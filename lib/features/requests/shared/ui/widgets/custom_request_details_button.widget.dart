@@ -1,20 +1,20 @@
-import 'package:app_test/core/utils/app_styles.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/services/localization_service.dart';
+import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:flutter/material.dart';
-import 'package:app_test/core/services/localization_service.dart';
-import 'package:app_test/core/constants/app_design.dart';
 
 class CustomRequestDetailsButton extends StatelessWidget {
   final String title;
-  var color;
+  final Color? color;
   final Future<void> Function() onPressed;
   final double? width;
+
   /// لو true → الـ font بيصغر في الإنجليزي بس (للزراير ذات النص الطويل)
   final bool smallFontOnEnglish;
 
-  CustomRequestDetailsButton({
+  const CustomRequestDetailsButton({
     super.key,
     this.width,
     this.color,
@@ -26,20 +26,23 @@ class CustomRequestDetailsButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isArabic = LocalizationService.isArabic(context: context);
-    final double fontSize = smallFontOnEnglish && !isArabic ? 9 : 11;
+    final double fontSize =
+        smallFontOnEnglish && !isArabic ? 11 : AppButtonSize.fontSize;
+    final Color effectiveColor = color ?? Color(AppColors.buttons);
+
     return Expanded(
       child: CustomElevatedButton(
-        titleSize: 10,
-        width: width,
+        width: width ?? double.infinity,
+        height: AppButtonSize.compactHeight,
+        backgroundColor: effectiveColor,
         buttonStyle: ElevatedButton.styleFrom(
-          fixedSize: const Size(double.infinity, double.infinity),alignment: Alignment.center,
+          elevation: 0,
           shadowColor: Colors.transparent,
-          backgroundColor:color?? Color(AppColors.secondaryButton),
-          foregroundColor: color??Color(AppColors.secondaryButton),
-          disabledForegroundColor: Colors.transparent,
-          elevation: 2,
+          backgroundColor: effectiveColor,
+          foregroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppRadius.xl),
+            borderRadius: AppRadius.button,
           ),
         ),
         onPressed: onPressed,
@@ -47,10 +50,10 @@ class CustomRequestDetailsButton extends StatelessWidget {
         titleWidget: FittedBox(
           fit: BoxFit.scaleDown,
           child: Text(
-            title.toUpperCase(),
+            title,
             style: AppStyles.whiteContent(context).copyWith(
               fontSize: fontSize,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w600,
             ),
             textAlign: TextAlign.center,
           ),

@@ -40,8 +40,8 @@ class _RequestTermsScreenState extends State<RequestTermsScreen> {
         onRefresh: () async => await viewModel.getRequestTypes(context: context),
         body: Center(
           child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: kIsWeb ? 1100 : double.infinity,
+            constraints: const BoxConstraints(
+              maxWidth: double.infinity,
             ),
             child: Padding(
               padding: EdgeInsets.all(AppSizes.s12),
@@ -73,12 +73,10 @@ class _RequestTermsScreenState extends State<RequestTermsScreen> {
                   return SizedBox(
                     height: 0.9.sh,
                     child: ListView.separated(
+                      clipBehavior: Clip.none,
                       itemCount: requestTypes.length,
-                      separatorBuilder: (context, index) => Divider(
-                        height: 32,
-                        thickness: 1,
-                        color: Color(AppColors.disableButton),
-                      ),
+                      separatorBuilder: (context, index) =>
+                          const SizedBox(height: AppSpacing.cardGap),
                       itemBuilder: (context, index) {
                         final requestType = requestTypes[index];
                         return _buildRequestTypeCard(requestType, context);
@@ -101,17 +99,12 @@ class _RequestTermsScreenState extends State<RequestTermsScreen> {
         : requestType.title.en;
 
     return Container(
-      padding: EdgeInsets.all(AppSizes.s20),
+      padding: AppSpacing.cardPadding,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.md),
-        boxShadow: [
-          BoxShadow(
-            color: Color(AppColors.disableButton).withValues(alpha: 0.3),
-            blurRadius: AppSizes.s5,
-            spreadRadius: 1,
-          ),
-        ],
+        border: AppBorders.card,
+        boxShadow: AppShadows.card,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

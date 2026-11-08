@@ -96,8 +96,8 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
                       const SizedBox(height: 14),
                       Center(
                         child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxWidth: kIsWeb ? 1100 : double.infinity,
+                          constraints: const BoxConstraints(
+                            maxWidth: double.infinity,
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,

@@ -409,7 +409,7 @@ class _QuickActionSheetState extends State<_QuickActionSheet> {
                         foregroundColor: Color(AppColors.buttons),
                         side: BorderSide(color: Color(AppColors.buttons)),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppRadius.md),
+                          borderRadius: AppRadius.button,
                         ),
                       ),
                       icon: const Icon(Icons.open_in_new_rounded, size: 18),
@@ -473,12 +473,6 @@ class _QuickActionSheetState extends State<_QuickActionSheet> {
                             isFuture: true,
                             titleSize: 13,
                             width: double.infinity,
-                            buttonStyle: ElevatedButton.styleFrom(
-                              backgroundColor: Color(AppColors.buttons),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(AppRadius.xl),
-                              ),
-                            ),
                             onPressed: () async => await _submitAction(),
                             title: 'submit_action'.tr(),
                             titleWidget: Text(

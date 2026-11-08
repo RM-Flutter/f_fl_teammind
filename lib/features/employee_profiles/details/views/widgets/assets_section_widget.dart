@@ -15,6 +15,7 @@ import 'package:app_test/core/services/url_launcher_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/foundation.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/widgets/app_card.widget.dart';
 
 class AssetsSectionWidget extends StatelessWidget {
   final EmployeeProfileModel? employee;
@@ -47,10 +48,11 @@ class AssetsSectionWidget extends StatelessWidget {
             ListView.separated(
               shrinkWrap: true,
               reverse: false,
+              clipBehavior: Clip.none,
               physics: const ClampingScrollPhysics(),
               padding: EdgeInsets.zero,
               itemCount: employee!.assets!.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
+              separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.cardGap),
               itemBuilder: (context, index) =>
                   _AssetCard(asset: employee!.assets![index]),
             ),
@@ -62,10 +64,11 @@ class AssetsSectionWidget extends StatelessWidget {
             ListView.separated(
               shrinkWrap: true,
               reverse: false,
+              clipBehavior: Clip.none,
               physics: const ClampingScrollPhysics(),
               padding: EdgeInsets.zero,
               itemCount: employee!.empCustomData!.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 10),
+              separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.cardGap),
               itemBuilder: (context, index) => _CustomDataCard(
                 item: employee!.empCustomData![index].item ?? '',
               ),
@@ -183,16 +186,11 @@ class _AssetCardState extends State<_AssetCard> {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-        boxShadow: [
-          BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 12,
-              offset: const Offset(0, 4)),
-        ],
-        border: Border.all(color: Colors.grey.withOpacity(0.08)),
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        boxShadow: AppShadows.card,
+        border: AppBorders.card,
       ),
-      padding: const EdgeInsets.all(16),
+      padding: AppSpacing.cardPadding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -200,15 +198,9 @@ class _AssetCardState extends State<_AssetCard> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: accent.withOpacity(0.10),
-                  borderRadius: BorderRadius.circular(AppRadius.md),
-                ),
-                child: Icon(Icons.devices_other_rounded,
-                    color: accent, size: 24),
+              AppCardLeadingAvatar(
+                icon: Icons.devices_other_rounded,
+                borderColor: accent,
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -527,17 +519,12 @@ class _CustomDataCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
+      padding: AppSpacing.cardPadding,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.md),
-        border: Border.all(color: Colors.grey.withOpacity(0.1)),
-        boxShadow: [
-          BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 8,
-              offset: const Offset(0, 3)),
-        ],
+        border: AppBorders.card,
+        boxShadow: AppShadows.card,
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

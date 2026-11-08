@@ -53,10 +53,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
               backgroundColor: Colors.white,
               elevation: 0,
               centerTitle: true,
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () => Navigator.pop(context),
-              ),
+              leading: const AppBackButton(),
               routeName: AppRoutes.newComplainScreen.name,
             ),
             backgroundColor: Color(AppColors.background),

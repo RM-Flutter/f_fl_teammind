@@ -314,19 +314,13 @@ class WeekendDisplayWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     if (!weekendModel.hasWeekends) {
       return Container(
-        margin: const EdgeInsets.only(bottom: 12, left: 8, right: 8),
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+        margin: const EdgeInsets.only(bottom: AppSpacing.cardGap, left: 8, right: 8),
+        padding: AppSpacing.cardPadding,
         decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(AppRadius.md),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              )
-            ],
-            border: Border.all(color: Colors.grey.withOpacity(0.05))),
+            boxShadow: AppShadows.card,
+            border: AppBorders.card),
         child: Row(
           children: [
             Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: Color(AppColors.buttons)),
@@ -347,19 +341,13 @@ class WeekendDisplayWidget extends StatelessWidget {
     }
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 12, left: 8, right: 8),
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+      margin: const EdgeInsets.only(bottom: AppSpacing.cardGap, left: 8, right: 8),
+      padding: AppSpacing.cardPadding,
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(AppRadius.md),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            )
-          ],
-          border: Border.all(color: Colors.grey.withOpacity(0.05))),
+          boxShadow: AppShadows.card,
+          border: AppBorders.card),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -518,19 +506,13 @@ class ThisWeekShiftsDisplayWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12, left: 8, right: 8),
-      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+      margin: const EdgeInsets.only(bottom: AppSpacing.cardGap, left: 8, right: 8),
+      padding: AppSpacing.cardPadding,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.md),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          )
-        ],
-        border: Border.all(color: Colors.grey.withOpacity(0.05)),
+        boxShadow: AppShadows.card,
+        border: AppBorders.card,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

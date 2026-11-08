@@ -13,6 +13,8 @@ import 'package:url_launcher/url_launcher.dart';
 import '../controllers/cv_hub_interview_details_controller.dart';
 import '../models/cv_hub_models.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/widgets/app_card.widget.dart';
+import 'package:app_test/core/widgets/app_status_badge.widget.dart';
 
 class CvHubInterviewDetailsScreen extends StatefulWidget {
   final String id;
@@ -134,27 +136,26 @@ class _CvHubInterviewDetailsScreenState extends State<CvHubInterviewDetailsScree
                       if (candidate?.attachments != null && candidate!.attachments!.isNotEmpty) ...[
                         _buildSectionHeader('Attachments'.tr(), Icons.attach_file),
                         const SizedBox(height: 12),
-                        ...candidate.attachments!.map((a) => InkWell(
-                          onTap: () {
-                            if (a.fileUrl != null) launchUrl(Uri.parse(a.fileUrl!), mode: LaunchMode.externalApplication);
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.only(bottom: 8),
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: Color(AppColors.scaffoldBackGround),
-                              borderRadius: BorderRadius.circular(AppRadius.md),
-                              border: Border.all(color: Colors.grey.shade200),
-                              boxShadow: [
-                                BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4))
-                              ]
-                            ),
+                        ...candidate.attachments!.map((a) => Padding(
+                          padding: const EdgeInsets.only(bottom: AppSpacing.cardGap),
+                          child: AppCard(
+                            onTap: () {
+                              if (a.fileUrl != null) launchUrl(Uri.parse(a.fileUrl!), mode: LaunchMode.externalApplication);
+                            },
                             child: Row(
                               children: [
-                                Icon(Icons.picture_as_pdf, color: Color(AppColors.failureRed)),
+                                AppCardLeadingAvatar(
+                                  icon: Icons.picture_as_pdf_rounded,
+                                  borderColor: Color(AppColors.failureRed),
+                                ),
                                 const SizedBox(width: 12),
-                                Expanded(child: Text(a.fileType ?? 'Attachment'.tr(), style: AppStyles.primaryContent(context).copyWith(fontWeight: FontWeight.w600))),
-                                Icon(Icons.download, color: mainColor, size: 20),
+                                Expanded(
+                                  child: Text(
+                                    a.fileType ?? 'Attachment'.tr(),
+                                    style: AppStyles.heading(context),
+                                  ),
+                                ),
+                                Icon(Icons.download_rounded, color: mainColor, size: 20),
                               ],
                             ),
                           ),
@@ -227,14 +228,12 @@ class _CvHubInterviewDetailsScreenState extends State<CvHubInterviewDetailsScree
 
   Widget _buildInfoBox(List<Widget> children) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: AppSpacing.cardPadding,
       decoration: BoxDecoration(
-        color: Color(AppColors.scaffoldBackGround),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.md),
-        border: Border.all(color: Colors.grey.shade100),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4))
-        ]
+        border: AppBorders.card,
+        boxShadow: AppShadows.card,
       ),
       child: Column(
         children: children,
@@ -286,178 +285,108 @@ class _CvHubInterviewDetailsScreenState extends State<CvHubInterviewDetailsScree
 
   Widget _buildHeader(BuildContext context, Color mainColor, InterviewModel interview) {
     final candidate = interview.candidate;
-    String? displayName = candidate?.fullName;
+    final String? displayName = candidate?.fullName;
+    final subtitleParts = <String>[
+      if (candidate?.job?.title != null && candidate!.job!.title!.isNotEmpty)
+        candidate.job!.title!,
+      if (interview.interviewType != null && interview.interviewType!.isNotEmpty)
+        interview.interviewType!,
+      if (interview.scheduledAt != null && interview.scheduledAt!.isNotEmpty)
+        interview.scheduledAt!,
+    ];
 
-    return Container(
-      height: 290,
-      width: 1.sw,
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-        color: Color(AppColors.secondaryButton),
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(AppRadius.xl),
-          bottomRight: Radius.circular(AppRadius.xl),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        AppBarWithBookmark(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          centerTitle: true,
+          routeName: AppRoutes.cvHubInterviewDetails.name,
+          title: 'Interview Details'.tr(),
         ),
-        image: const DecorationImage(
-          image: AssetImage("assets/images/request-app-bar.png"),
-          fit: BoxFit.fill,
-          opacity: 1.0,
-        ),
-      ),
-      child: Center(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 1.sw),
-          child: Column(
-            children: [
-              AppBarWithBookmark(
-                backgroundColor: Colors.transparent,
-                elevation: 0,
-                centerTitle: true,
-                routeName: AppRoutes.cvHubInterviewDetails.name,
-                title: 'Interview Details'.tr(),
-                titleStyle: AppStyles.whiteHeading(context).copyWith(fontSize: 12),
-                bookmarkIconColor: Colors.white,
-                leading: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: InkWell(
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
+          child: AppCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    AppCardLeadingAvatar(
+                      name: displayName,
+                      icon: Icons.video_camera_front_outlined,
+                      borderColor: mainColor,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            displayName ??
+                                (interview.interviewType ?? 'Interview'),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppStyles.heading(context),
+                          ),
+                          if (subtitleParts.isNotEmpty) ...[
+                            const SizedBox(height: 2),
+                            Text(
+                              subtitleParts.join(' · '),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppStyles.subtitleContent(context),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    AppStatusBadge.fromStatus(
+                      status: interview.status ?? 'Pending',
+                    ),
+                  ],
+                ),
+                if (interview.location != null &&
+                    interview.location!.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  InkWell(
                     onTap: () {
-                      if (context.canPop()) {
-                        context.pop();
-                      } else {
-                        context.goNamed(AppRoutes.home.name,
-                            pathParameters: {'lang': context.locale.languageCode});
+                      if (interview.location!.startsWith('http')) {
+                        launchUrl(Uri.parse(interview.location!),
+                            mode: LaunchMode.externalApplication);
                       }
                     },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.arrow_back_sharp,
-                        color: Color(AppColors.scaffoldBackGround),
-                        size: 18,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 8),
-              
-              if (displayName != null) ...[
-                Text(
-                  displayName,
-                  textAlign: TextAlign.center,
-                  style: AppStyles.whiteContent(context).copyWith(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    shadows: [const Shadow(color: Colors.black45, blurRadius: 10, offset: Offset(0, 4))]
-                  ),
-                ),
-                if (candidate?.job?.title != null)
-                   Text(
-                      candidate!.job!.title!,
-                      style: AppStyles.whiteContent(context).copyWith(
-                        fontSize: 12,
-                        color: Colors.white70,
-                      ),
-                    ),
-                const SizedBox(height: 12),
-              ],
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Row(
                       children: [
-                        Container(
-                          width: 65,
-                          height: 85,
-                          decoration: BoxDecoration(
-                            color: mainColor.withOpacity(.3),
-                            borderRadius: BorderRadius.circular(AppRadius.sm),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text('Status'.tr(), style: AppStyles.whiteContent(context).copyWith(fontSize: 10, fontWeight: FontWeight.bold)),
-                              const SizedBox(height: 4),
-                              Icon(Icons.video_camera_front, color: Color(AppColors.scaffoldBackGround), size: 28),
-                              const SizedBox(height: 4),
-                              Text(interview.status ?? '', style: AppStyles.whiteContent(context).copyWith(fontSize: 10, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
-                            ],
+                        Icon(Icons.location_on_outlined,
+                            size: 14, color: mainColor),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            interview.location!.startsWith('http')
+                                ? 'Meeting Link'.tr()
+                                : interview.location!,
+                            style: AppStyles.subtitleContent(context).copyWith(
+                              color: interview.location!.startsWith('http')
+                                  ? mainColor
+                                  : null,
+                              decoration: interview.location!.startsWith('http')
+                                  ? TextDecoration.underline
+                                  : null,
+                            ),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Container(
-                        height: 85,
-                        decoration: BoxDecoration(
-                          color: Color(AppColors.scaffoldBackGround),
-                          borderRadius: BorderRadius.circular(AppRadius.sm),
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              interview.interviewType ?? 'Interview',
-                              style: AppStyles.primaryContent(context).copyWith(fontWeight: FontWeight.bold, fontSize: 13, color: mainColor),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            const SizedBox(height: 6),
-                            if (interview.scheduledAt != null)
-                              Row(
-                                children: [
-                                  Icon(Icons.calendar_today_outlined, size: 10, color: Colors.grey.shade400),
-                                  const SizedBox(width: 4),
-                                  Expanded(child: Text(interview.scheduledAt!, style: AppStyles.greyContent(context).copyWith(fontSize: 10))),
-                                ],
-                              ),
-                            if (interview.location != null) ...[
-                              const SizedBox(height: 4),
-                              Row(
-                                children: [
-                                  Icon(Icons.location_on_outlined, size: 10, color: Colors.grey.shade400),
-                                  const SizedBox(width: 4),
-                                  Expanded(
-                                    child: InkWell(
-                                      onTap: () {
-                                        if (interview.location!.startsWith('http')) {
-                                          launchUrl(Uri.parse(interview.location!), mode: LaunchMode.externalApplication);
-                                        }
-                                      },
-                                      child: Text(
-                                        interview.location!.startsWith('http') ? 'Meeting Link'.tr() : interview.location!, 
-                                        style: AppStyles.greyContent(context).copyWith(
-                                          fontSize: 10,
-                                          color: interview.location!.startsWith('http') ? Colors.blue : null,
-                                          decoration: interview.location!.startsWith('http') ? TextDecoration.underline : null,
-                                        )
-                                      ),
-                                    )
-                                  ),
-                                ],
-                              ),
-                            ]
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+                  ),
+                ],
+              ],
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
 }

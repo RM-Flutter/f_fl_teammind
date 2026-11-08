@@ -43,23 +43,8 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
       appBar: AppBarWithBookmark(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Color(AppColors.secondaryButton),
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
-          ),
-          onPressed: _goBack,
-        ),
+        leading: AppBackButton(onPressed: _goBack),
         title: AppStrings.cvGenerator2.tr(),
-        titleStyle: TextStyle(
-          color: Color(AppColors.secondaryButton),
-          fontSize: 18,
-          fontWeight: FontWeight.w500,
-        ),
         centerTitle: true,
         routeName: AppRoutes.cvGeneratorScreen.name,
       ),
@@ -93,14 +78,14 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
                       foregroundColor: Color(AppColors.secondaryButton),
                       padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppRadius.xl),
+                        borderRadius: AppRadius.button,
                       ),
                     ),
                     child: Text(
                       AppStrings.updateInfo.tr(),
                       style: const TextStyle(
                         fontSize: 12,
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w600,
                         letterSpacing: 0.5,
                       ),
                     ),
@@ -149,7 +134,7 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppRadius.xl),
+                          borderRadius: AppRadius.button,
                         ),
                       ),
                       child: Text(

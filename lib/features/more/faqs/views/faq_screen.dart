@@ -10,6 +10,7 @@ import 'package:app_test/features/more/faqs/controllers/faq_controller.dart';
 import 'package:app_test/features/more/faqs/data/models/get_faq_model.dart';
 import 'package:app_test/features/more/faqs/views/widgets/faq_loading_widget.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
 
 class FaqScreen extends StatefulWidget {
   const FaqScreen({super.key});
@@ -27,30 +28,16 @@ class _FaqScreenState extends State<FaqScreen> {
       builder: (context, value, child) {
         return Scaffold(
           backgroundColor: Colors.white,
-          appBar: AppBar(
+          appBar: AppBarWithBookmark(
             surfaceTintColor: Colors.transparent,
-            title:  Text(AppStrings.faqs.tr().toUpperCase(), style:  AppStyles.heading(context).copyWith(fontSize: 16,
-                fontWeight: FontWeight.w700),),
-            leading: Padding(
-              padding: EdgeInsets.all(AppSizes.s10),
-              child: InkWell(
-                onTap: () =>  Navigator.pop(context),
-                child: Container(
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Color(AppColors.secondaryButton)),
-                  child: Icon(
-                    Icons.arrow_back_sharp,
-                    color: Colors.white,
-                    size: AppSizes.s18,
-                  ),
-                ),
-              ),
-            ),
-            backgroundColor: Colors.transparent,
+            title: AppStrings.faqs.tr().toUpperCase(),
+            centerTitle: true,
+            backgroundColor: Colors.white,
+            elevation: 0,
           ),
           body: (value.faqModel != null)?ListView.builder(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
+            clipBehavior: Clip.none,
             itemCount: value.faqModel!.page!.questions!.length,
             itemBuilder: (context, index) {
               return FaqTile(
@@ -58,7 +45,8 @@ class _FaqScreenState extends State<FaqScreen> {
               );
             },
           ):ListView.builder(
-            padding: EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
+            clipBehavior: Clip.none,
             itemCount: 3,
             itemBuilder: (context, index) {
               return const FaqLoadingWidget();
@@ -96,27 +84,13 @@ class _FaqTileState extends State<FaqTile> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 16.0),
+      padding: const EdgeInsets.only(bottom: AppSpacing.cardGap),
       child: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFFF5F8FA), // Light blue background like in the image
+          color: Colors.white,
           borderRadius: BorderRadius.circular(AppRadius.md),
-          boxShadow: [
-            // Top shadow
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              offset: Offset(0, -1), // Slightly offset upwards
-              blurRadius: 4,
-              spreadRadius: 0,
-            ),
-            // Bottom shadow
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              offset: Offset(0, 1), // Slightly offset downwards
-              blurRadius: 4,
-              spreadRadius: 0,
-            ),
-          ],
+          border: AppBorders.card,
+          boxShadow: AppShadows.card,
         ),
         child: ExpansionTile(
           tilePadding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),

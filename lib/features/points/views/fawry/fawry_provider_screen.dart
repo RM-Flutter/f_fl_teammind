@@ -10,6 +10,7 @@ import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_load
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:app_test/core/utils/gradient_bg_image.dart';
+import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
 import '../../controllers/fawry_controller/fawry_controller.dart';
 import 'package:app_test/core/constants/app_design.dart';
 
@@ -26,35 +27,11 @@ class _FawryProviderScreenState extends State<FawryProviderScreen> {
       child: Consumer<FawryController>(
         builder: (context, value, child) {
           return Scaffold( resizeToAvoidBottomInset: false,
-            appBar: AppBar(
-              backgroundColor: const Color(0xffFFFFFF),
-              leading: GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Icon(
-                    Icons.arrow_back,
-                    color: Color(0XFF224982),
-                  )),
-              title: Text(
-                AppStrings.chooseFromFawryServices.tr().toUpperCase(),
-                style: const TextStyle(
-                    fontSize: AppSizes.s16,
-                    fontWeight: FontWeight.w700,
-                    color: Color(0XFF224982)),
-              ),
-              flexibleSpace: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
-                      const Color(0xFFFF007A).withOpacity(0.03),
-                      const Color(0xFF00A1FF).withOpacity(0.03)
-                    ],
-                  ),
-                ),
-              ),
+            appBar: AppBarWithBookmark(
+              backgroundColor: Colors.white,
+              leading: const AppBackButton(),
+              title: AppStrings.chooseFromFawryServices.tr().toUpperCase(),
+              showBookmark: false,
             ),
             body: Container(
               height: MediaQuery.sizeOf(context).height * 1,

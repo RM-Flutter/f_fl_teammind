@@ -43,6 +43,7 @@ class SalaryAdvanceSectionWidget extends StatelessWidget {
           ListView.separated(
             reverse: false,
             shrinkWrap: true,
+            clipBehavior: Clip.none,
             physics: const ClampingScrollPhysics(),
             padding: EdgeInsets.zero,
             itemBuilder: (context, index) {
@@ -61,7 +62,7 @@ class SalaryAdvanceSectionWidget extends StatelessWidget {
                 },
               );
             },
-            separatorBuilder: (context, index) => const SizedBox(height: 12),
+            separatorBuilder: (context, index) => const SizedBox.shrink(),
             itemCount: requests!.length <= 5 ? requests!.length : 5,
           ),
           if (requests!.isNotEmpty) const SizedBox(height: 24),

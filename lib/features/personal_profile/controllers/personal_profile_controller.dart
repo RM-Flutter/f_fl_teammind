@@ -898,7 +898,7 @@ class PersonalProfileController extends ChangeNotifier {
         return Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(
-              maxWidth: kIsWeb ? 800 : double.infinity,
+              maxWidth: double.infinity,
             ),
             child: AlertDialog(
               shape: RoundedRectangleBorder(
@@ -1048,7 +1048,7 @@ class PersonalProfileController extends ChangeNotifier {
         return Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(
-              maxWidth: kIsWeb ? 800 : double.infinity,
+              maxWidth: double.infinity,
             ),
             child: AlertDialog(
               shape: RoundedRectangleBorder(

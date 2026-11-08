@@ -142,29 +142,15 @@ class _UpdateSalaryAdvanceScreenState
                                 color: Color(AppColors.buttons),
                               ),
                             )
-                          : Container(
+                          : SizedBox(
                               width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Color(AppColors.buttons),
-                                borderRadius: BorderRadius.circular(AppRadius.md),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Color(AppColors.buttons)
-                                        .withOpacity(0.3),
-                                    blurRadius: 15,
-                                    offset: const Offset(0, 8),
-                                  ),
-                                ],
-                              ),
+                              height: AppButtonSize.height,
                               child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.transparent,
-                                  shadowColor: Colors.transparent,
-                                  padding:
-                                      EdgeInsets.symmetric(vertical: 16),
+                                  backgroundColor: Color(AppColors.buttons),
+                                  foregroundColor: Colors.white,
                                   shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(AppRadius.md)),
+                                      borderRadius: AppRadius.button),
                                 ),
                                 onPressed: () async {
                                   final success =
@@ -175,8 +161,8 @@ class _UpdateSalaryAdvanceScreenState
                                 },
                                 child: Text(
                                   'save_changes'.tr(),
-                                  style: TextStyle(
-                                      fontSize: 16,
+                                  style: const TextStyle(
+                                      fontSize: 15,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white),
                                 ),

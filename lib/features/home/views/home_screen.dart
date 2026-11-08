@@ -431,8 +431,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             child: Center(
               child: ConstrainedBox(
-              // Web: keep some space at the sides on wide screens (sections share this width)
-              constraints: BoxConstraints(maxWidth: kIsWeb ? 1400 : double.infinity),
+              constraints: const BoxConstraints(maxWidth: double.infinity),
               child: ReorderableListView(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),

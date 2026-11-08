@@ -226,17 +226,17 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
 
     return Center(
       child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: kIsWeb ? 1100 : double.infinity,
+        constraints: const BoxConstraints(
+          maxWidth: double.infinity,
         ),
-        child: Padding(
-          padding: EdgeInsets.all(AppSizes.s12),
-          child: RefreshIndicator.adaptive(
-            onRefresh: () => controller.initializeScreen(context),
-            child: ListView.builder(
-              controller: _scrollController,
-              physics: const AlwaysScrollableScrollPhysics(),
-              itemCount: requests.length + (isIncoming ? (controller.incomingIsLoadingMore ? 1 : 0) : (controller.personalIsLoadingMore ? 1 : 0)),
+        child: RefreshIndicator.adaptive(
+          onRefresh: () => controller.initializeScreen(context),
+          child: ListView.builder(
+            controller: _scrollController,
+            clipBehavior: Clip.none,
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 80),
+            physics: const AlwaysScrollableScrollPhysics(),
+            itemCount: requests.length + (isIncoming ? (controller.incomingIsLoadingMore ? 1 : 0) : (controller.personalIsLoadingMore ? 1 : 0)),
               itemBuilder: (context, index) {
                 if (index == requests.length) {
                   return const Padding(
@@ -283,7 +283,6 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
               },
             ),
           ),
-        ),
       ),
     );
   }

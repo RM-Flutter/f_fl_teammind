@@ -53,7 +53,7 @@ if (controller.error != null) {
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () => controller.fetchInterviews(context),
-                    style: ElevatedButton.styleFrom(backgroundColor: Color(AppColors.c1)),
+                    style: ElevatedButton.styleFrom(backgroundColor: Color(AppColors.buttons)),
                     child: Text('Retry'.tr(), style: const TextStyle(color: Colors.white)),
                   )
                 ],
@@ -79,9 +79,10 @@ if (controller.error != null) {
           return RefreshIndicator(
             onRefresh: () => controller.fetchInterviews(context),
             child: ListView.separated(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+              clipBehavior: Clip.none,
               itemCount: controller.interviews.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 12),
+              separatorBuilder: (context, index) => const SizedBox.shrink(),
               itemBuilder: (context, index) {
                 final interview = controller.interviews[index];
                 return _buildInterviewCard(context, interview);
@@ -98,7 +99,6 @@ if (controller.error != null) {
     return ApprovableCardWidget(
       request: interview,
       isForDepartment: true,
-      margin: const EdgeInsets.symmetric(horizontal: 16.0),
       onTap: () {
         context.pushNamed(
           AppRoutes.cvHubInterviewDetails.name,

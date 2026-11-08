@@ -114,8 +114,8 @@ class _ListCommentsScreenState extends State<ListCommentsScreen> {
               },
               child: Center(
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                      maxWidth: kIsWeb ? 1100 : double.infinity
+                  constraints: const BoxConstraints(
+                      maxWidth: double.infinity
                   ),
                   child: ListView(
                     controller: _scrollController,

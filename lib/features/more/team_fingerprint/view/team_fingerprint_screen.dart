@@ -56,8 +56,8 @@ class _TeamFingerprintScreenState extends State<TeamFingerprintScreen> {
           onRefresh: () async => await viewModel.getEmployees(context: context),
           body: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(
-                  maxWidth: kIsWeb ? 1100 : double.infinity
+              constraints: const BoxConstraints(
+                  maxWidth: double.infinity
               ),
               child: Padding(
                 padding: EdgeInsets.all(AppSizes.s12),

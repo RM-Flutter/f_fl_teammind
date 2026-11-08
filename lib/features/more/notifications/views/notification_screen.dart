@@ -105,11 +105,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
           appBar: AppBarWithBookmark(
             surfaceTintColor: Colors.transparent,
             title: AppStrings.notifications.tr(),
-            titleStyle: AppStyles.heading(context).copyWith(
-              fontSize: 15, 
-              fontWeight: FontWeight.w400
-            ),
-            backgroundColor: Colors.transparent,
             routeName: AppRoutes.notifications.name,
           ),
           floatingActionButton: (gCache['is_teamleader_in'].isNotEmpty ||
@@ -148,8 +143,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
             },
             child: Center(
               child: ConstrainedBox(
-                constraints: BoxConstraints(
-                    maxWidth: kIsWeb ? 1100 : double.infinity
+                constraints: const BoxConstraints(
+                    maxWidth: double.infinity
                 ),
                 child: ListView(
                   controller: _scrollController,
@@ -169,39 +164,37 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       },
                     ),
                     SizedBox(height: 25),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 15),
-                      child: ListView.builder(
-                        padding: EdgeInsets.zero,
-                        shrinkWrap: true,
-                        reverse: false,
-                        physics: const ClampingScrollPhysics(),
-                        itemCount: notificationProviderModel.isGetNotificationLoading && notificationProviderModel.notifications.isEmpty
-                            ? 12 // Show 5 loading items initially
-                            : notificationProviderModel.notifications.length,
-                        itemBuilder: (context, index) {
-                          if (notificationProviderModel.isGetNotificationLoading && notificationProviderModel.currentPage == 1) {
-                            return Shimmer.fromColors(
-                              baseColor: Colors.grey[300]!,
-                              highlightColor: Colors.grey[100]!,
-                              child: Container(
-                                margin: EdgeInsets.symmetric(vertical: AppSizes.s12),
-                                padding: EdgeInsetsDirectional.symmetric(horizontal: AppSizes.s15, vertical: AppSizes.s12),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(AppRadius.md),
-                                ),
-                                height: 100,
+                    ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      clipBehavior: Clip.none,
+                      shrinkWrap: true,
+                      reverse: false,
+                      physics: const ClampingScrollPhysics(),
+                      itemCount: notificationProviderModel.isGetNotificationLoading && notificationProviderModel.notifications.isEmpty
+                          ? 12 // Show 5 loading items initially
+                          : notificationProviderModel.notifications.length,
+                      itemBuilder: (context, index) {
+                        if (notificationProviderModel.isGetNotificationLoading && notificationProviderModel.currentPage == 1) {
+                          return Shimmer.fromColors(
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.grey[100]!,
+                            child: Container(
+                              margin: EdgeInsets.symmetric(vertical: AppSizes.s12),
+                              padding: EdgeInsetsDirectional.symmetric(horizontal: AppSizes.s15, vertical: AppSizes.s12),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(AppRadius.md),
                               ),
-                            );
-                          } else {
-                            return PainterNotificationListViewItem(
-                              notifications: notificationProviderModel.notifications,
-                              index: index,
-                            );
-                          }
-                        },
-                      ),
+                              height: 100,
+                            ),
+                          );
+                        } else {
+                          return PainterNotificationListViewItem(
+                            notifications: notificationProviderModel.notifications,
+                            index: index,
+                          );
+                        }
+                      },
                     ),
                     if(!notificationProviderModel.isGetNotificationLoading && notificationProviderModel.notifications.isEmpty) Padding(
                       padding: EdgeInsets.symmetric(horizontal: 15),
@@ -228,11 +221,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               }
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF000033), // Dark navy blue as in design
+                              backgroundColor: Color(AppColors.buttons),
                               foregroundColor: Colors.white,
                               padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(AppRadius.xl),
+                                borderRadius: AppRadius.button,
                               ),
                             ),
                             child: Text(

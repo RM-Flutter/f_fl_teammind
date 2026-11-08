@@ -209,12 +209,6 @@ class _ManagerTakeActionModalState extends State<ManagerTakeActionModal> {
                     isFuture: true,
                     titleSize: 13,
                     width: double.infinity,
-                    buttonStyle: ElevatedButton.styleFrom(
-                      backgroundColor: Color(AppColors.buttons),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppRadius.xl),
-                      ),
-                    ),
                     onPressed: () async => await _submitAction(context),
                     title: 'submit_action'.tr(),
                     titleWidget: Text(

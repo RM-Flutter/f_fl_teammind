@@ -54,12 +54,8 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
         return Scaffold(
           backgroundColor: Color(AppColors.background),
           appBar: AppBarWithBookmark(
-            backgroundColor: Color(AppColors.background),
-            leading: GestureDetector(
-                onTap: (){
-                  Navigator.pop(context);
-                },
-                child: Icon(Icons.arrow_back, color: Color(AppColors.secondaryButton), size: 24,)),
+            backgroundColor: Colors.white,
+            leading: const AppBackButton(),
             title: AppStrings.languageSettings.tr().toUpperCase(),
             titleStyle: AppStyles.heading(context).copyWith(
                 fontSize: AppSizes.s16,
@@ -73,7 +69,7 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
               alignment: Alignment.center,
               child: SizedBox(
                   height: 1.sh,
-                  width: kIsWeb ? 1100 : 1.sw,
+                  width: double.infinity,
                   child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 20),
                       child: Column(

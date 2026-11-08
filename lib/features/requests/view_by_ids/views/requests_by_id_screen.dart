@@ -83,11 +83,11 @@ class _RequestsByTypeIdScreenState extends State<RequestsByTypeIdScreen> {
                   employeeId: widget.employeeId),
           body: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(
-                  maxWidth: kIsWeb ? 1100 : 1.sw
+              constraints: const BoxConstraints(
+                  maxWidth: double.infinity
               ),
               child: Padding(
-                  padding: EdgeInsets.all(!kIsWeb? 12 : 0),
+                  padding: const EdgeInsets.all(12),
                   child: Consumer<RequestsWithTypeIdViewModel>(
                       builder: (context, viewModel, child) => viewModel.isLoading
                           ? const LoadingPageWidget()

@@ -134,25 +134,10 @@ class _PersonalityTestScreenState extends State<PersonalityTestScreen> {
     return Scaffold(
       backgroundColor: Color(AppColors.background),
       appBar: AppBarWithBookmark(
-        backgroundColor: Color(AppColors.background),
+        backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(
-          icon: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Color(AppColors.secondaryButton),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(Icons.arrow_back, color: Color(AppColors.background), size: 18),
-          ),
-          onPressed: _goBack,
-        ),
+        leading: AppBackButton(onPressed: _goBack),
         title: AppStrings.personalityTest2.tr(),
-        titleStyle: TextStyle(
-          color: Color(AppColors.secondaryButton),
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
         centerTitle: true,
         routeName: AppRoutes.personalityTestScreen.name,
       ),
@@ -314,10 +299,10 @@ class _PersonalityTestScreenState extends State<PersonalityTestScreen> {
               onPressed: _restartTest,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(AppColors.buttons),
-                foregroundColor: Color(AppColors.background),
+                foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(AppRadius.xl),
+                  borderRadius: AppRadius.button,
                 ),
               ),
               child: Text(

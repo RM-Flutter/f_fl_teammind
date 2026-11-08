@@ -4,23 +4,25 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../constants/app_colors.dart';
 
 class AppStyles {
-  /// Base Heading style (Ibrand for EN / Montserrat-Arabic for AR)
+  /// Base Heading style (Poppins for EN / Cairo for AR)
   static TextStyle heading(BuildContext context) {
     bool isArabic = context.locale.languageCode == 'ar';
     return TextStyle(
-      fontFamily: isArabic ? 'Montserrat-Arabic' : 'Ibrand',
+      fontFamily: isArabic ? 'Cairo' : 'Poppins',
       // color: Color(AppColors.secondaryButton),
       color: Colors.black,
-      fontSize: isArabic ? 14.sp : 16.sp,
+      fontSize: 14,
+      fontWeight: FontWeight.w600,
     );
   }
 
   static TextStyle whiteHeading(BuildContext context) {
     bool isArabic = context.locale.languageCode == 'ar';
     return TextStyle(
-      fontFamily: isArabic ? 'Montserrat-Arabic' : 'Ibrand',
+      fontFamily: isArabic ? 'Cairo' : 'Poppins',
       color: Colors.white,
-      fontSize: isArabic ? 14.sp : 16.sp,
+      fontSize: 14,
+      fontWeight: FontWeight.w600,
     );
   }
 

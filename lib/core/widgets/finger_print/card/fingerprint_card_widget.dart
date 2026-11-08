@@ -11,6 +11,8 @@ import 'package:intl/intl.dart';
 import '../../../constants/app_colors.dart';
 import 'bottom_sheet/finger_print_details_modal_sheet_widget.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:app_test/core/widgets/app_card.widget.dart';
 
 class FingerprintCard extends StatelessWidget {
   final FingerPrintModel fingerprint;
@@ -19,121 +21,111 @@ class FingerprintCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String? formatFingerDatetime(List<FingerDateTime>? fingerDatetime) {
-      // Check if the list is empty
       if (fingerDatetime?.isEmpty == true || fingerDatetime == null) {
         return null;
       }
 
-      // Extract the first and last time strings
       String? firstTime = fingerDatetime.first.time;
       String? lastTime = fingerDatetime.last.time;
       if (firstTime == null && lastTime == null) {
         return null;
       }
-      // Parse the time strings to DateTime objects
       debugPrint("FIRST IS --> ${firstTime}");
       DateTime firstDateTime = DateFormat('hh:mm:ss', "en").parse(firstTime!);
       DateTime lastDateTime = DateFormat('hh:mm:ss', "en").parse(lastTime!);
 
-      // Format the DateTime objects to the desired format (e.g., "hh:mm a")
       String formattedFirstTime = DateFormat('hh:mm a', LocalizationService.isArabic(context: context) ? "ar" :"en").format(firstDateTime);
       String formattedLastTime = DateFormat('hh:mm a', LocalizationService.isArabic(context: context) ? "ar" :"en").format(lastDateTime);
 
-      // Get the length of the list
       int length = fingerDatetime.length;
-
-      // Construct the final string
       String result = '$formattedFirstTime : $formattedLastTime ($length)';
-
       return result;
     }
 
-    return InkWell(
+    final timeSubtitle = formatFingerDatetime(fingerprint.fingerDateTime);
+    final accentColor = Color(AppColors.buttons);
+
+    return AppCard(
       onTap: () => ModalSheetHelper.showModalSheet(
-          context: context,viewProfile: false,
+          context: context,
+          viewProfile: false,
           height: AppSizes.s400,
           title: AppStrings.fingerprintInfo.tr(),
           modalContent: FingerprintDetailsModalSheet(fingerprint: fingerprint)),
-      child: Container(
-        padding: const EdgeInsets.all(AppSizes.s8),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(AppRadius.md),
-          color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              )
-            ],
-            border: Border.all(color: Colors.grey.withOpacity(0.05)),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            if (fingerprint.fingerDay != null)
-              Container(
-                width: AppSizes.s50,
-                padding: const EdgeInsets.all(AppSizes.s4),
-                decoration: BoxDecoration(
-                  color: Color(AppColors.buttons),
-                  borderRadius: BorderRadius.circular(AppRadius.sm),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    AutoSizeText(
-                      DateService.getWeekdayName(fingerprint.fingerDay, context) ?? '',
-                      maxLines: 1,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: AppSizes.s12,
-                        color: Colors.white,
-                      ),
-                    ),
-                    AutoSizeText(
-                      DateService.getDaysInMonth(fingerprint.fingerDay)?.toString() ?? ' - ',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: AppSizes.s12,
-                        height: 1.5,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          if (fingerprint.fingerDay != null)
+            Container(
+              width: 46,
+              height: 46,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: accentColor.withOpacity(0.12),
+                border: Border.all(color: accentColor, width: 2),
               ),
-              Container(
-              margin: const EdgeInsets.symmetric(horizontal: AppSizes.s8),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   AutoSizeText(
-                    DateFormat('d-M-yyyy', LocalizationService.isArabic(context: context) ? "ar" :"en").format(DateTime.parse(fingerprint.fingerDay.toString())).toString(),
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: AppSizes.s14,
-                      color: Color(AppColors.secondaryButton),
+                    DateService.getWeekdayName(fingerprint.fingerDay, context) ?? '',
+                    maxLines: 1,
+                    minFontSize: 8,
+                    style: AppStyles.heading(context).copyWith(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 10,
+                      color: accentColor,
+                      height: 1.1,
                     ),
                   ),
-                  if (formatFingerDatetime(fingerprint.fingerDateTime) != null)
-                    AutoSizeText(
-                      formatFingerDatetime(fingerprint.fingerDateTime) ?? '',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: AppSizes.s12,
-                        letterSpacing: 0.5,
-                        color: Color(0xff606060)
-                      ),
+                  AutoSizeText(
+                    DateService.getDaysInMonth(fingerprint.fingerDay)?.toString() ?? '-',
+                    maxLines: 1,
+                    minFontSize: 9,
+                    style: AppStyles.heading(context).copyWith(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 12,
+                      height: 1.2,
+                      color: accentColor,
                     ),
+                  ),
                 ],
               ),
             ),
-          ],
-        ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  DateFormat('d-M-yyyy', LocalizationService.isArabic(context: context) ? "ar" : "en")
+                      .format(DateTime.parse(fingerprint.fingerDay.toString())),
+                  style: AppStyles.heading(context).copyWith(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                if (timeSubtitle != null) ...[
+                  const SizedBox(height: 3),
+                  Text(
+                    timeSubtitle,
+                    style: AppStyles.subtitleContent(context).copyWith(
+                      fontSize: 11,
+                      color: Colors.grey.shade600,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

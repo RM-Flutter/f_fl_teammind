@@ -10,6 +10,8 @@ import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/services/date_service.dart';
 
 import '../../../../core/constants/app_strings.dart';
+import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/widgets/app_card.widget.dart';
 
 class FingerprintCardOffiline extends StatelessWidget {
   final List? fingerprint;
@@ -27,6 +29,7 @@ class FingerprintCardOffiline extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.separated(
         padding: EdgeInsets.zero,
+        clipBehavior: Clip.none,
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         reverse: false,
@@ -34,141 +37,73 @@ class FingerprintCardOffiline extends StatelessWidget {
           final String? uploadError =
               fingerprint![index]['upload_error']?.toString();
           final bool hasError = uploadError != null && uploadError.isNotEmpty;
+          final accentColor = hasError
+              ? const Color(0xFFC62828)
+              : Color(AppColors.buttons);
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              InkWell(
-                onTap: () {},
-                child: Container(
-                  padding: EdgeInsets.all(AppSizes.s8.w),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(AppSizes.s10.r),
-                    color: Colors.white,
-                    border: hasError
-                        ? Border.all(color: Colors.red, width: 1.5)
-                        : null,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Color(AppColors.buttons).withOpacity(0.2),
-                        offset: const Offset(0, 0),
-                        blurRadius: 2.5,
+              AppCard(
+                border: hasError
+                    ? Border.all(color: Colors.red, width: 1.5)
+                    : AppBorders.card,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    AppCardLeadingAvatar(
+                      icon: _getFingerprintTypeIcon(fingerprint![index]['type']),
+                      borderColor: accentColor,
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            _formatFingerprintDate(
+                                fingerprint![index]['finger_day'].toString(),
+                                context),
+                            style: AppStyles.heading(context),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            _getFingerprintTypeLabel(
+                                fingerprint![index]['type']),
+                            style: AppStyles.subtitleContent(context),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ],
+                      ),
+                    ),
+                    if (onDelete != null) ...[
+                      const SizedBox(width: 8),
+                      IconButton(
+                        icon: deletingIndexes != null &&
+                                deletingIndexes!.contains(index)
+                            ? SizedBox(
+                                width: 18.w,
+                                height: 18.h,
+                                child: const CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Icon(Icons.delete_outline_rounded,
+                                color: Colors.red),
+                        onPressed: (deletingIndexes != null &&
+                                deletingIndexes!.contains(index))
+                            ? null
+                            : () {
+                                onDelete!(index);
+                              },
                       ),
                     ],
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      if (fingerprint![index]['finger_day'] != null)
-                        Container(
-                          width: AppSizes.s50.w,
-                          padding: EdgeInsets.all(AppSizes.s4.w),
-                          decoration: BoxDecoration(
-                            color: Color(AppColors.buttons),
-                            borderRadius: BorderRadius.circular(AppSizes.s8.r),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              AutoSizeText(
-                                DateService.getWeekdayName(
-                                        fingerprint![index]['finger_day'],
-                                        context) ??
-                                    '',
-                                maxLines: 1,
-                                style: AppStyles.whiteContent(context).copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: AppSizes.s12.sp,
-                                ),
-                              ),
-                              AutoSizeText(
-                                DateService.getDaysInMonth(
-                                            fingerprint![index]['finger_day'])
-                                        ?.toString() ??
-                                    ' - ',
-                                style: AppStyles.whiteContent(context).copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: AppSizes.s12.sp,
-                                  height: 1.5,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      Expanded(
-                        child: Padding(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: AppSizes.s8.w),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(
-                                    _getFingerprintTypeIcon(
-                                        fingerprint![index]['type']),
-                                    size: 16.sp,
-                                    color: Color(AppColors.buttons),
-                                  ),
-                                  SizedBox(width: 4.w),
-                                  Flexible(
-                                    child: Text(
-                                      _getFingerprintTypeLabel(
-                                          fingerprint![index]['type']),
-                                      style: AppStyles.primaryContent(context)
-                                          .copyWith(
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.w600,
-                                        color: Color(AppColors.buttons),
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 1,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 4.h),
-                              AutoSizeText(
-                                _formatFingerprintDate(
-                                    fingerprint![index]['finger_day']
-                                        .toString(),
-                                    context),
-                                style: AppStyles.secoundaryContent(context)
-                                    .copyWith(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: AppSizes.s14.sp,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      if (onDelete != null) ...[
-                        const Spacer(),
-                        IconButton(
-                          icon: deletingIndexes != null &&
-                                  deletingIndexes!.contains(index)
-                              ? SizedBox(
-                                  width: 18.w,
-                                  height: 18.h,
-                                  child: const CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                  ),
-                                )
-                              : const Icon(Icons.delete, color: Colors.red),
-                          onPressed: (deletingIndexes != null &&
-                                  deletingIndexes!.contains(index))
-                              ? null
-                              : () {
-                                  onDelete!(index);
-                                },
-                        ),
-                      ],
-                    ],
-                  ),
+                  ],
                 ),
               ),
               if (hasError)
@@ -195,8 +130,8 @@ class FingerprintCardOffiline extends StatelessWidget {
             ],
           );
         },
-        separatorBuilder: (context, index) => SizedBox(
-              height: 15.h,
+        separatorBuilder: (context, index) => const SizedBox(
+              height: AppSpacing.cardGap,
             ),
         itemCount: fingerprint!.length);
   }

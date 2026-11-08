@@ -10,6 +10,9 @@ import 'package:provider/provider.dart';
 import '../../data/repos/rewards_and_penalties.service.dart';
 import '../../controllers/rewards_and_penalties_controller.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:app_test/core/widgets/app_card.widget.dart';
+import 'package:app_test/core/widgets/app_status_badge.widget.dart';
 
 class RewardAndPenaltyCardWidget extends StatelessWidget {
   var rewardAndPenalty;
@@ -29,87 +32,96 @@ class RewardAndPenaltyCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final typeValue = _getTypeValue(rewardAndPenalty.type);
-    
-    return Column(
-      children: [
-        InkWell(
-          onTap: () async => await ModalSheetHelper.showModalSheet(
-              context: context,viewProfile: false,
-              modalContent: RewardsAndPenaltiesDetailsModal(
-                rewardAndPenalty: rewardAndPenalty,
-                onCancel: () {
-                  try {
-                    final viewModel = context.read<RewardsAndPenaltiesViewModel>();
-                    viewModel.cancelRewardAndPenalty(context: context, id: rewardAndPenalty.id!);
-                  } catch (e) {
-                    debugPrint('RewardsAndPenaltiesViewModel not found: $e');
-                  }
-                },
+    final isReward = typeValue.toLowerCase().contains('reward');
+    final accentColor = isReward
+        ? const Color(0xFF2E7D32)
+        : const Color(0xFFC62828);
+    final dateText =
+        RewardsAndPenaltiesRepo.formatDate(context, rewardAndPenalty.dueDate) ??
+            '';
+    final employeeName = rewardAndPenalty.profile?.name?.toString();
+    final titleText = (isTeam && employeeName != null && employeeName.isNotEmpty)
+        ? employeeName
+        : (dateText.isNotEmpty
+            ? dateText
+            : (isReward
+                ? AppStrings.rewardInfo.tr()
+                : AppStrings.penaltyInfo.tr()));
+    final subtitleText =
+        (isTeam && employeeName != null && employeeName.isNotEmpty)
+            ? dateText
+            : typeValue;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.cardGap),
+      child: AppCard(
+        onTap: () async => await ModalSheetHelper.showModalSheet(
+            context: context,
+            viewProfile: false,
+            modalContent: RewardsAndPenaltiesDetailsModal(
+              rewardAndPenalty: rewardAndPenalty,
+              onCancel: () {
+                try {
+                  final viewModel =
+                      context.read<RewardsAndPenaltiesViewModel>();
+                  viewModel.cancelRewardAndPenalty(
+                      context: context, id: rewardAndPenalty.id!);
+                } catch (e) {
+                  debugPrint('RewardsAndPenaltiesViewModel not found: $e');
+                }
+              },
+            ),
+            title: isReward
+                ? AppStrings.rewardInfo.tr()
+                : AppStrings.penaltyInfo.tr(),
+            height: MediaQuery.of(context).size.height * 0.75),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            AppCardLeadingAvatar(
+              name: isTeam ? employeeName : null,
+              icon: isReward
+                  ? Icons.emoji_events_outlined
+                  : Icons.warning_amber_rounded,
+              borderColor: accentColor,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    titleText,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppStyles.heading(context),
+                  ),
+                  if (subtitleText.isNotEmpty) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitleText,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppStyles.subtitleContent(context),
+                    ),
+                  ],
+                ],
               ),
-              title: typeValue.toLowerCase().contains('reward') == true
+            ),
+            const SizedBox(width: 8),
+            AppStatusBadge(
+              label: isReward
                   ? AppStrings.rewardInfo.tr()
                   : AppStrings.penaltyInfo.tr(),
-              height: MediaQuery.of(context).size.height * 0.75),
-          child: Container(
-            padding: const EdgeInsets.symmetric(
-                vertical: AppSizes.s14, horizontal: AppSizes.s16),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(AppRadius.sm),
-              color: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
+              color: accentColor,
+              icon: isReward
+                  ? Icons.emoji_events_outlined
+                  : Icons.warning_amber_rounded,
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Image.asset(
-                  RewardsAndPenaltiesRepo.getRewardAndPenaltyImage(
-                      type: typeValue),
-                  width: AppSizes.s24,
-                  errorBuilder: (context, error, stackTrace) => const Icon(
-                    Icons.error_outline,
-                    size: AppSizes.s24,
-                    color: Colors.red,
-                  ),
-                ),
-                gapW12,
-                Expanded(
-                  child: Text(
-                    isTeam && rewardAndPenalty.profile?.name != null
-                        ? '${RewardsAndPenaltiesRepo.formatDate(context, rewardAndPenalty.dueDate) ?? ''} - ${rewardAndPenalty.profile!.name}'
-                        : RewardsAndPenaltiesRepo.formatDate(context, rewardAndPenalty.dueDate) ?? '',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: AppSizes.s14,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-
-                Container(
-                  height: AppSizes.s28,
-                  width: AppSizes.s28,
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Color(AppColors.buttons)),
-                  child: const Icon(
-                    Icons.arrow_forward_outlined,
-                    color: Colors.white,
-                    size: AppSizes.s12,
-                  ),
-                ),
-              ],
-            ),
-          ),
+          ],
         ),
-        gapH20
-      ],
+      ),
     );
   }
 }

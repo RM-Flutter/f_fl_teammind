@@ -55,7 +55,7 @@ class _TeamTodayStatusScreenState extends State<TeamTodayStatusScreen> {
             onRefresh: () async => controller.fetchTeamStatus(context),
             body: Center(
               child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 1100),
+                constraints: const BoxConstraints(maxWidth: double.infinity),
                 child: controller.isLoading
                     ? const _LoadingShimmer()
                     : controller.errorMessage != null && controller.data == null
@@ -141,11 +141,12 @@ class _Content extends StatelessWidget {
         else
           ListView.separated(
             shrinkWrap: true,
+            clipBehavior: Clip.none,
             physics: const NeverScrollableScrollPhysics(),
             padding: const EdgeInsets.symmetric(
                 horizontal: 16, vertical: 4),
             itemCount: members.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 10),
+            separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.cardGap),
             itemBuilder: (_, i) => InkWell(
                   onTap: () async {
                     if (members[i].id != null) {
@@ -232,6 +233,7 @@ class _SummaryCard extends StatelessWidget {
           color: color.withOpacity(0.08),
           borderRadius: BorderRadius.circular(AppRadius.md),
           border: Border.all(color: color.withOpacity(0.2)),
+          boxShadow: AppShadows.card,
         ),
         child: Column(
           children: [
@@ -442,10 +444,8 @@ class _ErrorView extends StatelessWidget {
               icon: const Icon(Icons.refresh_rounded, size: 18),
               label: const Text('Retry'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(AppColors.secondaryButton),
+                backgroundColor: Color(AppColors.buttons),
                 foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppRadius.lg)),
               ),
             ),
           ],

@@ -8,6 +8,8 @@ import '../../../../core/utils/app_styles.dart';
 import '../../data/models/tracking_session.model.dart';
 import 'manual_point_tile.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/widgets/app_card.widget.dart';
+import 'package:app_test/core/widgets/app_status_badge.widget.dart';
 
 class TrackingSessionCard extends StatefulWidget {
   final TrackingSessionModel session;
@@ -38,25 +40,15 @@ class _TrackingSessionCardState extends State<TrackingSessionCard> {
         : ('ongoing'.tr());
 
     return Container(
-      margin: const EdgeInsets.only(bottom: AppSizes.s12),
-      decoration: ShapeDecoration(
-        color: Color(AppColors.cardBackground), // 0xFFF1F6FF
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.sm),
-          side: BorderSide(
-            color: session.isActive
-                ? const Color(0xff2D6A4F).withOpacity(0.4)
-                : Color(AppColors.border),
-            width: session.isActive ? 1.5 : 1,
-          ),
-        ),
-        shadows: [
-          BoxShadow(
-            color: Color(AppColors.disableButton).withOpacity(0.3),
-            blurRadius: 4,
-            spreadRadius: 1,
-          )
-        ],
+      margin: const EdgeInsets.only(bottom: AppSpacing.cardGap),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        border: session.isActive
+            ? Border.all(
+                color: const Color(0xff2D6A4F).withOpacity(0.4), width: 1.5)
+            : AppBorders.card,
+        boxShadow: AppShadows.card,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,71 +56,47 @@ class _TrackingSessionCardState extends State<TrackingSessionCard> {
           // Header
           InkWell(
             onTap: () => setState(() => _isExpanded = !_isExpanded),
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.sm)),
+            borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(AppRadius.md)),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              padding: AppSpacing.cardPadding,
               child: Row(
                 children: [
-                  Container(
-                    width: 32,
-                    height: 32,
-                    decoration: BoxDecoration(
-                      color: session.status.color.withOpacity(0.12),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      session.isActive
-                          ? Icons.radio_button_checked
-                          : Icons.check_circle_outline,
-                      color: session.status.color,
-                      size: 18,
-                    ),
+                  AppCardLeadingAvatar(
+                    icon: session.isActive
+                        ? Icons.radio_button_checked
+                        : Icons.check_circle_outline,
+                    borderColor: session.status.color,
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            Text('route_leg'.tr(namedArgs: {'session_index_1': '${widget.sessionIndex + 1}'}),
-                              style: AppStyles.content(context).copyWith(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
-                                color: Color(AppColors.titleText),
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                              decoration: BoxDecoration(
-                                color: session.status.color.withOpacity(0.15),
-                                borderRadius: BorderRadius.circular(AppRadius.xs),
-                              ),
-                              child: Text(
-                                session.status.getLabel(isArabic: isAr),
-                                style: TextStyle(
-                                  color: session.status.color,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
+                        Text(
+                          'route_leg'.tr(namedArgs: {
+                            'session_index_1': '${widget.sessionIndex + 1}'
+                          }),
+                          style: AppStyles.heading(context),
                         ),
-                        const SizedBox(height: 3),
+                        const SizedBox(height: 2),
                         Text(
                           '$startTimeStr - $endTimeStr (${session.getDurationFormatted(isArabic: isAr)})',
-                          style: AppStyles.subtitleContent(context).copyWith(
-                            fontSize: 11,
-                            color: const Color(0xff606060),
-                          ),
+                          style: AppStyles.subtitleContent(context),
                         ),
                       ],
                     ),
                   ),
+                  const SizedBox(width: 8),
+                  AppStatusBadge(
+                    label: session.status.getLabel(isArabic: isAr),
+                    color: session.status.color,
+                  ),
+                  const SizedBox(width: 4),
                   Icon(
-                    _isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                    _isExpanded
+                        ? Icons.keyboard_arrow_up
+                        : Icons.keyboard_arrow_down,
                     color: Color(AppColors.iconSecondary),
                   ),
                 ],
@@ -191,9 +159,6 @@ class _TrackingSessionCardState extends State<TrackingSessionCard> {
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Color(AppColors.buttons),
                       side: BorderSide(color: Color(AppColors.buttons)),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppRadius.sm),
-                      ),
                       padding: const EdgeInsets.symmetric(vertical: 8),
                     ),
                     onPressed: widget.onOpenMap,

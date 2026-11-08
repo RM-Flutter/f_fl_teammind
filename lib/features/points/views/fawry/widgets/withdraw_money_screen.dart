@@ -12,6 +12,7 @@ import '../../../../../core/constants/app_strings.dart';
 import '../../../../../core/services/backend_services/api_service/dio_api_service/shared.dart';
 import '../../../../../core/services/validation_service.dart';
 import '../../../../../core/utils/gradient_bg_image.dart';
+import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
 import '../../../../../core/widgets/button_widget.dart';
 import 'package:app_test/core/constants/app_design.dart';
 
@@ -64,35 +65,11 @@ class _WithdrawMoneyScreenState extends State<WithdrawMoneyScreen> {
           }
           return Scaffold(
             resizeToAvoidBottomInset: false,
-            appBar: AppBar(
-              backgroundColor: const Color(0xffFFFFFF),
-              leading: GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Icon(
-                    Icons.arrow_back,
-                    color: Color(0XFF224982),
-                  )),
-              title: Text(
-                AppStrings.withdrawMoney.tr().toUpperCase(),
-                style: TextStyle(
-                    fontSize: AppSizes.s16,
-                    fontWeight: FontWeight.w700,
-                    color: const Color(0XFF224982)),
-              ),
-              flexibleSpace: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
-                      const Color(0xFFFF007A).withOpacity(0.03),
-                      const Color(0xFF00A1FF).withOpacity(0.03)
-                    ],
-                  ),
-                ),
-              ),
+            appBar: AppBarWithBookmark(
+              backgroundColor: Colors.white,
+              leading: const AppBackButton(),
+              title: AppStrings.withdrawMoney.tr().toUpperCase(),
+              showBookmark: false,
             ),
             body: SafeArea(
               child: SingleChildScrollView(keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,

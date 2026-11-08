@@ -349,7 +349,7 @@ class _AddShiftChangeRequestScreenState
                 // Submit Button
                 SizedBox(
                   width: double.infinity,
-                  height: 54,
+                  height: AppButtonSize.height,
                   child: ElevatedButton(
                     onPressed: provider.isActionLoading
                         ? null
@@ -357,10 +357,9 @@ class _AddShiftChangeRequestScreenState
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(AppColors.buttons),
                       foregroundColor: Colors.white,
-                      elevation: 4,
-                      shadowColor: Color(AppColors.buttons).withOpacity(0.3),
+                      elevation: 0,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppRadius.md),
+                        borderRadius: AppRadius.button,
                       ),
                     ),
                     child: provider.isActionLoading
@@ -369,7 +368,7 @@ class _AddShiftChangeRequestScreenState
                             AppStrings.sendRequest.tr(),
                             style: AppStyles.whiteContent(context).copyWith(
                               fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                              fontSize: 15,
                             ),
                           ),
                   ),

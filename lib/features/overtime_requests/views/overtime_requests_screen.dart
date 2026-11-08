@@ -275,6 +275,7 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
                         )
                       : ListView.builder(
                           controller: _scrollController,
+                          clipBehavior: Clip.none,
                           physics: const AlwaysScrollableScrollPhysics(),
                           padding: const EdgeInsets.symmetric(
                                   horizontal: 16, vertical: 8)

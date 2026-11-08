@@ -321,18 +321,18 @@ class _SharedListFilterWidgetState extends State<SharedListFilterWidget> {
                                       Navigator.pop(context, _buildFilterMap());
                                     },
                                     child: Container(
-                                      height: 50,
+                                      height: AppButtonSize.height,
                                       alignment: Alignment.center,
                                       decoration: BoxDecoration(
-                                        color: Color(AppColors.secondaryButton),
-                                        borderRadius: BorderRadius.circular(AppRadius.pill),
+                                        color: Color(AppColors.buttons),
+                                        borderRadius: AppRadius.button,
                                       ),
                                       padding: EdgeInsets.symmetric(horizontal: 40),
                                       child: Text(
                                         AppStrings.applyFilter.tr().toUpperCase(),
                                         style: AppStyles.whiteContent(context).copyWith(
                                           fontSize: 12,
-                                          fontWeight: FontWeight.w500,
+                                          fontWeight: FontWeight.w600,
                                         ),
                                       ),
                                     ),
@@ -348,11 +348,11 @@ class _SharedListFilterWidgetState extends State<SharedListFilterWidget> {
                                       });
                                     },
                                     child: Container(
-                                      height: 50,
+                                      height: AppButtonSize.height,
                                       alignment: Alignment.center,
                                       decoration: BoxDecoration(
                                         color: Color(AppColors.background),
-                                        borderRadius: BorderRadius.circular(AppRadius.pill),
+                                        borderRadius: AppRadius.button,
                                         border: Border.all(color: Color(AppColors.secondaryButton), width: 1),
                                       ),
                                       padding: EdgeInsets.symmetric(horizontal: 20),
@@ -360,7 +360,7 @@ class _SharedListFilterWidgetState extends State<SharedListFilterWidget> {
                                         AppStrings.clear.tr().toUpperCase(),
                                         style: AppStyles.darkContent(context).copyWith(
                                           fontSize: 12,
-                                          fontWeight: FontWeight.w500,
+                                          fontWeight: FontWeight.w600,
                                         ),
                                       ),
                                     ),

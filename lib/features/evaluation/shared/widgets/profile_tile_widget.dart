@@ -1,15 +1,15 @@
 import 'package:app_test/core/constants/app_colors.dart';
-import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/utils/app_styles.dart';
+import 'package:app_test/core/widgets/app_card.widget.dart';
+import 'package:app_test/core/widgets/app_status_badge.widget.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:app_test/core/constants/app_design.dart';
 
 class ProfileTile extends StatelessWidget {
   final String title;
@@ -19,6 +19,7 @@ class ProfileTile extends StatelessWidget {
   final double? marginBottom;
   List? weekends;
   bool? isList = false;
+
   ProfileTile({
     super.key,
     this.icon,
@@ -32,98 +33,104 @@ class ProfileTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(
-          bottom: marginBottom?.h ?? AppSizes.s12, left: 8, right: 8),
-      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(AppRadius.md),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: Offset(0, 4),
-            )
-          ],
-          border: Border.all(color: Colors.grey.withOpacity(0.05))),
-      child: isTitleOnly == true
-          ? Center(
-              child: Text(title.toString(),
-              style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w600, fontSize: 13),
-              ),
-            )
-          : Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                if (icon != null) ...[
-                  icon!,
-                  SizedBox(width: 12),
-                ],
-                Expanded(
-                  flex: 3,
-                  child: Text(title,
-                  style: AppStyles.primaryContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 13)),
-                ),
-                SizedBox(width: 8),
-                if (isList == false && trailingTitle != null)
-                  Expanded(
-                    flex: 4,
-                    child: AutoSizeText(
-                      trailingTitle!,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 14),
-                      textAlign: TextAlign.end,
-                    ),
+    final accentColor = Color(AppColors.buttons);
+    final String? subtitleText = (isList == true && weekends != null)
+        ? weekends!.where((e) => e != null).map((e) => e.toString()).join(' · ')
+        : trailingTitle;
+
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: marginBottom?.h ?? AppSpacing.cardGap,
+        left: 8,
+        right: 8,
+      ),
+      child: AppCard(
+        padding: AppSpacing.cardPadding,
+        child: isTitleOnly == true
+            ? Center(
+                child: Text(
+                  title.toString(),
+                  style: AppStyles.heading(context).copyWith(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
                   ),
-                if (isList == true && weekends != null)
+                ),
+              )
+            : Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  AppCardLeadingAvatar(
+                    icon: Icons.info_outline_rounded,
+                    borderColor: accentColor,
+                  ),
+                  const SizedBox(width: 12),
                   Expanded(
-                    flex: 4,
-                    child: Container(
-                      alignment: LocalizationService.isArabic(context: context) ? Alignment.centerLeft : Alignment.centerRight,
-                      height: 18,
-                      child: ListView.separated(
-                          padding: EdgeInsets.zero,
-                          scrollDirection: Axis.horizontal,
-                          physics: const ClampingScrollPhysics(),
-                          shrinkWrap: true,
-                          reverse: false,
-                          itemBuilder: (context, index) => AutoSizeText(
-                            weekends![index] ?? '',
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppStyles.heading(context).copyWith(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        if (subtitleText != null &&
+                            subtitleText.trim().isNotEmpty) ...[
+                          const SizedBox(height: 3),
+                          Text(
+                            subtitleText,
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
-                            style: AppStyles.blackContent(context).copyWith(
-                                fontWeight: FontWeight.w700, fontSize: 14),
-                            textAlign: LocalizationService.isArabic(context: context) ? TextAlign.end : TextAlign.start,
+                            style: AppStyles.subtitleContent(context).copyWith(
+                              fontSize: 11,
+                              color: Colors.grey.shade600,
+                            ),
                           ),
-                          separatorBuilder: (context, index) => SizedBox(width: 4,child: Text(index == weekends!.length - 1 ? "" : ",", style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 14),),),
-                          itemCount: weekends!.length),
+                        ],
+                      ],
                     ),
-                  )
-              ],
-            ),
+                  ),
+                  if (subtitleText != null &&
+                      subtitleText.trim().isNotEmpty &&
+                      subtitleText.length <= 24) ...[
+                    const SizedBox(width: 8),
+                    AppStatusBadge(
+                      label: subtitleText,
+                      color: accentColor,
+                    ),
+                  ],
+                ],
+              ),
+      ),
     );
   }
 }
+
 class ProfileTileEva extends StatelessWidget {
   final String title;
   final String? trailingTitle;
   final bool? isTitleOnly;
   bool? isViewArrow = true;
   final Widget? icon;
+  final bool? isDone;
   var url;
   var eva;
   var createAt;
   var totalPoints;
   var gainedPoints;
   final double? marginBottom;
+
   ProfileTileEva({
     super.key,
     this.totalPoints,
     this.eva,
     this.gainedPoints,
     this.icon,
+    this.isDone,
     this.createAt,
     this.url,
     this.isViewArrow,
@@ -133,104 +140,265 @@ class ProfileTileEva extends StatelessWidget {
     required this.title,
   });
 
+  bool _resolveIsDone() {
+    if (isDone != null) return isDone!;
+    if (icon is Icon) {
+      final ic = icon as Icon;
+      if (ic.icon == Icons.check_circle_outline ||
+          ic.icon == Icons.check_circle_outline_rounded ||
+          ic.color == Colors.green) {
+        return true;
+      }
+      return false;
+    }
+    return false;
+  }
+
+  String _formatDate(BuildContext context, dynamic rawDate) {
+    if (rawDate == null || rawDate.toString().trim().isEmpty) return '';
+    try {
+      final dt = DateTime.parse(rawDate.toString());
+      return DateFormat(
+        'dd MMM yyyy',
+        LocalizationService.isArabic(context: context) ? 'ar' : 'en',
+      ).format(dt);
+    } catch (_) {
+      return rawDate.toString();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: ()async{
-        showEvaluationBottomSheet(context);
+    final bool done = _resolveIsDone();
+    final Color statusColor = done
+        ? Color(AppColors.successGreen)
+        : Color(AppColors.warningYellow);
+    final IconData statusIcon = done
+        ? Icons.check_circle_outline_rounded
+        : Icons.schedule_rounded;
+    final String statusLabel =
+        done ? 'completed'.tr() : AppStrings.pendingStatus.tr();
+
+    final subtitleParts = <String>[];
+    final formattedDate = _formatDate(context, createAt);
+    if (formattedDate.isNotEmpty) {
+      subtitleParts.add(formattedDate);
+    }
+    if (gainedPoints != null && totalPoints != null) {
+      subtitleParts.add('$gainedPoints / $totalPoints');
+    } else if (eva is List && (eva as List).isNotEmpty) {
+      final firstWithPoints = (eva as List).cast<dynamic>().firstWhere(
+            (item) => item is Map && item['gained_points'] != null,
+            orElse: () => null,
+          );
+      if (firstWithPoints != null) {
+        subtitleParts.add(
+          '${firstWithPoints['gained_points'] ?? 0} / ${firstWithPoints['total_points'] ?? 0}',
+        );
       }
-      ,
-      child: Container(
-        margin: EdgeInsets.only(bottom: marginBottom?.h ?? AppSizes.s12),
-        padding: EdgeInsets.symmetric(
-            vertical: 16, horizontal: 20),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(AppRadius.md),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: Offset(0, 4),
-              )
-            ],
-            border: Border.all(color: Colors.grey.withOpacity(0.05))),
-        child: Row(crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      icon ?? const SizedBox.shrink(),
-                      SizedBox(width: 12),
-                      Text(title,style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 13)),
-                      SizedBox(width: 12),
-                      if(isViewArrow == true) const Spacer(),
-                     if(isViewArrow == true) CircleAvatar(
-                        backgroundColor: Color(AppColors.buttons),
-                        radius: 12,
-                        child: Icon(Icons.arrow_forward_sharp,color: Colors.white, size: 10,),
-                      )
-                    ],
+    }
+
+    return Padding(
+      padding: EdgeInsets.only(bottom: marginBottom?.h ?? AppSpacing.cardGap),
+      child: AppCard(
+        padding: AppSpacing.cardPadding,
+        onTap: () => showEvaluationBottomSheet(context),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            AppCardLeadingAvatar(
+              nameForInitials: title,
+              icon: Icons.assignment_turned_in_outlined,
+              borderColor: statusColor,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppStyles.heading(context).copyWith(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
+                  if (subtitleParts.isNotEmpty) ...[
+                    const SizedBox(height: 3),
+                    Text(
+                      subtitleParts.join(' · '),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppStyles.subtitleContent(context).copyWith(
+                        fontSize: 11,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            AppStatusBadge(
+              label: statusLabel,
+              color: statusColor,
+              icon: statusIcon,
+            ),
+          ],
+        ),
       ),
     );
   }
+
   void showEvaluationBottomSheet(BuildContext context) {
+    final List resultsList = (eva is List) ? (eva as List) : const [];
+    final String headerDate = _formatDate(context, createAt);
+
     showModalBottomSheet(
       context: context,
-      shape: RoundedRectangleBorder(
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
       ),
       backgroundColor: Colors.white,
       builder: (context) {
-        return Container(
-          padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
-          height: MediaQuery.sizeOf(context).height * 0.6,
-          width: double.infinity,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(AppStrings.evaluationsInfo.tr(),style: AppStyles.heading(context).copyWith(fontSize: 20, fontWeight: FontWeight.w600),),
-               SizedBox(height: 15,),
-               Container(
-                 width: double.infinity,
-                 alignment: Alignment.center,
-                 height: 40,
-                 decoration: BoxDecoration(
-                   color: Color(AppColors.buttons),
-                   borderRadius: BorderRadius.circular(AppRadius.sm)
-                 ),
-                 child: Text(
-                   DateFormat('MMMM yyyy', LocalizationService.isArabic(context: context)? "ar" : "en").format(DateTime.parse(createAt)).toString(),
-                   style: AppStyles.whiteContent(context).copyWith(
-                     fontSize: 18,
-                     fontWeight: FontWeight.bold,
-                   ),
-                 ),
-               ),
-              SizedBox(height: 30),
-              SizedBox(
-                height: MediaQuery.sizeOf(context).height * 0.35,
-                child: ListView.separated(
-                    shrinkWrap: true,
-                    reverse: false,
-                    padding: EdgeInsets.zero,
-                    physics: const ClampingScrollPhysics(),
-                    itemBuilder: (context, index) =>eva[index]['gained_points'] != null? Column(
-                      children: [
-                        Text("${eva[index]['employee_name']} (${eva[index]['created_at']})", style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 12),),
-                        SizedBox(height: 10,),
-                        Text("${AppStrings.totalEvalutaions.tr().toUpperCase()} : ${eva[index]['gained_points']?.toString() ?? 0}/${eva[index]['total_points']?.toString() ?? 0}", style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 12),),
-                      ],
-                    ): const SizedBox.shrink(), separatorBuilder: (context, index) => SizedBox(height: 20,),
-                    itemCount: eva.length),
-              )
-            ],
+        return SafeArea(
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              vertical: 20,
+              horizontal: AppSpacing.page,
+            ),
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.sizeOf(context).height * 0.65,
+            ),
+            width: double.infinity,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  AppStrings.evaluationsInfo.tr(),
+                  style: AppStyles.heading(context).copyWith(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: Color(AppColors.secondaryButton),
+                  ),
+                ),
+                if (headerDate.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  AppStatusBadge(
+                    label: headerDate,
+                    color: Color(AppColors.buttons),
+                    icon: Icons.calendar_today_rounded,
+                  ),
+                ],
+                const SizedBox(height: 16),
+                Flexible(
+                  child: resultsList.isEmpty
+                      ? Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(24),
+                            child: Text(
+                              AppStrings.noExistingEvaluation.tr(),
+                              style: AppStyles.subtitleContent(context),
+                            ),
+                          ),
+                        )
+                      : ListView.separated(
+                          shrinkWrap: true,
+                          clipBehavior: Clip.none,
+                          padding: EdgeInsets.zero,
+                          physics: const ClampingScrollPhysics(),
+                          itemCount: resultsList.length,
+                          separatorBuilder: (_, __) =>
+                              const SizedBox(height: AppSpacing.cardGap),
+                          itemBuilder: (context, index) {
+                            final item = resultsList[index];
+                            if (item is! Map || item['gained_points'] == null) {
+                              return const SizedBox.shrink();
+                            }
+                            final String evaluatorName =
+                                item['employee_name']?.toString() ?? '-';
+                            final String evalDate =
+                                item['created_at']?.toString() ?? '';
+                            final String scoreText =
+                                '${item['gained_points'] ?? 0} / ${item['total_points'] ?? 0}';
+                            final Color badgeColor = Color(AppColors.buttons);
+
+                            return AppCard(
+                              padding: AppSpacing.cardPadding,
+                              child: Row(
+                                children: [
+                                  AppCardLeadingAvatar(
+                                    nameForInitials: evaluatorName,
+                                    borderColor: badgeColor,
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          evaluatorName,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: AppStyles.heading(context)
+                                              .copyWith(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                        if (evalDate.isNotEmpty) ...[
+                                          const SizedBox(height: 3),
+                                          Text(
+                                            evalDate,
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                            style: AppStyles.subtitleContent(
+                                                    context)
+                                                .copyWith(
+                                              fontSize: 11,
+                                              color: Colors.grey.shade600,
+                                            ),
+                                          ),
+                                        ],
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  AppStatusBadge(
+                                    label: scoreText,
+                                    color: badgeColor,
+                                    icon: Icons.stars_rounded,
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                ),
+              ],
+            ),
           ),
         );
       },
     );
   }
-
 }
+
 class ProfileTileNotTap extends StatelessWidget {
   final String title;
   final String? trailingTitle;
@@ -243,6 +411,7 @@ class ProfileTileNotTap extends StatelessWidget {
   var totalPoints;
   var gainedPoints;
   final double? marginBottom;
+
   ProfileTileNotTap({
     super.key,
     this.totalPoints,
@@ -260,38 +429,57 @@ class ProfileTileNotTap extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: marginBottom?.h ?? AppSizes.s12),
-      padding: EdgeInsets.symmetric(
-          vertical: 16, horizontal: 20),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(AppRadius.md),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 10,
-              offset: Offset(0, 4),
-            )
+    final accentColor = Color(AppColors.buttons);
+    return Padding(
+      padding: EdgeInsets.only(bottom: marginBottom?.h ?? AppSpacing.cardGap),
+      child: AppCard(
+        padding: AppSpacing.cardPadding,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            AppCardLeadingAvatar(
+              nameForInitials: title,
+              icon: Icons.info_outline_rounded,
+              borderColor: accentColor,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppStyles.heading(context).copyWith(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  if (trailingTitle != null &&
+                      trailingTitle!.trim().isNotEmpty) ...[
+                    const SizedBox(height: 3),
+                    Text(
+                      trailingTitle!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppStyles.subtitleContent(context).copyWith(
+                        fontSize: 11,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
           ],
-          border: Border.all(color: Colors.grey.withOpacity(0.05))),
-      child: Row(crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          icon ?? const SizedBox.shrink(),
-          SizedBox(width: 12),
-          Text(title,style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 13)),
-          SizedBox(width: 12),
-          if(isViewArrow == true) const Spacer(),
-          if(isViewArrow == true) CircleAvatar(
-            backgroundColor: Color(AppColors.buttons),
-            radius: 12,
-            child: Icon(Icons.arrow_forward_sharp,color: Colors.white, size: 10,),
-          )
-        ],
+        ),
       ),
     );
   }
 }
+
 class ProfileTileEvaReq extends StatelessWidget {
   final String title;
   final String? empName;
@@ -300,15 +488,18 @@ class ProfileTileEvaReq extends StatelessWidget {
   final bool? isTitleOnly;
   bool? isViewArrow = true;
   final Widget? icon;
+  final bool? isDone;
   var url;
   var createAt;
   final double? marginBottom;
+
   ProfileTileEvaReq({
     super.key,
     this.empName,
     this.department,
     this.name,
     this.icon,
+    this.isDone,
     this.createAt,
     this.url,
     this.isViewArrow,
@@ -317,56 +508,117 @@ class ProfileTileEvaReq extends StatelessWidget {
     required this.title,
   });
 
+  bool _resolveIsDone() {
+    if (isDone != null) return isDone!;
+    if (icon is Icon) {
+      final ic = icon as Icon;
+      if (ic.icon == Icons.check_circle_outline ||
+          ic.icon == Icons.check_circle_outline_rounded ||
+          ic.color == Colors.green) {
+        return true;
+      }
+      return false;
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: ()async{
-        if(url != null){
-          await launchUrl(Uri.parse(url));
-        }
-      }
-      ,
-      child: Container(
-        margin: EdgeInsets.only(bottom: marginBottom?.h ?? AppSizes.s12),
-        padding: EdgeInsets.symmetric(
-            vertical: 16, horizontal: 20),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(AppRadius.md),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: Offset(0, 4),
-              )
-            ],
-            border: Border.all(color: Colors.grey.withOpacity(0.05))),
-        child: Row(crossAxisAlignment: CrossAxisAlignment.center,
+    final bool done = _resolveIsDone();
+    final Color statusColor = done
+        ? Color(AppColors.successGreen)
+        : Color(AppColors.warningYellow);
+    final IconData statusIcon = done
+        ? Icons.check_circle_outline_rounded
+        : Icons.schedule_rounded;
+    final String statusLabel =
+        done ? 'completed'.tr() : AppStrings.pendingStatus.tr();
+
+    final subtitleParts = <String>[
+      if (empName != null && empName!.trim().isNotEmpty) empName!.trim(),
+      if (department != null && department!.trim().isNotEmpty)
+        department!.trim(),
+    ];
+
+    final String dateStr =
+        (createAt != null && createAt.toString().trim().isNotEmpty)
+            ? createAt.toString().trim()
+            : '';
+
+    return Padding(
+      padding: EdgeInsets.only(bottom: marginBottom?.h ?? 0),
+      child: AppCard(
+        padding: AppSpacing.cardPadding,
+        onTap: () async {
+          if (url != null && url.toString().trim().isNotEmpty) {
+            await launchUrl(Uri.parse(url.toString()));
+          }
+        },
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            icon ?? const SizedBox.shrink(),
-            SizedBox(width: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title,style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 13)),
-                Text("${AppStrings.employeeName.tr()} : ${empName ?? ''}",style: AppStyles.greyContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 11)),
-                Text("${AppStrings.department.tr()} : ${department ?? ''}",style: AppStyles.greyContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 11)),
-                Text("${AppStrings.createdAt.tr()} : ${createAt ?? ''}",style: AppStyles.greyContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 11)),
-              ],
+            AppCardLeadingAvatar(
+              nameForInitials:
+                  (empName != null && empName!.trim().isNotEmpty)
+                      ? empName
+                      : title,
+              borderColor: statusColor,
             ),
-            SizedBox(width: 12),
-            if(isViewArrow == true) const Spacer(),
-            if(isViewArrow == true) CircleAvatar(
-              backgroundColor: Color(AppColors.buttons),
-              radius: 12,
-              child: Icon(Icons.arrow_forward_sharp,color: Colors.white, size: 10,),
-            )
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppStyles.heading(context).copyWith(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  if (subtitleParts.isNotEmpty) ...[
+                    const SizedBox(height: 3),
+                    Text(
+                      subtitleParts.join(' · '),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppStyles.subtitleContent(context).copyWith(
+                        fontSize: 11,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                  ],
+                  if (dateStr.isNotEmpty) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      dateStr,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppStyles.subtitleContent(context).copyWith(
+                        fontSize: 10.5,
+                        color: Colors.grey.shade500,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            AppStatusBadge(
+              label: statusLabel,
+              color: statusColor,
+              icon: statusIcon,
+            ),
           ],
         ),
       ),
     );
   }
 }
+
 class ProfileTilePay extends StatelessWidget {
   final String title;
   final String? empName;
@@ -377,6 +629,7 @@ class ProfileTilePay extends StatelessWidget {
   var url;
   var createAt;
   final double? marginBottom;
+
   ProfileTilePay({
     super.key,
     this.empName,
@@ -392,47 +645,62 @@ class ProfileTilePay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: ()async{
-        if(url != null){
-          await launchUrl(Uri.parse(url));
-        }
-      }
-      ,
-      child: Container(
-        margin: EdgeInsets.only(bottom: marginBottom?.h ?? AppSizes.s12),
-        padding: EdgeInsets.symmetric(
-            vertical: 16, horizontal: 20),
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(AppRadius.md),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: Offset(0, 4),
-              )
-            ],
-            border: Border.all(color: Colors.grey.withOpacity(0.05))),
-        child: Row(crossAxisAlignment: CrossAxisAlignment.center,
+    final accentColor = Color(AppColors.buttons);
+    final subtitleParts = <String>[
+      if (empName != null && empName!.trim().isNotEmpty) empName!.trim(),
+      if (createAt != null && createAt.toString().trim().isNotEmpty)
+        createAt.toString().trim(),
+    ];
+
+    return Padding(
+      padding: EdgeInsets.only(bottom: marginBottom?.h ?? AppSpacing.cardGap),
+      child: AppCard(
+        padding: AppSpacing.cardPadding,
+        onTap: () async {
+          if (url != null && url.toString().trim().isNotEmpty) {
+            await launchUrl(Uri.parse(url.toString()));
+          }
+        },
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            icon ?? const SizedBox.shrink(),
-            SizedBox(width: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title,style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 13)),
-                Text("${AppStrings.employeeName.tr()} : ${empName ?? ''}",style: AppStyles.greyContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 11)),
-                Text("${AppStrings.createdAt.tr()} : ${createAt ?? ''}",style: AppStyles.greyContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 11)),
-              ],
+            AppCardLeadingAvatar(
+              nameForInitials:
+                  (empName != null && empName!.trim().isNotEmpty)
+                      ? empName
+                      : title,
+              borderColor: accentColor,
             ),
-            SizedBox(width: 12),
-            if(isViewArrow == true) const Spacer(),
-            if(isViewArrow == true) CircleAvatar(
-              backgroundColor: Color(AppColors.buttons),
-              radius: 12,
-              child: Icon(Icons.arrow_forward_sharp,color: Colors.white, size: 10,),
-            )
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppStyles.heading(context).copyWith(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  if (subtitleParts.isNotEmpty) ...[
+                    const SizedBox(height: 3),
+                    Text(
+                      subtitleParts.join(' · '),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppStyles.subtitleContent(context).copyWith(
+                        fontSize: 11,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
           ],
         ),
       ),

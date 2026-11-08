@@ -164,8 +164,8 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                     Expanded(
                       child: Center(
                         child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                              maxWidth: kIsWeb ? 1100 : double.infinity
+                          constraints: const BoxConstraints(
+                              maxWidth: double.infinity
                           ),
                           child: Padding(
                             padding: EdgeInsets.symmetric(
@@ -293,8 +293,8 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                     )
                   else Center(
                     child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                          maxWidth: kIsWeb ? 1100 : double.infinity
+                      constraints: const BoxConstraints(
+                          maxWidth: double.infinity
                       ),
                       child: ContactsSectionWidget(
                           employee:

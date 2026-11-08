@@ -106,7 +106,7 @@ class PendingCancelBanner extends StatelessWidget {
 
     return Center(
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: kIsWeb ? 1100 : 1.sw),
+        constraints: const BoxConstraints(maxWidth: double.infinity),
         child: Container(
           // Web: same side inset as the tab bar (8) so the edges line up
           margin: compact

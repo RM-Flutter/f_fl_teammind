@@ -134,8 +134,8 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
             // Flutter report view — constrained width + padding
             return Center(
               child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: kIsWeb ? 1100 : double.infinity,
+                constraints: const BoxConstraints(
+                  maxWidth: double.infinity,
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),

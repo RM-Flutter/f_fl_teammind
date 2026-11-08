@@ -335,17 +335,18 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
   }
 
   Widget _buildSubmitButton(OvertimeRequestsProvider provider) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
-      height: 55,
+      height: AppButtonSize.height,
       child: ElevatedButton(
         onPressed: provider.isActionLoading ? null : _submit,
         style: ElevatedButton.styleFrom(
           backgroundColor: Color(AppColors.buttons),
           foregroundColor: Colors.white,
-          elevation: 4,
-          shadowColor: Color(AppColors.buttons).withOpacity(0.3),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: AppRadius.button,
+          ),
         ),
         child: provider.isActionLoading
             ? const CircularProgressIndicator(color: Colors.white)
@@ -353,7 +354,7 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
                 AppStrings.sendRequest.tr(),
                 style: AppStyles.whiteContent(context).copyWith(
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: 15,
                 ),
               ),
       ),

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 import '../constants/app_colors.dart';
 import '../constants/app_constants.dart';
+import '../widgets/app_status_badge.widget.dart';
 
 /// used when getting requests ( my requests - my team requests - other Departments requests)
 enum GetRequestsTypes { mine, myTeam, otherDepartment, allCompany }
@@ -84,6 +85,9 @@ abstract class RequestsServices {
       double? iconSize}) {
     if (status == null || status.trim().isEmpty || status.trim().toLowerCase() == 'null') {
       return const SizedBox.shrink();
+    }
+    if (iconColor == null && iconSize == null) {
+      return AppStatusBadge.fromStatus(status: status);
     }
     switch (status.toLowerCase().trim()) {
       case 'approved':

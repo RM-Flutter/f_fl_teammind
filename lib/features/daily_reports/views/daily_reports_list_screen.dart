@@ -18,6 +18,8 @@ import '../models/daily_report_model.dart';
 import '../../../../core/widgets/shared_list_filter_widget.dart' as app_test_filter;
 import '../../../../core/widgets/active_filters_row_widget.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/widgets/app_card.widget.dart';
+import 'package:app_test/core/widgets/app_status_badge.widget.dart';
 
 class DailyReportsListScreen extends StatefulWidget {
   final Map<String, dynamic>? extra;
@@ -303,7 +305,8 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
       },
       child: ListView.builder(
         controller: _scrollController,
-        padding: EdgeInsets.only(top: 16, bottom: 100),
+        clipBehavior: Clip.none,
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 100),
         physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
         itemCount: list.length + (provider.isForDepartment ? (provider.incomingIsLoadingMore ? 1 : 0) : (provider.personalIsLoadingMore ? 1 : 0)),
         itemBuilder: (context, index) {
@@ -321,162 +324,140 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
   }
 
   Widget _buildReportCard(DailyReportModel report, DailyReportsProvider provider, {required bool isIncoming}) {
-    String? displayName = report.employeeProfile?.name;
-    // Only the owner can edit their own reports (which are in the personal list, i.e., !isIncoming)
-    // AND it must be on the same day it was created.
-    bool canEdit = !isIncoming && report.createdAt != null &&
+    final String? displayName = report.employeeProfile?.name;
+    final bool canEdit = !isIncoming &&
+        report.createdAt != null &&
         DateTime.now().year == report.createdAt!.year &&
         DateTime.now().month == report.createdAt!.month &&
         DateTime.now().day == report.createdAt!.day;
 
-    return Container(
-      margin: EdgeInsets.only(bottom: AppSizes.s16, left: 16, right: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-        boxShadow: [
-          BoxShadow(
-            color: Color(AppColors.buttons).withOpacity(0.06),
-            blurRadius: 15,
-            spreadRadius: 0,
-            offset: const Offset(0, 5),
+    final String dateTitle = report.createdAt != null
+        ? DateFormat('EEEE, dd MMM yyyy', context.locale.languageCode)
+            .format(report.createdAt!)
+        : "No Date";
+
+    final String? subLine = isIncoming
+        ? [
+            if (displayName != null && displayName.isNotEmpty) displayName,
+            if (report.employeeProfile?.department != null &&
+                report.employeeProfile!.department!.isNotEmpty)
+              report.employeeProfile!.department!,
+          ].join(' · ')
+        : report.done;
+
+    return AppCard(
+      margin: const EdgeInsets.only(bottom: AppSpacing.cardGap),
+      padding: AppSpacing.cardPadding,
+      onTap: () {
+        context.pushNamed(
+          AppRoutes.dailyReportDetailsScreen.name,
+          pathParameters: {'lang': context.locale.languageCode},
+          extra: report,
+        );
+      },
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          AppCardLeadingAvatar(
+            nameForInitials: displayName ?? dateTitle,
+            icon: isIncoming ? null : Icons.calendar_month_rounded,
+            borderColor: Color(AppColors.buttons),
           ),
-        ],
-        border: Border.all(color: Colors.grey.shade100, width: 1.5),
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(AppRadius.lg),
-          onTap: () {
-            context.pushNamed(
-               AppRoutes.dailyReportDetailsScreen.name,
-               pathParameters: {'lang': context.locale.languageCode},
-               extra: report,
-            );
-          },
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+          const SizedBox(width: 12),
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Color(AppColors.buttons).withOpacity(0.08),
-                            borderRadius: BorderRadius.circular(AppRadius.md),
-                          ),
-                          child: Icon(Icons.calendar_month_rounded, color: Color(AppColors.buttons), size: 20),
-                        ),
-                        SizedBox(width: 12),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              report.createdAt != null 
-                                ? DateFormat('EEEE, dd MMM yyyy', context.locale.languageCode).format(report.createdAt!) 
-                                : "No Date",
-                              style: AppStyles.titleTextContent(context).copyWith(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                                color: Color(AppColors.secondaryButton),
-                              )
-                            ),
-                            if (displayName != null) ...[
-                              SizedBox(height: 2),
-                              Text(
-                                displayName,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.grey.shade600,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ]
-                          ],
-                        ),
-                      ],
-                    ),
-                    if (canEdit)
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                            icon: Container(
-                              padding: EdgeInsets.all(6),
-                              decoration: BoxDecoration(
-                                color: Color(AppColors.buttons).withOpacity(0.1),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(Icons.edit_rounded, color: Color(AppColors.buttons), size: 16)
-                            ),
-                            onPressed: () {
-                              context.pushNamed(
-                                AppRoutes.addEditDailyReportScreen.name,
-                                pathParameters: {'lang': context.locale.languageCode},
-                                extra: report,
-                              ).then((_) {
-                                if (context.mounted) {
-                                  provider.fetchReports(context);
-                                  if (provider.isManagerOrHr) provider.fetchReports(context, isIncoming: true);
-                                }
-                              });
-                            },
-                          ),
-                          IconButton(
-                            icon: Container(
-                              padding: EdgeInsets.all(6),
-                              decoration: BoxDecoration(
-                                color: Colors.red.withOpacity(0.1),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(Icons.delete_outline_rounded, color: Colors.red, size: 16)
-                            ),
-                            onPressed: () => _deleteReport(context, report, provider),
-                          ),
-                        ],
-                      )
-                    else
-                      Icon(Icons.arrow_forward_ios_rounded, size: 14, color: Colors.grey.shade300)
-                  ],
+                Text(
+                  isIncoming && displayName != null && displayName.isNotEmpty
+                      ? displayName
+                      : dateTitle,
+                  style: AppStyles.heading(context).copyWith(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                if ((isIncoming ? report.employeeProfile?.department : report.done) != null && 
-                    (isIncoming ? report.employeeProfile!.department! : report.done!).isNotEmpty) ...[
-                  Padding(
-                    padding: EdgeInsets.only(top: 16, bottom: 12),
-                    child: Divider(height: 1, color: Colors.grey.shade100),
+                const SizedBox(height: 3),
+                Text(
+                  isIncoming
+                      ? [
+                          dateTitle,
+                          if (report.employeeProfile?.department != null &&
+                              report.employeeProfile!.department!.isNotEmpty)
+                            report.employeeProfile!.department!,
+                        ].join(' · ')
+                      : (subLine != null && subLine.isNotEmpty
+                          ? subLine
+                          : dateTitle),
+                  style: AppStyles.subtitleContent(context).copyWith(
+                    fontSize: 11,
+                    color: Colors.grey.shade600,
                   ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Icon(isIncoming ? Icons.business_rounded : Icons.check_circle_rounded, 
-                           color: isIncoming ? Colors.blue.shade400 : Colors.green.shade400, size: 18),
-                      SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          isIncoming ? report.employeeProfile!.department! : report.done!, 
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: AppStyles.titleTextContent(context).copyWith(
-                            fontWeight: isIncoming ? FontWeight.w500 : FontWeight.w400,
-                            fontSize: 13,
-                            color: Colors.grey.shade700,
-                            height: 1.4,
-                          )
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ],
             ),
           ),
-        ),
+          const SizedBox(width: 8),
+          if (canEdit)
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                InkWell(
+                  customBorder: const CircleBorder(),
+                  onTap: () {
+                    context
+                        .pushNamed(
+                      AppRoutes.addEditDailyReportScreen.name,
+                      pathParameters: {'lang': context.locale.languageCode},
+                      extra: report,
+                    )
+                        .then((_) {
+                      if (context.mounted) {
+                        provider.fetchReports(context);
+                        if (provider.isManagerOrHr) {
+                          provider.fetchReports(context, isIncoming: true);
+                        }
+                      }
+                    });
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: Color(AppColors.buttons).withOpacity(0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(Icons.edit_rounded,
+                        color: Color(AppColors.buttons), size: 16),
+                  ),
+                ),
+                const SizedBox(width: 6),
+                InkWell(
+                  customBorder: const CircleBorder(),
+                  onTap: () => _deleteReport(context, report, provider),
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: Color(AppColors.failureRed).withOpacity(0.1),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(Icons.delete_outline_rounded,
+                        color: Color(AppColors.failureRed), size: 16),
+                  ),
+                ),
+              ],
+            )
+          else
+            AppStatusBadge(
+              label: 'submitted'.tr(),
+              color: Color(AppColors.successGreen),
+              icon: Icons.check_circle_outline_rounded,
+            ),
+        ],
       ),
     );
   }

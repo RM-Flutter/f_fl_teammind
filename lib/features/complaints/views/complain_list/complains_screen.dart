@@ -22,6 +22,8 @@ import 'package:app_test/core/widgets/gradient_bg_image.dart';
 import '../../../../core/widgets/app_bar_with_bookmark.widget.dart';
 import '../../controller/complaints_controller.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/widgets/app_card.widget.dart';
+import 'package:app_test/core/widgets/app_status_badge.widget.dart';
 
 class ComplainScreen extends StatefulWidget {
  const ComplainScreen({super.key});
@@ -72,9 +74,8 @@ class _ComplainScreenState extends State<ComplainScreen> {
      backgroundColor: Colors.white,
      appBar: AppBarWithBookmark(
       title: AppStrings.ticketSystem.tr().toUpperCase(),
-      titleStyle: AppStyles.heading(context).copyWith(fontSize: 20, fontWeight: FontWeight.bold),
       centerTitle: true,
-      backgroundColor: Color(AppColors.background),
+      backgroundColor: Colors.white,
       elevation: 0,
       routeName: AppRoutes.complainScreen.name),
      floatingActionButton: FloatingActionButton(
@@ -114,11 +115,9 @@ class _ComplainScreenState extends State<ComplainScreen> {
        child: Center(
         child: ConstrainedBox(
          constraints: const BoxConstraints(
-           maxWidth: kIsWeb ? 1100 : double.infinity
+           maxWidth: double.infinity
          ),
-         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: RefreshIndicator.adaptive(
+         child: RefreshIndicator.adaptive(
            onRefresh: ()async{
             await value.getRequest(context, page: 1);
             await value.getRequestMine(context, page: 1);
@@ -127,14 +126,15 @@ class _ComplainScreenState extends State<ComplainScreen> {
             height: MediaQuery.sizeOf(context).height * 1,
             alignment: Alignment.topCenter,
             child: SingleChildScrollView(
+             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
              child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-               const SizedBox(height: 15,),
                ListView.builder(
                 itemCount: value.requests.length,
                 reverse: false,
                 shrinkWrap: true,
+                clipBehavior: Clip.none,
                 physics: const NeverScrollableScrollPhysics(),
                 padding: EdgeInsets.zero,
                 itemBuilder: (context, index) {
@@ -162,17 +162,18 @@ class _ComplainScreenState extends State<ComplainScreen> {
                ),
                // "Other Requests" Text
                if(value.requestsTeam.isNotEmpty && (gCache['is_hr'] == true || gCache['top_management'] == true)) Padding(
-                padding: const EdgeInsets.only(bottom: 8),
+                padding: const EdgeInsets.only(bottom: 8, top: 8),
                 child: Text(
                  AppStrings.otherRequests.tr().toUpperCase(),
-                 style: AppStyles.blackContent(context).copyWith(fontSize: 18,
-                  fontWeight: FontWeight.w500,
+                 style: AppStyles.blackContent(context).copyWith(fontSize: 16,
+                  fontWeight: FontWeight.w600,
                   color: Color(AppColors.secondaryButton))),
                ),
                if(value.requestsTeam.isNotEmpty && (gCache['is_hr'] == true || gCache['top_management'] == true)) ListView.builder(
                 itemCount: value.requestsTeam.length,
                 reverse: false,
                 shrinkWrap: true,
+                clipBehavior: Clip.none,
                 physics: const NeverScrollableScrollPhysics(),
                 padding: EdgeInsets.zero,
                 itemBuilder: (context, index) {
@@ -204,7 +205,6 @@ class _ComplainScreenState extends State<ComplainScreen> {
             ),
            ),
           ),
-         ),
         ),
        ),
       ) : Center(
@@ -237,44 +237,51 @@ class _ComplainScreenState extends State<ComplainScreen> {
     switch (status.toLowerCase()) {
       case 'hold':
       case 'معلق':
-        statusIcon = Icons.pause_circle_filled_rounded;
-        iconColor = Colors.orange;
+        statusIcon = Icons.pause_circle_outline_rounded;
+        iconColor = const Color(0xFFE65100);
         break;
       case 'closed':
       case 'مغلق':
-        statusIcon = Icons.cancel_rounded;
-        iconColor = Colors.red;
+        statusIcon = Icons.cancel_outlined;
+        iconColor = const Color(0xFFC62828);
         break;
       case 'open':
       case 'مفتوح':
-        statusIcon = Icons.info_outline_rounded;
-        iconColor = Color(AppColors.buttons);
-        break;
       default:
         statusIcon = Icons.info_outline_rounded;
         iconColor = Color(AppColors.buttons);
     }
 
-    return Container(
-      margin: EdgeInsets.only(bottom: AppSizes.s16),
-      padding: EdgeInsets.symmetric(
-        vertical: AppSizes.s14,
-        horizontal: AppSizes.s16,
-      ),
-      decoration: ShapeDecoration(
-        color: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.sm),
-        ),
-        shadows: [
-          BoxShadow(
-            color: Color(AppColors.disableButton).withValues(alpha: 0.5),
-            blurRadius: AppSizes.s5,
-            spreadRadius: 1,
-          )
-        ],
-      ),
-      child: InkWell(
+    IconData leadingIcon;
+    String? typeLabel;
+    switch (requestType?.toLowerCase()) {
+      case 'suggestion':
+        leadingIcon = Icons.lightbulb_outline;
+        typeLabel = AppStrings.suggestion.tr();
+        break;
+      case 'other':
+        leadingIcon = Icons.more_horiz;
+        typeLabel = AppStrings.other.tr();
+        break;
+      case 'complaint':
+        leadingIcon = Icons.report_problem_outlined;
+        typeLabel = AppStrings.complaint.tr();
+        break;
+      default:
+        leadingIcon = Icons.confirmation_number_outlined;
+        typeLabel = null;
+        break;
+    }
+
+    final subtitleParts = <String>[
+      if (typeLabel != null && typeLabel.isNotEmpty) typeLabel,
+      if (targetName != null && targetName.isNotEmpty) targetName,
+      if (date.isNotEmpty) date,
+    ];
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.cardGap),
+      child: AppCard(
         onTap: () async {
           await context.pushNamed(
             AppRoutes.complainDetails.name,
@@ -287,146 +294,44 @@ class _ComplainScreenState extends State<ComplainScreen> {
         },
         child: Row(
           children: [
+            AppCardLeadingAvatar(
+              name: targetName,
+              icon: leadingIcon,
+              borderColor: iconColor,
+            ),
+            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  if ((requestType != null && requestType.isNotEmpty) ||
-                      (targetName != null && targetName.isNotEmpty)) ...[
-                    Row(
-                      children: [
-                        if (requestType != null && requestType.isNotEmpty) ...[
-                          _buildTypeBadge(requestType, context),
-                          const SizedBox(width: 8),
-                        ],
-                        if (targetName != null && targetName.isNotEmpty) ...[
-                          Icon(
-                            relatedTo == 'person'
-                                ? Icons.person_outline
-                                : Icons.business_outlined,
-                            size: 13,
-                            color: Colors.grey.shade600,
-                          ),
-                          const SizedBox(width: 4),
-                          Flexible(
-                            child: Text(
-                              targetName,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                fontSize: 11.5,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.grey.shade700,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                  ],
                   Text(
                     "$title",
-                    style: AppStyles.blackContent(context).copyWith(
-                      fontWeight: FontWeight.w400,
-                      fontSize: AppSizes.s16,
-                      letterSpacing: 0.5,
-                      height: 1.1,
-                    ),
-                    maxLines: 2,
+                    style: AppStyles.heading(context),
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 6),
-                  Row(
-                    children: [
-                      Text(
-                        status,
-                        style: AppStyles.greyContent(context).copyWith(
-                          fontSize: 12,
-                          color: iconColor,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: Text("|", style: TextStyle(color: Colors.grey.shade400)),
-                      ),
-                      Text(
-                        date,
-                        style: TextStyle(
-                          color: dateColor ?? Colors.grey.shade700,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
+                  if (subtitleParts.isNotEmpty) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitleParts.join(' · '),
+                      style: AppStyles.subtitleContent(context),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
                 ],
               ),
             ),
-            SizedBox(width: AppSizes.s8),
-            Icon(
-              statusIcon,
+            const SizedBox(width: 8),
+            AppStatusBadge(
+              label: status,
               color: iconColor,
-              size: 24,
+              icon: statusIcon,
             ),
           ],
         ),
       ),
     );
   }
-
-  Widget _buildTypeBadge(String? type, BuildContext context) {
-    if (type == null || type.isEmpty) return const SizedBox.shrink();
-    Color bgColor;
-    Color textColor;
-    String label;
-    IconData icon;
-
-    switch (type.toLowerCase()) {
-      case 'suggestion':
-        bgColor = const Color(0xFFE8F5E9);
-        textColor = const Color(0xFF2E7D32);
-        label = AppStrings.suggestion.tr();
-        icon = Icons.lightbulb_outline;
-        break;
-      case 'other':
-        bgColor = const Color(0xFFEDE7F6);
-        textColor = const Color(0xFF512DA8);
-        label = AppStrings.other.tr();
-        icon = Icons.more_horiz;
-        break;
-      case 'complaint':
-      default:
-        bgColor = const Color(0xFFFFEBEE);
-        textColor = const Color(0xFFC62828);
-        label = AppStrings.complaint.tr();
-        icon = Icons.report_problem_outlined;
-        break;
-    }
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(AppRadius.sm),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 12, color: textColor),
-          const SizedBox(width: 4),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.bold,
-              color: textColor,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
 }

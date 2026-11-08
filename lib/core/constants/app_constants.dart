@@ -205,10 +205,11 @@ abstract class AppConstants {
   static const String refreshTokenBaseUrl = "http://refresh_token_test-api/";
   static const String appPackageName = "com.rightminddev.rmemp";
   static const String fontFamilyPoppins = 'Poppins';
-  static const String fontFamilyIbrand = 'Ibrand';
+  static const String fontFamilyCairo = 'Cairo';
+  static const String fontFamilyIbrand = 'Poppins';
   static const String country = 'EG';
   static const String countryCode = '+20';
-  static const String fontFamilyMontserratArabic = 'Montserrat-Arabic';
+  static const String fontFamilyMontserratArabic = 'Cairo';
   static String get socialLoginGoogle => '$base/auth/socialite/google/login?redirect_url=$base/front-end/social_login&device_unique_id=';
   static String get socialLoginFacebook => '$base/auth/socialite/facebook/login?redirect_url=$base/front-end/social_login&device_unique_id=';
   static String get socialLoginLinkedIn => '$base/auth/socialite/linkedin-openid/login?redirect_url=$base/front-end/social_login&device_unique_id=';

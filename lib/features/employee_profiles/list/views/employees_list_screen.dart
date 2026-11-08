@@ -19,6 +19,7 @@ import 'package:app_test/core/widgets/loading_page.widget.dart';
 import 'package:app_test/core/widgets/template_page.widget.dart';
 import '../controller/employees_list_controller.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/widgets/app_card.widget.dart';
 
 class EmployeesListScreen extends StatefulWidget {
   const EmployeesListScreen({super.key});
@@ -47,8 +48,8 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
             preferredSize: Size.fromHeight(AppSizes.s70),
             child: Center(
               child: ConstrainedBox(
-                constraints: BoxConstraints(
-                    maxWidth: kIsWeb ? 1100 : double.infinity
+                constraints: const BoxConstraints(
+                    maxWidth: double.infinity
                 ),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: AppSizes.s12, vertical: AppSizes.s12),
@@ -110,8 +111,8 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
             children: [
               Center(
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                      maxWidth: kIsWeb ? 1100 : double.infinity
+                  constraints: const BoxConstraints(
+                      maxWidth: double.infinity
                   ),
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: AppSizes.s12),
@@ -126,109 +127,88 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
                                 ? NoExistingPlaceholderScreen(
                                     height: LayoutService.getHeight(context) * 0.6,
                                     title: AppStrings.thereIsNoEmployees.tr())
-                                : Column(children: [
-                                    // GeneralScreenMessageWidget(
-                                    //     screenId: '/employees-list'),
-                                    ...viewModel.filteredEmployees.map((employee) {
-                                      return Column(
-                                        children: [
-                                          ListTile(
-                                            contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                                            leading: employee.avatar != null && employee.avatar!.isNotEmpty
-                                                ? CircleAvatar(
-                                                    radius: 25,
-                                                    backgroundColor: Colors.transparent,
-                                                    child: Center(
-                                                      child: ClipRRect(
-                                                        borderRadius: BorderRadius.circular(AppRadius.pill),
-                                                        child: CachedNetworkImage(
-                                                            imageUrl: employee.avatar!,
-                                                            fit: BoxFit.cover,
-                                                            width: 50,
-                                                            height: 50,
-                                                            placeholder: (context,
-                                                                    url) =>
-                                                                const ShimmerAnimatedLoading(
-                                                                  circularRaduis:
-                                                                      AppSizes.s50,
-                                                                ),
-                                                            errorWidget: (context,
-                                                                    url, error) =>
-                                                                Image.asset(
-                                                                  "assets/images/user.png",
-                                                                  fit: BoxFit.cover,
-                                                                  width: 50,
-                                                                  height: 50,
-                                                                )),
-                                                      ),
-                                                    ),
-                                                  )
-                                                : CircleAvatar(
-                                                    radius: 25,
-                                                    backgroundColor: Colors.transparent,
-                                                    child: Image.asset(
-                                                      "assets/images/user.png",
-                                                      fit: BoxFit.cover,
-                                                      width: 50,
-                                                      height: 50,
-                                                    ),
-                                                  ),
-                                            title: Text(
-                                              employee.name ?? '',
-                                              style: AppStyles.blackContent(context).copyWith(
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 15,
-                                              ),
-                                            ),
-                                            subtitle: Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: [
-                                                if (employee.jobTitle != null && employee.jobTitle!.isNotEmpty)
-                                                  Text(
-                                                    employee.jobTitle!,
-                                                    style: AppStyles.greyContent(context).copyWith(
-                                                      fontSize: 12,
-                                                      fontWeight: FontWeight.w400,
-                                                    ),
-                                                  ),
-                                                if (employee.phone != null && employee.phone.toString().isNotEmpty) ... [
-                                                  SizedBox(height: 3),
-                                                  Text(
-                                                    employee.countryKey != null
-                                                        ? LocalizationService.isArabic(context: context)
-                                                        ? '${employee.phone.toString()}(${employee.countryKey ?? ''}+)'
-                                                        : '(+${employee.countryKey ?? ''}) ${employee.phone.toString()}'
-                                                        : '${employee.phone.toString()}',
-                                                    style: AppStyles.greyContent(context).copyWith(
-                                                      fontSize: 12,
-                                                      fontWeight: FontWeight.w400,
-                                                    ),
-                                                  ),
-                                                ],
+                                : Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                                    child: Column(children: [
+                                      ...viewModel.filteredEmployees.map((employee) {
+                                        final String phoneStr = (employee.phone != null &&
+                                                employee.phone.toString().isNotEmpty)
+                                            ? (employee.countryKey != null
+                                                ? (LocalizationService.isArabic(context: context)
+                                                    ? '${employee.phone.toString()}(${employee.countryKey ?? ''}+)'
+                                                    : '(+${employee.countryKey ?? ''}) ${employee.phone.toString()}')
+                                                : employee.phone.toString())
+                                            : '';
+                                        final subtitleParts = <String>[
+                                          if (employee.jobTitle != null &&
+                                              employee.jobTitle!.isNotEmpty)
+                                            employee.jobTitle!,
+                                          if (phoneStr.isNotEmpty) phoneStr,
+                                        ];
 
-                                              ],
-                                            ),
+                                        return Padding(
+                                          padding: const EdgeInsets.only(
+                                              bottom: AppSpacing.cardGap),
+                                          child: AppCard(
                                             onTap: () async {
-                                              FocusManager.instance.primaryFocus?.unfocus();
+                                              FocusManager.instance.primaryFocus
+                                                  ?.unfocus();
                                               await context.pushNamed(
                                                   AppRoutes.employeeDetails.name,
                                                   pathParameters: {
                                                     'id': employee.id.toString(),
-                                                    'lang': context.locale.languageCode
+                                                    'lang': context
+                                                        .locale.languageCode
                                                   });
                                             },
+                                            child: Row(
+                                              children: [
+                                                AppCardLeadingAvatar(
+                                                  imageUrl: employee.avatar,
+                                                  name: employee.name,
+                                                  borderColor: Color(
+                                                      AppColors.buttons),
+                                                ),
+                                                const SizedBox(width: 12),
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.center,
+                                                    children: [
+                                                      Text(
+                                                        employee.name ?? '',
+                                                        maxLines: 1,
+                                                        overflow:
+                                                            TextOverflow.ellipsis,
+                                                        style: AppStyles.heading(
+                                                            context),
+                                                      ),
+                                                      if (subtitleParts
+                                                          .isNotEmpty) ...[
+                                                        const SizedBox(height: 2),
+                                                        Text(
+                                                          subtitleParts
+                                                              .join(' · '),
+                                                          maxLines: 1,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: AppStyles
+                                                              .subtitleContent(
+                                                                  context),
+                                                        ),
+                                                      ],
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                           Divider(
-                                            color: Color(AppColors.divider).withOpacity(.3),
-                                            height: 1,
-                                            indent: 16,
-                                            endIndent: 16,
-                                          )
-                                        ],
-                                      );
-                                    })
-                                  ])),
+                                        );
+                                      })
+                                    ]),
+                                  )),
                   ),
                 ),
               ),

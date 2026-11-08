@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../constants/app_colors.dart';
-import '../constants/app_sizes.dart';
 import 'app_bar_with_bookmark.widget.dart';
 
 class TemplatePage extends StatelessWidget {
@@ -36,39 +35,28 @@ class TemplatePage extends StatelessWidget {
 
   @override
   Widget build(context) {
+    final canPop = context.canPop() || Navigator.of(context).canPop();
     return Scaffold(
       backgroundColor: backgroundColor,
       floatingActionButton: floatingActionButton,
       appBar: AppBarWithBookmark(
         actions: actions,
-        backgroundColor:
-            backgroundColor ?? Theme.of(pageContext).scaffoldBackgroundColor,
+        backgroundColor: Colors.white,
         title: title,
-        titleStyle: titleStyle ?? TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w700,
-          color: Color(AppColors.secondaryButton)
-        ),
+        titleStyle: titleStyle ??
+            TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: Color(AppColors.secondaryButton),
+            ),
         bottom: bottomAppbarWidget,
         routeName: routeName,
         defaultTitle: title,
         showBookmark: showBookmark,
-        leading: context.canPop()
-            ? Padding(
-                padding: const EdgeInsets.all(AppSizes.s10),
-                child: InkWell(
-                  onTap: () => pageContext.pop(popResult),
-                  child: Container(
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Color(AppColors.secondaryButton)),
-                    child: const Icon(
-                      Icons.arrow_back_sharp,
-                      color: Colors.white,
-                      size: AppSizes.s18,
-                    ),
-                  ),
-                ),
+        leading: canPop
+            ? AppBackButton(
+                onTap: () => pageContext.pop(popResult),
+                popResult: popResult,
               )
             : const SizedBox.shrink(),
       ),
@@ -76,6 +64,7 @@ class TemplatePage extends StatelessWidget {
           ? RefreshIndicator.adaptive(
               onRefresh: onRefresh!,
               child: ListView(
+                clipBehavior: Clip.none,
                 children: [
                   body,
                 ],

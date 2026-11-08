@@ -1,27 +1,20 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:app_test/core/constants/app_colors.dart';
-import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/utils/app_styles.dart';
+import 'package:app_test/core/widgets/app_card.widget.dart';
+import 'package:app_test/core/widgets/app_status_badge.widget.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../../../core/services/requests_services.dart';
-import '../../../../core/widgets/glassmorphism_card.widget.dart';
+import 'package:go_router/go_router.dart';
 import '../../shared/models/salary_advance_request_model.dart';
 import '../update_salary_advance_screen.dart';
-import 'package:app_test/core/constants/app_design.dart';
 
-class SalaryAdvanceListItemWidget extends StatefulWidget {
+class SalaryAdvanceListItemWidget extends StatelessWidget {
   final SalaryAdvanceRequestModel request;
   final bool isIncoming;
-
-  /// Whether the current logged-in user can edit this request
-  /// (owner employee OR manager/HR for any request)
   final bool canEdit;
-
-  /// Called when the list should be refreshed (e.g. after an edit)
   final VoidCallback? onRefresh;
 
   const SalaryAdvanceListItemWidget({
@@ -33,375 +26,147 @@ class SalaryAdvanceListItemWidget extends StatefulWidget {
   });
 
   @override
-  State<SalaryAdvanceListItemWidget> createState() =>
-      _SalaryAdvanceListItemWidgetState();
-}
-
-class _SalaryAdvanceListItemWidgetState
-    extends State<SalaryAdvanceListItemWidget>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _scaleAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 150));
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.97).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
-    );
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    bool isApproved = (widget.request.employeeApproved == true &&
-        widget.request.hrApproved == true &&
-        widget.request.managerApproved == true);
+    final bool isApproved = (request.employeeApproved == true &&
+        request.hrApproved == true &&
+        request.managerApproved == true);
 
-    String status = widget.request.status?.toLowerCase() ??
-        (isApproved ? 'approved' : 'pending');
-    Color statusColor;
-    String statusText;
+    final String status =
+        request.status?.toLowerCase() ?? (isApproved ? 'approved' : 'pending');
+    final Color statusColor = AppStatusBadge.colorForStatus(status);
+    final bool showTakeAction = request.takeAction == true ||
+        request.canTakeActionAsSomeoneElse == true;
 
-    switch (status) {
-      case 'approved':
-        statusColor = Color(AppColors.successGreen);
-        statusText = 'approved'.tr();
-        break;
-      case 'rejected':
-        statusColor = Color(AppColors.failureRed);
-        statusText = 'rejected'.tr();
-        break;
-      case 'cancelled' || 'canceled':
-        statusColor = Color(AppColors.failureRed);
-        statusText = 'cancelled'.tr();
-        break;
-      default:
-        statusColor = Color(AppColors.warningYellow);
-        statusText = 'pending'.tr();
-    }
+    final String title = '${request.total ?? '0'} ${'egp'.tr()}';
+    final String subtitle = [
+      if (request.from != null && request.from!.isNotEmpty)
+        '${'from_date'.tr()}: ${request.from}',
+      if (request.howLongToPay != null)
+        '${'how_long_to_pay'.tr()}: ${request.howLongToPay} ${'months'.tr()}',
+    ].join(' · ');
 
-    return GestureDetector(
-        onTapDown: (_) {
-          HapticFeedback.lightImpact();
-          _animationController.forward();
-        },
-        onTapUp: (_) => _animationController.reverse(),
-        onTapCancel: () => _animationController.reverse(),
-        onTap: () async {
-          final updated = await context.pushNamed<bool>(
-            AppRoutes.salaryAdvanceDetails.name,
-            pathParameters: {
-              'id': widget.request.id.toString(),
-              'lang': context.locale.languageCode,
-            },
-          );
-          if (updated == true) {
-            widget.onRefresh?.call();
-          }
-        },
-        child: AnimatedBuilder(
-            animation: _scaleAnimation,
-            builder: (context, child) => Transform.scale(
-                  scale: _scaleAnimation.value,
-                  child: child,
+    final String employeeName =
+        isIncoming ? (request.employeeProfile?.name ?? '') : '';
+
+    return AppCard(
+      margin: const EdgeInsets.only(bottom: AppSpacing.cardGap),
+      padding: AppSpacing.cardPadding,
+      onTap: () async {
+        final updated = await context.pushNamed<bool>(
+          AppRoutes.salaryAdvanceDetails.name,
+          pathParameters: {
+            'id': request.id.toString(),
+            'lang': context.locale.languageCode,
+          },
+        );
+        if (updated == true) {
+          onRefresh?.call();
+        }
+      },
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          AppCardLeadingAvatar(
+            nameForInitials: employeeName.isNotEmpty ? employeeName : title,
+            icon: employeeName.isNotEmpty ? null : Icons.payments_outlined,
+            borderColor: statusColor,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (showTakeAction) ...[
+                  AppStatusBadge(
+                    icon: Icons.gavel_rounded,
+                    color: Color(AppColors.failureRed),
+                    label: 'take_action'.tr(),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    fontSize: 10,
+                    iconSize: 11,
+                  ),
+                  const SizedBox(height: 5),
+                ],
+                Text(
+                  title,
+                  style: AppStyles.heading(context).copyWith(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-            child: Padding(
-              padding: EdgeInsets.only(bottom: AppSizes.s16, left: 4, right: 4),
-              child: GlassmorphismCard(
-                padding: EdgeInsets.zero,
-                backgroundColor: Colors.white,
-                opacity: 0.8,
-                boxShadow: [
-                  BoxShadow(
-                    color: Color(AppColors.buttonColor).withOpacity(0.08),
-                    blurRadius: 20,
-                    offset: const Offset(0, 10),
-                    spreadRadius: -5,
+                if (subtitle.isNotEmpty) ...[
+                  const SizedBox(height: 3),
+                  Text(
+                    subtitle,
+                    style: AppStyles.subtitleContent(context).copyWith(
+                      fontSize: 11,
+                      color: Colors.grey.shade600,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (widget.request.takeAction == true || widget.request.canTakeActionAsSomeoneElse == true) ...[
-                      Padding(
-                        padding: EdgeInsets.only(
-                          top: AppSizes.s14,
-                          left: AppSizes.s16,
-                          right: AppSizes.s16,
-                        ),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFFFEBEE),
-                            borderRadius: BorderRadius.circular(AppRadius.sm),
-                            border: Border.all(color: const Color(0xFFEF5350).withOpacity(0.5)),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(
-                                Icons.error_outline_rounded,
-                                size: 13,
-                                color: Color(0xFFD32F2F),
-                              ),
-                              const SizedBox(width: 4),
-                              Text('take_action'.tr(),
-                                style: const TextStyle(
-                                  color: Color(0xFFD32F2F),
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
+                if (employeeName.isNotEmpty) ...[
+                  const SizedBox(height: 3),
+                  Text(
+                    employeeName,
+                    style: AppStyles.subtitleContent(context).copyWith(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey.shade700,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ],
+            ),
+          ),
+          const SizedBox(width: 8),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              AppStatusBadge.fromStatus(status: status),
+              if (canEdit &&
+                  status != 'approved' &&
+                  status != 'cancelled' &&
+                  status != 'canceled') ...[
+                const SizedBox(height: 6),
+                InkWell(
+                  borderRadius: BorderRadius.circular(AppRadius.pill),
+                  onTap: () async {
+                    HapticFeedback.mediumImpact();
+                    final updated = await Navigator.of(context).push<bool>(
+                      MaterialPageRoute(
+                        builder: (_) => UpdateSalaryAdvanceScreen(
+                          existingRequest: request,
                         ),
                       ),
-                    ],
-                        // ─── Incoming: Employee name header ───
-                        if (widget.isIncoming &&
-                            widget.request.employeeProfile != null) ...[
-                          Padding(
-                            padding: EdgeInsets.only(
-                                top: AppSizes.s14,
-                                left: AppSizes.s16,
-                                right: AppSizes.s16),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      if (widget.request.employeeProfile?.id !=
-                                          null) {
-                                        context.pushNamed(
-                                          AppRoutes.employeeDetails.name,
-                                          pathParameters: {
-                                            'id': widget
-                                                .request.employeeProfile!.id
-                                                .toString(),
-                                            'lang': context.locale.languageCode,
-                                          },
-                                        );
-                                      }
-                                    },
-                                    child: Text(
-                                      widget.request.employeeProfile?.name ??
-                                          '',
-                                      style: AppStyles.primaryContent(context)
-                                          .copyWith(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(AppColors.titleTextColor),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: AppSizes.s16, vertical: 10),
-                            child:
-                                Divider(height: 1, color: Colors.grey.shade100),
-                          ),
-                        ],
-
-                        // ─── Main Content Row ───
-                        Padding(
-                          padding: EdgeInsets.only(
-                            top: widget.isIncoming ? 0 : AppSizes.s16,
-                            bottom: AppSizes.s16,
-                            left: AppSizes.s16,
-                            right: AppSizes.s16,
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              // ─── Left: Amount + details ───
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          '${widget.request.total ?? '0'}',
-                                          style: AppStyles.heading(context)
-                                              .copyWith(
-                                            fontSize: 24,
-                                            fontWeight: FontWeight.w900,
-                                            color: Color(AppColors.buttonColor),
-                                            letterSpacing: 0.5,
-                                          ),
-                                        ),
-                                        SizedBox(width: 4),
-                                        Padding(
-                                          padding: EdgeInsets.only(bottom: 4),
-                                          child: Text(
-                                            'egp'.tr(),
-                                            style: AppStyles.content(context)
-                                                .copyWith(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.grey.shade600,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 8),
-                                    Row(
-                                      children: [
-                                        Icon(Icons.calendar_month,
-                                            size: 14,
-                                            color: Colors.grey.shade400),
-                                        SizedBox(width: 4),
-                                        Text(
-                                          '${'from_date'.tr()}: ${widget.request.from ?? ''}',
-                                          style: AppStyles.content(context)
-                                              .copyWith(
-                                            fontSize: 13,
-                                            color: Colors.grey.shade600,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 4),
-                                    Row(
-                                      children: [
-                                        Icon(Icons.update,
-                                            size: 14,
-                                            color: Colors.grey.shade400),
-                                        SizedBox(width: 4),
-                                        Text(
-                                          '${'how_long_to_pay'.tr()}: ${widget.request.howLongToPay ?? ''} ${'months'.tr()}',
-                                          style: AppStyles.content(context)
-                                              .copyWith(
-                                            fontSize: 13,
-                                            color: Colors.grey.shade600,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              SizedBox(width: 10),
-
-                              // ─── Right: Status badge + Edit button ───
-                              Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  // Status badge
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 12, vertical: 8),
-                                    decoration: BoxDecoration(
-                                      color: statusColor.withOpacity(0.1),
-                                      borderRadius: BorderRadius.circular(AppRadius.md),
-                                      border: Border.all(
-                                          color: statusColor.withOpacity(0.2)),
-                                    ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        RequestsServices.getRequestsStatusIcon(
-                                          context: context,
-                                          status: status,
-                                          iconColor: statusColor,
-                                        ),
-                                        SizedBox(height: 4),
-                                        Text(
-                                          statusText,
-                                          style: AppStyles.content(context)
-                                              .copyWith(
-                                            color: statusColor,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-
-                                  // Edit button — shown only when canEdit is true and status is editable
-                                  if (widget.canEdit &&
-                                      status != 'approved' &&
-                                      status != 'cancelled' &&
-                                      status != 'canceled') ...[
-                                    SizedBox(height: 8),
-                                    GestureDetector(
-                                      onTap: () async {
-                                        HapticFeedback.mediumImpact();
-                                        final updated =
-                                            await Navigator.of(context)
-                                                .push<bool>(
-                                          MaterialPageRoute(
-                                            builder: (_) =>
-                                                UpdateSalaryAdvanceScreen(
-                                              existingRequest: widget.request,
-                                            ),
-                                          ),
-                                        );
-                                        if (updated == true) {
-                                          widget.onRefresh?.call();
-                                        }
-                                      },
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 10, vertical: 7),
-                                        decoration: BoxDecoration(
-                                          color: Color(AppColors.buttons),
-                                          borderRadius:
-                                              BorderRadius.circular(AppRadius.sm),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Color(AppColors.buttons)
-                                                  .withOpacity(0.35),
-                                              blurRadius: 10,
-                                              offset: const Offset(0, 4),
-                                            ),
-                                          ],
-                                        ),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            Icon(Icons.edit_rounded,
-                                                color: Colors.white, size: 13),
-                                            SizedBox(width: 4),
-                                            Text(
-                                              'edit_request'.tr(),
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 11,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                    );
+                    if (updated == true) {
+                      onRefresh?.call();
+                    }
+                  },
+                  child: AppStatusBadge(
+                    label: 'edit_request'.tr(),
+                    color: Color(AppColors.buttons),
+                    icon: Icons.edit_rounded,
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    fontSize: 10,
+                    iconSize: 11,
                   ),
                 ),
-              ));
+              ],
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }

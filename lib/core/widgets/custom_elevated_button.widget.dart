@@ -18,7 +18,10 @@ class CustomElevatedButton extends StatefulWidget {
   final Color? outlineColor;
   final bool? isFuture;
   final bool? isPrimaryBackground;
-  final bool? isOutlined; // 👈 الجديد
+  final bool? isOutlined;
+  final bool isDestructive;
+  final bool isCompact;
+  final IconData? icon;
   final Color? titleColor;
 
   const CustomElevatedButton({
@@ -36,7 +39,10 @@ class CustomElevatedButton extends StatefulWidget {
     this.height,
     this.isFuture = true,
     this.isPrimaryBackground = true,
-    this.isOutlined = false, // 👈 default false
+    this.isOutlined = false,
+    this.isDestructive = false,
+    this.isCompact = false,
+    this.icon,
   });
 
   @override
@@ -65,16 +71,15 @@ class CustomElevatedButtonState extends State<CustomElevatedButton>
 
   void _handlePressed() async {
     if (!mounted) return;
-    
+
     setState(() {
       _isLoading = true;
     });
-    
+
     if (!mounted) return;
     try {
       await _controller.forward();
     } catch (e) {
-      // Controller might be disposed
       if (mounted) {
         setState(() {
           _isLoading = false;
@@ -82,10 +87,9 @@ class CustomElevatedButtonState extends State<CustomElevatedButton>
       }
       return;
     }
-    
+
     await widget.onPressed();
-    
-    // Check if widget is still mounted and controller is not disposed before using controller
+
     if (mounted) {
       try {
         if (_controller.isAnimating || _controller.value > 0) {
@@ -94,7 +98,7 @@ class CustomElevatedButtonState extends State<CustomElevatedButton>
       } catch (e) {
         // Controller might be disposed, ignore
       }
-      
+
       if (mounted) {
         setState(() {
           _isLoading = false;
@@ -105,12 +109,45 @@ class CustomElevatedButtonState extends State<CustomElevatedButton>
 
   @override
   Widget build(BuildContext context) {
+    final Color primaryColor = widget.isDestructive
+        ? Color(AppColors.failureRed)
+        : (widget.backgroundColor ?? Color(AppColors.buttons));
+    final Color effectiveOutlineColor = widget.outlineColor ?? primaryColor;
+    final Color effectiveTextColor = widget.titleColor ??
+        (widget.isOutlined == true ? effectiveOutlineColor : Colors.white);
+    final double effectiveHeight = widget.height ??
+        (widget.isCompact ? AppButtonSize.compactHeight : AppButtonSize.height);
+
+    final ButtonStyle baseStyle = ElevatedButton.styleFrom(
+      backgroundColor:
+          widget.isOutlined == true ? Colors.transparent : primaryColor,
+      foregroundColor: effectiveTextColor,
+      disabledForegroundColor: Colors.white,
+      elevation: 0,
+      shadowColor: Colors.transparent,
+      padding: AppButtonSize.padding,
+      side: widget.isOutlined == true
+          ? BorderSide(color: effectiveOutlineColor, width: 1.5)
+          : null,
+      shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
+    );
+
+    final ButtonStyle effectiveStyle = widget.buttonStyle != null
+        ? widget.buttonStyle!.copyWith(
+            elevation: const WidgetStatePropertyAll(0),
+            shadowColor: const WidgetStatePropertyAll(Colors.transparent),
+            shape: WidgetStatePropertyAll(
+              RoundedRectangleBorder(borderRadius: AppRadius.button),
+            ),
+          )
+        : baseStyle;
+
     return LayoutBuilder(
       builder: (context, constraints) {
         double targetWidth = widget.width ?? AppSizes.s200;
         if (targetWidth == double.infinity) {
-          targetWidth = constraints.maxWidth.isFinite 
-              ? constraints.maxWidth 
+          targetWidth = constraints.maxWidth.isFinite
+              ? constraints.maxWidth
               : MediaQuery.of(context).size.width;
         }
 
@@ -119,60 +156,67 @@ class CustomElevatedButtonState extends State<CustomElevatedButton>
           builder: (context, child) {
             return AnimatedContainer(
               duration: const Duration(milliseconds: 300),
-              width: _isLoading ? AppButtonSize.height * 1.5 : targetWidth,
-              height: widget.height ?? AppButtonSize.height,
-          child: ElevatedButton(
-            style: widget.buttonStyle ??
-                ElevatedButton.styleFrom(
-                  backgroundColor: widget.isOutlined == true
-                      ? Colors.transparent // 👈 Transparent
-                      : widget.backgroundColor ?? Color(AppColors.buttons),
-                  foregroundColor: widget.isOutlined == true
-                      ? Color(AppColors.buttons) // 👈 Text بلون الـ primary
-                      : Colors.white,
-                  disabledForegroundColor: Colors.white,
-                  elevation: 0,
-                  padding: AppButtonSize.padding,
-                  side: widget.isOutlined == true
-                      ? BorderSide(color: widget.outlineColor ?? Color(AppColors.buttons), width: 1.5)
-                      : null,
-                  // Same shape for every button in the app
-                  shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
-                ),
-            onPressed: widget.isFuture == true
-                ? _isLoading
-                ? () {}
-                : _handlePressed
-                : widget.onPressed,
-            child: widget.isFuture == true && _isLoading
-                ? const Center(
-              child: CircularProgressIndicator.adaptive(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              ),
-            )
-                : Center(
-              child: widget.titleWidget ??
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      widget.title,
-                      style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                            fontSize: AppButtonSize.fontSize,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.4,
-                            color: widget.titleColor ??
-                                (widget.isOutlined == true ? Color(AppColors.buttons) : null),
+              width: _isLoading ? effectiveHeight * 1.5 : targetWidth,
+              height: effectiveHeight,
+              child: ElevatedButton(
+                style: effectiveStyle,
+                onPressed: widget.isFuture == true
+                    ? _isLoading
+                        ? () {}
+                        : _handlePressed
+                    : widget.onPressed,
+                child: widget.isFuture == true && _isLoading
+                    ? Center(
+                        child: SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator.adaptive(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              effectiveTextColor,
+                            ),
                           ),
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-            ),
-          ),
+                        ),
+                      )
+                    : Center(
+                        child: widget.titleWidget ??
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  if (widget.icon != null) ...[
+                                    Icon(
+                                      widget.icon,
+                                      size: 18,
+                                      color: effectiveTextColor,
+                                    ),
+                                    const SizedBox(width: 8),
+                                  ],
+                                  Text(
+                                    widget.title,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineSmall!
+                                        .copyWith(
+                                          fontSize: AppButtonSize.fontSize,
+                                          fontWeight: FontWeight.w600,
+                                          letterSpacing: 0.4,
+                                          color: effectiveTextColor,
+                                        ),
+                                    textAlign: TextAlign.center,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                            ),
+                      ),
+              ),
+            );
+          },
         );
-      },
-    );
       },
     );
   }

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_constants.dart';
+import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/widgets/finger_print/card/fingerprint_card_widget.dart';
@@ -102,50 +103,52 @@ class _FingerprintScreenState extends State<FingerprintScreen> {
           onRefresh: () async => await viewModel.initializeFingerprintScreen(context: context, empId: widget.empId),
           body: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(
-                  maxWidth: kIsWeb ? 1100 : double.infinity
+              constraints: const BoxConstraints(
+                  maxWidth: double.infinity
               ),
-              child: Padding(
-                padding: EdgeInsets.all(AppSizes.s12),
-                child: SingleChildScrollView(
-                  child: Consumer<FingerprintViewModel>(
-                      builder: (context, viewModel, child) => viewModel.isLoading
-                          ? const FingerprintLoadingScreenWidget()
-                          : (viewModel.fingerprints?.isEmpty ?? true) && (AppConstants.fingerPrints?.isEmpty ?? true)
-                              ? NoExistingPlaceholderScreen(
-                                  height: LayoutService.getHeight(context) * 0.6,
-                                  title: locale.tr(AppStrings.noFingerprintsYet))
-                              : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                          if(AppConstants.fingerPrints != null && AppConstants.fingerPrints!.isNotEmpty)  Center(
-                                child: CustomElevatedButton(
-                                    backgroundColor: Color(AppColors.buttons),
-                                    titleSize: AppSizes.s12,
-                                    title: locale.tr(AppStrings.showOfflineFingerprints).toUpperCase(),
-                                    onPressed: () async{
-                                      await context.pushNamed(
-                                          AppRoutes.fingerPrintOffline.name,
-                                          pathParameters: {
-                                            'lang': context.locale.languageCode
-                                          });
-                                      await viewModel.initializeFingerprintScreen(
-                                          context: context, empId: widget.empId);
-                                    }
-                                )),
-                            if(AppConstants.fingerPrints != null && AppConstants.fingerPrints!.isNotEmpty) SizedBox(height: 15),
-                                if(viewModel.fingerprints != null)  ...viewModel.fingerprints!.map(
-                                    (FingerPrintModel fingerprint) => Column(
-                                      children: [
-                                        FingerprintCard(
-                                          fingerprint: fingerprint,
-                                        ),
-                                        SizedBox(height: 12)
-                                      ],
-                                    ),
-                                  ),
-                                  ])),
+              child: SingleChildScrollView(
+                clipBehavior: Clip.none,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.page,
+                  vertical: AppSpacing.md,
                 ),
+                child: Consumer<FingerprintViewModel>(
+                    builder: (context, viewModel, child) => viewModel.isLoading
+                        ? const FingerprintLoadingScreenWidget()
+                        : (viewModel.fingerprints?.isEmpty ?? true) && (AppConstants.fingerPrints?.isEmpty ?? true)
+                            ? NoExistingPlaceholderScreen(
+                                height: LayoutService.getHeight(context) * 0.6,
+                                title: locale.tr(AppStrings.noFingerprintsYet))
+                            : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                        if(AppConstants.fingerPrints != null && AppConstants.fingerPrints!.isNotEmpty)  Center(
+                              child: CustomElevatedButton(
+                                  backgroundColor: Color(AppColors.buttons),
+                                  titleSize: AppSizes.s12,
+                                  title: locale.tr(AppStrings.showOfflineFingerprints).toUpperCase(),
+                                  onPressed: () async{
+                                    await context.pushNamed(
+                                        AppRoutes.fingerPrintOffline.name,
+                                        pathParameters: {
+                                          'lang': context.locale.languageCode
+                                        });
+                                    await viewModel.initializeFingerprintScreen(
+                                        context: context, empId: widget.empId);
+                                  }
+                              )),
+                          if(AppConstants.fingerPrints != null && AppConstants.fingerPrints!.isNotEmpty) const SizedBox(height: 15),
+                              if(viewModel.fingerprints != null)  ...viewModel.fingerprints!.map(
+                                  (FingerPrintModel fingerprint) => Column(
+                                    children: [
+                                      FingerprintCard(
+                                        fingerprint: fingerprint,
+                                      ),
+                                      const SizedBox(height: AppSpacing.cardGap),
+                                    ],
+                                  ),
+                                ),
+                                ])),
               ),
             ),
           )),

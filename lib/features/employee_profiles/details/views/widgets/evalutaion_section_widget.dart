@@ -28,20 +28,22 @@ class EvalutaionSectionWidget extends StatelessWidget {
              ListView.separated(
                  reverse: false,
                  shrinkWrap: true,
+                 clipBehavior: Clip.none,
                  physics: const ClampingScrollPhysics(),
                  padding: EdgeInsets.zero,
-                 itemBuilder: (context, index) =>  ProfileTileEva(
+                 itemBuilder: (context, index) => ProfileTileEva(
                    isTitleOnly: false,
                    isViewArrow: true,
+                   isDone: evaluations![index]['done'] == true,
                    createAt: evaluations![index]['created_at'],
                    eva: evaluations![index]['results'],
                    gainedPoints: evaluations![index]['gainedPoints'],
                    totalPoints: evaluations![index]['totalPoints'],
                    title: "${evaluations![index]['title']}",
-                   icon: evaluations![index]['done'] == true ? Icon(Icons.check_circle_outline, color: Colors.green, size: 20,): Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: Colors.black),
+                   icon: evaluations![index]['done'] == true ? const Icon(Icons.check_circle_outline, color: Colors.green, size: 20) : Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: Colors.black),
                    url: (evaluations![index]['submitUrl'] != null)? evaluations![index]['submitUrl'].toString() : null,
                  ),
-                 separatorBuilder: (context, index) => SizedBox(height: 12,),
+                 separatorBuilder: (context, index) => const SizedBox.shrink(),
                  itemCount:evaluations!.length <= 6 ? evaluations!.length : 6),
           if(evaluations!.isNotEmpty) SizedBox(height: 24),
           if(evaluations!.isNotEmpty) Center(

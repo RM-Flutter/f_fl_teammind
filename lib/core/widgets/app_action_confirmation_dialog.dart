@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/localization_service.dart';
 
@@ -61,9 +62,9 @@ Future<bool?> showAppActionConfirmationDialog({
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w700,
                     color: Color(AppColors.secondaryButton),
-                    fontFamily: isArabic ? null : 'Poppins',
+                    fontFamily: isArabic ? 'Cairo' : 'Poppins',
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -90,12 +91,12 @@ Future<bool?> showAppActionConfirmationDialog({
                     // Cancel / تراجع Button
                     Expanded(
                       child: SizedBox(
-                        height: 46,
+                        height: AppButtonSize.height,
                         child: OutlinedButton(
                           style: OutlinedButton.styleFrom(
                             side: BorderSide(color: Colors.grey.shade300, width: 1.2),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24),
+                              borderRadius: AppRadius.button,
                             ),
                             backgroundColor: Colors.grey.shade50,
                             foregroundColor: Colors.grey.shade800,
@@ -118,13 +119,13 @@ Future<bool?> showAppActionConfirmationDialog({
                     // Confirm / تأكيد Button
                     Expanded(
                       child: SizedBox(
-                        height: 46,
+                        height: AppButtonSize.height,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             elevation: 0,
                             backgroundColor: effectiveConfirmColor,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24),
+                              borderRadius: AppRadius.button,
                             ),
                           ),
                           onPressed: () => Navigator.pop(ctx, true),

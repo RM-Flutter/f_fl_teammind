@@ -16,6 +16,8 @@ import 'cached_network_image_widget.dart';
 import 'package:app_test/features/more/notifications/controllers/notification_controller.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:app_test/core/widgets/app_card.widget.dart';
 
 class NotificationCard extends StatefulWidget {
   final NotificationModel notification;
@@ -29,87 +31,86 @@ class NotificationCard extends StatefulWidget {
 class _NotificationCardState extends State<NotificationCard> {
   @override
   Widget build(BuildContext context) {
+    final bool seen = widget.notification.seen == true;
+    final String? imageUrl = (widget.notification.mainThumbnail != null &&
+            widget.notification.mainThumbnail!.isNotEmpty)
+        ? widget.notification.mainThumbnail![0].file
+        : null;
+    final String dateText = DateService.formatDate(
+            LocalizationService.isArabic(context: context) ? "ar" : "en",
+            context,
+            widget.notification.createdAt) ??
+        '';
 
-    return InkWell(
-      onTap: (){
-        // Mark as read locally if not already
-        if (widget.notification.seen != true && widget.notification.id != null) {
-          Provider.of<NotificationProviderModel>(context, listen: false)
-              .markAsRead(context, widget.notification.id!);
-        }
-        setState(() {
-          widget.notification.seen = true;
-        });
-        context.pushNamed(
-          AppRoutes.notificationDetails.name,
-          pathParameters: {
-            'lang': context.locale.languageCode,
-            'id': widget.notification.id!.toString(),
-          },
-        );
-      },
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: AppSizes.s8),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(AppRadius.md),
-        ),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.cardGap),
+      child: AppCard(
+        onTap: () {
+          if (widget.notification.seen != true &&
+              widget.notification.id != null) {
+            Provider.of<NotificationProviderModel>(context, listen: false)
+                .markAsRead(context, widget.notification.id!);
+          }
+          setState(() {
+            widget.notification.seen = true;
+          });
+          context.pushNamed(
+            AppRoutes.notificationDetails.name,
+            pathParameters: {
+              'lang': context.locale.languageCode,
+              'id': widget.notification.id!.toString(),
+            },
+          );
+        },
         child: Row(
           children: [
-            widget.notification.mainThumbnail!.isNotEmpty
-                ?ClipRRect(
-              borderRadius: BorderRadius.circular(AppRadius.md),
-                  child: CachedNetworkImage(
-                              height: AppSizes.s75,
-                              width: AppSizes.s75,
-                              fit: BoxFit.cover,
-                              imageUrl: widget.notification.mainThumbnail![0].file ?? "",
-                              placeholder: (context, url) =>
-                              const ShimmerAnimatedLoading(),
-                              errorWidget: (context, url, error) => const Icon(
-                  Icons.image_not_supported_outlined,
-                  size: AppSizes.s32,
-                  color: Colors.white,
-                              ),
-                            ),
-                )
-                : Container(
-                    height: AppSizes.s75,
-                    width: AppSizes.s75,
-                    padding: EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                      color: Color(AppColors.secondaryButton),
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(AppRadius.md),
-                      ),
-                    ),
-                    child: SvgPicture.asset("assets/images/svg/image_holder.svg"),
-                  ),
-            const SizedBox(width: 20,),
+            AppCardLeadingAvatar(
+              imageUrl: imageUrl,
+              icon: Icons.notifications_outlined,
+              borderColor: seen
+                  ? Colors.grey.shade400
+                  : Color(AppColors.buttons),
+            ),
+            const SizedBox(width: 12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Opacity(
-                    opacity: 0.3,
-                    child: AutoSizeText(
-                      DateService.formatDate(LocalizationService.isArabic(context: context) ?"ar" : "en",context,widget.notification.createdAt) ?? '',
-                      style: Theme.of(context).textTheme.labelSmall!,
+                  Text(
+                    widget.notification.title ?? '',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppStyles.heading(context).copyWith(
+                      fontWeight: seen ? FontWeight.w500 : FontWeight.w600,
+                      color: seen
+                          ? Colors.black.withOpacity(0.55)
+                          : Color(AppColors.secondaryButton),
+                    ),
+                  ),
+                  if (dateText.isNotEmpty) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      dateText,
+                      style: AppStyles.subtitleContent(context),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                  gapH4,
-                  Text(widget.notification.title ?? '',
-                    style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: widget.notification.seen == true? FontWeight.w300 : FontWeight.w700,
-                        color: widget.notification.seen == true? Colors.black.withOpacity(0.5):const Color(AppColors.realDark)),
-                  )
+                  ],
                 ],
               ),
             ),
+            if (!seen) ...[
+              const SizedBox(width: 8),
+              Container(
+                width: 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  color: Color(AppColors.buttons),
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ],
           ],
         ),
       ),

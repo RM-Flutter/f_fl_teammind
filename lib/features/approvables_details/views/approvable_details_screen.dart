@@ -199,8 +199,8 @@ class _ApprovableDetailsScreenState extends State<ApprovableDetailsScreen> {
                 Expanded(
                   child: Center(
                     child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        maxWidth: kIsWeb ? 1100 : 1.sw,
+                      constraints: const BoxConstraints(
+                        maxWidth: double.infinity,
                       ),
                       child:
                           CustomTabbarViewApprovableDetails(details: details),

@@ -9,6 +9,7 @@ import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/widgets/app_card.widget.dart';
 
 class PainterNotificationListViewItem extends StatefulWidget {
   final List notifications;
@@ -28,11 +29,10 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
             (notification['main_thumbnail'] as List).isNotEmpty)
         ? ((notification['main_thumbnail'] as List)[0]['file'] ?? '')
         : '';
-    final double iconSize = (1.sw * 0.22).clamp(60.0, 84.0).r;
 
     return Padding(
-      padding: EdgeInsets.only(bottom: AppSizes.s12),
-      child: InkWell(
+      padding: const EdgeInsets.only(bottom: AppSpacing.cardGap),
+      child: AppCard(
         onTap: () {
           setState(() {
             notification['seen'] = true;
@@ -43,93 +43,52 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
                 'id': notification['id'].toString(),
               });
         },
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        child: Container(
-          // no padding — icon fills full card height
-          decoration: BoxDecoration(
-            color: Color(AppColors.background),
-            borderRadius: BorderRadius.circular(AppRadius.md),
-            border: Border.all(color: const Color(0xFFE8ECF0), width: 1),
-            boxShadow: [
-              BoxShadow(
-                color: const Color.fromRGBO(0, 0, 0, 0.03),
-                spreadRadius: 0,
-                offset: Offset(0, 2),
-                blurRadius: 6,
-              )
-            ],
-          ),
-          child: Row(
-            children: [
-              // Blue icon — fills card height, all corners rounded
-              ClipRRect(
-                borderRadius: BorderRadius.circular((AppSizes.s15 - 1).r),
-                child: Container(
-                  width: iconSize,
-                  height: iconSize,
-                  color: Color(AppColors.buttons),
-                  child: imageUrl.isNotEmpty
-                      ? CachedNetworkImage(
-                          imageUrl: imageUrl,
-                          width: iconSize,
-                          height: iconSize,
-                          fit: BoxFit.cover,
-                          placeholder: (context, url) => ShimmerAnimatedLoading(
-                            width: iconSize,
-                            height: iconSize,
-                            circularRaduis: 0,
-                          ),
-                          errorWidget: (context, url, error) => Center(
-                            child: Icon(
-                              Icons.notifications_outlined,
-                              color: Colors.white,
-                              size: iconSize * 0.45,
-                            ),
-                          ),
-                        )
-                      : Center(
-                          child: Icon(
-                            Icons.notifications_outlined,
-                            color: Colors.white,
-                            size: iconSize * 0.45,
-                          ),
-                        ),
-                ),
-              ),
-              SizedBox(width: 12),
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: AppSizes.s12),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        DateFormat('dd/MM/yyyy', context.locale.languageCode)
-                            .format(DateTime.parse(notification['created_at'])),
-                        style: AppStyles.greyContent(context).copyWith(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w400,
-                          color: const Color(0xFFB0B7C3),
-                        ),
-                      ),
-                      SizedBox(height: 4),
-                      Text(
-                        (notification['title'] ?? '').toString().toUpperCase(),
-                        style: AppStyles.darkContent(context).copyWith(
-                          fontSize: 13,
-                          fontWeight: seen ? FontWeight.w400 : FontWeight.w700,
-                          color: seen
-                              ? Colors.black.withOpacity(0.5)
-                              : Color(AppColors.secondaryButton),
-                        ),
-                      ),
-                    ],
+        child: Row(
+          children: [
+            AppCardLeadingAvatar(
+              imageUrl: imageUrl.isNotEmpty ? imageUrl : null,
+              icon: Icons.notifications_outlined,
+              borderColor: seen
+                  ? Colors.grey.shade400
+                  : Color(AppColors.buttons),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    (notification['title'] ?? '').toString(),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppStyles.heading(context).copyWith(
+                      fontWeight: seen ? FontWeight.w500 : FontWeight.w600,
+                      color: seen
+                          ? Colors.black.withOpacity(0.55)
+                          : Color(AppColors.secondaryButton),
+                    ),
                   ),
+                  const SizedBox(height: 2),
+                  Text(
+                    DateFormat('dd/MM/yyyy', context.locale.languageCode)
+                        .format(DateTime.parse(notification['created_at'])),
+                    style: AppStyles.subtitleContent(context),
+                  ),
+                ],
+              ),
+            ),
+            if (!seen) ...[
+              const SizedBox(width: 8),
+              Container(
+                width: 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  color: Color(AppColors.buttons),
+                  shape: BoxShape.circle,
                 ),
               ),
-              SizedBox(width: AppSizes.s12),
             ],
-          ),
+          ],
         ),
       ),
     );

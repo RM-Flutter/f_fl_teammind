@@ -213,6 +213,7 @@ class _ShiftChangeRequestsScreenState extends State<ShiftChangeRequestsScreen> {
                         )
                       : ListView.builder(
                           controller: _scrollController,
+                          clipBehavior: Clip.none,
                           physics: const AlwaysScrollableScrollPhysics(),
                           padding: const EdgeInsets.symmetric(
                             horizontal: 16,

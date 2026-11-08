@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 
 class GradientBgImage extends StatelessWidget {
@@ -10,21 +11,15 @@ class GradientBgImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: [
-            const Color(0xFFFF007A).withOpacity(0.03),
-            const Color(0xFF00A1FF).withOpacity(0.03)
-          ],
-        ),
-      ),
+      color: Color(AppColors.background),
       child: Padding(
-          padding: padding ??
-              const EdgeInsets.symmetric(
-                  horizontal: AppSizes.s24, vertical: AppSizes.s24),
-          child: child),
+        padding: padding ??
+            const EdgeInsets.symmetric(
+              horizontal: AppSizes.s24,
+              vertical: AppSizes.s24,
+            ),
+        child: child,
+      ),
     );
   }
 }

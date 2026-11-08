@@ -124,8 +124,8 @@ class _RewardsAndPenaltiesScreenState extends State<RewardsAndPenaltiesScreen> {
           body: Align(
             alignment: Alignment.topCenter,
             child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: kIsWeb ? 1100 : double.infinity,
+              constraints: const BoxConstraints(
+                maxWidth: double.infinity,
               ),
               child: Padding(
                 padding: EdgeInsets.all(AppSizes.s12),

@@ -122,8 +122,8 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                         ),
                         Center(
                           child: ConstrainedBox(
-                            constraints: BoxConstraints(
-                                maxWidth: kIsWeb ? 800 : double.infinity
+                            constraints: const BoxConstraints(
+                                maxWidth: double.infinity
                             ),
                             child: Padding(padding: EdgeInsets.symmetric(horizontal: 15),
                               child: Column(
@@ -169,6 +169,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                   SizedBox(height: 20,),
                                   ListView.separated(
                                     padding: EdgeInsets.zero,
+                                    clipBehavior: Clip.none,
                                     reverse: false,
                                     shrinkWrap: true,
                                     physics: const NeverScrollableScrollPhysics(),
@@ -201,15 +202,17 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                         },
                                         child: IntrinsicHeight(
                                           child: Container(
+                                            clipBehavior: Clip.antiAlias,
                                             decoration: BoxDecoration(
                                               color: Colors.white,
-                                              borderRadius: BorderRadius.zero,
-                                              border: Border.all(
-                                                color: isCompleted
-                                                    ?  (Color(AppColors.buttons))
-                                                    : Color(AppColors.border),
-                                                width: 1,
-                                              ),
+                                              borderRadius: BorderRadius.circular(AppRadius.md),
+                                              border: isCompleted
+                                                  ? Border.all(
+                                                      color: Color(AppColors.buttons),
+                                                      width: 1.5,
+                                                    )
+                                                  : AppBorders.card,
+                                              boxShadow: AppShadows.card,
                                             ),
                                             child: Row(
                                               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -290,7 +293,6 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                                     width: 40,
                                                     decoration:  BoxDecoration(
                                                       color: (Color(AppColors.buttons)),
-                                                      borderRadius: BorderRadius.zero,
                                                     ),
                                                     child: Center(
                                                       child: Icon(
@@ -330,50 +332,44 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                         ),
                                       );
                                     },
-                                    separatorBuilder: (context, index) => SizedBox(height: 15),
+                                    separatorBuilder: (context, index) => const SizedBox(height: AppSpacing.cardGap),
                                     itemCount: value.getOneTaskModel!.task!.subTasks!.length,
                                   ),
                                   SizedBox(height: 15,),
-                                  if(value.getOneTaskModel!.task!.status == "open")GestureDetector(
-                                    onTap: (){
-                                      value.updateStatusTask(context, value.getOneTaskModel!.task!.id);
-                                    },
-                                    child: Container(
-                                      padding: EdgeInsets.only(
-                                          left: LocalizationService.isArabic(context: context) ?0 :15,
-                                          right: LocalizationService.isArabic(context: context) ?15 :0
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: Color(AppColors.green),
-                                        borderRadius: BorderRadius.circular(AppRadius.sm),
-
-                                      ),
-                                      child: Row(
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: [
-                                          Padding(padding: EdgeInsets.symmetric(vertical: 10),
-                                            child: Text(AppStrings.closeMainTask.tr(),
-                                              style: AppStyles.whiteContent(context).copyWith(fontSize: 12,fontWeight: FontWeight.w600),),
+                                  if(value.getOneTaskModel!.task!.status == "open")
+                                    SizedBox(
+                                      width: double.infinity,
+                                      height: AppButtonSize.height,
+                                      child: ElevatedButton.icon(
+                                        onPressed: () {
+                                          value.updateStatusTask(context, value.getOneTaskModel!.task!.id);
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Color(AppColors.green),
+                                          foregroundColor: Colors.white,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: AppRadius.button,
                                           ),
-                                          const Spacer(),
-                                          Container(
-                                            alignment: Alignment.center,
-                                            padding: EdgeInsets.symmetric(horizontal: 5 ,vertical: 15),
-                                            decoration: BoxDecoration(
-                                                color: Colors.transparent,
-                                                borderRadius: BorderRadius.only(
-                                                  topRight: LocalizationService.isArabic(context: context) ?const Radius.circular(0) : Radius.circular(AppRadius.xs) ,
-                                                  bottomRight: LocalizationService.isArabic(context: context) ?const Radius.circular(0) : Radius.circular(AppRadius.xs) ,
-                                                  topLeft: LocalizationService.isArabic(context: context) ?Radius.circular(AppRadius.sm) : const Radius.circular(0) ,
-                                                  bottomLeft: LocalizationService.isArabic(context: context) ?Radius.circular(AppRadius.sm) : const Radius.circular(0) ,
-                                                )
-                                            ),
-                                            child: (value.isLoading == true)? SizedBox(width: 24, height: 24, child: const CircularProgressIndicator(color: Colors.white,)):Icon(Icons.check, color: Colors.white, size: 24,),
-                                          )
-                                        ],
+                                        ),
+                                        icon: (value.isLoading == true)
+                                            ? const SizedBox(
+                                                width: 20,
+                                                height: 20,
+                                                child: CircularProgressIndicator(
+                                                  color: Colors.white,
+                                                  strokeWidth: 2,
+                                                ),
+                                              )
+                                            : const Icon(Icons.check, color: Colors.white, size: 20),
+                                        label: Text(
+                                          locale.StringTranslateExtension(AppStrings.closeMainTask).tr(),
+                                          style: AppStyles.whiteContent(context).copyWith(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
                                   SizedBox(height: 20,),
                                   Row(
                                     children: [

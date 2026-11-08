@@ -179,7 +179,7 @@ class RequestsCalendarScreen extends StatelessWidget {
               body: SingleChildScrollView(
                 child: Center(
                   child: ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: kIsWeb ? 1100 : 1.sw),
+                    constraints: const BoxConstraints(maxWidth: double.infinity),
                     child: Padding(
                       padding: EdgeInsets.all(12),
                       child: Column(

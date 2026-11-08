@@ -99,9 +99,8 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                 SizedBox(height: 20),
                                 Center(
                                   child: ConstrainedBox(
-                                    constraints: BoxConstraints(
-                                        maxWidth:
-                                            kIsWeb ? 800 : double.infinity),
+                                    constraints: const BoxConstraints(
+                                        maxWidth: double.infinity),
                                     child: Padding(
                                       padding:
                                           EdgeInsets.symmetric(horizontal: 15),

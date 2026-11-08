@@ -289,8 +289,8 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
           ),
           child: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(
-                  maxWidth: kIsWeb ? 1100 : 1.sw
+              constraints: const BoxConstraints(
+                  maxWidth: double.infinity
               ),
               child: Column(
                 children: [

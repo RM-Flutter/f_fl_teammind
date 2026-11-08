@@ -74,10 +74,6 @@ abstract class AppThemeService {
         ),
         displayMedium: TextStyle(
           // --> used
-            letterSpacing: LocalizationService.isArabic(context: context)
-                ? null
-                : AppSizes.s12,
-            height: AppSizes.s6,
             fontSize: AppSizes.s16,
             fontWeight: FontWeight.w500,
             color: Colors.white),
@@ -96,8 +92,6 @@ abstract class AppThemeService {
             letterSpacing: kIsWeb && !LocalizationService.isArabic(context: context) ? 0.3 : null),
         headlineMedium: TextStyle(
           // --> used
-            letterSpacing:
-            LocalizationService.isArabic(context: context) ? null : 1.2,
             color: Colors.white,
             fontWeight: FontWeight.w500,
             fontSize: AppSizes.s13),
@@ -105,9 +99,7 @@ abstract class AppThemeService {
           // --> used
             fontWeight: FontWeight.w600,
             color: colorPalette.quinaryTextColor.color,
-            fontSize: AppSizes.s16,
-            letterSpacing:
-            LocalizationService.isArabic(context: context) ? null : 1.6),
+            fontSize: AppSizes.s16),
         headlineLarge: TextStyle(
           // --> used for the title of modal sheet
             fontWeight: FontWeight.bold,
@@ -119,8 +111,6 @@ abstract class AppThemeService {
           // --> used
           fontWeight: FontWeight.w400,
           fontSize: AppSizes.s10,
-          letterSpacing:
-          LocalizationService.isArabic(context: context) ? null : 1,
           color: const Color(AppColors.grey47),
         ),
         bodyMedium: TextStyle(
@@ -136,8 +126,6 @@ abstract class AppThemeService {
           //-> used
           fontWeight: FontWeight.w400,
           fontSize: AppSizes.s12,
-          letterSpacing:
-          LocalizationService.isArabic(context: context) ? null : 0.5,
           color: const Color(AppColors.grey3B),
         ),
         titleLarge: const TextStyle(
@@ -157,8 +145,6 @@ abstract class AppThemeService {
           //-- >used
           fontSize: AppSizes.s14,
           fontWeight: FontWeight.w500,
-          letterSpacing:
-          LocalizationService.isArabic(context: context) ? null : 0.75,
           height: 1.1,
           color: colorPalette.primaryTextColor.get(isDark).withOpacity(.75),
         ),
@@ -174,8 +160,8 @@ abstract class AppThemeService {
       ThemeData(
         // application font family
         fontFamily: LocalizationService.isArabic(context: context)
-            ? AppConstants.fontFamilyMontserratArabic
-            : AppConstants.fontFamilyIbrand,
+            ? AppConstants.fontFamilyCairo
+            : AppConstants.fontFamilyPoppins,
         // application input decoration theme
         inputDecorationTheme: InputDecorationTheme(
           hintStyle: TextStyle(
@@ -217,13 +203,16 @@ abstract class AppThemeService {
           fillColor: colorPalette.inputFillColor.color,
           isDense: true,
         ),
-        // Cards: white, 12px corners, soft shadow, no border (see AppCard / app_design.dart)
+        // Cards: white, 12px corners, 12% grey border, soft 3% shadow (see AppCard / app_design.dart)
         cardTheme: CardThemeData(
-          color: Color(AppColors.cardBackground),
+          color: Colors.white,
           surfaceTintColor: Colors.transparent,
-          shadowColor: const Color(0x33101828),
-          elevation: 2,
-          shape: RoundedRectangleBorder(borderRadius: AppRadius.card),
+          shadowColor: Colors.black.withOpacity(0.08),
+          elevation: 1,
+          shape: RoundedRectangleBorder(
+            borderRadius: AppRadius.card,
+            side: AppBorders.cardSide,
+          ),
           clipBehavior: Clip.antiAlias,
         ),
         dividerTheme: DividerThemeData(color: Color(AppColors.divider), thickness: 1, space: 1),
@@ -251,17 +240,27 @@ abstract class AppThemeService {
           backgroundColor: colorPalette.fabBackgroundColor.color,
           shape: const CircleBorder(),
         ),
-        // application appbar theme
+        // application appbar theme (unified white bar + navy title)
         appBarTheme: AppBarTheme(
-          backgroundColor: colorPalette.appBarBackgroundColor.color,
+          backgroundColor: Colors.white,
+          surfaceTintColor: Colors.transparent,
           elevation: AppSizes.s0,
           centerTitle: true,
+          iconTheme: IconThemeData(color: Color(AppColors.secondaryButton)),
+          titleTextStyle: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w700,
+            color: Color(AppColors.secondaryButton),
+            fontFamily: LocalizationService.isArabic(context: context)
+                ? AppConstants.fontFamilyCairo
+                : AppConstants.fontFamilyPoppins,
+          ),
         ),
         // application text theme
         textTheme: _textTheme(context: context, isDark: isDark).apply(
           fontFamily: LocalizationService.isArabic(context: context)
-              ? AppConstants.fontFamilyMontserratArabic
-              : AppConstants.fontFamilyIbrand,
+              ? AppConstants.fontFamilyCairo
+              : AppConstants.fontFamilyPoppins,
         ),
         // application theme
         brightness: isDark ? Brightness.dark : Brightness.light,
@@ -278,8 +277,8 @@ abstract class AppThemeService {
         // Buttons: all pill shaped, same height, padding and text (see AppButtonSize)
         elevatedButtonTheme: ElevatedButtonThemeData(
             style: ElevatedButton.styleFrom(
-              foregroundColor: colorPalette.quinaryTextColor.color,
-              backgroundColor: colorPalette.primaryColorBackground.color,
+              foregroundColor: Colors.white,
+              backgroundColor: Color(AppColors.buttons),
               elevation: 0,
               minimumSize: const Size(AppButtonSize.minWidth, AppButtonSize.height),
               padding: AppButtonSize.padding,
@@ -288,8 +287,8 @@ abstract class AppThemeService {
             )),
         filledButtonTheme: FilledButtonThemeData(
             style: FilledButton.styleFrom(
-              foregroundColor: colorPalette.quinaryTextColor.color,
-              backgroundColor: colorPalette.primaryColorBackground.color,
+              foregroundColor: Colors.white,
+              backgroundColor: Color(AppColors.buttons),
               minimumSize: const Size(AppButtonSize.minWidth, AppButtonSize.height),
               padding: AppButtonSize.padding,
               shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
@@ -297,8 +296,8 @@ abstract class AppThemeService {
             )),
         outlinedButtonTheme: OutlinedButtonThemeData(
             style: OutlinedButton.styleFrom(
-              foregroundColor: colorPalette.primaryColorBackground.color,
-              side: BorderSide(color: colorPalette.primaryColorBackground.color, width: 1.5),
+              foregroundColor: Color(AppColors.buttons),
+              side: BorderSide(color: Color(AppColors.buttons), width: 1.5),
               minimumSize: const Size(AppButtonSize.minWidth, AppButtonSize.height),
               padding: AppButtonSize.padding,
               shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
@@ -306,7 +305,7 @@ abstract class AppThemeService {
             )),
         textButtonTheme: TextButtonThemeData(
             style: TextButton.styleFrom(
-              foregroundColor: colorPalette.secondaryColor.color,
+              foregroundColor: Color(AppColors.buttons),
               minimumSize: const Size(AppButtonSize.minWidth, AppButtonSize.compactHeight),
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
               shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
@@ -322,17 +321,17 @@ abstract class AppThemeService {
           labelStyle: TextStyle(
             fontSize: AppSizes.s16,
             fontFamily: LocalizationService.isArabic(context: context)
-                ? AppConstants.fontFamilyMontserratArabic
-                : AppConstants.fontFamilyIbrand,
-            fontWeight: FontWeight.bold,
+                ? AppConstants.fontFamilyCairo
+                : AppConstants.fontFamilyPoppins,
+            fontWeight: FontWeight.w600,
           ),
           unselectedLabelColor: colorPalette.tertiaryTextColor.color,
           unselectedLabelStyle: TextStyle(
               fontSize: AppSizes.s16,
               fontFamily: LocalizationService.isArabic(context: context)
-                  ? AppConstants.fontFamilyMontserratArabic
-                  : AppConstants.fontFamilyIbrand,
-              fontWeight: FontWeight.bold),
+                  ? AppConstants.fontFamilyCairo
+                  : AppConstants.fontFamilyPoppins,
+              fontWeight: FontWeight.w500),
           labelPadding: const EdgeInsets.symmetric(vertical: 8.0),
         ),
 

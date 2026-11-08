@@ -12,21 +12,15 @@ class GradientBgImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: [
-            const Color(AppColors.pinkLight).withOpacity(0.03),
-            const Color(AppColors.blueLight).withOpacity(0.03)
-          ],
-        ),
-      ),
+      color: Color(AppColors.background),
       child: Padding(
-          padding: padding ??
-              const EdgeInsets.symmetric(
-                  horizontal: AppSizes.s24, vertical: AppSizes.s24),
-          child: child),
+        padding: padding ??
+            const EdgeInsets.symmetric(
+              horizontal: AppSizes.s24,
+              vertical: AppSizes.s24,
+            ),
+        child: child,
+      ),
     );
   }
 }

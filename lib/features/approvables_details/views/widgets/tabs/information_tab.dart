@@ -8,6 +8,8 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/widgets/app_card.widget.dart';
 
 class InformationTab extends StatelessWidget {
   final String? createdAt;
@@ -39,27 +41,23 @@ class InformationTab extends StatelessWidget {
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.symmetric(vertical: 12),
+      padding: AppSpacing.cardPadding,
       decoration: BoxDecoration(
-        color: const Color(0xFFF3F3F3),
-        borderRadius: BorderRadius.circular(AppRadius.xl),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        border: AppBorders.card,
+        boxShadow: AppShadows.card,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             "$label : ",
-            style: AppStyles.darkContent(context).copyWith(
-              fontWeight: FontWeight.w400,
-              fontSize: 12,
-            ),
+            style: AppStyles.subtitleContent(context).copyWith(fontSize: 12),
           ),
           Text(
             value,
-            style: AppStyles.primaryContent(context).copyWith(
-              fontWeight: FontWeight.bold,
-              fontSize: 13,
-            ),
+            style: AppStyles.heading(context).copyWith(fontSize: 13),
           ),
         ],
       ),
@@ -108,24 +106,21 @@ class InformationTab extends StatelessWidget {
             const SizedBox(height: 12),
             ...seenBy!.map((person) {
               return Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                padding: const EdgeInsets.all(12),
+                margin: const EdgeInsets.symmetric(
+                    horizontal: 16, vertical: AppSpacing.cardGap / 2),
+                padding: AppSpacing.cardPadding,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(AppRadius.md),
-                  border: Border.all(color: Colors.grey.shade200),
+                  border: AppBorders.card,
+                  boxShadow: AppShadows.card,
                 ),
                 child: Row(
                   children: [
-                    CircleAvatar(
-                      radius: 20,
-                      backgroundColor: Colors.grey.shade200,
-                      backgroundImage: (person.avatar != null && person.avatar!.isNotEmpty)
-                          ? (kIsWeb ? NetworkImage(person.avatar!) : CachedNetworkImageProvider(person.avatar!)) as ImageProvider
-                          : null,
-                      child: (person.avatar == null || person.avatar!.isEmpty)
-                          ? Icon(Icons.person, color: Colors.grey.shade400)
-                          : null,
+                    AppCardLeadingAvatar(
+                      imageUrl: person.avatar,
+                      name: person.name,
+                      borderColor: Color(AppColors.buttons),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -134,20 +129,15 @@ class InformationTab extends StatelessWidget {
                         children: [
                           Text(
                             person.name ?? '',
-                            style: const TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                            ),
+                            style: AppStyles.heading(context),
                           ),
-                          if (person.date != null && person.date!.isNotEmpty)
+                          if (person.date != null && person.date!.isNotEmpty) ...[
+                            const SizedBox(height: 2),
                             Text(
                               _formatInfoDate(person.date, context),
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: Colors.grey.shade600,
-                              ),
+                              style: AppStyles.subtitleContent(context),
                             ),
+                          ],
                         ],
                       ),
                     ),
@@ -291,15 +281,14 @@ class InformationTab extends StatelessWidget {
     }
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.symmetric(
+          horizontal: 16, vertical: AppSpacing.cardGap / 2),
+      padding: AppSpacing.cardPadding,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.md),
-        border: Border.all(color: Colors.grey.shade100),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4))
-        ]
+        border: AppBorders.card,
+        boxShadow: AppShadows.card,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

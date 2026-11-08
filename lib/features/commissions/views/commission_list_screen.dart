@@ -115,38 +115,37 @@ class _CommissionListScreenState extends State<CommissionListScreen> {
     return Center(
       child: ConstrainedBox(
         constraints:
-            BoxConstraints(maxWidth: kIsWeb ? 1100 : double.infinity),
-        child: Padding(
-          padding: const EdgeInsets.all(AppSizes.s12),
-          child: RefreshIndicator.adaptive(
-            onRefresh: () => controller.initializeScreen(context),
-            child: ListView.builder(
-              controller: _scrollController,
-              physics: const AlwaysScrollableScrollPhysics(),
-              itemCount: controller.commissions!.length +
-                  (controller.isLoadingMore ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (index == controller.commissions!.length) {
-                  return const Padding(
-                    padding: EdgeInsets.all(16),
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                }
-                return TweenAnimationBuilder<double>(
-                  duration: Duration(
-                      milliseconds: 350 + (index * 80).clamp(0, 500)),
-                  tween: Tween(begin: 0.0, end: 1.0),
-                  curve: Curves.easeOutQuart,
-                  builder: (ctx, value, child) => Transform.translate(
-                    offset: Offset(0, 40 * (1 - value)),
-                    child: Opacity(opacity: value, child: child),
-                  ),
-                  child: CommissionCardWidget(
-                    commission: controller.commissions![index],
-                  ),
+            const BoxConstraints(maxWidth: double.infinity),
+        child: RefreshIndicator.adaptive(
+          onRefresh: () => controller.initializeScreen(context),
+          child: ListView.builder(
+            controller: _scrollController,
+            clipBehavior: Clip.none,
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 80),
+            physics: const AlwaysScrollableScrollPhysics(),
+            itemCount: controller.commissions!.length +
+                (controller.isLoadingMore ? 1 : 0),
+            itemBuilder: (context, index) {
+              if (index == controller.commissions!.length) {
+                return const Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Center(child: CircularProgressIndicator()),
                 );
-              },
-            ),
+              }
+              return TweenAnimationBuilder<double>(
+                duration: Duration(
+                    milliseconds: 350 + (index * 80).clamp(0, 500)),
+                tween: Tween(begin: 0.0, end: 1.0),
+                curve: Curves.easeOutQuart,
+                builder: (ctx, value, child) => Transform.translate(
+                  offset: Offset(0, 40 * (1 - value)),
+                  child: Opacity(opacity: value, child: child),
+                ),
+                child: CommissionCardWidget(
+                  commission: controller.commissions![index],
+                ),
+              );
+            },
           ),
         ),
       ),
@@ -184,7 +183,7 @@ class _ActiveFiltersBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: kIsWeb ? 1100 : double.infinity),
+        constraints: const BoxConstraints(maxWidth: double.infinity),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(
             AppSizes.s12,
@@ -502,14 +501,11 @@ class _CommissionFilterSheetState extends State<_CommissionFilterSheet> {
               children: [
                 Expanded(
                   child: SizedBox(
-                    height: 50,
+                    height: AppButtonSize.height,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(AppColors.buttons),
                         foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppRadius.md),
-                        ),
                       ),
                       onPressed: () => Navigator.pop(context, {
                         'status': _status,
@@ -528,14 +524,11 @@ class _CommissionFilterSheetState extends State<_CommissionFilterSheet> {
                 ),
                 const SizedBox(width: 12),
                 SizedBox(
-                  height: 50,
+                  height: AppButtonSize.height,
                   child: OutlinedButton(
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Color(AppColors.secondaryButton),
                       side: BorderSide(color: Color(AppColors.secondaryButton)),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppRadius.md),
-                      ),
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                     ),
                     onPressed: () => Navigator.pop(context, {

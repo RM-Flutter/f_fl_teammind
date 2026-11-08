@@ -14,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/widgets/app_card.widget.dart';
+import 'package:app_test/core/widgets/app_status_badge.widget.dart';
 
 class DailyReportsSectionWidget extends StatelessWidget {
   final EmployeeProfileModel? employee;
@@ -47,134 +49,75 @@ class DailyReportsSectionWidget extends StatelessWidget {
           ListView.separated(
             reverse: false,
             shrinkWrap: true,
+            clipBehavior: Clip.none,
             physics: const ClampingScrollPhysics(),
             padding: EdgeInsets.zero,
             itemBuilder: (context, index) {
               final report = reports![index];
-              return Container(
-                margin: const EdgeInsets.symmetric(horizontal: 2),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(AppRadius.lg),
-                  boxShadow: [
-                    BoxShadow(
-                      color:  Color(AppColors.buttons).withOpacity(0.06),
-                      blurRadius: 15,
-                      spreadRadius: 0,
-                      offset: const Offset(0, 5),
+              final dateStr = report.createdAt != null
+                  ? DateFormat('EEEE, dd MMM yyyy', context.locale.languageCode)
+                      .format(report.createdAt!)
+                  : "No Date";
+              final subtitleStr = (!isIncoming &&
+                      report.done != null &&
+                      report.done!.isNotEmpty)
+                  ? report.done!
+                  : (isIncoming &&
+                          employee?.department != null &&
+                          employee!.department!.isNotEmpty)
+                      ? employee!.department!
+                      : '';
+              final accentColor = Color(AppColors.buttons);
+
+              return AppCard(
+                onTap: () {
+                  context.pushNamed(
+                    AppRoutes.dailyReportDetailsScreen.name,
+                    pathParameters: {'lang': context.locale.languageCode},
+                    extra: report,
+                  );
+                },
+                child: Row(
+                  children: [
+                    AppCardLeadingAvatar(
+                      icon: Icons.calendar_month_rounded,
+                      borderColor: accentColor,
                     ),
-                  ],
-                  border: Border.all(color: Colors.grey.shade100, width: 1.5),
-                ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(AppRadius.lg),
-                    onTap: () {
-                      context.pushNamed(
-                         AppRoutes.dailyReportDetailsScreen.name,
-                         pathParameters: {'lang': context.locale.languageCode},
-                         extra: report,
-                      );
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                    const SizedBox(width: 12),
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      color:  Color(AppColors.buttons).withOpacity(0.08),
-                                      borderRadius: BorderRadius.circular(AppRadius.md),
-                                    ),
-                                    child:  Icon(Icons.calendar_month_rounded, color: Color(AppColors.buttons), size: 20),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        report.createdAt != null 
-                                          ? DateFormat('EEEE, dd MMM yyyy', context.locale.languageCode).format(report.createdAt!) 
-                                          : "No Date",
-                                        style: AppStyles.titleTextContent(context).copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 14,
-                                          color:  Color(AppColors.secondaryButton),
-                                        )
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              Icon(Icons.arrow_forward_ios_rounded, size: 14, color: Colors.grey.shade300),
-                            ],
+                          Text(
+                            dateStr,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppStyles.heading(context),
                           ),
-                          if (!isIncoming && report.done != null && report.done!.isNotEmpty) ...[
-                            Padding(
-                              padding: const EdgeInsets.only(top: 16, bottom: 12),
-                              child: Divider(height: 1, color: Colors.grey.shade100),
-                            ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Icon(Icons.check_circle_rounded, color: Colors.green.shade400, size: 18),
-                                const SizedBox(width: 8),
-                                Expanded(
-                                  child: Text(
-                                    report.done!, 
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: AppStyles.titleTextContent(context).copyWith(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 13,
-                                      color: Colors.grey.shade700,
-                                      height: 1.4,
-                                    )
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ] else if (isIncoming && employee?.department != null && employee!.department!.isNotEmpty) ...[
-                            Padding(
-                              padding: const EdgeInsets.only(top: 16, bottom: 12),
-                              child: Divider(height: 1, color: Colors.grey.shade100),
-                            ),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Icon(Icons.business_rounded, color: Colors.blue.shade400, size: 18),
-                                const SizedBox(width: 8),
-                                Expanded(
-                                  child: Text(
-                                    employee!.department!,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: AppStyles.titleTextContent(context).copyWith(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 13,
-                                      color: Colors.grey.shade700,
-                                      height: 1.4,
-                                    )
-                                  ),
-                                ),
-                              ],
+                          if (subtitleStr.isNotEmpty) ...[
+                            const SizedBox(height: 2),
+                            Text(
+                              subtitleStr,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppStyles.subtitleContent(context),
                             ),
                           ],
                         ],
                       ),
                     ),
-                  ),
+                    const SizedBox(width: 8),
+                    AppStatusBadge(
+                      label: AppStrings.dailyReports.tr(),
+                      color: accentColor,
+                      icon: Icons.description_outlined,
+                    ),
+                  ],
                 ),
               );
             },
-            separatorBuilder: (context, index) => const SizedBox(height: 16),
+            separatorBuilder: (context, index) =>
+                const SizedBox(height: AppSpacing.cardGap),
             itemCount: reports!.length <= 5 ? reports!.length : 5,
           ),
           if (reports!.isNotEmpty) const SizedBox(height: 24),

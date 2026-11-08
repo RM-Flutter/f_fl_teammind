@@ -1,26 +1,25 @@
 import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/date_service.dart';
 import 'package:app_test/core/services/requests_services.dart';
 import 'package:app_test/core/services/settings_service.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:app_test/core/utils/app_styles.dart';
-import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
-import 'package:app_test/features/cv_hub/models/cv_hub_models.dart';
-
-import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/widgets/app_action_confirmation_dialog.dart';
+import 'package:app_test/core/widgets/app_card.widget.dart';
+import 'package:app_test/core/widgets/app_status_badge.widget.dart';
+import 'package:app_test/core/widgets/quick_action_sheet.dart';
 import 'package:app_test/features/approvables_details/data/services/approvables_details_service.dart';
+import 'package:app_test/features/approvables_details/views/widgets/overlapping_vacations_sheet.dart';
+import 'package:app_test/features/cv_hub/models/cv_hub_models.dart';
+import 'package:app_test/features/expense_claim_requests/shared/models/expense_claim_model.dart';
 import 'package:app_test/features/overtime_requests/models/overtime_request_model.dart';
 import 'package:app_test/features/salary_advance_requests/shared/models/salary_advance_request_model.dart';
-import 'package:app_test/features/expense_claim_requests/shared/models/expense_claim_model.dart';
 import 'package:app_test/features/shifts/models/shift_change_request_model.dart';
-import 'package:app_test/core/widgets/quick_action_sheet.dart';
-import 'package:app_test/features/approvables_details/views/widgets/overlapping_vacations_sheet.dart';
-import 'package:app_test/core/constants/app_design.dart';
-
-import 'app_action_confirmation_dialog.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ApprovableCardWidget extends StatelessWidget {
   final dynamic
@@ -53,6 +52,7 @@ class ApprovableCardWidget extends StatelessWidget {
     String title = '';
     String subtitle = '';
     String employeeName = '';
+    String? avatarUrl;
     String approvableType = 'employee_requests';
     String id = '';
 
@@ -118,7 +118,7 @@ class ApprovableCardWidget extends StatelessWidget {
           final formattedFrom = DateService.formatDate(
                   isArabic ? 'ar' : 'en', context, sa.from) ??
               sa.from!;
-          details += ' • ${'from'.tr()}: $formattedFrom';
+          details += ' · ${'from'.tr()}: $formattedFrom';
         }
         subtitle = details;
       } else if (request is ExpenseClaimModel) {
@@ -130,24 +130,22 @@ class ApprovableCardWidget extends StatelessWidget {
         id = ec.id?.toString() ?? '';
         approvableType = 'employee_expense_claims';
 
-        // Title = reason (or money value if reason is empty)
         final amount = ec.moneyValue ?? '0';
         title = ec.reason?.isNotEmpty == true
             ? ec.reason!
             : '$amount ${'egp_2'.tr()}';
 
-        // Subtitle = amount + category
         String sub = '$amount ${'egp_2'.tr()}';
         if (ec.categoryName != null && ec.categoryName!.isNotEmpty) {
-          sub += ' • ${ec.categoryName}';
+          sub += ' · ${ec.categoryName}';
         } else if (ec.category != null && ec.category!.isNotEmpty) {
-          sub += ' • ${ec.category}';
+          sub += ' · ${ec.category}';
         }
         if (ec.dateFrom != null && ec.dateFrom!.isNotEmpty) {
           final formattedDate = DateService.formatDate(
                   isArabic ? 'ar' : 'en', context, ec.dateFrom) ??
               ec.dateFrom!;
-          sub += ' • $formattedDate';
+          sub += ' · $formattedDate';
         }
         subtitle = sub;
       } else if (request is ShiftChangeRequestModel) {
@@ -199,7 +197,7 @@ class ApprovableCardWidget extends StatelessWidget {
         approvableType = 'interview';
 
         title =
-            '${interview.candidate?.job?.title ?? ''} • ${interview.interviewType ?? ''}';
+            '${interview.candidate?.job?.title ?? ''} · ${interview.interviewType ?? ''}';
         subtitle = interview.scheduledAt ?? '';
       } else {
         final dyn = request as dynamic;
@@ -209,9 +207,12 @@ class ApprovableCardWidget extends StatelessWidget {
         employeeName = dyn.employeeName ?? '';
         id = dyn.id?.toString() ?? '';
         approvableType = 'employee_requests';
+        try {
+          avatarUrl = dyn.employeeAvatar?.toString() ?? dyn.avatar?.toString();
+        } catch (_) {}
         String? depName = dyn.departmentName;
         if (depName != null && depName.isNotEmpty) {
-          employeeName = '$employeeName - $depName';
+          employeeName = '$employeeName · $depName';
         }
 
         String? typeNameFallback;
@@ -287,9 +288,27 @@ class ApprovableCardWidget extends StatelessWidget {
       title: title,
       subtitle: subtitle,
       employeeName: employeeName,
+      avatarUrl: avatarUrl,
       approvableType: approvableType,
       id: id,
     );
+  }
+
+  static IconData _iconForApprovableType(String type) {
+    switch (type) {
+      case 'overtime':
+        return Icons.more_time_rounded;
+      case 'salary_advance':
+        return Icons.payments_outlined;
+      case 'employee_expense_claims':
+        return Icons.receipt_long_outlined;
+      case 'shift_change_requests':
+        return Icons.swap_horiz_rounded;
+      case 'interview':
+        return Icons.assignment_ind_outlined;
+      default:
+        return Icons.event_note_rounded;
+    }
   }
 
   @override
@@ -315,26 +334,26 @@ class ApprovableCardWidget extends StatelessWidget {
             }
           },
           backgroundColor: Colors.transparent,
-          foregroundColor: const Color(0xFFB71C1C),
+          foregroundColor: Color(AppColors.failureRed),
           padding: EdgeInsets.zero,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 48,
-                height: 48,
+                width: 44,
+                height: 44,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFB71C1C).withOpacity(0.12),
+                  color: Color(AppColors.failureRed).withOpacity(0.12),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.gavel_rounded,
-                    color: Color(0xFFB71C1C), size: 24),
+                child: Icon(Icons.gavel_rounded,
+                    color: Color(AppColors.failureRed), size: 22),
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 4),
               Text(
                 'action'.tr(),
-                style: const TextStyle(
-                  color: Color(0xFFB71C1C),
+                style: TextStyle(
+                  color: Color(AppColors.failureRed),
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
                 ),
@@ -360,26 +379,26 @@ class ApprovableCardWidget extends StatelessWidget {
             }
           },
           backgroundColor: Colors.transparent,
-          foregroundColor: const Color(0xFFE65100),
+          foregroundColor: Color(AppColors.warningYellow),
           padding: EdgeInsets.zero,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 48,
-                height: 48,
+                width: 44,
+                height: 44,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE65100).withOpacity(0.12),
+                  color: Color(AppColors.warningYellow).withOpacity(0.12),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.manage_accounts_rounded,
-                    color: Color(0xFFE65100), size: 24),
+                child: Icon(Icons.manage_accounts_rounded,
+                    color: Color(AppColors.warningYellow), size: 22),
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 4),
               Text(
                 'as_someone'.tr(),
-                style: const TextStyle(
-                  color: Color(0xFFE65100),
+                style: TextStyle(
+                  color: Color(AppColors.warningYellow),
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
                 ),
@@ -429,26 +448,26 @@ class ApprovableCardWidget extends StatelessWidget {
             }
           },
           backgroundColor: Colors.transparent,
-          foregroundColor: const Color(0xFFC62828),
+          foregroundColor: Color(AppColors.failureRed),
           padding: EdgeInsets.zero,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 48,
-                height: 48,
+                width: 44,
+                height: 44,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFC62828).withOpacity(0.12),
+                  color: Color(AppColors.failureRed).withOpacity(0.12),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.cancel_outlined,
-                    color: Color(0xFFC62828), size: 24),
+                child: Icon(Icons.cancel_outlined,
+                    color: Color(AppColors.failureRed), size: 22),
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 4),
               Text(
                 isArabic ? 'موافقة إلغاء' : 'Approve Cancel',
-                style: const TextStyle(
-                  color: Color(0xFFC62828),
+                style: TextStyle(
+                  color: Color(AppColors.failureRed),
                   fontSize: 10,
                   fontWeight: FontWeight.w600,
                 ),
@@ -460,178 +479,209 @@ class ApprovableCardWidget extends StatelessWidget {
       );
     }
 
-    final cardBody = Container(
-      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-      decoration: ShapeDecoration(
-        color: Color(AppColors.cardBackground),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.sm),
-        ),
-        shadows: [
-          BoxShadow(
-            color: Color(AppColors.disableButton).withOpacity(0.5),
-            blurRadius: 5,
-            spreadRadius: 1,
-          )
-        ],
-      ),
-      child: InkWell(
-        onTap: onTap,
-        onLongPress: onLongPress,
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (info.takeAction ||
-                      info.takeActionAsSomeoneElse ||
-                      info.canApproveCancel ||
-                      info.waitingCancel) ...[
-                    Wrap(
-                      spacing: 6,
-                      runSpacing: 4,
-                      children: [
-                        if (info.takeAction)
-                          _ActionBadge(
-                            icon: Icons.gavel_rounded,
-                            color: const Color(0xFFD32F2F),
-                            label: 'action_required'.tr(),
-                          ),
-                        if (info.takeActionAsSomeoneElse)
-                          _ActionBadge(
-                            icon: Icons.manage_accounts_rounded,
-                            color: const Color(0xFFE65100),
-                            label: 'act_as_someone'.tr(),
-                          ),
-                        if (info.canApproveCancel)
-                          _ActionBadge(
-                            icon: Icons.cancel_outlined,
-                            color: const Color(0xFFC62828),
-                            label: isArabic
-                                ? 'مطلوب موافقة إلغاء'
-                                : 'Cancel Approval Required',
-                          ),
-                        if (info.waitingCancel)
-                          _ActionBadge(
-                            icon: Icons.hourglass_top_rounded,
-                            color: const Color(0xFFE65100),
-                            label: isArabic
-                                ? 'طلب إلغاء معلق'
-                                : 'Cancellation Pending',
-                          ),
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                  ],
-                  AutoSizeText(
-                    info.title,
-                    style: AppStyles.titleTextContent(context).copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      letterSpacing: 0.75,
-                      height: 1.1,
+    final Color statusColor = AppStatusBadge.colorForStatus(
+      info.takeAction
+          ? 'action_required'
+          : (info.status ?? '').trim().toLowerCase(),
+    );
+
+    final bool showEmployeeAvatar =
+        isForDepartment && info.employeeName.trim().isNotEmpty;
+
+    final cardBody = AppCard(
+      onTap: onTap,
+      onLongPress: onLongPress,
+      padding: AppSpacing.cardPadding,
+      margin: slideActions.isNotEmpty
+          ? const EdgeInsets.symmetric(horizontal: 1, vertical: 2)
+          : null,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // ── Leading 46x46 Avatar (matching TeamMemberStatusCard) ────────
+          AppCardLeadingAvatar(
+            imageUrl: info.avatarUrl,
+            nameForInitials:
+                showEmployeeAvatar ? info.employeeName : info.title,
+            icon: showEmployeeAvatar
+                ? null
+                : _iconForApprovableType(info.approvableType),
+            borderColor: statusColor,
+          ),
+          const SizedBox(width: 12),
+
+          // ── Content: Action badges + Title + Subtitle + Employee ────────
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (info.takeAction ||
+                    info.takeActionAsSomeoneElse ||
+                    info.canApproveCancel ||
+                    info.waitingCancel) ...[
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 4,
+                    children: [
+                      if (info.takeAction)
+                        AppStatusBadge(
+                          icon: Icons.gavel_rounded,
+                          color: Color(AppColors.failureRed),
+                          label: 'action_required'.tr(),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 3),
+                          fontSize: 10,
+                          iconSize: 11,
+                        ),
+                      if (info.takeActionAsSomeoneElse)
+                        AppStatusBadge(
+                          icon: Icons.manage_accounts_rounded,
+                          color: Color(AppColors.warningYellow),
+                          label: 'act_as_someone'.tr(),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 3),
+                          fontSize: 10,
+                          iconSize: 11,
+                        ),
+                      if (info.canApproveCancel)
+                        AppStatusBadge(
+                          icon: Icons.cancel_outlined,
+                          color: Color(AppColors.failureRed),
+                          label: isArabic
+                              ? 'مطلوب موافقة إلغاء'
+                              : 'Cancel Approval Required',
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 3),
+                          fontSize: 10,
+                          iconSize: 11,
+                        ),
+                      if (info.waitingCancel)
+                        AppStatusBadge(
+                          icon: Icons.hourglass_top_rounded,
+                          color: Color(AppColors.warningYellow),
+                          label: isArabic
+                              ? 'طلب إلغاء معلق'
+                              : 'Cancellation Pending',
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 3),
+                          fontSize: 10,
+                          iconSize: 11,
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                ],
+                Text(
+                  info.title.isNotEmpty ? info.title : '-',
+                  style: AppStyles.heading(context).copyWith(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                if (info.subtitle.isNotEmpty) ...[
+                  const SizedBox(height: 3),
+                  Text(
+                    info.subtitle,
+                    style: AppStyles.subtitleContent(context).copyWith(
+                      fontSize: 11,
+                      color: Colors.grey.shade600,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 4),
-                  Opacity(
-                    opacity: 0.5,
-                    child: AutoSizeText(
-                      info.subtitle,
-                      style: AppStyles.titleTextContent(context).copyWith(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 12,
-                        letterSpacing: 0.5,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  if (isForDepartment && info.employeeName.isNotEmpty)
-                    const SizedBox(height: 4),
-                  if (isForDepartment && info.employeeName.isNotEmpty)
-                    Text(
-                      info.employeeName,
-                      style: AppStyles.titleTextContent(context).copyWith(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 12,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
                 ],
-              ),
+                if (isForDepartment && info.employeeName.isNotEmpty) ...[
+                  const SizedBox(height: 3),
+                  Text(
+                    info.employeeName,
+                    style: AppStyles.subtitleContent(context).copyWith(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey.shade700,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ],
             ),
-            if (isForDepartment)
-              Builder(
-                builder: (context) {
-                  bool showOverlappingIcon = false;
-                  try {
-                    final dyn = request as dynamic;
-                    if (dyn.id != null) {
-                      showOverlappingIcon = dyn.hasOverlapping == true;
-                    }
-                  } catch (_) {}
+          ),
 
-                  if (showOverlappingIcon) {
-                    return Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            showOverlappingVacationsSheet(
-                              context: context,
-                              approvableId: (request as dynamic).id.toString(),
-                            );
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(6),
-                            decoration: BoxDecoration(
-                              color: Color(AppColors.warningYellow)
-                                  .withOpacity(0.12),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(Icons.people_alt_rounded,
-                                color: Color(AppColors.warningYellow),
-                                size: 20),
+          // ── Overlapping Vacations button (for department view) ──────────
+          if (isForDepartment)
+            Builder(
+              builder: (context) {
+                bool showOverlappingIcon = false;
+                try {
+                  final dyn = request as dynamic;
+                  if (dyn.id != null) {
+                    showOverlappingIcon = dyn.hasOverlapping == true;
+                  }
+                } catch (_) {}
+
+                if (showOverlappingIcon) {
+                  return Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(width: 6),
+                      InkWell(
+                        customBorder: const CircleBorder(),
+                        onTap: () {
+                          showOverlappingVacationsSheet(
+                            context: context,
+                            approvableId: (request as dynamic).id.toString(),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: Color(AppColors.warningYellow)
+                                .withOpacity(0.12),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.people_alt_rounded,
+                            color: Color(AppColors.warningYellow),
+                            size: 18,
                           ),
                         ),
-                        const SizedBox(width: 8),
-                      ],
-                    );
-                  }
-                  return const SizedBox.shrink();
-                },
-              ),
-            if (customTrailing != null) ...[
-              const SizedBox(width: 8),
-              customTrailing!,
-            ] else if (request is InterviewModel) ...[
-              const SizedBox(width: 8),
-              _EvaluationStatusBadge(
-                isEvaluated: (request as InterviewModel).myEvaluation != null,
-              ),
-            ] else if (info.status != null &&
-                info.status!.trim().isNotEmpty &&
-                info.status!.trim().toLowerCase() != 'null') ...[
-              const SizedBox(width: 8),
-              RequestsServices.getRequestsStatusIcon(
-                  context: context, status: info.status),
-            ],
+                      ),
+                    ],
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+
+          // ── Trailing Status Badge ───────────────────────────────────────
+          if (customTrailing != null) ...[
+            const SizedBox(width: 8),
+            customTrailing!,
+          ] else if (request is InterviewModel) ...[
+            const SizedBox(width: 8),
+            _EvaluationStatusBadge(
+              isEvaluated: (request as InterviewModel).myEvaluation != null,
+            ),
+          ] else if (info.status != null &&
+              info.status!.trim().isNotEmpty &&
+              info.status!.trim().toLowerCase() != 'null') ...[
+            const SizedBox(width: 8),
+            RequestsServices.getRequestsStatusIcon(
+              context: context,
+              status: info.status,
+            ),
           ],
-        ),
+        ],
       ),
     );
 
     Widget finalWidget;
-    // If no slide actions are needed, return card as-is
     if (slideActions.isEmpty) {
       finalWidget = cardBody;
     } else {
-      // Wrap with Slidable — swipe left to reveal action buttons
       finalWidget = Slidable(
         key: ValueKey(info.id),
         endActionPane: ActionPane(
@@ -644,49 +694,8 @@ class ApprovableCardWidget extends StatelessWidget {
     }
 
     return Padding(
-      padding: margin ?? const EdgeInsets.only(bottom: 16),
+      padding: margin ?? const EdgeInsets.only(bottom: AppSpacing.cardGap),
       child: finalWidget,
-    );
-  }
-}
-
-/// Small badge shown inline on the card when swipe action is available.
-class _ActionBadge extends StatelessWidget {
-  final IconData icon;
-  final Color color;
-  final String label;
-
-  const _ActionBadge({
-    required this.icon,
-    required this.color,
-    required this.label,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-        border: Border.all(color: color.withOpacity(0.3), width: 0.8),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 11, color: color),
-          const SizedBox(width: 4),
-          Text(
-            label,
-            style: TextStyle(
-              color: color,
-              fontSize: 10,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 0.2,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
@@ -699,37 +708,16 @@ class _EvaluationStatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color color =
-        isEvaluated ? Color(AppColors.successGreen) : const Color(0xFFE65100);
+    final Color color = isEvaluated
+        ? Color(AppColors.successGreen)
+        : Color(AppColors.warningYellow);
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-        border: Border.all(color: color.withOpacity(0.35), width: 0.8),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            isEvaluated
-                ? Icons.check_circle_outline_rounded
-                : Icons.pending_actions_rounded,
-            size: 13,
-            color: color,
-          ),
-          const SizedBox(width: 4),
-          Text(
-            isEvaluated ? 'Evaluated'.tr() : 'Required'.tr(),
-            style: TextStyle(
-              color: color,
-              fontSize: 11,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
+    return AppStatusBadge(
+      label: isEvaluated ? 'Evaluated'.tr() : 'Required'.tr(),
+      color: color,
+      icon: isEvaluated
+          ? Icons.check_circle_outline_rounded
+          : Icons.pending_actions_rounded,
     );
   }
 }
@@ -744,6 +732,7 @@ class _ApprovableInfo {
   final String title;
   final String subtitle;
   final String employeeName;
+  final String? avatarUrl;
   final String approvableType;
   final String id;
 
@@ -756,6 +745,7 @@ class _ApprovableInfo {
     required this.title,
     required this.subtitle,
     required this.employeeName,
+    this.avatarUrl,
     required this.approvableType,
     required this.id,
   });

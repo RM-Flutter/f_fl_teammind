@@ -1,7 +1,8 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_design.dart';
 
+/// Unified card wrapper (previously GlassmorphismCard) now delegating to the standard
+/// app card style: white background, 12px radius, 12% grey border, and soft 3% shadow.
 class GlassmorphismCard extends StatelessWidget {
   final Widget child;
   final double blur;
@@ -16,40 +17,27 @@ class GlassmorphismCard extends StatelessWidget {
     Key? key,
     required this.child,
     this.blur = 10,
-    this.opacity = 0.6,
-    this.padding = const EdgeInsets.all(16.0),
+    this.opacity = 1.0,
+    this.padding = AppSpacing.cardPadding,
     this.borderRadius,
     this.backgroundColor = Colors.white,
-    this.borderColor = Colors.white24,
+    this.borderColor = const Color(0x1F9E9E9E),
     this.boxShadow,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: borderRadius ?? BorderRadius.circular(AppRadius.lg),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
-        child: Container(
-          padding: padding,
-          decoration: BoxDecoration(
-            color: backgroundColor.withOpacity(opacity),
-            borderRadius: borderRadius ?? BorderRadius.circular(AppRadius.lg),
-            border: Border.all(
-              width: 1.5,
-              color: borderColor,
-            ),
-            boxShadow: boxShadow ?? [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: child,
-        ),
+    final resolvedRadius =
+        borderRadius ?? BorderRadius.circular(AppRadius.md);
+    return Container(
+      padding: padding,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: resolvedRadius,
+        border: AppBorders.card,
+        boxShadow: AppShadows.card,
       ),
+      child: child,
     );
   }
 }

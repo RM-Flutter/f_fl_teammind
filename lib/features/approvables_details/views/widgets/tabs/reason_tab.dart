@@ -55,11 +55,12 @@ class ReasonTab extends StatelessWidget {
               const SizedBox(height: 16),
             ],
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: AppSpacing.cardPadding,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(AppRadius.md),
-                border: Border.all(color: Colors.grey.shade200),
+                border: AppBorders.card,
+                boxShadow: AppShadows.card,
               ),
               child: Text(
                 reason != null && reason!.trim().isNotEmpty
@@ -81,11 +82,12 @@ class ReasonTab extends StatelessWidget {
 
   Widget _buildNotesCard(BuildContext context, String notes) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: AppSpacing.cardPadding,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.md),
-        border: Border.all(color: Colors.grey.shade200),
+        border: AppBorders.card,
+        boxShadow: AppShadows.card,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -228,20 +230,12 @@ class ReasonTab extends StatelessWidget {
     final isTwoWay = d.isTwoWayShiftSwap;
 
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: AppSpacing.cardPadding,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-        border: Border.all(
-          color: Color(AppColors.buttons).withOpacity(0.25),
-        ),
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        boxShadow: AppShadows.card,
+        border: AppBorders.card,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

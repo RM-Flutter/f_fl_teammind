@@ -323,8 +323,8 @@ class _RequestsScreenState extends State<RequestsScreen> {
           },
           body: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(
-                  maxWidth: kIsWeb ? 1100 : 1.sw
+              constraints: const BoxConstraints(
+                  maxWidth: double.infinity
               ),
               child: Container(
                 alignment: Alignment.topCenter,
@@ -351,9 +351,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                     ),
                     // Main content
                     Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child: Consumer<RequestsViewModel>(
+                      child: Consumer<RequestsViewModel>(
                           builder: (context, viewModel, child) {
                             if (viewModel.isLoading) return const LoadingPageWidget();
 
@@ -364,25 +362,28 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                     (viewModel.allCompanyRequests?.isNotEmpty == true);
 
                             if (!hasRequests) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  if (viewModel.rulesMessage != null)
-                                    AutoSizeText(
-                                      viewModel.rulesMessage ?? "",
-                                      style: AppStyles.greyContent(context).copyWith(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w400),
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 10,
-                                      textAlign: TextAlign.center,
-                                      softWrap: true,
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    if (viewModel.rulesMessage != null)
+                                      AutoSizeText(
+                                        viewModel.rulesMessage ?? "",
+                                        style: AppStyles.greyContent(context).copyWith(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 10,
+                                        textAlign: TextAlign.center,
+                                        softWrap: true,
+                                      ),
+                                    NoExistingPlaceholderScreen(
+                                      height: 0.6.sh,
+                                      title: AppStrings.thereIsNoRequests.tr(),
                                     ),
-                                  NoExistingPlaceholderScreen(
-                                    height: 0.6.sh,
-                                    title: AppStrings.thereIsNoRequests.tr(),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               );
                             }
 
@@ -403,7 +404,8 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                 alignment: Alignment.topCenter,
                                 child: ListView(
                                   controller: _scrollController,
-                                  padding: const EdgeInsets.only(bottom: 140), // keep last card clear of the FABs
+                                  clipBehavior: Clip.none,
+                                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 140), // keep last card clear of the FABs
                                   children: [
                                     /// calendar button
                                     if (widget.requestsType == GetRequestsTypes.myTeam ||
@@ -740,7 +742,6 @@ class _RequestsScreenState extends State<RequestsScreen> {
                             );
                           },
                         ),
-                      ),
                     ),
                   ],
                 ),

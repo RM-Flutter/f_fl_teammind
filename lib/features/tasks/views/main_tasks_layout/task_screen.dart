@@ -140,8 +140,8 @@ class _TaskScreenState extends State<TaskScreen> {
           },
           body: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: kIsWeb ? 1100 : double.infinity,
+              constraints: const BoxConstraints(
+                maxWidth: double.infinity,
               ),
               child: Column(
                 children: [
@@ -165,51 +165,48 @@ class _TaskScreenState extends State<TaskScreen> {
                                     height: 0.6.sh,
                                     title: AppStrings.thereIsNoTasks.tr()),
                               if (viewModel.tasks.isNotEmpty)
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 15),
-                                  child: ListView.separated(
-                                    padding: EdgeInsets.zero,
-                                    shrinkWrap: true,
-                                    reverse: false,
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    itemBuilder: (context, index) {
-                                      final iconName =
-                                          viewModel.tasks[index]["icon"];
-                                      final icon = viewModel.iconsName.firstWhere(
-                                        (item) => item["name"] == iconName,
-                                        orElse: () => {"value": "assets/images/svg/t3.svg"},
-                                      );
-                                      return TaskListTileWidget(
-                                        onTap: () async {
-                                          await context.pushNamed(
-                                              AppRoutes.taskDetails.name,
-                                              pathParameters: {
-                                                'lang': context.locale.languageCode,
-                                                'id': viewModel.tasks[index]['id']
-                                                    .toString(),
-                                              });
-                                          viewModel.currentPage = 1;
-                                          await viewModel.getTask(context,
-                                              date: null);
-                                        },
-                                        complete: viewModel.tasks[index]['status']
-                                            .toString(),
-                                        assetName: icon['value']!,
-                                        title: viewModel.tasks[index]['title'],
-                                        id: viewModel.tasks[index]['id']
-                                            .toString(),
-                                        date: viewModel.tasks[index]['dueDate'] ??
-                                            "",
-                                        createdAt: viewModel.tasks[index]
-                                                ['createdAt'] ??
-                                            "",
-                                      );
-                                    },
-                                    itemCount: viewModel.tasks.length,
-                                    separatorBuilder: (context, index) =>
-                                        SizedBox(height: 15),
-                                  ),
+                                ListView.separated(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                                  clipBehavior: Clip.none,
+                                  shrinkWrap: true,
+                                  reverse: false,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemBuilder: (context, index) {
+                                    final iconName =
+                                        viewModel.tasks[index]["icon"];
+                                    final icon = viewModel.iconsName.firstWhere(
+                                      (item) => item["name"] == iconName,
+                                      orElse: () => {"value": "assets/images/svg/t3.svg"},
+                                    );
+                                    return TaskListTileWidget(
+                                      onTap: () async {
+                                        await context.pushNamed(
+                                            AppRoutes.taskDetails.name,
+                                            pathParameters: {
+                                              'lang': context.locale.languageCode,
+                                              'id': viewModel.tasks[index]['id']
+                                                  .toString(),
+                                            });
+                                        viewModel.currentPage = 1;
+                                        await viewModel.getTask(context,
+                                            date: null);
+                                      },
+                                      complete: viewModel.tasks[index]['status']
+                                          .toString(),
+                                      assetName: icon['value']!,
+                                      title: viewModel.tasks[index]['title'],
+                                      id: viewModel.tasks[index]['id']
+                                          .toString(),
+                                      date: viewModel.tasks[index]['dueDate'] ??
+                                          "",
+                                      createdAt: viewModel.tasks[index]
+                                              ['createdAt'] ??
+                                          "",
+                                    );
+                                  },
+                                  itemCount: viewModel.tasks.length,
+                                  separatorBuilder: (context, index) =>
+                                      const SizedBox(height: AppSpacing.cardGap),
                                 ),
                               SizedBox(height: 20),
                               if (viewModel.hasMore && !viewModel.isLoadingMore)
@@ -221,12 +218,12 @@ class _TaskScreenState extends State<TaskScreen> {
                                         viewModel.getTask(context, loadMore: true);
                                       },
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: Color(AppColors.secondaryButton),
+                                        backgroundColor: Color(AppColors.buttons),
                                         foregroundColor: Colors.white,
                                         padding: EdgeInsets.symmetric(
                                             horizontal: 40, vertical: 12),
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(AppRadius.xl),
+                                          borderRadius: AppRadius.button,
                                         ),
                                       ),
                                       child: Text(

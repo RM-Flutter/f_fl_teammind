@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
@@ -58,68 +59,67 @@ class _EvaluationRequireScreenState extends State<EvaluationRequireScreen> {
           onRefresh: () async => await viewModel.getEvaluationRequired(context),
           body: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(
-                  maxWidth: kIsWeb ? 1100 : double.infinity
+              constraints: const BoxConstraints(
+                  maxWidth: double.infinity
               ),
-              child: Padding(
-                padding: EdgeInsets.all(AppSizes.s12),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      if(viewModel.evaluations.isEmpty == true)    CustomElevatedButton(
-                          backgroundColor: Color(AppColors.buttons),
-                          titleSize: AppSizes.s12,
-                          title: AppStrings.myEvaluations.tr().toUpperCase(),
-                          onPressed: () async => await context.pushNamed(
-                              AppRoutes.evaluationScreen.name,
-                              extra: {
-                                "empId": gCache['employee_profile_id'].toString(),
-                                "begin": const Offset(1.0, 0.0),
-                              },
-                              pathParameters: {
-                                'lang': context.locale.languageCode,
-                                // "empName" : "unKnown"
-                              })),
-                      if(viewModel.evaluations.isEmpty == true)   SizedBox(height: 20),
-                      Consumer<EvaluationController>(
-                          builder: (context, viewModel, child) => viewModel.isLoading
-                              ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget()
-                              : viewModel.evaluations.isEmpty == true
-                              ? NoExistingPlaceholderScreen(
-                              height: LayoutService.getHeight(context) * 0.6,
-                              title: AppStrings.noExistingEvaluation.tr())
-                              : Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SizedBox(height: 20),
-                                /// general screen message widget for other requests types
-                                // GeneralScreenMessageWidget(
-                                //     screenId: '/payrolls'),
-                                ListView.separated(
-                                    reverse: false,
-                                    shrinkWrap: true,
-                                    physics: const ClampingScrollPhysics(),
-                                    padding: EdgeInsets.zero,
-                                    itemBuilder: (context, index) {
-                                      return ProfileTileEvaReq(
-                                        createAt: viewModel.evaluations[index]['created_at'],
-                                        empName: viewModel.evaluations[index]['employee_name'],
-                                        name: gCache['name'],
-                                        icon : viewModel.evaluations[index]['done']  == true? Icon(Icons.check_circle_outline_rounded,
-                                            color: Colors.green, size: AppSizes.s24) : Icon(Icons.access_time,
-                                            color:  const Color(0xff606060), size: AppSizes.s24),
-                                        department: viewModel.evaluations[index]['department_name'],
-                                        title: "${viewModel.evaluations[index]['title']}",
-                                        url: (viewModel.evaluations[index]['submitUrl'] != null)? viewModel.evaluations[index]['submitUrl'].toString() : null,
-                                      );
-                                    },
-                                    separatorBuilder: (context, index) => SizedBox(height: 15),
-                                    itemCount: viewModel.evaluations.length),
+              child: SingleChildScrollView(
+                clipBehavior: Clip.none,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.page,
+                  vertical: AppSpacing.md,
+                ),
+                child: Column(
+                  children: [
+                    if(viewModel.evaluations.isEmpty == true) CustomElevatedButton(
+                        backgroundColor: Color(AppColors.buttons),
+                        titleSize: AppSizes.s12,
+                        title: AppStrings.myEvaluations.tr().toUpperCase(),
+                        onPressed: () async => await context.pushNamed(
+                            AppRoutes.evaluationScreen.name,
+                            extra: {
+                              "empId": gCache['employee_profile_id'].toString(),
+                              "begin": const Offset(1.0, 0.0),
+                            },
+                            pathParameters: {
+                              'lang': context.locale.languageCode,
+                            })),
+                    if(viewModel.evaluations.isEmpty == true) const SizedBox(height: 20),
+                    Consumer<EvaluationController>(
+                        builder: (context, viewModel, child) => viewModel.isLoading
+                            ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget()
+                            : viewModel.evaluations.isEmpty == true
+                            ? NoExistingPlaceholderScreen(
+                            height: LayoutService.getHeight(context) * 0.6,
+                            title: AppStrings.noExistingEvaluation.tr())
+                            : Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              ListView.separated(
+                                  reverse: false,
+                                  shrinkWrap: true,
+                                  clipBehavior: Clip.none,
+                                  physics: const ClampingScrollPhysics(),
+                                  padding: EdgeInsets.zero,
+                                  itemBuilder: (context, index) {
+                                    return ProfileTileEvaReq(
+                                      isDone: viewModel.evaluations[index]['done'] == true,
+                                      createAt: viewModel.evaluations[index]['created_at'],
+                                      empName: viewModel.evaluations[index]['employee_name'],
+                                      name: gCache['name'],
+                                      icon : viewModel.evaluations[index]['done'] == true? Icon(Icons.check_circle_outline_rounded,
+                                          color: Colors.green, size: AppSizes.s24) : Icon(Icons.access_time,
+                                          color: const Color(0xff606060), size: AppSizes.s24),
+                                      department: viewModel.evaluations[index]['department_name'],
+                                      title: "${viewModel.evaluations[index]['title']}",
+                                      url: (viewModel.evaluations[index]['submitUrl'] != null)? viewModel.evaluations[index]['submitUrl'].toString() : null,
+                                    );
+                                  },
+                                  separatorBuilder: (context, index) => const SizedBox(height: AppSpacing.cardGap),
+                                  itemCount: viewModel.evaluations.length),
 
-                              ])),
+                            ])),
 
-                    ],
-                  ),
+                  ],
                 ),
               ),
             ),

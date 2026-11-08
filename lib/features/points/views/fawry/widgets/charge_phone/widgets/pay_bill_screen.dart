@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:app_test/core/widgets/button_widget.dart';
 import 'package:app_test/core/utils/gradient_bg_image.dart';
+import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 
 import '../../../../../../../core/services/validation_service.dart';
@@ -49,35 +50,11 @@ class _PayBillScreenState extends State<PayBillScreen> {
           return Form(
             key: formKey,
             child: Scaffold( resizeToAvoidBottomInset: false,
-              appBar: AppBar(
-                backgroundColor: const Color(0xffFFFFFF),
-                leading: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
-                    child: const Icon(
-                      Icons.arrow_back,
-                      color: Color(0XFF224982),
-                    )),
-                title: Text(
-                  widget.title.toString().toUpperCase(),
-                  style: const TextStyle(
-                      fontSize: AppSizes.s16,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0XFF224982)),
-                ),
-                flexibleSpace: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      colors: [
-                        const Color(0xFFFF007A).withOpacity(0.03),
-                        const Color(0xFF00A1FF).withOpacity(0.03)
-                      ],
-                    ),
-                  ),
-                ),
+              appBar: AppBarWithBookmark(
+                backgroundColor: Colors.white,
+                leading: const AppBackButton(),
+                title: widget.title.toString().toUpperCase(),
+                showBookmark: false,
               ),
               body: Container(
                 height: MediaQuery.sizeOf(context).height * 1,

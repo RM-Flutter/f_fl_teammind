@@ -18,6 +18,7 @@ import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_load
 import 'package:app_test/core/utils/gradient_bg_image.dart';
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
 
 class DefaultListPage extends StatefulWidget {
   var type;
@@ -62,8 +63,17 @@ class _DefaultListPageState extends State<DefaultListPage> {
     return Consumer<BlogProviderModel>(
       builder: (context, points, child) {
         return SafeArea(
-          child: Scaffold( resizeToAvoidBottomInset: true,
+          child: Scaffold(
+            resizeToAvoidBottomInset: true,
             backgroundColor: const Color(0xffFFFFFF),
+            appBar: AppBarWithBookmark(
+              title: widget.type == "rmnotifications"
+                  ? AppStrings.notifications.tr().toUpperCase()
+                  : widget.type.toString().tr().toUpperCase(),
+              centerTitle: true,
+              backgroundColor: Colors.white,
+              elevation: 0,
+            ),
             body: SingleChildScrollView(
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               controller: _scrollController,
@@ -71,30 +81,7 @@ class _DefaultListPageState extends State<DefaultListPage> {
                 padding: EdgeInsets.zero,
                 child: Column(
                   children: [
-                    Container(
-                      color: Colors.transparent,
-                      height: 90,
-                      width: double.infinity,
-                      alignment: Alignment.center,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          IconButton(
-                            icon: Icon(Icons.arrow_back, color:  const Color(0xff224982), size: 24,),
-                            onPressed: () =>  Navigator.pop(context),
-                          ),
-                          Text(
-                            widget.type == "rmnotifications" ? AppStrings.notifications.tr().toUpperCase() : widget.type.toString().tr().toUpperCase(),
-                            style: AppStyles.heading(context).copyWith(fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                          IconButton(
-                            icon:  Icon(Icons.arrow_back, color: Colors.transparent, size: 24,),
-                            onPressed: () {},
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: AppSizes.s20),
+                    SizedBox(height: AppSizes.s16),
                     if(points.blogs.isEmpty)Container(
                       height: 0.8.sh,
                       alignment: Alignment.center,
@@ -185,21 +172,18 @@ class _DefaultListPageState extends State<DefaultListPage> {
         padding: EdgeInsets.symmetric(vertical: 0),
         child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppRadius.sm),
+            borderRadius: BorderRadius.circular(AppRadius.md),
             color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 8,
-                spreadRadius: 1,
-              )
-            ],
+            border: AppBorders.card,
+            boxShadow: AppShadows.card,
           ),
           child: Column(
             children: [
               Expanded(
                 child: ClipRRect(
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(AppRadius.sm), topRight: Radius.circular(AppRadius.sm)),
+                  borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(AppRadius.md),
+                      topRight: Radius.circular(AppRadius.md)),
                   child:  CachedNetworkImage(
                     fit: BoxFit.cover,
                     width: double.infinity,

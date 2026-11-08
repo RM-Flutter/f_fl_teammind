@@ -19,6 +19,7 @@ import '../../../../core/utils/custom_shimmer_loading/shimmer_animated_loading.d
 import '../../../../core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import '../../controllers/points_controller/points_controller.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
 
 class PrizeScreen extends StatefulWidget {
   final bool viewArrow;
@@ -99,38 +100,21 @@ class _PrizeScreenState extends State<PrizeScreen> {
               points.isRedeemSuccess = false;
             }
             return SafeArea(
-              child: Scaffold( resizeToAvoidBottomInset: false,
-                backgroundColor: const Color(0xffFFFFFF),
-                body: SingleChildScrollView(keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
-
+              child: Scaffold(
+                resizeToAvoidBottomInset: false,
+                backgroundColor: Color(AppColors.background),
+                appBar: AppBarWithBookmark(
+                  title: AppStrings.chooseThePrize.tr().toUpperCase(),
+                  centerTitle: true,
+                  leading: widget.viewArrow ? null : const SizedBox.shrink(),
+                ),
+                body: SingleChildScrollView(
+                  keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
                   controller: _scrollController,
                   child: GradientBgImage(
                     padding: EdgeInsets.zero,
                     child: Column(
                       children: [
-                        Container(
-                          color: Colors.transparent,
-                          height: 90,
-                          width: double.infinity,
-                          alignment: Alignment.center,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.arrow_back, color: widget.viewArrow ? const Color(0xff224982) : Colors.transparent),
-                                onPressed: () => widget.viewArrow ? Navigator.pop(context) : null,
-                              ),
-                              Text(
-                                AppStrings.chooseThePrize.tr().toUpperCase(),
-                                style: const TextStyle(color: Color(0xff224982), fontWeight: FontWeight.bold, fontSize: 16),
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.arrow_back, color: Colors.transparent),
-                                onPressed: () {},
-                              ),
-                            ],
-                          ),
-                        ),
                         const SizedBox(height: AppSizes.s20),
                         if(points.prizes.isEmpty && !points.isLoading)Container(
                           height: MediaQuery.sizeOf(context).height * 0.8,
@@ -139,135 +123,128 @@ class _PrizeScreenState extends State<PrizeScreen> {
                               height: LayoutService.getHeight(context) * 0.4,
                               title: AppStrings.noPrizesAvailable.tr()),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15),
-                          child: ListView.separated(
-                            padding: EdgeInsets.zero,
-                            shrinkWrap: true,
-                            reverse: false,
-                            physics: const NeverScrollableScrollPhysics(),
-                            separatorBuilder: (context, index) => const SizedBox(height: 10,),
-                            itemCount: points.isLoading && points.currentPage == 1
-                                ? 12 // Show 5 loading items initially
-                                : points.prizes.length,
-                            itemBuilder: (context, index) {
-                              if (points.isLoading && points.currentPage == 1) {
-                                return Shimmer.fromColors(
-                                  baseColor: Colors.grey[300]!,
-                                  highlightColor: Colors.grey[100]!,
-                                  child: Container(
-                                    margin: const EdgeInsets.symmetric(vertical: AppSizes.s12),
-                                    padding: const EdgeInsetsDirectional.symmetric(horizontal: AppSizes.s15, vertical: AppSizes.s12),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(AppRadius.md),
-                                    ),
-                                    height: 100,
+                        ListView.separated(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          clipBehavior: Clip.none,
+                          shrinkWrap: true,
+                          reverse: false,
+                          physics: const NeverScrollableScrollPhysics(),
+                          separatorBuilder: (context, index) => const SizedBox(height: AppSpacing.cardGap),
+                          itemCount: points.isLoading && points.currentPage == 1
+                              ? 12 // Show 5 loading items initially
+                              : points.prizes.length,
+                          itemBuilder: (context, index) {
+                            if (points.isLoading && points.currentPage == 1) {
+                              return Shimmer.fromColors(
+                                baseColor: Colors.grey[300]!,
+                                highlightColor: Colors.grey[100]!,
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(vertical: AppSizes.s12),
+                                  padding: const EdgeInsetsDirectional.symmetric(horizontal: AppSizes.s15, vertical: AppSizes.s12),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(AppRadius.md),
                                   ),
-                                );
-                              } else {
-                                return InkWell(
-                                  onTap: points.isRedeemLoading == false ?() {
-                                    setState(() {
-                                      points.selectIndex = index;
-                                      points.type = points.prizes[index]['type']['key'];
-                                    });
-                                    if((points.prizes[index]['type']['key'] == "external" || points.prizes[index]['type']['key'] == "internal") &&
-                                        (points.prizes[index]['needed_data'].isNotEmpty && points.prizes[index]['needed_data'] != [] && points.prizes[index]['needed_data'] != null)){
-                                      showModalBottomSheet(
-                                          context: context,
-                                          isScrollControlled: true, // Allow full screen interaction
-                                          builder: (BuildContext context) {
-                                            return RayaAddDataBottomsheet(points.prizes[index]['id'],
-                                                points.prizes[index]['needed_data']
-                                            );
-                                          }
-                                      );
-                                    }
-                                    else if((points.prizes[index]['type']['key'] != "external" && points.prizes[index]['type']['key'] != "internal") &&
-                                        (points.prizes[index]['needed_data'].isEmpty ||points.prizes[index]['needed_data'] == [] || points.prizes[index]['needed_data'] == null)){
-                                      PointsSuccessSheet.showConfirmationSheet(context,
-                                          onTap: ()async{
-                                            Navigator.pop(context);
-                                            await points.postRedeemPrize(context, id: points.prizes[index]['id'].toString());
-                                          }
-                                      );
-                                    }
-                                    else if((points.prizes[index]['type']['key'] == "external" || points.prizes[index]['type']['key'] == "internal") &&
-                                        (points.prizes[index]['needed_data'].isEmpty || points.prizes[index]['needed_data'] == [] || points.prizes[index]['needed_data'] == null)){
-                                      PointsSuccessSheet.showConfirmationSheet(context,
+                                  height: 100,
+                                ),
+                              );
+                            } else {
+                              return InkWell(
+                                borderRadius: BorderRadius.circular(AppRadius.md),
+                                onTap: points.isRedeemLoading == false ?() {
+                                  setState(() {
+                                    points.selectIndex = index;
+                                    points.type = points.prizes[index]['type']['key'];
+                                  });
+                                  if((points.prizes[index]['type']['key'] == "external" || points.prizes[index]['type']['key'] == "internal") &&
+                                      (points.prizes[index]['needed_data'].isNotEmpty && points.prizes[index]['needed_data'] != [] && points.prizes[index]['needed_data'] != null)){
+                                    showModalBottomSheet(
+                                        context: context,
+                                        isScrollControlled: true, // Allow full screen interaction
+                                        builder: (BuildContext context) {
+                                          return RayaAddDataBottomsheet(points.prizes[index]['id'],
+                                              points.prizes[index]['needed_data']
+                                          );
+                                        }
+                                    );
+                                  }
+                                  else if((points.prizes[index]['type']['key'] != "external" && points.prizes[index]['type']['key'] != "internal") &&
+                                      (points.prizes[index]['needed_data'].isEmpty ||points.prizes[index]['needed_data'] == [] || points.prizes[index]['needed_data'] == null)){
+                                    PointsSuccessSheet.showConfirmationSheet(context,
+                                        onTap: ()async{
+                                          Navigator.pop(context);
+                                          await points.postRedeemPrize(context, id: points.prizes[index]['id'].toString());
+                                        }
+                                    );
+                                  }
+                                  else if((points.prizes[index]['type']['key'] == "external" || points.prizes[index]['type']['key'] == "internal") &&
+                                      (points.prizes[index]['needed_data'].isEmpty || points.prizes[index]['needed_data'] == [] || points.prizes[index]['needed_data'] == null)){
+                                    PointsSuccessSheet.showConfirmationSheet(context,
 
-                                          onTap: ()async{
-                                            Navigator.pop(context);
-                                            await points.postRedeemPrize(context, id: points.prizes[index]['id'].toString());
-                                          });
-                                    }
-                                    else if(points.prizes[index]['type']['key'] == null){
-                                      PointsSuccessSheet.showConfirmationSheet(context,
+                                        onTap: ()async{
+                                          Navigator.pop(context);
+                                          await points.postRedeemPrize(context, id: points.prizes[index]['id'].toString());
+                                        });
+                                  }
+                                  else if(points.prizes[index]['type']['key'] == null){
+                                    PointsSuccessSheet.showConfirmationSheet(context,
 
-                                          onTap: ()async{
-                                            Navigator.pop(context);
-                                            await points.postRedeemPrize(context, id: points.prizes[index]['id'].toString());
-                                          });
-                                    }else{
-                                      print("DATA --> ${points.prizes[index]['needed_data']}");
-                                    }
-                                  } : (){},
-                                  child: Container(
-                                    padding: const EdgeInsetsDirectional.symmetric(
-                                        horizontal: AppSizes.s15, vertical: AppSizes.s12),
-                                    decoration: BoxDecoration(
-                                      color:  Color(AppColors.textC5),
-                                      borderRadius: BorderRadius.circular(AppRadius.md),
-                                      boxShadow: const [
-                                        BoxShadow(
-                                            color: Color.fromRGBO(0, 0, 0, 0.05),
-                                            spreadRadius: 0,
-                                            offset: Offset(0, 1),
-                                            blurRadius: 10)
-                                      ],
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius: BorderRadius.circular(AppRadius.md),
-                                          child: CachedNetworkImage(
-                                              imageUrl: (points.prizes[index]['image'].isNotEmpty)?
-                                              points.prizes[index]['image'][0]['file'] : "",
-                                              fit: BoxFit.contain,
-                                              height: 110,
-                                              width: double.infinity,
-                                              placeholder: (context, url) => const ShimmerAnimatedLoading(
-                                                width: 63.0,
-                                                height: 63,
-                                                circularRaduis: 63,
-                                              ),
-                                              errorWidget: (context, url, error) => const Icon(
-                                                Icons.image_not_supported_outlined,
-                                              )),
-                                        ),
-                                        gapH14,
-                                        Row(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            if(!points.isRedeemLoading) Icon(Icons.arrow_back_ios, size: 16,),
-                                            if(!points.isRedeemLoading)  gapH4,
-                                            if(!points.isRedeemLoading)  Text("${points.prizes[index]['points']} ${AppStrings.points.tr()}".toString(),
-                                              style: const TextStyle(
-                                                  fontSize: 12,
-                                                  fontWeight:  FontWeight.w700,
-                                                  color: Color(0xff0D3B6F)),
+                                        onTap: ()async{
+                                          Navigator.pop(context);
+                                          await points.postRedeemPrize(context, id: points.prizes[index]['id'].toString());
+                                        });
+                                  }else{
+                                    print("DATA --> ${points.prizes[index]['needed_data']}");
+                                  }
+                                } : (){},
+                                child: Container(
+                                  padding: AppSpacing.cardPadding,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(AppRadius.md),
+                                    border: AppBorders.card,
+                                    boxShadow: AppShadows.card,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(AppRadius.md),
+                                        child: CachedNetworkImage(
+                                            imageUrl: (points.prizes[index]['image'].isNotEmpty)?
+                                            points.prizes[index]['image'][0]['file'] : "",
+                                            fit: BoxFit.contain,
+                                            height: 110,
+                                            width: double.infinity,
+                                            placeholder: (context, url) => const ShimmerAnimatedLoading(
+                                              width: 63.0,
+                                              height: 63,
+                                              circularRaduis: 63,
                                             ),
-                                            if(points.isRedeemLoading && points.selectIndex == index)const CircularProgressIndicator()
-                                          ],
-                                        )
-                                      ],
-                                    ),
+                                            errorWidget: (context, url, error) => const Icon(
+                                              Icons.image_not_supported_outlined,
+                                            )),
+                                      ),
+                                      gapH14,
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          if(!points.isRedeemLoading) Icon(Icons.arrow_back_ios, size: 16,),
+                                          if(!points.isRedeemLoading)  gapH4,
+                                          if(!points.isRedeemLoading)  Text("${points.prizes[index]['points']} ${AppStrings.points.tr()}".toString(),
+                                            style: const TextStyle(
+                                                fontSize: 12,
+                                                fontWeight:  FontWeight.w700,
+                                                color: Color(0xff0D3B6F)),
+                                          ),
+                                          if(points.isRedeemLoading && points.selectIndex == index)const CircularProgressIndicator()
+                                        ],
+                                      )
+                                    ],
                                   ),
-                                );
-                              }
-                            },
-                          ),
+                                ),
+                              );
+                            }
+                          },
                         ),
                         if (points.isLoading && points.currentPage != 1)
                           const Center(child: CircularProgressIndicator()),

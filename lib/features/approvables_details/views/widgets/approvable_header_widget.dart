@@ -8,6 +8,8 @@ import 'package:app_test/core/services/date_service.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import '../../data/models/approvable_details_model.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/widgets/app_card.widget.dart';
+import 'package:app_test/core/widgets/app_status_badge.widget.dart';
 
 class ApprovableHeaderWidget extends StatelessWidget {
   final ApprovableDetailsModel details;
@@ -51,17 +53,12 @@ class ApprovableHeaderWidget extends StatelessWidget {
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(16),
+      padding: AppSpacing.cardPadding,
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        border: AppBorders.card,
+        boxShadow: AppShadows.card,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,15 +67,10 @@ class ApprovableHeaderWidget extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              CircleAvatar(
-                radius: 26,
-                backgroundColor: Color(AppColors.buttons).withOpacity(0.1),
-                backgroundImage: (profile?.avatar != null && profile!.avatar!.isNotEmpty)
-                    ? NetworkImage(profile.avatar!)
-                    : null,
-                child: (profile?.avatar == null || profile!.avatar!.isEmpty)
-                    ? Icon(Icons.person, size: 28, color: Color(AppColors.buttons))
-                    : null,
+              AppCardLeadingAvatar(
+                imageUrl: profile?.avatar,
+                name: profile?.name,
+                borderColor: statusColor,
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -87,21 +79,14 @@ class ApprovableHeaderWidget extends StatelessWidget {
                   children: [
                     Text(
                       profile?.name ?? 'employee'.tr(),
-                      style: AppStyles.primaryContent(context).copyWith(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Color(AppColors.titleTextColor),
-                      ),
+                      style: AppStyles.heading(context),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      '${profile?.jobTitle ?? ''} ${details.department?.title != null ? '• ${details.department!.title}' : ''}',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey.shade600,
-                      ),
+                      '${profile?.jobTitle ?? ''}${details.department?.title != null ? ' · ${details.department!.title}' : ''}',
+                      style: AppStyles.subtitleContent(context),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -109,21 +94,8 @@ class ApprovableHeaderWidget extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                decoration: BoxDecoration(
-                  color: statusColor.withOpacity(0.12),
-                  borderRadius: BorderRadius.circular(AppRadius.lg),
-                  border: Border.all(color: statusColor.withOpacity(0.4)),
-                ),
-                child: Text(
-                  (details.status ?? '').tr(),
-                  style: TextStyle(
-                    color: statusColor,
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+              AppStatusBadge.fromStatus(
+                status: details.status ?? '',
               ),
             ],
           ),

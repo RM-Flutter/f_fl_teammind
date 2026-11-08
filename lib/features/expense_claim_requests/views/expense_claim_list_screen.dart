@@ -219,62 +219,60 @@ class _ExpenseClaimListScreenState extends State<ExpenseClaimListScreen> {
   }) {
     return Center(
       child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: kIsWeb ? 1100 : double.infinity,
+        constraints: const BoxConstraints(
+          maxWidth: double.infinity,
         ),
-        child: Padding(
-          padding: EdgeInsets.all(AppSizes.s12),
-          child: RefreshIndicator.adaptive(
-            onRefresh: () => controller.initializeScreen(context),
-            child: ListView.builder(
-              controller: _scrollController,
-              physics: const AlwaysScrollableScrollPhysics(),
-              // Room so the floating add button doesn't cover the last card
-              padding: const EdgeInsets.only(bottom: 80),
-              itemCount: requests.length +
-                  (isIncoming
-                      ? (controller.incomingIsLoadingMore ? 1 : 0)
-                      : (controller.personalIsLoadingMore ? 1 : 0)),
-              itemBuilder: (context, index) {
-                if (index == requests.length) {
-                  return const Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                }
-                final request = requests[index];
-
-                return TweenAnimationBuilder<double>(
-                  duration:
-                      Duration(milliseconds: 400 + (index * 100).clamp(0, 500)),
-                  tween: Tween(begin: 0.0, end: 1.0),
-                  curve: Curves.easeOutQuart,
-                  builder: (context, value, child) {
-                    return Transform.translate(
-                      offset: Offset(0, 50 * (1 - value)),
-                      child: Opacity(opacity: value, child: child),
-                    );
-                  },
-                  child: ApprovableCardWidget(
-                    request: request,
-                    isForDepartment: isIncoming,
-                    onTap: () async {
-                      final updated = await context.pushNamed(
-                        AppRoutes.expenseClaimDetails.name,
-                        pathParameters: {
-                          'lang': context.locale.languageCode,
-                          'id': request.id.toString(),
-                        },
-                        extra: request,
-                      );
-                      if (updated == true) {
-                        controller.initializeScreen(context);
-                      }
-                    },
-                  ),
+        child: RefreshIndicator.adaptive(
+          onRefresh: () => controller.initializeScreen(context),
+          child: ListView.builder(
+            controller: _scrollController,
+            clipBehavior: Clip.none,
+            physics: const AlwaysScrollableScrollPhysics(),
+            // Room so the floating add button doesn't cover the last card
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 80),
+            itemCount: requests.length +
+                (isIncoming
+                    ? (controller.incomingIsLoadingMore ? 1 : 0)
+                    : (controller.personalIsLoadingMore ? 1 : 0)),
+            itemBuilder: (context, index) {
+              if (index == requests.length) {
+                return const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Center(child: CircularProgressIndicator()),
                 );
-              },
-            ),
+              }
+              final request = requests[index];
+
+              return TweenAnimationBuilder<double>(
+                duration:
+                    Duration(milliseconds: 400 + (index * 100).clamp(0, 500)),
+                tween: Tween(begin: 0.0, end: 1.0),
+                curve: Curves.easeOutQuart,
+                builder: (context, value, child) {
+                  return Transform.translate(
+                    offset: Offset(0, 50 * (1 - value)),
+                    child: Opacity(opacity: value, child: child),
+                  );
+                },
+                child: ApprovableCardWidget(
+                  request: request,
+                  isForDepartment: isIncoming,
+                  onTap: () async {
+                    final updated = await context.pushNamed(
+                      AppRoutes.expenseClaimDetails.name,
+                      pathParameters: {
+                        'lang': context.locale.languageCode,
+                        'id': request.id.toString(),
+                      },
+                      extra: request,
+                    );
+                    if (updated == true) {
+                      controller.initializeScreen(context);
+                    }
+                  },
+                ),
+              );
+            },
           ),
         ),
       ),

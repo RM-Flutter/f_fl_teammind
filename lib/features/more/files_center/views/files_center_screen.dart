@@ -19,6 +19,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:app_test/core/widgets/app_card.widget.dart';
+import 'package:app_test/core/widgets/app_status_badge.widget.dart';
 
 class FilesCenterScreen extends StatefulWidget {
   const FilesCenterScreen({super.key});
@@ -175,11 +178,14 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
                   const SizedBox(height: 24),
                   SizedBox(
                     width: double.infinity,
+                    height: AppButtonSize.height,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(AppColors.buttons),
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.sm)),
+                        foregroundColor: Colors.white,
+                        elevation: 0,
+                        padding: AppButtonSize.padding,
+                        shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
                       ),
                       onPressed: () {
                         viewModel.selectedStatus = tempSelectedStatus;
@@ -187,7 +193,7 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
                         viewModel.applyFilters();
                         Navigator.pop(context);
                       },
-                      child: Text(AppStrings.applied.tr(), style: const TextStyle(color: Colors.white, fontSize: 16)),
+                      child: Text(AppStrings.applied.tr(), style: const TextStyle(color: Colors.white, fontSize: AppButtonSize.fontSize, fontWeight: FontWeight.w600)),
                     ),
                   ),
                 ],
@@ -289,27 +295,25 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
     }
   }
 
-  Widget _getFileTypeIcon(String? type) {
-    final color = Color(AppColors.buttons);
-    if (type == null) return Icon(Icons.insert_drive_file, color: color, size: 30);
-    
+  IconData _getFileTypeIconData(String? type) {
+    if (type == null) return Icons.insert_drive_file_outlined;
     switch (type.toLowerCase()) {
       case 'pdf':
-        return Icon(Icons.picture_as_pdf, color: color, size: 30);
+        return Icons.picture_as_pdf_outlined;
       case 'doc':
       case 'docx':
-        return Icon(Icons.description, color: color, size: 30);
+        return Icons.description_outlined;
       case 'xls':
       case 'xlsx':
-        return Icon(Icons.table_chart, color: color, size: 30);
+        return Icons.table_chart_outlined;
       case 'ppt':
       case 'pptx':
-        return Icon(Icons.slideshow, color: color, size: 30);
+        return Icons.slideshow_outlined;
       case 'zip':
       case 'rar':
-        return Icon(Icons.folder_zip, color: color, size: 30);
+        return Icons.folder_zip_outlined;
       default:
-        return Icon(Icons.insert_drive_file, color: color, size: 30);
+        return Icons.insert_drive_file_outlined;
     }
   }
 
@@ -320,183 +324,123 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
     final fileId = file.id ?? 0;
     final isDownloading = _downloadProgress.containsKey(fileId);
     final progress = _downloadProgress[fileId] ?? 0.0;
-    
-    return InkWell(
-      onTap: isDownloading ? null : () => _downloadFile(file),
-      borderRadius: BorderRadius.circular(AppRadius.md),
-      child: Stack(
-        children: [
-          Container(
-            margin: const EdgeInsets.only(bottom: 12),
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(AppRadius.md),
-              border: Border.all(color: Colors.grey[300]!),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withValues(alpha: 0.1),
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Row(
-              children: [
-                // Image/Icon
-                Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[100],
-                    borderRadius: BorderRadius.circular(AppRadius.md),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(AppRadius.md),
-                    child: isImage && imageUrl != null && imageUrl.isNotEmpty
-                        ? Image.network(
-                            imageUrl,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) => Container(
-                              color: Colors.grey[100],
-                              child: Icon(Icons.broken_image, color: Colors.grey[400], size: 30),
-                            ),
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return Container(
-                                color: Colors.grey[100],
-                                child: Center(
-                                  child: CircularProgressIndicator(strokeWidth: 2, color: Color(AppColors.buttons)),
-                                ),
-                              );
-                            },
-                          )
-                        : Container(
-                            color: Color(AppColors.buttons).withValues(alpha: 0.1),
-                            child: _getFileTypeIcon(fileType),
-                          ),
-                  ),
-                ),
-                
-                const SizedBox(width: 12),
-                
-                // Info
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // Status Badge
-                      if (file.status != null) ...[
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: file.status == 'premium' 
-                                ? Colors.amber.withValues(alpha: 0.2) 
-                                : file.status == 'private' 
-                                  ? Colors.red.withValues(alpha: 0.1) 
-                                  : Colors.green.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(AppRadius.xs),
-                          ),
-                          child: Text(
-                            file.status!.tr().toUpperCase(),
-                            style: TextStyle(
-                              color: file.status == 'premium' 
-                                  ? Colors.amber[800] 
-                                  : file.status == 'private' 
-                                    ? Colors.red 
-                                    : Colors.green,
-                              fontSize: 10,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 6),
-                      ],
-                      // Title
-                      if (file.title != null && file.title!.isNotEmpty) ...[
-                        Text(
-                          file.title!,
-                          style: TextStyle(
-                            color: Color(AppColors.secondaryButton),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 4),
-                      ],
-                      // Description
-                      if (file.description != null && file.description!.isNotEmpty) ...[
-                        Text(
-                          file.description!,
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 12,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-                
-                // Download icon
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Color(AppColors.buttons).withValues(alpha: 0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.download_rounded,
-                    color: Color(AppColors.buttons),
-                    size: 20,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          
-          if (isDownloading)
-            Positioned.fill(
-              bottom: 12,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.8),
-                  borderRadius: BorderRadius.circular(AppRadius.md),
-                ),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(
-                          value: progress > 0 ? progress : null,
-                          strokeWidth: 3,
-                          valueColor: AlwaysStoppedAnimation<Color>(Color(AppColors.buttons)),
-                        ),
+    final Color statusColor = AppStatusBadge.colorForStatus(
+      (file.status ?? 'public').toLowerCase(),
+    );
+
+    return Stack(
+      children: [
+        AppCard(
+          margin: const EdgeInsets.only(bottom: AppSpacing.cardGap),
+          padding: AppSpacing.cardPadding,
+          onTap: isDownloading ? null : () => _downloadFile(file),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // ── Leading 46x46 Circular Avatar ───────────────────────────
+              AppCardLeadingAvatar(
+                imageUrl: (isImage && imageUrl != null && imageUrl.isNotEmpty)
+                    ? imageUrl
+                    : null,
+                nameForInitials: file.title,
+                icon: _getFileTypeIconData(fileType),
+                borderColor: statusColor,
+              ),
+              const SizedBox(width: 12),
+
+              // ── Info ────────────────────────────────────────────────────
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      (file.title != null && file.title!.isNotEmpty)
+                          ? file.title!
+                          : '-',
+                      style: AppStyles.heading(context).copyWith(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
                       ),
-                      const SizedBox(height: 8),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    if (file.description != null &&
+                        file.description!.isNotEmpty) ...[
+                      const SizedBox(height: 3),
                       Text(
-                        '${(progress * 100).toInt()}%',
-                        style: TextStyle(
-                          color: Color(AppColors.buttons),
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
+                        file.description!,
+                        style: AppStyles.subtitleContent(context).copyWith(
+                          fontSize: 11,
+                          color: Colors.grey.shade600,
                         ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
-                  ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(width: 8),
+
+              // ── Status Badge + Download action ──────────────────────────
+              if (file.status != null && file.status!.isNotEmpty) ...[
+                AppStatusBadge.fromStatus(status: file.status),
+                const SizedBox(width: 8),
+              ],
+              Container(
+                padding: const EdgeInsets.all(7),
+                decoration: BoxDecoration(
+                  color: Color(AppColors.buttons).withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.download_rounded,
+                  color: Color(AppColors.buttons),
+                  size: 18,
+                ),
+              ),
+            ],
+          ),
+        ),
+        if (isDownloading)
+          Positioned.fill(
+            bottom: AppSpacing.cardGap,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.85),
+                borderRadius: BorderRadius.circular(AppRadius.md),
+              ),
+              child: Center(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        value: progress > 0 ? progress : null,
+                        strokeWidth: 2.5,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                            Color(AppColors.buttons)),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      '${(progress * 100).toInt()}%',
+                      style: TextStyle(
+                        color: Color(AppColors.buttons),
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
-        ],
-      ),
+          ),
+      ],
     );
   }
 
@@ -509,29 +453,8 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
         appBar: AppBarWithBookmark(
           backgroundColor: Colors.white,
           elevation: 0,
-          leading: IconButton(
-            icon: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Color(AppColors.secondaryButton),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
-            ),
-            onPressed: () {
-              if (context.canPop()) {
-                context.pop();
-              } else {
-                Navigator.pop(context);
-              }
-            },
-          ),
+          leading: const AppBackButton(),
           title: 'files_center'.tr(),
-          titleStyle: TextStyle(
-            color: Color(AppColors.secondaryButton),
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-          ),
           centerTitle: true,
           routeName: 'filesCenter',
         ),

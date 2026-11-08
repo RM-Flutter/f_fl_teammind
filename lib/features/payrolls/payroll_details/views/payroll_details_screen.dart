@@ -48,8 +48,8 @@ class _PayrollDetailsScreenState extends State<PayrollDetailsScreen> {
               Expanded(
                 child: Center(
                   child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxWidth: kIsWeb ? 1100 : double.infinity,
+                    constraints: const BoxConstraints(
+                      maxWidth: double.infinity,
                     ),
                     child: PayrollDetailsBodyWidget(payroll: widget.payroll),
                   ),

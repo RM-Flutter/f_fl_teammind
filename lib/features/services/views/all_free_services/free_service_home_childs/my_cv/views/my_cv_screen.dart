@@ -115,16 +115,8 @@ class _MyCVScreenState extends State<MyCVScreen> with SingleTickerProviderStateM
         appBar: AppBarWithBookmark(
           backgroundColor: Colors.white,
           elevation: 0,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Color(AppColors.secondaryButton)),
-            onPressed: _goBack,
-          ),
+          leading: AppBackButton(onPressed: _goBack),
           title: AppStrings.myCV2.tr().toUpperCase(),
-          titleStyle: TextStyle(
-            color: Color(AppColors.secondaryButton),
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
           centerTitle: true,
           routeName: AppRoutes.myCVScreen.name,
         ),
@@ -135,8 +127,8 @@ class _MyCVScreenState extends State<MyCVScreen> with SingleTickerProviderStateM
                                    (viewModel.cvData?.jobInfo?.experiences?.isNotEmpty ?? false);
             return FloatingActionButton.extended(
               onPressed: _navigateToEdit,
-              backgroundColor: Color(AppColors.secondaryButton),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.xl)),
+              backgroundColor: Color(AppColors.buttons),
+              shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
               icon: Icon(hasRealCV ? Icons.edit : Icons.add, color: Colors.white, size: 20),
               label: Text(
                 hasRealCV ? AppStrings.edit.tr() : AppStrings.createCV.tr(),

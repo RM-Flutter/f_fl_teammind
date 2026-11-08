@@ -1,9 +1,56 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../constants/app_colors.dart';
+import '../constants/app_sizes.dart';
 import '../services/backend_services/api_service/dio_api_service/shared.dart';
+import '../utils/app_styles.dart';
 import 'bookmark_widgets/bookmark_button.widget.dart';
 
-/// Helper widget to create an AppBar with bookmark button automatically added
+/// The single unified back button used in every AppBar across the app.
+class AppBackButton extends StatelessWidget {
+  final VoidCallback? onTap;
+  final VoidCallback? onPressed;
+  final dynamic popResult;
+
+  const AppBackButton({
+    super.key,
+    this.onTap,
+    this.onPressed,
+    this.popResult,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(AppSizes.s10),
+      child: InkWell(
+        customBorder: const CircleBorder(),
+        onTap: onTap ??
+            onPressed ??
+            () {
+              if (context.canPop()) {
+                context.pop(popResult);
+              } else {
+                Navigator.of(context).maybePop(popResult);
+              }
+            },
+        child: Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Color(AppColors.secondaryButton),
+          ),
+          child: const Icon(
+            Icons.arrow_back_sharp,
+            color: Colors.white,
+            size: AppSizes.s18,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Helper widget to create an AppBar with bookmark button and unified back button automatically added
 class AppBarWithBookmark extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
   final Widget? titleWidget;
@@ -20,6 +67,7 @@ class AppBarWithBookmark extends StatelessWidget implements PreferredSizeWidget 
   final Color? surfaceTintColor;
   final Color? bookmarkIconColor;
   final bool showBookmark;
+  final bool automaticallyImplyLeading;
 
   const AppBarWithBookmark({
     super.key,
@@ -38,6 +86,7 @@ class AppBarWithBookmark extends StatelessWidget implements PreferredSizeWidget 
     this.surfaceTintColor,
     this.bookmarkIconColor,
     this.showBookmark = true,
+    this.automaticallyImplyLeading = true,
   }) : assert(title != null || titleWidget != null, 'Either title or titleWidget must be provided');
 
   @override
@@ -48,7 +97,7 @@ class AppBarWithBookmark extends StatelessWidget implements PreferredSizeWidget 
     } catch (e) {
       // Ignore if GoRouterState is not available (e.g. when pushed via normal Navigator)
     }
-    
+
     final currentRouteName = routeName ?? routerState?.name ?? '';
     final currentRoutePath = routerState?.uri.toString() ?? '';
     final bookmarkTitle = defaultTitle ?? title ?? '';
@@ -57,14 +106,13 @@ class AppBarWithBookmark extends StatelessWidget implements PreferredSizeWidget 
     Map<String, dynamic>? finalStateData = stateData;
     if (currentRouteName.contains('requests') || currentRoutePath.contains('requests')) {
       finalStateData ??= {};
-      // Collect filter data from CacheHelper
       final reqId = CacheHelper.getString("reqId");
       final empId = CacheHelper.getString("empId");
       final depId = CacheHelper.getString("depId");
       final selectStatus = CacheHelper.getString("selectStatus");
       final from = CacheHelper.getString("from");
       final to = CacheHelper.getString("to");
-      
+
       if (reqId.isNotEmpty) finalStateData['reqId'] = reqId;
       if (empId.isNotEmpty) finalStateData['empId'] = empId;
       if (depId.isNotEmpty) finalStateData['depId'] = depId;
@@ -74,7 +122,7 @@ class AppBarWithBookmark extends StatelessWidget implements PreferredSizeWidget 
     }
 
     final allActions = <Widget>[];
-    
+
     // Add bookmark button only if showBookmark is true
     if (showBookmark) {
       allActions.add(
@@ -87,21 +135,36 @@ class AppBarWithBookmark extends StatelessWidget implements PreferredSizeWidget 
         ),
       );
     }
-    
+
     // Add custom actions if any
     if (actions != null) {
       allActions.addAll(actions!);
     }
 
+    final canPop = context.canPop() || Navigator.of(context).canPop();
+    final effectiveLeading = leading ??
+        (automaticallyImplyLeading && canPop
+            ? const AppBackButton()
+            : const SizedBox.shrink());
+
+    final effectiveTitleStyle = titleStyle ??
+        AppStyles.heading(context).copyWith(
+          fontSize: 16,
+          fontWeight: FontWeight.w700,
+          color: Color(AppColors.secondaryButton),
+        );
+
     return AppBar(
-      title: titleWidget ?? (title != null ? Text(title!, style: titleStyle) : null),
-      leading: leading,
+      title: titleWidget ??
+          (title != null ? Text(title!, style: effectiveTitleStyle) : null),
+      leading: effectiveLeading,
+      automaticallyImplyLeading: automaticallyImplyLeading,
       actions: allActions.isEmpty ? null : allActions,
-      backgroundColor: backgroundColor,
+      backgroundColor: backgroundColor ?? Colors.white,
       centerTitle: centerTitle,
       elevation: elevation,
       bottom: bottom,
-      surfaceTintColor: surfaceTintColor,
+      surfaceTintColor: surfaceTintColor ?? Colors.transparent,
       toolbarHeight: bottom != null ? kToolbarHeight : null,
       actionsIconTheme: const IconThemeData(size: 24),
     );
@@ -115,4 +178,3 @@ class AppBarWithBookmark extends StatelessWidget implements PreferredSizeWidget 
     return const Size.fromHeight(kToolbarHeight);
   }
 }
-

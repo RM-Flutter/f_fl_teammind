@@ -13,6 +13,9 @@ import 'package:app_test/features/more/user_device/controllers/user_device_contr
 import 'package:app_test/core/services/app_config_service.dart';
 import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
+import 'package:app_test/core/widgets/app_card.widget.dart';
+import 'package:app_test/core/widgets/app_status_badge.widget.dart';
 
 class UserDeviceScreen extends StatefulWidget {
   const UserDeviceScreen({super.key});
@@ -67,151 +70,131 @@ class _UserDeviceScreenState extends State<UserDeviceScreen> {
         }
         return Scaffold(
           backgroundColor: const Color(0xffFFFFFF),
+          appBar: AppBarWithBookmark(
+            title: AppStrings.userDevices.tr().toUpperCase(),
+            centerTitle: true,
+            backgroundColor: Colors.white,
+            elevation: 0,
+          ),
           body: SingleChildScrollView(
             controller: _scrollController,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             child: Column(
               children: [
-                Container(
-                  color: Colors.transparent,
-                  height: 90,
-                  width: double.infinity,
-                  alignment: Alignment.center,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.arrow_back, color: Color(AppColors.secondaryButton), size: 24,),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                      Text(
-                        AppStrings.userDevices.tr().toUpperCase(),
-                        style: AppStyles.heading(context).copyWith(fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                      IconButton(
-                          icon: const Icon(Icons.arrow_back, color: Colors.transparent),
-                          onPressed: (){}
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: AppSizes.s20,),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: ListView.separated(
-                    padding: EdgeInsets.zero,
-                    separatorBuilder: (context, index)=> SizedBox(height: 18,),
-                    shrinkWrap: true,
-                    reverse: false,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount:(value.isLoading)? 5 : value.devices.length,
-                    scrollDirection: Axis.vertical,
-                    itemBuilder: (context, index) =>
-                    (value.isLoading)?
-                    Shimmer.fromColors(
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[100]!,
-                      child: Container(
-                        margin: EdgeInsets.symmetric(vertical: AppSizes.s12),
-                        padding: EdgeInsetsDirectional.symmetric(
-                            horizontal: AppSizes.s15, vertical: AppSizes.s12),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(AppRadius.md),
+                ListView.separated(
+                  padding: EdgeInsets.zero,
+                  clipBehavior: Clip.none,
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: AppSpacing.cardGap),
+                  shrinkWrap: true,
+                  reverse: false,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: (value.isLoading) ? 5 : value.devices.length,
+                  scrollDirection: Axis.vertical,
+                  itemBuilder: (context, index) {
+                    if (value.isLoading) {
+                      return Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          margin:
+                              const EdgeInsets.symmetric(vertical: AppSizes.s4),
+                          padding: const EdgeInsetsDirectional.symmetric(
+                              horizontal: AppSizes.s15, vertical: AppSizes.s12),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(AppRadius.md),
+                          ),
+                          height: 70,
                         ),
-                        height: 100,  // Adjust height to match your layout
-                      ),
-                    ) :
-                    InkWell(
-                      onTap: () {
-                      },
-                      child: Container(
-                        padding: EdgeInsetsDirectional.symmetric(
-                            horizontal: AppSizes.s15, vertical: AppSizes.s12),
-                        decoration: BoxDecoration(
-                          color: Color(AppColors.textC5),
-                          borderRadius: BorderRadius.circular(AppRadius.md),
-                          boxShadow: [
-                            BoxShadow(
-                                color: const Color.fromRGBO(0, 0, 0, 0.05),
-                                spreadRadius: 0,
-                                offset: Offset(0, 1),
-                                blurRadius: 10)
-                          ],
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            if(value.devices[index]['device_type'] != "PC/Laptop")SvgPicture.asset("assets/images/svg/mobile.svg", width: 24, height: 24,),
-                            if(value.devices[index]['device_type'] == "PC/Laptop")SvgPicture.asset("assets/images/svg/laptop.svg", width: 24, height: 24,),
-                            SizedBox(width: 15,),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
+                      );
+                    }
+                    final device = value.devices[index];
+                    final isLaptop = device['device_type'] == "PC/Laptop";
+                    final isCurrent = appConfigServiceProvider
+                            .deviceInformation.deviceUniqueId ==
+                        device['unique_id'].toString();
+                    final accentColor = isCurrent
+                        ? const Color(0xFF2E7D32)
+                        : Color(AppColors.buttons);
+                    final subtitle = _deviceSubtitle(device);
+
+                    return AppCard(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          AppCardLeadingAvatar(
+                            icon: isLaptop
+                                ? Icons.laptop_mac_rounded
+                                : Icons.phone_iphone_rounded,
+                            borderColor: accentColor,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  _deviceTitle(device),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppStyles.heading(context),
+                                ),
+                                if (subtitle.isNotEmpty) ...[
+                                  const SizedBox(height: 2),
                                   Text(
-                                    _deviceTitle(value.devices[index]).toUpperCase(),
+                                    subtitle,
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
-                                    style: AppStyles.darkContent(context).copyWith(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600),
+                                    style: AppStyles.subtitleContent(context),
                                   ),
-                                  if (_deviceSubtitle(value.devices[index]).isNotEmpty)
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 2),
-                                      child: Text(
-                                        _deviceSubtitle(value.devices[index]),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: AppStyles.darkContent(context).copyWith(
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.grey.shade600),
-                                      ),
-                                    ),
                                 ],
-                              ),
+                              ],
                             ),
-                            SizedBox(width: 10,),
-                            if(appConfigServiceProvider.deviceInformation.deviceUniqueId == value.devices[index]['unique_id'].toString())Text(
-                              AppStrings.currentDevice.tr(),
-                              maxLines: 1,
-                              style: AppStyles.greenContent(context).copyWith(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                              ),
+                          ),
+                          const SizedBox(width: 8),
+                          if (isCurrent)
+                            AppStatusBadge(
+                              label: AppStrings.currentDevice.tr(),
+                              color: const Color(0xFF2E7D32),
+                              icon: Icons.check_circle_outline,
                             ),
-                            if(appConfigServiceProvider.deviceInformation.deviceUniqueId != value.devices[index]['unique_id'].toString())GestureDetector(
-                                onTap: (){
-                                  setState(() {
-                                    selectIndex = index;
-                                  });
-                                  value.deleteDevices(context: context, deviceId: value.devices[index]['id']);
-                                },
-                                child: (value.isDeleteLoading == true && selectIndex == index) ? const CircularProgressIndicator():const Icon(Icons.logout, color: Colors.red,))
-                          ],
-                        ),
+                          if (!isCurrent)
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectIndex = index;
+                                });
+                                value.deleteDevices(
+                                    context: context, deviceId: device['id']);
+                              },
+                              child: (value.isDeleteLoading == true &&
+                                      selectIndex == index)
+                                  ? const SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(
+                                          strokeWidth: 2),
+                                    )
+                                  : const Icon(Icons.logout_rounded,
+                                      color: Color(0xFFC62828), size: 20),
+                            ),
+                        ],
                       ),
-                    )
-                    ,
-                  ),
+                    );
+                  },
                 ),
-                SizedBox(height: AppSizes.s20,),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: Center(
-                      child: (value.isDeleteLoading == false) ?CustomElevatedButton(
-                          titleSize: AppSizes.s14,
-                          width: 1.sw,
-                          radius: AppSizes.s10,
-                          backgroundColor: const Color(0xffFF0000),
-                          title: AppStrings.logoutFromAllDevices.tr(),
-                          onPressed: () async => await value.deleteDevices(context: context, deviceId: null)
-                      ) : const CircularProgressIndicator()
-                  ),
-                ),
+                const SizedBox(height: AppSizes.s20),
+                Center(
+                    child: (value.isDeleteLoading == false)
+                        ? CustomElevatedButton(
+                            titleSize: AppSizes.s14,
+                            width: 1.sw,
+                            backgroundColor: const Color(0xffFF0000),
+                            title: AppStrings.logoutFromAllDevices.tr(),
+                            onPressed: () async => await value.deleteDevices(
+                                context: context, deviceId: null))
+                        : const CircularProgressIndicator()),
               ],
             ),
           ),

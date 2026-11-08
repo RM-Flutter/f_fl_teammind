@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../constants/app_colors.dart';
+import '../constants/app_design.dart';
 import '../constants/app_sizes.dart';
-
 
 class ButtonWidget extends StatelessWidget {
   final VoidCallback? onPressed;
@@ -17,11 +18,12 @@ class ButtonWidget extends StatelessWidget {
   final Color? fontColor;
   final FontWeight? fontWeight;
   final double? fontSize;
+
   const ButtonWidget({
     super.key,
     required this.onPressed,
     this.backgroundColor,
-    this.borderRadius = 50,
+    this.borderRadius = AppRadius.pill,
     this.borderSide = BorderSide.none,
     this.padding,
     required this.title,
@@ -35,88 +37,62 @@ class ButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final effectiveBg = backgroundColor ?? Color(AppColors.buttons);
+    final effectiveFg = fontColor ?? Colors.white;
+
     return isLoading == false
-        ? ElevatedButton(
-            onPressed: isLoading == false ? onPressed : null,
-            style: Theme.of(context).elevatedButtonTheme.style?.copyWith(
-                  elevation: WidgetStateProperty.all(0),
-                  padding: WidgetStateProperty.all(padding),
-                  shape: WidgetStateProperty.all(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(borderRadius),
-                      side: borderSide,
+        ? SizedBox(
+            height: AppButtonSize.height,
+            child: ElevatedButton(
+              onPressed: isLoading == false ? onPressed : null,
+              style: ElevatedButton.styleFrom(
+                elevation: 0,
+                shadowColor: Colors.transparent,
+                backgroundColor: effectiveBg,
+                foregroundColor: effectiveFg,
+                minimumSize:
+                    const Size(AppButtonSize.minWidth, AppButtonSize.height),
+                padding: padding ?? AppButtonSize.padding,
+                shape: RoundedRectangleBorder(
+                  borderRadius: AppRadius.button,
+                  side: borderSide,
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (svgIcon != null)
+                    Padding(
+                      padding: const EdgeInsets.only(right: AppSizes.s12),
+                      child: SvgPicture.asset(
+                        svgIcon!,
+                        fit: BoxFit.scaleDown,
+                        colorFilter: svgIconColor != null
+                            ? ColorFilter.mode(svgIconColor!, BlendMode.srcIn)
+                            : null,
+                      ),
+                    ),
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontWeight: fontWeight ?? FontWeight.w600,
+                      color: effectiveFg,
+                      fontSize: fontSize ?? AppButtonSize.fontSize,
                     ),
                   ),
-                  backgroundColor: WidgetStateProperty.all(
-                    backgroundColor,
-                  ),
-                  textStyle: WidgetStateProperty.resolveWith((_) {
-                    return TextStyle(
-                      fontWeight: fontWeight,
-                      // height: 0.08,
-
-                      color:
-                          fontColor ?? Theme.of(context).colorScheme.onPrimary,
-                      fontSize: fontSize,
-                    );
-                  }),
-                ),
-            // child: Container(
-            //padding: padding ?? EdgeInsets.symmetric(horizontal: 8, vertical: 16),
-            // decoration: ShapeDecoration(
-            //   color: backgroundColor ?? AppColors.whiteBackground,
-            //   shape: RoundedRectangleBorder(
-            //     borderRadius: BorderRadius.circular(borderRadius ?? 6),
-            //     side: borderSide,
-            //   ),
-            // ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                svgIcon != null
-                    ? Padding(
-                        padding: const EdgeInsets.only(right: AppSizes.s12),
-                        child: SvgPicture.asset(
-                          svgIcon!,
-                          fit: BoxFit.scaleDown,
-                        ),
-                      )
-                    : const SizedBox.shrink(),
-                Text(
-                  title,
-                  style: Theme.of(context)
-                      .elevatedButtonTheme
-                      .style
-                      ?.textStyle
-                      ?.resolve({WidgetState.focused})?.copyWith(
-                    fontWeight: fontWeight,
-                    // height: 0.08,
-
-                    color: fontColor ?? Theme.of(context).colorScheme.onPrimary,
-                    fontSize: fontSize,
-                  ),
-                  // textStyle: AppTextStyle.textStyle(
-                  //   color: childColor ?? AppColors.white,
-                  //   fontSize: AppFontSize.text16,
-                  //   fontWeight: AppFontWeight.bold,
-                  //   height: 0.10,
-                  // ),
-                ),
-              ],
-            )
-
-            // ),
-            )
-        : Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(
-                color: Theme.of(context).progressIndicatorTheme.color,
+                ],
               ),
-            ],
+            ),
+          )
+        : SizedBox(
+            height: AppButtonSize.height,
+            child: Center(
+              child: CircularProgressIndicator(
+                color: Theme.of(context).progressIndicatorTheme.color ??
+                    Color(AppColors.buttons),
+              ),
+            ),
           );
   }
 }

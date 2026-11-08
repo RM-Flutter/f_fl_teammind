@@ -86,8 +86,8 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
             Padding(padding: EdgeInsets.symmetric(horizontal: 15),
              child: Center(
               child: ConstrainedBox(
-               constraints: BoxConstraints(
-                maxWidth: kIsWeb ? 1100 : double.infinity,
+               constraints: const BoxConstraints(
+                maxWidth: double.infinity,
                ),
                child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,

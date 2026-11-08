@@ -109,7 +109,7 @@ class _FreeServiceMoreScreenState extends State<FreeServiceMoreScreen> {
                                 Center(
                                   child: ConstrainedBox(
                                     constraints: const BoxConstraints(
-                                      maxWidth: kIsWeb ? 1070 : double.infinity,
+                                      maxWidth: double.infinity,
                                     ),
                                     child: Container(
                                       padding: const EdgeInsetsDirectional.only(start: 16),
@@ -173,7 +173,7 @@ class _FreeServiceMoreScreenState extends State<FreeServiceMoreScreen> {
                                 Center(
                                   child: ConstrainedBox(
                                     constraints: const BoxConstraints(
-                                      maxWidth: kIsWeb ? 1070 : double.infinity,
+                                      maxWidth: double.infinity,
                                     ),
                                     child: Container(
                                       padding: const EdgeInsetsDirectional.only(start: 16),
@@ -352,7 +352,7 @@ class DefaultListTile extends StatelessWidget {
     return Center(
       child: ConstrainedBox(
         constraints: const BoxConstraints(
-          maxWidth: kIsWeb ? 1100 : double.infinity,
+          maxWidth: double.infinity,
         ),
         child: Column(
           children: [

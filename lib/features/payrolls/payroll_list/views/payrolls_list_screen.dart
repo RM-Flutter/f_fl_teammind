@@ -86,47 +86,46 @@ class _FingerprintScreenState extends State<PayrollsListScreen> {
               context: context, empId: widget.empId),
           body: Center(
             child: ConstrainedBox(
-              constraints: BoxConstraints(
-                maxWidth: kIsWeb ? 1100 : double.infinity,
+              constraints: const BoxConstraints(
+                maxWidth: double.infinity,
               ),
-              child: Padding(
-                padding: EdgeInsets.all(AppSizes.s12),
-                child: SingleChildScrollView(
-                  child: Consumer<PayrollsListViewModel>(
-                      builder: (context, viewModel, child) => viewModel
-                              .isLoading
-                          ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget()
-                          : viewModel.payrolls?.isEmpty == true ||
-                                  viewModel.payrolls == null
-                              ? NoExistingPlaceholderScreen(
-                                  height: 0.6.sh,
-                                  title: AppStrings.noExistingPayrolls.tr())
-                              : Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                      gapH12,
-                                      if (widget.empName == null)
-                                        Text(
-                                          gCache['name'],
-                                          style: AppStyles.heading(context)
-                                              .copyWith(
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: 20,
-                                          ),
+              child: SingleChildScrollView(
+                clipBehavior: Clip.none,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                child: Consumer<PayrollsListViewModel>(
+                    builder: (context, viewModel, child) => viewModel
+                            .isLoading
+                        ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget()
+                        : viewModel.payrolls?.isEmpty == true ||
+                                viewModel.payrolls == null
+                            ? NoExistingPlaceholderScreen(
+                                height: 0.6.sh,
+                                title: AppStrings.noExistingPayrolls.tr())
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                    gapH12,
+                                    if (widget.empName == null)
+                                      Text(
+                                        gCache['name'],
+                                        style: AppStyles.heading(context)
+                                            .copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 20,
                                         ),
-                                      SizedBox(
-                                        height: 20,
                                       ),
+                                    SizedBox(
+                                      height: 20,
+                                    ),
 
-                                      /// general screen message widget for other requests types
-                                      // GeneralScreenMessageWidget(
-                                      //     screenId: '/payrolls'),
-                                      ...viewModel.payrolls!.map(
-                                          (PayrollModel payroll) =>
-                                              PayrollListItemWidget(
-                                                  payroll: payroll))
-                                    ])),
-                ),
+                                    /// general screen message widget for other requests types
+                                    // GeneralScreenMessageWidget(
+                                    //     screenId: '/payrolls'),
+                                    ...viewModel.payrolls!.map(
+                                        (PayrollModel payroll) =>
+                                            PayrollListItemWidget(
+                                                payroll: payroll))
+                                  ])),
               ),
             ),
           )),

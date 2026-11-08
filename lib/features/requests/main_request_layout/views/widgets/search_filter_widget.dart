@@ -560,18 +560,18 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                                 Navigator.pop(context, _buildFilterMap(viewModels, viewModel));
                                               },
                                               child: Container(
-                                                height: 50,
+                                                height: AppButtonSize.height,
                                                 alignment: Alignment.center,
                                                 decoration: BoxDecoration(
-                                                  color: Color(AppColors.secondaryButton),
-                                                  borderRadius: BorderRadius.circular(AppRadius.pill),
+                                                  color: Color(AppColors.buttons),
+                                                  borderRadius: AppRadius.button,
                                                 ),
                                                 padding: const EdgeInsets.symmetric(horizontal: 40),
                                                 child: Text(
                                                   AppStrings.applyFilter.tr().toUpperCase(),
                                                   style: AppStyles.whiteContent(context).copyWith(
                                                       fontSize: 12,
-                                                      fontWeight: FontWeight.w500,
+                                                      fontWeight: FontWeight.w600,
                                                   ),
                                                 ),
                                               ),
@@ -588,11 +588,11 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                                 Navigator.pop(context, _emptyFilterMap());
                                               },
                                               child: Container(
-                                                height: 50,
+                                                height: AppButtonSize.height,
                                                 alignment: Alignment.center,
                                                 decoration: BoxDecoration(
                                                   color: Color(AppColors.background),
-                                                  borderRadius: BorderRadius.circular(AppRadius.pill),
+                                                  borderRadius: AppRadius.button,
                                                   border: Border.all(color: Color(AppColors.secondaryButton), width: 1),
                                                 ),
                                                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -600,7 +600,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                                   AppStrings.clear.tr().toUpperCase(),
                                                   style: AppStyles.darkContent(context).copyWith(
                                                       fontSize: 12,
-                                                      fontWeight: FontWeight.w500,
+                                                      fontWeight: FontWeight.w600,
                                                   ),
                                                 ),
                                               ),

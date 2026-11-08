@@ -10,6 +10,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/widgets/app_card.widget.dart';
+import 'package:app_test/core/widgets/app_status_badge.widget.dart';
 
 class ReportsCatalogScreen extends StatelessWidget {
   const ReportsCatalogScreen({Key? key}) : super(key: key);
@@ -26,8 +28,8 @@ class ReportsCatalogScreen extends StatelessWidget {
             onRefresh: () async => viewModel.fetchCatalog(context),
             body: Center(
               child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: kIsWeb ? 1100 : double.infinity,
+                constraints: const BoxConstraints(
+                  maxWidth: double.infinity,
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
@@ -107,61 +109,45 @@ class ReportsCatalogScreen extends StatelessWidget {
   }
 
   Widget _buildReportItem(BuildContext context, ReportCatalogModel report) {
-    return Column(
-      children: [
-        InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ReportDetailsScreen(report: report),
+    final bool isFlutter = report.viewType == 'flutter';
+    final Color accentColor = Color(AppColors.buttons);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.cardGap),
+      child: AppCard(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ReportDetailsScreen(report: report),
+            ),
+          );
+        },
+        child: Row(
+          children: [
+            AppCardLeadingAvatar(
+              icon: isFlutter
+                  ? Icons.analytics_outlined
+                  : Icons.open_in_browser_outlined,
+              borderColor: accentColor,
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                report.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppStyles.heading(context),
               ),
-            );
-          },
-          borderRadius: BorderRadius.circular(AppRadius.sm),
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(AppRadius.sm),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 5,
-                  spreadRadius: 1,
-                ),
-              ],
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    report.name,
-                    style: AppStyles.blackContent(context).copyWith(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Container(
-                  height: 28,
-                  width: 28,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color(AppColors.buttons),
-                  ),
-                  child: const Icon(Icons.arrow_forward_outlined, color: Colors.white, size: 12),
-                ),
-              ],
+            const SizedBox(width: 8),
+            AppStatusBadge(
+              label: isFlutter ? 'mobile_reports'.tr() : 'browser_reports'.tr(),
+              color: accentColor,
+              icon: Icons.arrow_forward_rounded,
             ),
-          ),
+          ],
         ),
-        const SizedBox(height: 12),
-      ],
+      ),
     );
   }
 }

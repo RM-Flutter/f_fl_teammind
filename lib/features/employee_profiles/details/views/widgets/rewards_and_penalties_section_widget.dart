@@ -109,8 +109,9 @@ class _RewardsAndPenaltiesSectionWidgetState
               ? Center(child: Text(AppStrings.noDataFounded.tr()))
               : ListView.separated(
                   padding: EdgeInsets.zero,
+                  clipBehavior: Clip.none,
                   itemCount: _items.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 12),
+                  separatorBuilder: (_, __) => const SizedBox.shrink(),
                   itemBuilder: (context, index) {
                     final eItem = _items[index];
                     
