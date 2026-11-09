@@ -107,7 +107,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                   ),
                 ): null),
                 body: value.getOneTaskModel == null || value.getOneTaskModel!.task == null  ?
-                const DetailsLoadingWidget():RefreshIndicator.adaptive(
+                const DetailsLoadingWidget(headerHeight: 300, showTabs: false, textLines: 3, cards: 2):RefreshIndicator.adaptive(
                   onRefresh: ()async{
                     await value.getOneTask(context, widget.id);
                   },

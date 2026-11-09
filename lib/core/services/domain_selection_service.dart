@@ -557,6 +557,7 @@ class DomainSelectionService {
                         ),
                         child: ListView.builder(
                           shrinkWrap: true,
+ padding: EdgeInsets.zero,
                           itemCount: savedDomains.length,
                           itemBuilder: (context, index) {
                             final domain = savedDomains[index];

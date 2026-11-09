@@ -83,6 +83,7 @@ Widget defaultTapBarItem({
         child: SizedBox(
           child: ListView.builder(
             shrinkWrap: true,
+ padding: EdgeInsets.zero,
             reverse: false,
             clipBehavior: Clip.none, // the square clip of the inner list is what cut the tabs with a hard edge
             scrollDirection: useVertical ? Axis.vertical : Axis.horizontal, // 👈 الاتجاه هنا

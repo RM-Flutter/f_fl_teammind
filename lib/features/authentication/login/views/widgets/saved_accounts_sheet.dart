@@ -108,6 +108,7 @@ class _SavedAccountsSheetState extends State<SavedAccountsSheet> {
                 Flexible(
                   child: ListView.separated(
                     shrinkWrap: true,
+ padding: EdgeInsets.zero,
                     itemCount: _accounts.length,
                     separatorBuilder: (_, __) => const Divider(height: 1),
                     itemBuilder: (context, index) {

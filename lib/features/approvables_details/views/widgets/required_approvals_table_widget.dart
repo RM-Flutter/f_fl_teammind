@@ -34,7 +34,7 @@ class RequiredApprovalsTableWidget extends StatelessWidget {
     final isArabic = LocalizationService.isArabic(context: context);
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      margin: const EdgeInsets.symmetric(vertical: 4),
       padding: AppSpacing.cardPadding,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -63,6 +63,7 @@ class RequiredApprovalsTableWidget extends StatelessWidget {
           const SizedBox(height: 14),
           ListView.separated(
             shrinkWrap: true,
+ padding: EdgeInsets.zero,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: sortedLevels.length,
             separatorBuilder: (_, __) => const SizedBox(height: 12),

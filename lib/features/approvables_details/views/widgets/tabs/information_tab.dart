@@ -40,7 +40,7 @@ class InformationTab extends StatelessWidget {
   Widget _buildInfoCard(BuildContext context, String label, String value) {
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      margin: EdgeInsets.zero,
       padding: AppSpacing.cardPadding,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -107,7 +107,7 @@ class InformationTab extends StatelessWidget {
             ...seenBy!.map((person) {
               return Container(
                 margin: const EdgeInsets.symmetric(
-                    horizontal: 16, vertical: AppSpacing.cardGap / 2),
+                    vertical: AppSpacing.cardGap / 2),
                 padding: AppSpacing.cardPadding,
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -282,7 +282,7 @@ class InformationTab extends StatelessWidget {
 
     return Container(
       margin: const EdgeInsets.symmetric(
-          horizontal: 16, vertical: AppSpacing.cardGap / 2),
+          vertical: AppSpacing.cardGap / 2),
       padding: AppSpacing.cardPadding,
       decoration: BoxDecoration(
         color: Colors.white,

@@ -1,3 +1,4 @@
+import 'package:app_test/features/cv_hub/views/widgets/interview_details_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -51,7 +52,19 @@ class _CvHubInterviewDetailsScreenState extends State<CvHubInterviewDetailsScree
       body: Consumer<CvHubInterviewDetailsController>(
         builder: (context, controller, child) {
           if (controller.isLoading) {
-            return const Center(child: CircularProgressIndicator());
+            // Same app bar as the loaded page, then the skeleton of its content.
+            return Column(
+              children: [
+                AppBarWithBookmark(
+                  backgroundColor: Colors.white,
+                  elevation: 0,
+                  centerTitle: true,
+                  routeName: AppRoutes.cvHubInterviewDetails.name,
+                  title: 'Interview Details'.tr(),
+                ),
+                const Expanded(child: InterviewDetailsLoading()),
+              ],
+            );
           }
           if (controller.error != null) {
             return Center(

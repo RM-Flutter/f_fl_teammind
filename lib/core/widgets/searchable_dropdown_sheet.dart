@@ -124,6 +124,7 @@ class _SearchableDropdownSheetState extends State<SearchableDropdownSheet> {
                       child: ListView.builder(
                         controller: scrollController,
                         shrinkWrap: true,
+ padding: EdgeInsets.zero,
                         itemCount: filtered.length,
                         itemBuilder: (context, index) {
                           final item = filtered[index];

@@ -156,6 +156,7 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
                           if (selectedFiles.isNotEmpty) ...[
                             ListView.separated(
                               shrinkWrap: true,
+ padding: EdgeInsets.zero,
                               physics: const NeverScrollableScrollPhysics(),
                               itemCount: selectedFiles.length,
                               separatorBuilder: (context, index) => SizedBox(height: 10),

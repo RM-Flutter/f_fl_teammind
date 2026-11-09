@@ -97,6 +97,7 @@ Widget defaultTap2BarItem({
               ),
               child: ListView.builder(
                 shrinkWrap: true,
+ padding: EdgeInsets.zero,
                 reverse: false,
                 scrollDirection: Axis.horizontal,
                 physics: const NeverScrollableScrollPhysics(),

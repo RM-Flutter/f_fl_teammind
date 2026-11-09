@@ -163,6 +163,7 @@ class OvertimeCalendarScreen extends StatelessWidget {
                                             width: double.maxFinite,
                                             child: ListView.separated(
                                               shrinkWrap: true,
+ padding: EdgeInsets.zero,
                                               itemCount: details.appointments.length,
                                               separatorBuilder: (_, __) => const SizedBox(height: 8),
                                               itemBuilder: (ctx, index) {

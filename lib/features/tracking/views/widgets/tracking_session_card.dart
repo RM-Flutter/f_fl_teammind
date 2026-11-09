@@ -140,6 +140,7 @@ class _TrackingSessionCardState extends State<TrackingSessionCard> {
                     )
                   : ListView.builder(
                       shrinkWrap: true,
+ padding: EdgeInsets.zero,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: session.manualPoints.length,
                       itemBuilder: (context, idx) {

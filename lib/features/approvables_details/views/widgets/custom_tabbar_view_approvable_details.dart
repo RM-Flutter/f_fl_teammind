@@ -22,7 +22,7 @@ class CustomTabbarViewApprovableDetails extends StatelessWidget {
     );
 
     return Padding(
-      padding: const EdgeInsets.only(left: 8, right: 8, top: 12, bottom: 0),
+      padding: const EdgeInsets.only(left: AppSpacing.page, right: AppSpacing.page, top: AppSpacing.md, bottom: 0),
       child: DefaultTabController(
         length: 3,
         child: Column(
@@ -86,7 +86,7 @@ class CustomTabbarViewApprovableDetails extends StatelessWidget {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 0),
+                padding: const EdgeInsets.only(top: AppSpacing.md, bottom: 0),
                 child: TabBarView(
                   children: [
                     ReasonTab(

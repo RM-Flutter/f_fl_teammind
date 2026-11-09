@@ -144,7 +144,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
         child: Consumer<EmployeeDetailsViewModel>(
             builder: (context, viewModel, child) {
               if (viewModel.isLoading) {
-                return const DetailsLoadingWidget();
+                return const DetailsLoadingWidget(headerHeight: AppSizes.profileHeaderHeight);
               }
               
               if (viewModel.employee == null) {

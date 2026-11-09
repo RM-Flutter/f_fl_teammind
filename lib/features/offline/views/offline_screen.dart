@@ -253,6 +253,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                             child: ListView.builder(
                               itemCount: viewModel.usersFingerprints.length,
                               shrinkWrap: true,
+ padding: EdgeInsets.zero,
                               scrollDirection: Axis.horizontal,
                               itemBuilder: (context, index) {
                                 IconData icon;

@@ -51,6 +51,7 @@ class SkippedEmployeesDialog extends StatelessWidget {
               Flexible(
                 child: ListView.separated(
                   shrinkWrap: true,
+ padding: EdgeInsets.zero,
                   itemCount: skipped.length,
                   separatorBuilder: (_, __) => const SizedBox(height: 8),
                   itemBuilder: (_, index) {

@@ -134,7 +134,7 @@ class _ApprovableDetailsScreenState extends State<ApprovableDetailsScreen> {
           builder: (context, state) {
             if (state is ApprovableDetailsLoading ||
                 state is ApprovableDetailsInitial) {
-              return const DetailsLoadingWidget();
+              return const DetailsLoadingWidget(headerHeight: 340);
             }
 
             if (state is ApprovableDetailsError) {

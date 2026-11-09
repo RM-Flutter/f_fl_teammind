@@ -223,6 +223,7 @@ class RequestsCalendarScreen extends StatelessWidget {
                                                 width: double.maxFinite,
                                                 child: ListView.separated(
                                                   shrinkWrap: true,
+ padding: EdgeInsets.zero,
                                                   itemCount: details.appointments.length,
                                                   separatorBuilder: (context, index) => SizedBox(height: 8),
                                                   itemBuilder: (context, index) {

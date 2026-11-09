@@ -1,3 +1,4 @@
+import 'package:app_test/core/utils/custom_shimmer_loading/app_shimmer_list.dart';
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/widgets/approvable_card_widget.dart';
@@ -38,7 +39,7 @@ class _CvHubInterviewsScreenState extends State<CvHubInterviewsScreen> {
       body: Consumer<CvHubInterviewsController>(
         builder: (context, controller, child) {
           if (controller.isLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const AppShimmerList();
           }
 if (controller.error != null) {
             return Center(

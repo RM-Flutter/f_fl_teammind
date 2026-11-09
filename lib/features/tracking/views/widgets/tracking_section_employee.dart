@@ -403,6 +403,7 @@ class _TrackingSectionEmployeeState extends State<TrackingSectionEmployee> {
                 )
               : ListView.builder(
                   shrinkWrap: true,
+ padding: EdgeInsets.zero,
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: _sessions.length,
                   itemBuilder: (context, index) {
