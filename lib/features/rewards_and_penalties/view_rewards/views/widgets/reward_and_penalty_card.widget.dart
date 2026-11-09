@@ -55,7 +55,7 @@ class RewardAndPenaltyCardWidget extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.cardGap),
-      child: AppCard(
+      child: AppCard(animateIn: true, 
         onTap: () async => await ModalSheetHelper.showModalSheet(
             context: context,
             viewProfile: false,

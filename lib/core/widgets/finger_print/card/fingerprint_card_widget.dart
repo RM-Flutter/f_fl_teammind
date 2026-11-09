@@ -45,7 +45,7 @@ class FingerprintCard extends StatelessWidget {
     final timeSubtitle = formatFingerDatetime(fingerprint.fingerDateTime);
     final accentColor = Color(AppColors.buttons);
 
-    return AppCard(
+    return AppCard(animateIn: true, 
       onTap: () => ModalSheetHelper.showModalSheet(
           context: context,
           viewProfile: false,

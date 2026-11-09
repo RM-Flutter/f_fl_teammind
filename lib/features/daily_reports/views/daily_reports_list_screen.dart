@@ -330,7 +330,7 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
           ].join(' · ')
         : report.done;
 
-    return AppCard(
+    return AppCard(animateIn: true, 
       margin: const EdgeInsets.only(bottom: AppSpacing.cardGap),
       padding: AppSpacing.cardPadding,
       onTap: () {

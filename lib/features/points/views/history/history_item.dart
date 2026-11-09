@@ -50,7 +50,7 @@ class HistoryItem extends StatelessWidget {
                       return Padding(
                         padding:
                             const EdgeInsets.only(bottom: AppSpacing.cardGap),
-                        child: AppCard(
+                        child: AppCard(animateIn: true, 
                           onTap: () {
                             if ((e.notes != null && e.notes != "") ||
                                 (e.code != null && e.code != "")) {

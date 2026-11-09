@@ -111,7 +111,7 @@ class ReportsCatalogScreen extends StatelessWidget {
   Widget _buildReportItem(BuildContext context, ReportCatalogModel report) {
     final bool isFlutter = report.viewType == 'flutter';
     final Color accentColor = Color(AppColors.buttons);
-    return AppCard(
+    return AppCard(animateIn: true, 
         onTap: () {
           Navigator.push(
             context,

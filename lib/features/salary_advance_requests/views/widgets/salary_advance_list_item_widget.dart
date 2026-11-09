@@ -48,7 +48,7 @@ class SalaryAdvanceListItemWidget extends StatelessWidget {
     final String employeeName =
         isIncoming ? (request.employeeProfile?.name ?? '') : '';
 
-    return AppCard(
+    return AppCard(animateIn: true, 
       margin: const EdgeInsets.only(bottom: AppSpacing.cardGap),
       padding: AppSpacing.cardPadding,
       onTap: () async {

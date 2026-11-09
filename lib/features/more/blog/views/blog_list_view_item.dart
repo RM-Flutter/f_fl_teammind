@@ -26,7 +26,7 @@ class BlogListViewItem extends StatelessWidget {
         : null;
     final String? createdAt = item['created_at']?.toString();
 
-    return AppCard(
+    return AppCard(animateIn: true, 
       onTap: () {
         context.pushNamed(AppRoutes.defaultSinglePage.name,
             pathParameters: {

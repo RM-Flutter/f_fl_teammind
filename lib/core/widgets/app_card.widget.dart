@@ -1,3 +1,4 @@
+import 'package:app_test/core/widgets/app_list_entrance.widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -25,6 +26,9 @@ class AppCard extends StatelessWidget {
   final BoxBorder? border;
   final List<BoxShadow>? boxShadow;
 
+  /// Fades the card in and lifts it slightly when it first appears. On for the cards of lists.
+  final bool animateIn;
+
   const AppCard({
     super.key,
     required this.child,
@@ -36,6 +40,7 @@ class AppCard extends StatelessWidget {
     this.radius,
     this.border,
     this.boxShadow,
+    this.animateIn = false,
   });
 
   /// Builds a standardized list-item card matching the `TeamMemberStatusCard` layout:
@@ -64,6 +69,7 @@ class AppCard extends StatelessWidget {
     final effectiveAccent = accentColor ?? Color(AppColors.buttons);
     return AppCard(
       key: key,
+      animateIn: true,
       onTap: onTap,
       onLongPress: onLongPress,
       padding: padding,
@@ -146,7 +152,7 @@ class AppCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final shape = radius ?? AppRadius.card;
-    return Container(
+    final card = Container(
       margin: margin,
       decoration: BoxDecoration(
         color: color ?? Colors.white,
@@ -168,6 +174,7 @@ class AppCard extends StatelessWidget {
             : Padding(padding: padding, child: child),
       ),
     );
+    return animateIn ? AppListEntrance(child: card) : card;
   }
 }
 

@@ -107,7 +107,7 @@ class _UserDeviceScreenState extends State<UserDeviceScreen> {
                           : Color(AppColors.buttons);
                       final subtitle = _deviceSubtitle(device);
 
-                      return AppCard(
+                      return AppCard(animateIn: true, 
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [

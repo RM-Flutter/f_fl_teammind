@@ -75,7 +75,7 @@ class TaskListTileWidget extends StatelessWidget {
 
     final String subtitle = parts.join(' · ');
 
-    return AppCard(
+    return AppCard(animateIn: true, 
       margin: const EdgeInsets.only(bottom: AppSpacing.cardGap),
       padding: AppSpacing.cardPadding,
       onTap: onTap,

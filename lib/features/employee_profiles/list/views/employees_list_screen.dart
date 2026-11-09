@@ -142,7 +142,7 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
                                         return Padding(
                                           padding: const EdgeInsets.only(
                                               bottom: AppSpacing.cardGap),
-                                          child: AppCard(
+                                          child: AppCard(animateIn: true, 
                                             onTap: () async {
                                               FocusManager.instance.primaryFocus
                                                   ?.unfocus();

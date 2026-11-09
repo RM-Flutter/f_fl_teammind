@@ -44,7 +44,7 @@ class FingerprintCardOffline extends StatelessWidget {
         final fingerDay = item['finger_day'];
         final type = item['type'];
 
-        return AppCard(
+        return AppCard(animateIn: true, 
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,

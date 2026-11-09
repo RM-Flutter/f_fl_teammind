@@ -275,7 +275,7 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
 
     return Stack(
       children: [
-        AppCard(
+        AppCard(animateIn: true, 
           margin: const EdgeInsets.only(bottom: AppSpacing.cardGap),
           padding: AppSpacing.cardPadding,
           onTap: isDownloading ? null : () => _downloadFile(file),

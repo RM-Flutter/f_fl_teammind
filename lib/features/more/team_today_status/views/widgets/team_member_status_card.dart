@@ -27,7 +27,7 @@ class TeamMemberStatusCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final statusColor = _statusColor(member.status);
 
-    return AppCard(
+    return AppCard(animateIn: true, 
       padding: AppSpacing.cardPadding,
       child: Row(
         children: [

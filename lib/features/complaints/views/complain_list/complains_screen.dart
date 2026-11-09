@@ -272,7 +272,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
 
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.cardGap),
-      child: AppCard(
+      child: AppCard(animateIn: true, 
         onTap: () async {
           await context.pushNamed(
             AppRoutes.complainDetails.name,

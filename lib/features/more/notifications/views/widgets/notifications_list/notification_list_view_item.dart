@@ -32,7 +32,7 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
 
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.cardGap),
-      child: AppCard(
+      child: AppCard(animateIn: true, 
         onTap: () {
           setState(() {
             notification['seen'] = true;

@@ -44,7 +44,7 @@ class _NotificationCardState extends State<NotificationCard> {
 
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.cardGap),
-      child: AppCard(
+      child: AppCard(animateIn: true, 
         onTap: () {
           if (widget.notification.seen != true &&
               widget.notification.id != null) {

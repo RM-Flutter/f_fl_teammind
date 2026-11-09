@@ -40,7 +40,7 @@ class CommissionCardWidget extends StatelessWidget {
       if (timePart != null && timePart.isNotEmpty) timePart,
     ];
 
-    return AppCard(
+    return AppCard(animateIn: true, 
       margin: const EdgeInsets.only(bottom: AppSpacing.cardGap),
       padding: AppSpacing.cardPadding,
       onTap: () => ModalSheetHelper.showModalSheet(

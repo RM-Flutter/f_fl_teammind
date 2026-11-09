@@ -488,7 +488,7 @@ class ApprovableCardWidget extends StatelessWidget {
     final bool showEmployeeAvatar =
         isForDepartment && info.employeeName.trim().isNotEmpty;
 
-    final cardBody = AppCard(
+    final cardBody = AppCard(animateIn: true, 
       onTap: onTap,
       onLongPress: onLongPress,
       padding: AppSpacing.cardPadding,

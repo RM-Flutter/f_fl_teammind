@@ -25,7 +25,7 @@ class PayrollListItemWidget extends StatelessWidget {
         '${'to'.tr()}: ${payroll.dateTo}',
     ].join(' · ');
 
-    return AppCard(
+    return AppCard(animateIn: true, 
       margin: const EdgeInsets.only(bottom: AppSpacing.cardGap),
       padding: AppSpacing.cardPadding,
       onTap: () async => await context.pushNamed(
