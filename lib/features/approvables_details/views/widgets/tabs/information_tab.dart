@@ -205,7 +205,7 @@ class InformationTab extends StatelessWidget {
         actionLabel = 'update_amount'.tr();
         break;
       case 'update-duration':
-        actionColor = Colors.orange;
+        actionColor = Color(AppColors.warningYellow);
         actionIcon = Icons.update_rounded;
         actionLabel = 'update_duration'.tr();
         break;

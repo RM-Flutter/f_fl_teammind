@@ -1,3 +1,5 @@
+import 'package:app_test/core/widgets/app_section_header.widget.dart';
+import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -37,11 +39,9 @@ class _RewardsAndPenaltiesSectionWidgetState
     final all = widget.employee?.rewardsAndPenalties ?? [];
 
     if (all.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Text(AppStrings.noDataFounded.tr()),
-        ),
+      return NoExistingPlaceholderScreen(
+        compact: true,
+        title: AppStrings.noDataFounded.tr(),
       );
     }
 
@@ -49,64 +49,63 @@ class _RewardsAndPenaltiesSectionWidgetState
     final penalties = all.where((e) => e.type == 'penalty').length;
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        gapH12,
-
-        // ── Summary chips ─────────────────────────────────────
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            _SummaryChip(
-              label: 'all'.tr(),
-              count: all.length,
-              isSelected: _filter == 0,
-              color: Color(AppColors.buttons),
-              onTap: () => setState(() => _filter = 0),
-            ),
-            const SizedBox(width: 8),
-            _SummaryChip(
-              label: 'rewards'.tr(),
-              count: rewards,
-              isSelected: _filter == 1,
-              color: const Color(0xFF2D6A4F),
-              onTap: () => setState(() => _filter = 1),
-            ),
-            const SizedBox(width: 8),
-            _SummaryChip(
-              label: 'penalties'.tr(),
-              count: penalties,
-              isSelected: _filter == 2,
-              color: const Color(0xFFC72C41),
-              onTap: () => setState(() => _filter = 2),
-            ),
-            const Spacer(),
-            TextButton(
-              onPressed: () {
-                context.pushNamed(
-                  AppRoutes.rewardsAndPenalties.name,
-                  pathParameters: {'lang': context.locale.languageCode},
-                  extra: {
-                    'employeeName': widget.employee?.name,
-                    'employeeId': widget.employee?.id?.toString(),
-                  },
-                );
+        // ── Title + "View all" ────────────────────────────────
+        AppSectionHeader(
+          height: 24,
+          title: AppStrings.rewardsAndPenalties.tr(),
+          onViewAll: () {
+            context.pushNamed(
+              AppRoutes.rewardsAndPenalties.name,
+              pathParameters: {'lang': context.locale.languageCode},
+              extra: {
+                'employeeName': widget.employee?.name,
+                'employeeId': widget.employee?.id?.toString(),
               },
-              child: Text(
-                AppStrings.viewAll.tr(),
-                style: AppStyles.titleTextContent(context).copyWith(
-                  fontSize: 10,
-                ),
+            );
+          },
+        ),
+        const SizedBox(height: AppSpacing.md),
+
+        // ── Summary chips (scroll sideways instead of overflowing) ─────
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              _SummaryChip(
+                label: 'all'.tr(),
+                count: all.length,
+                isSelected: _filter == 0,
+                color: Color(AppColors.buttons),
+                onTap: () => setState(() => _filter = 0),
               ),
-            ),
-          ],
+              const SizedBox(width: 8),
+              _SummaryChip(
+                label: 'rewards'.tr(),
+                count: rewards,
+                isSelected: _filter == 1,
+                color: Color(AppColors.successGreen),
+                onTap: () => setState(() => _filter = 1),
+              ),
+              const SizedBox(width: 8),
+              _SummaryChip(
+                label: 'penalties'.tr(),
+                count: penalties,
+                isSelected: _filter == 2,
+                color: Color(AppColors.failureRed),
+                onTap: () => setState(() => _filter = 2),
+              ),
+            ],
+          ),
         ),
 
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSpacing.md),
 
         // ── List ─────────────────────────────────────────────
         Expanded(
           child: _items.isEmpty
-              ? Center(child: Text(AppStrings.noDataFounded.tr()))
+              ? NoExistingPlaceholderScreen(compact: true, title: AppStrings.noDataFounded.tr())
               : ListView.separated(
                   padding: EdgeInsets.zero,
                   clipBehavior: Clip.none,

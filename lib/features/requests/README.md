@@ -4,12 +4,12 @@ Employee requests (vacation, permission, mission, work from home, ... the types 
 
 | Path | Role |
 |---|---|
-| `main_request_layout/` | `RequestsScreen` with tabs **Mine / My team / Other departments / All company** (`GetRequestsTypes`). `RequestsViewModel.initializeRequestsScreen` loads them through the approval system: mine via `RequestsServices.getMyApprovables(type: 'employee_requests')` (`approval-system/v1/employee_requests/employee/my-approvables`); team, other and all via `getManagerApprovables(scope: team / other_departments / all_company)` (`.../manager/under-my-management-approvables`). `FilterController` and the search/filter widgets filter by request type, department, employee, status and date. |
+| `main_request_layout/` | `RequestsScreen` (navy branded header like home, with the balance carousel inside it, for the "mine" tab wherever it is opened from; team / other departments / all company keep the plain app bar) with tabs **Mine / My team / Other departments / All company** (`GetRequestsTypes`). `RequestsViewModel.initializeRequestsScreen` loads them through the approval system: mine via `RequestsServices.getMyApprovables(type: 'employee_requests')` (`approval-system/v1/employee_requests/employee/my-approvables`); team, other and all via `getManagerApprovables(scope: team / other_departments / all_company)` (`.../manager/under-my-management-approvables`). `FilterController` and the search/filter widgets filter by request type, department, employee, status and date. |
 | `add/` | `AddRequestScreen` + `AddNewRequestController` (below) |
 | `details/` | `RequestDetailsScreen` + `RequestDetailsViewModel`. It loads one request (`/emp_requests/v1/my_request`) and shows tabs for info, reason, manager response, comments and tracking (the `features/tracking` widgets). Actions: ask to ignore, ask to remember, complain, download attachments, and the employee's history and balance statistics. |
 | `calender/` | `RequestsCalendarScreen`: Syncfusion calendar of requests |
 | `view_by_ids/` | Requests of one type for one employee, plus a summary report (`/emp_reports/v1/summary_report`) |
-| `shared/ui/widgets/` | Buttons used across the request screens |
+| `shared/ui/widgets/` | Shared pieces of the request screens (the calendar / summary entry is `AppShortcutCard` in `core/widgets`) |
 
 ## How adding a request works (`AddNewRequestController`)
 

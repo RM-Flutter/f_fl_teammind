@@ -222,14 +222,7 @@ Future<void> defaultActionBottomSheet2({
                                       width: 1.0,
                                     ),
                                   ),
-                                  shadows: const [
-                                    BoxShadow(
-                                      color: Color(0x0C000000),
-                                      blurRadius: 10,
-                                      offset: Offset(0, 1),
-                                      spreadRadius: 0,
-                                    )
-                                  ],
+                                  shadows: AppShadows.overlay,
                                 ),
                                 child: Row(
                                   children: [
@@ -555,14 +548,7 @@ defaultActionBottomSheet(
                               width: 1.0,
                             ),
                           ),
-                          shadows: const [
-                            BoxShadow(
-                              color: Color(0x0C000000),
-                              blurRadius: 10,
-                              offset: Offset(0, 1),
-                              spreadRadius: 0,
-                            )
-                          ],
+                          shadows: AppShadows.overlay,
                         ),
                         child: Text(refLink!, style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 12, color: Color(0xff5E5E5E)),),
                       ),
@@ -803,14 +789,7 @@ Future<void> defaultActionBottomSheetPoints({
                                       width: 1.0,
                                     ),
                                   ),
-                                  shadows: const [
-                                    BoxShadow(
-                                      color: Color(0x0C000000),
-                                      blurRadius: 10,
-                                      offset: Offset(0, 1),
-                                      spreadRadius: 0,
-                                    )
-                                  ],
+                                  shadows: AppShadows.overlay,
                                 ),
                                 child: Row(
                                   children: [

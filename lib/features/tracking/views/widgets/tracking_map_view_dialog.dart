@@ -207,7 +207,7 @@ class _TrackingMapViewDialogState extends State<TrackingMapViewDialog> {
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.92),
                           borderRadius: BorderRadius.circular(AppRadius.sm),
-                          boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4)],
+                          boxShadow: AppShadows.overlay,
                         ),
                         child: Row(
                           children: [
@@ -232,7 +232,7 @@ class _TrackingMapViewDialogState extends State<TrackingMapViewDialog> {
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(AppRadius.md),
-                            boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 8)],
+                            boxShadow: AppShadows.overlay,
                           ),
                           child: Row(
                             children: [

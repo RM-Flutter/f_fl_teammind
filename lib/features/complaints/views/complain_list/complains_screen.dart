@@ -17,13 +17,14 @@ import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:app_test/core/widgets/gradient_bg_image.dart';
 import '../../../../core/widgets/app_bar_with_bookmark.widget.dart';
 import '../../controller/complaints_controller.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/widgets/app_card.widget.dart';
 import 'package:app_test/core/widgets/app_status_badge.widget.dart';
+import 'package:app_test/core/widgets/hide_on_scroll_fab.widget.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/app_shimmer_list.dart';
 
 class ComplainScreen extends StatefulWidget {
  const ComplainScreen({super.key});
@@ -70,7 +71,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
      gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
      UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
     }
-    return Scaffold(
+    return HideOnScrollFabHost(builder: (context, wrapFab) => Scaffold(
      backgroundColor: Colors.white,
      appBar: AppBarWithBookmark(
       title: AppStrings.ticketSystem.tr().toUpperCase(),
@@ -78,7 +79,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
       backgroundColor: Colors.white,
       elevation: 0,
       routeName: AppRoutes.complainScreen.name),
-     floatingActionButton: FloatingActionButton(
+     floatingActionButton: wrapFab(FloatingActionButton(
       heroTag: 'complains_new',
       onPressed: ()async {
        await context.pushNamed(AppRoutes.newComplainScreen.name,
@@ -87,27 +88,15 @@ class _ComplainScreenState extends State<ComplainScreen> {
        await value.getRequestMine(context, page: 1);
       },
       backgroundColor: Color(AppColors.buttons),
-      child: const Icon(Icons.add, color: Colors.white)),
+      child: const Icon(Icons.add, color: Colors.white))),
      body: (value.isGetRequestLoading == true && value.currentPage == 1)
        ? ListView.builder(
-      padding: EdgeInsets.zero,
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page, vertical: AppSpacing.md),
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       reverse: false,
       itemCount: 7,
-      itemBuilder:(context, index) => Shimmer.fromColors(
-       baseColor: Colors.grey[300]!,
-       highlightColor: Colors.grey[100]!,
-       child: Container(
-        margin: EdgeInsets.symmetric(vertical: AppSizes.s12,),
-        padding: EdgeInsetsDirectional.symmetric(horizontal: AppSizes.s15, vertical: AppSizes.s12,),
-        decoration: BoxDecoration(
-         color: Colors.white,
-         borderRadius: BorderRadius.circular(AppRadius.md),
-        ),
-        height: 100,
-       ),
-      )):
+      itemBuilder:(context, index) => const Padding(padding: EdgeInsets.only(bottom: AppSpacing.cardGap), child: AppShimmerCard())):
      SafeArea(
       child: (value.requests.isNotEmpty || value.requestsTeam.isNotEmpty)? Container(
        height: MediaQuery.sizeOf(context).height * 1,
@@ -213,7 +202,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
          title: AppStrings.thereIsNoComplains.tr()),
       ),
      ),
-    );
+    ));
    } ,
   );
  }

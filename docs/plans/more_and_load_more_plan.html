@@ -1,0 +1,270 @@
+<title>More Spacing &amp; Load More</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column, two plans as chapters, each = problem → cause → steps → done-when */
+:root {
+  --bg: #F5F6FB;
+  --surface: #FFFFFF;
+  --fg: #171A3A;
+  --muted: #5E6283;
+  --line: #E2E4F0;
+  --navy: #12136E;
+  --accent: #3A8DED;
+  --accent-soft: #E7F0FD;
+  --bad: #C2364B;
+  --bad-soft: #FBE9EC;
+  --good: #1F8A5B;
+  --good-soft: #E4F4EC;
+  --code-bg: #EEF0F8;
+  --f-body: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0D0F24; --surface: #161936; --fg: #E8E9F6; --muted: #A2A5C6; --line: #2A2E55;
+  --navy: #AEB2FF; --accent: #6AAAF5; --accent-soft: #1B2A4A; --bad: #F08597; --bad-soft: #3A1A24;
+  --good: #6BD3A2; --good-soft: #163327; --code-bg: #1F2347; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0D0F24; --surface: #161936; --fg: #E8E9F6; --muted: #A2A5C6; --line: #2A2E55;
+  --navy: #AEB2FF; --accent: #6AAAF5; --accent-soft: #1B2A4A; --bad: #F08597; --bad-soft: #3A1A24;
+  --good: #6BD3A2; --good-soft: #163327; --code-bg: #1F2347; color-scheme: dark; }
+
+body { background: var(--bg); color: var(--fg); font-family: var(--f-body); font-size: 15.5px; line-height: 1.75; }
+.wrap { max-width: 760px; margin: 0 auto; padding-block: 40px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 40px; }
+header { display: flex; flex-direction: column; gap: 8px; }
+.eyebrow { font-size: 12px; letter-spacing: .06em; color: var(--accent); font-weight: 700; }
+h1 { font-size: 30px; line-height: 1.3; margin: 0; color: var(--navy); text-wrap: balance; }
+.lead { color: var(--muted); margin: 0; max-width: 62ch; }
+.toc { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.toc a { text-decoration: none; color: var(--navy); background: var(--surface); border: 1px solid var(--line);
+  padding: 6px 14px; border-radius: 999px; font-size: 13.5px; font-weight: 500; }
+.toc a:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+section.plan { display: flex; flex-direction: column; gap: 20px; }
+h2 { font-size: 22px; margin: 0; color: var(--navy); display: flex; gap: 10px; align-items: baseline; text-wrap: balance; }
+h2 .tag { font-size: 12px; font-weight: 500; color: var(--muted); background: var(--surface); border: 1px solid var(--line);
+  padding: 2px 10px; border-radius: 999px; }
+h3 { font-size: 16px; margin: 0; color: var(--fg); }
+p { margin: 0; max-width: 65ch; }
+.block { display: flex; flex-direction: column; gap: 10px; }
+
+.findings { display: grid; gap: 10px; }
+.finding { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px;
+  display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; min-width: 0; }
+.finding .sev { grid-row: span 2; align-self: start; font-size: 11.5px; font-weight: 700; padding: 2px 8px; border-radius: 6px; white-space: nowrap; }
+.sev.hi { background: var(--bad-soft); color: var(--bad); }
+.sev.mid { background: var(--accent-soft); color: var(--accent); }
+.finding b { font-weight: 700; }
+.finding .where { color: var(--muted); font-size: 13px; min-width: 0; overflow-wrap: anywhere; }
+
+code, .mono { font-family: var(--f-mono); font-size: 13px; background: var(--code-bg); padding: 1px 6px; border-radius: 4px; direction: ltr; unicode-bidi: isolate; }
+pre { margin: 0; background: var(--code-bg); border-radius: 10px; padding: 14px 16px; overflow-x: auto; direction: ltr; text-align: left; }
+pre code { background: none; padding: 0; font-size: 12.8px; line-height: 1.6; }
+
+ol.steps { margin: 0; padding: 0; list-style: none; counter-reset: s; display: flex; flex-direction: column; gap: 12px; }
+ol.steps > li { counter-increment: s; display: grid; grid-template-columns: 32px 1fr; gap: 12px; min-width: 0; }
+ol.steps > li::before { content: counter(s); width: 28px; height: 28px; border-radius: 50%; background: var(--navy); color: var(--surface);
+  display: grid; place-items: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+ol.steps > li > div { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+
+.done { background: var(--good-soft); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; }
+.done h3 { color: var(--good); }
+.done ul, .plain { margin: 0; padding-inline-start: 20px; display: flex; flex-direction: column; gap: 4px; }
+
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 13.5px; }
+th, td { text-align: start; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; color: var(--muted); font-weight: 500; letter-spacing: .03em; }
+tr:last-child td { border-bottom: 0; }
+.pill { font-size: 11.5px; font-weight: 700; padding: 2px 8px; border-radius: 6px; white-space: nowrap; }
+.pill.bad { background: var(--bad-soft); color: var(--bad); }
+.pill.ok { background: var(--good-soft); color: var(--good); }
+.pill.mid { background: var(--accent-soft); color: var(--accent); }
+
+.explain { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.timeline { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.tl { border-radius: 10px; padding: 10px 12px; font-size: 13.5px; display: flex; flex-direction: column; gap: 2px; }
+.tl small { color: var(--muted); font-size: 12px; }
+.tl.now { background: var(--bad-soft); }
+.tl.fix { background: var(--good-soft); }
+.tl.req { background: var(--code-bg); }
+@media (max-width: 560px) { .timeline { grid-template-columns: 1fr; } h1 { font-size: 25px; } }
+.q { border-inline-start: 3px solid var(--accent); padding-inline-start: 12px; color: var(--muted); }
+footer { color: var(--muted); font-size: 13px; }
+</style>
+
+<div class="wrap" dir="rtl" lang="ar">
+  <header>
+    <span class="eyebrow">TEAM MIND · خطة تعديل</span>
+    <h1>مسافات شاشة More وزرار Load More</h1>
+    <p class="lead">خطتين: الأولى تظبط المسافات والعناوين في شاشة More، والتانية تخلي زرار Load More ميظهرش في أي مكان في الأبلكيشن غير لو فيه فعلاً عناصر لسه ما اتحملتش.</p>
+    <nav class="toc" aria-label="المحتوى">
+      <a href="#more-screen">١ · شاشة More</a>
+      <a href="#load-more">٢ · Load More على مستوى الأبلكيشن</a>
+      <a href="#order">ترتيب التنفيذ</a>
+    </nav>
+  </header>
+
+  <!-- ===================== PLAN 1 ===================== -->
+  <section class="plan" id="more-screen">
+    <h2>شاشة More <span class="tag">features/more/more_screen.dart</span></h2>
+
+    <div class="block">
+      <h3>اللي لقيته في الكود</h3>
+      <div class="findings">
+        <div class="finding"><span class="sev hi">أساسي</span>
+          <b>مسافة فاضية كبيرة بين المسمى الوظيفي وأول عنصر</b>
+          <span class="where">القائمة بتبدأ بعد <code>SizedBox(height: height * 0.14)</code> ثابتة (سطر 132). الهيدر <code>0.25</code> والصورة متحطوطة عند <code>0.15</code>، فكل الحسابات نسبة من طول الشاشة. على الشاشات الطويلة بتطلع مسافة فاضية، وعلى القصيرة الاسم ممكن يركب على أول عنصر.</span></div>
+        <div class="finding"><span class="sev hi">أساسي</span>
+          <b>عنوان القسم بعيد عن عناصره بنفس بُعده عن القسم اللي قبله</b>
+          <span class="where">كل عنوان قسم (MY WORK، MY ACCOUNT …) قبله <code>SizedBox(15)</code> وبعده <code>SizedBox(15)</code> (سطور 149–164 و219–234 و…). المفروض العنوان يبقى لازق في عناصره: <code>AppSpacing.section</code> فوقه و<code>sectionHeaderGap</code> تحته.</span></div>
+        <div class="finding"><span class="sev hi">أساسي</span>
+          <b>الصفوف طويلة والفواصل تقيلة</b>
+          <span class="where"><code>DefaultListTile</code> (سطر 865): ‏<code>ListTile</code> عادي (56) وفوقه <code>vertical: xs</code>، فالصف بيوصل لحوالي 64. والـ <code>Divider</code> سُمكه 2 ولونه ثابت <code>0xFFF3F3F3</code> ومن الحافة للحافة.</span></div>
+        <div class="finding"><span class="sev mid">شكل</span>
+          <b>كل النصوص Capital</b>
+          <span class="where">عناوين العناصر <code>toUpperCase()</code> بحجم 12 وعناوين الأقسام كمان Capital بحجم 13، فالمستويين شبه بعض ومفيش فرق واضح بينهم. وفي العربي <code>toUpperCase</code> مالهاش أي تأثير.</span></div>
+        <div class="finding"><span class="sev mid">سلوك</span>
+          <b>عنوان القسم بيظهر حتى لو القسم فاضي</b>
+          <span class="where">عنوان MY REQUESTS (سطر 221) بيظهر حتى لو باكدج <code>emp-requests</code> مش موجودة، فبيطلع عنوان مفيش تحته حاجة. ونفس الكلام ممكن يحصل في أقسام تانية.</span></div>
+        <div class="finding"><span class="sev mid">نظافة</span>
+          <b>كود العنوان متكرر 7 مرات</b>
+          <span class="where">بلوك <code>Padding → Container(alignment) → Text</code> متكرر 7 مرات بنفس الشكل. المفروض يبقى widget واحد، وكمان <code>Alignment</code> اليدوي مش محتاجينه لأن <code>AlignmentDirectional</code> بيتعامل مع RTL لوحده.</span></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h3>الخطوات</h3>
+      <ol class="steps">
+        <li><div><b>widget واحد لعنوان القسم.</b>
+          <p>في نفس الملف (زي <code>DefaultListTile</code>) أعمل <code>_MoreSectionLabel(title)</code> وفيه: <code>padding: EdgeInsetsDirectional.fromSTEB(page, section, page, sectionHeaderGap)</code>، وحجم 12، و<code>w700</code>، و<code>letterSpacing: .6</code>، بلون <code>AppColors.buttons</code>. وأشيل كل الـ <code>SizedBox(15)</code> اللي حوالين العناوين.</p></div></li>
+        <li><div><b>العنوان يظهر بس لو تحته عناصر.</b>
+          <p>كل قسم أجمّع عناصره في <code>List&lt;Widget&gt;</code>، ولو القايمة فاضية مش هرسم العنوان. وده كمان هيصلح عنوان MY REQUESTS اللي بيظهر من غير باكدج.</p></div></li>
+        <li><div><b>صف أخف.</b>
+          <p><code>DefaultListTile</code>: ‏<code>minVerticalPadding: 0</code> و<code>visualDensity: compact</code> علشان الصف يبقى حوالي 52، و<code>minLeadingWidth: 24</code>، والأيقونة جوه مربع 32×32 بخلفية <code>buttons</code> شفافة 10% زي أيقونات كروت الهوم. والعنوان بحجم 14 و<code>w500</code> من غير <code>toUpperCase</code>.</p></div></li>
+        <li><div><b>فاصل رفيع يبدأ من بداية النص.</b>
+          <p><code>Divider(height: 1, thickness: 1)</code> بلون من الثيم (<code>AppColors</code> مش رقم ثابت)، و<code>indent</code> يبدأ من بداية النص، وآخر عنصر في القسم ملوش فاصل.</p></div></li>
+        <li><div><b>الهيدر يتحسب من المقاسات الحقيقية مش من نسبة الشاشة.</b>
+          <p>أشيل الـ <code>Stack</code>/<code>Positioned</code> المبني على النسب. الهيدر الكحلي يبقى ارتفاعه ثابت (مثلاً 180 + safe area)، والصورة 96 بتتداخل بنصها مع الكارت الأبيض، والاسم والمسمى الوظيفي جوه الـ <code>ListView</code> نفسها كأول عنصر. كده مفيش مسافة متحسبة يدوي، وكمان الاسم والصورة هيعملوا scroll مع القائمة.</p></div></li>
+        <li><div><b>Tokens بدل الأرقام.</b>
+          <p>ارتفاع الهيدر ومقاس الصورة يتحطوا في <code>AppSizes</code> مش أرقام جوه الشاشة (قاعدة CLAUDE.md). وأحدّث <code>features/more/README.md</code>.</p></div></li>
+      </ol>
+    </div>
+
+    <div class="done">
+      <h3>هنعتبره خلص لما</h3>
+      <ul>
+        <li>المسافة بين المسمى الوظيفي وأول عنصر تبقى زي ما هي (حوالي 24) على iPhone SE وعلى Pro Max.</li>
+        <li>كل عنوان قسم يبعد 8 عن عناصره و16 عن القسم اللي قبله.</li>
+        <li>مفيش عنوان قسم فاضي، وأجرّب ده بحساب ناقصه باكدج.</li>
+        <li>الشاشة تتشاف صح في العربي (RTL) والإنجليزي.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ===================== PLAN 2 ===================== -->
+  <section class="plan" id="load-more">
+    <h2>Load More على مستوى الأبلكيشن <span class="tag">core + 14 شاشة</span></h2>
+
+    <div class="explain">
+      <h3>ليه الزرار بيظهر وهو مش المفروض يظهر؟</h3>
+      <p>في الإشعارات حجم الصفحة <code>itemsCount = 9</code>. الصفحة الأولى جابت 3 إشعارات بس، يعني أقل من 9، وده معناه إن مفيش غيرهم. بس الكود مش بيقفل <code>hasMoreNotifications</code> غير لما صفحة <b>كاملة</b> ترجع فاضية:</p>
+<pre><code>if (newNotifications.isNotEmpty) {
+  notifications.addAll(newNotifications);
+  if (hasMore) currentPage++;          // hasMore always true
+} else {
+  hasMoreNotifications = false;        // only flips on an EMPTY page
+}</code></pre>
+      <div class="timeline">
+        <div class="tl req"><b>صفحة 1 → 3 عناصر</b><small>3 أقل من 9، يعني مفيش غيرهم</small></div>
+        <div class="tl now"><b>الكود الحالي: الزرار ظاهر</b><small>بيستنى صفحة فاضية علشان يعرف</small></div>
+        <div class="tl fix"><b>بعد التعديل: الزرار مخفي</b><small>3 &lt; 9 ⇒ hasMore = false</small></div>
+      </div>
+      <p>يعني المستخدم بيدوس الزرار، بيروح request كامل للسيرفر، يرجع فاضي، وساعتها بس الزرار يختفي. وكمان <code>hasMoreNotifications</code> مش بيرجع <code>true</code> لما تغيّر بين All وMy Department أو تعمل refresh، فلو قفل مرة مش هيفتح تاني.</p>
+      <p class="q">ونفس الغلطة موجودة في معظم الشاشات اللي فيها infinite scroll، بس هناك مش باينة لأن مفيش زرار. اللي بيحصل إن فيه request زيادة على الفاضي في آخر كل قائمة.</p>
+    </div>
+
+    <div class="block">
+      <h3>الشاشات اللي فيها pagination</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>الشاشة</th><th>شكل التحميل</th><th>إمتى hasMore بيبقى false</th><th>الحالة</th></tr></thead>
+          <tbody>
+            <tr><td>Notifications</td><td>زرار + scroll</td><td>صفحة فاضية بس، ومش بيرجع true عند الـ toggle</td><td><span class="pill bad">غلط</span></td></tr>
+            <tr><td>Tasks</td><td>زرار</td><td>صفحة فاضية بس</td><td><span class="pill bad">غلط</span></td></tr>
+            <tr><td>Requests (4 تابات)</td><td>scroll</td><td>صفحة فاضية أو مفيش ids جديدة</td><td><span class="pill bad">غلط</span></td></tr>
+            <tr><td>Complaints</td><td>scroll</td><td>صفحة فاضية بس</td><td><span class="pill bad">غلط</span></td></tr>
+            <tr><td>Blog</td><td>scroll</td><td>صفحة فاضية بس</td><td><span class="pill bad">غلط</span></td></tr>
+            <tr><td>Points / Prizes</td><td>scroll</td><td>صفحة فاضية بس</td><td><span class="pill bad">غلط</span></td></tr>
+            <tr><td>Rewards &amp; Penalties</td><td>scroll</td><td>صفحة فاضية بس</td><td><span class="pill bad">غلط</span></td></tr>
+            <tr><td>Expense claims</td><td>scroll</td><td>صفحة فاضية بس</td><td><span class="pill bad">غلط</span></td></tr>
+            <tr><td>Salary advance</td><td>scroll</td><td>صفحة فاضية بس</td><td><span class="pill bad">غلط</span></td></tr>
+            <tr><td>Overtime</td><td>scroll</td><td>فاضية أو <code>length ≥ total</code></td><td><span class="pill mid">نص صح</span></td></tr>
+            <tr><td>Commissions</td><td>scroll</td><td><code>meta.last_page</code> أو <code>length &lt; perPage</code></td><td><span class="pill ok">صح</span></td></tr>
+            <tr><td>Files center</td><td>محلي</td><td><code>displayed &lt; filtered</code></td><td><span class="pill ok">صح</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="color:var(--muted);font-size:13.5px">ومعاهم Daily reports وShift change. محتاج أبص على قاعدتهم بنفسي في الكود وأنا بنفذ.</p>
+    </div>
+
+    <div class="block">
+      <h3>الحل: قاعدة واحدة في core وكل الشاشات تستخدمها</h3>
+      <ol class="steps">
+        <li><div><b><code>PaginationState</code> في <code>core/models/pagination_state.dart</code>.</b>
+          <p>كلاس صغير بيحفظ <code>page</code> و<code>hasMore</code> و<code>isLoadingMore</code>، وفيه دالة واحدة بتقرر هل فيه صفحة كمان ولا لأ:</p>
+<pre><code>void onPageLoaded({required int received, required int pageSize, Map? meta}) {
+  final last = meta?['last_page'] ?? meta?['lastPage'];
+  final total = meta?['total'];
+  if (last is int)       hasMore = page &lt; last;          // 1) server says
+  else if (total is int) hasMore = loadedCount &lt; total;  // 2) server total
+  else                   hasMore = received &gt;= pageSize; // 3) short page = end
+  if (hasMore) page++;
+}
+void reset() { page = 1; hasMore = true; isLoadingMore = false; }</code></pre>
+          <p>لو السيرفر بيرجع <code>meta</code> فهو اللي يحدد، ولو لأ بنعتمد على إن الصفحة الناقصة يعني إن القائمة خلصت. ودي نفس طريقة Commissions اللي شغالة صح.</p></div></li>
+        <li><div><b><code>AppLoadMoreButton</code> في <code>core/widgets/app_load_more_button.widget.dart</code>.</b>
+          <p>بياخد <code>state</code> و<code>itemCount</code> و<code>onPressed</code>. وبيظهر <b>بس</b> لو <code>hasMore &amp;&amp; itemCount &gt; 0 &amp;&amp; !isLoading</code>، وأثناء التحميل بيظهر loader صغير مكانه، فالمستخدم مش هيشوف الزرار واللودر مع بعض. وده بدل نسختين الزرار المتكررين في Notifications وTasks.</p></div></li>
+        <li><div><b>الرجوع للصفحة الأولى عند أي تغيير.</b>
+          <p>أي refresh أو filter أو toggle (All/My Department، أو تغيير تاريخ في Tasks) لازم ينادي <code>reset()</code> قبل ما يجيب الصفحة الأولى. ده هيصلح إن الإشعارات بتفضل مقفولة بعد ما تغيّر الـ toggle.</p></div></li>
+        <li><div><b>infinite scroll بنفس القاعدة.</b>
+          <p>الـ scroll listener بيشيّك على <code>state.hasMore &amp;&amp; !state.isLoadingMore</code>، فالـ request الفاضي اللي بيروح في آخر كل قائمة هيختفي في كل الشاشات.</p></div></li>
+        <li><div><b>نطبّق على الشاشات واحدة واحدة.</b>
+          <p>نبدأ بـ Notifications وTasks لأنهم الاتنين اللي فيهم زرار ظاهر، وبعدهم Requests، وبعدها الباقي بالترتيب اللي في الجدول. كل كنترولر يحتفظ بأسماء متغيراته القديمة، ونخلّي <code>hasMoreNotifications</code> مثلاً يقرأ من <code>state.hasMore</code>، علشان منكسرش أي حاجة بتستخدمه.</p></div></li>
+        <li><div><b>Docs.</b>
+          <p>أضيف قاعدة pagination لقواعد <code>app_design.dart</code> و<code>core/widgets/README.md</code> و<code>core/models/README.md</code>، وأحدّث README كل feature أعدّل فيها.</p></div></li>
+      </ol>
+    </div>
+
+    <div class="block">
+      <h3>محتاج منك إجابة</h3>
+      <ul class="plain">
+        <li>API الإشعارات (<code>/emp_requests/v1/notifications/list</code>) بيرجع <code>meta</code> أو <code>total</code>؟ لو آه، الزرار هيبقى دقيق حتى لو آخر صفحة جت كاملة بالظبط (9 من 9). لو لأ، في الحالة دي بس المستخدم هيدوس الزرار مرة زيادة ترجع فاضية.</li>
+        <li>الإشعارات تفضل بزرار ولا تبقى infinite scroll زي باقي الأبلكيشن؟ حالياً الاتنين شغالين مع بعض.</li>
+      </ul>
+    </div>
+
+    <div class="done">
+      <h3>هنعتبره خلص لما</h3>
+      <ul>
+        <li>حساب عنده 3 إشعارات: الزرار مايظهرش خالص.</li>
+        <li>حساب عنده 20 إشعار: الزرار يظهر مرتين، وبعد الصفحة التالتة (2 عنصر) يختفي.</li>
+        <li>لما أغيّر All ↔ My Department الزرار يرجع يظهر لو القسم التاني فيه أكتر من صفحة.</li>
+        <li>في الشاشات اللي فيها scroll، مفيش request على صفحة فاضية في الـ Dio log لما توصل لآخر القائمة.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="plan" id="order">
+    <h2>ترتيب التنفيذ</h2>
+    <ol class="steps">
+      <li><div><b>Load More: الـ core الأول</b><p><code>PaginationState</code> و<code>AppLoadMoreButton</code>، وبعدهم Notifications وTasks. ده الجزء اللي المستخدم شايف فيه المشكلة.</p></div></li>
+      <li><div><b>شاشة More</b><p>تعديل في ملف واحد ملوش علاقة بالـ pagination، فممكن يتعمل في نفس الوقت.</p></div></li>
+      <li><div><b>Load More: باقي الشاشات</b><p>Requests، وبعدها باقي الجدول. كل شاشة commit لوحدها علشان لو حاجة باظت نعرف نرجّعها بسهولة.</p></div></li>
+    </ol>
+  </section>
+
+  <footer>اتعملت من الكود على branch ‏<span class="mono">new-version2</span>. أرقام السطور من نسخة الملفات الحالية.</footer>
+</div>

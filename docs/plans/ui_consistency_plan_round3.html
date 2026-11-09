@@ -1,0 +1,310 @@
+<title>Team Mind UI Consistency</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&family=Poppins:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one reading column; four fixes, each = problem → cause → proposal (with a phone-sized mock) → steps → done-when */
+:root {
+  --bg: #F5F6FB; --surface: #FFFFFF; --fg: #171A3A; --muted: #5E6283; --line: #E2E4F0;
+  --navy: #12136E; --accent: #3A8DED; --accent-soft: #E7F0FD;
+  --bad: #C2364B; --bad-soft: #FBE9EC; --good: #1F8A5B; --good-soft: #E4F4EC; --code-bg: #EEF0F8;
+  --app-bg: #F6F7FB; --app-card: #FFFFFF; --app-navy: #12136E; --app-blue: #3A8DED; --app-text: #1B1D3A; --app-sub: #8A8DA8;
+  --f-body: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+  --f-app: "Poppins", "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0D0F24; --surface: #161936; --fg: #E8E9F6; --muted: #A2A5C6; --line: #2A2E55;
+  --navy: #AEB2FF; --accent: #6AAAF5; --accent-soft: #1B2A4A; --bad: #F08597; --bad-soft: #3A1A24;
+  --good: #6BD3A2; --good-soft: #163327; --code-bg: #1F2347; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0D0F24; --surface: #161936; --fg: #E8E9F6; --muted: #A2A5C6; --line: #2A2E55;
+  --navy: #AEB2FF; --accent: #6AAAF5; --accent-soft: #1B2A4A; --bad: #F08597; --bad-soft: #3A1A24;
+  --good: #6BD3A2; --good-soft: #163327; --code-bg: #1F2347; color-scheme: dark; }
+
+body { background: var(--bg); color: var(--fg); font-family: var(--f-body); font-size: 15.5px; line-height: 1.75; }
+.wrap { max-width: 780px; margin: 0 auto; padding-block: 40px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 44px; }
+header { display: flex; flex-direction: column; gap: 8px; }
+.eyebrow { font-size: 12px; letter-spacing: .06em; color: var(--accent); font-weight: 700; }
+h1 { font-size: 30px; line-height: 1.3; margin: 0; color: var(--navy); text-wrap: balance; }
+.lead { color: var(--muted); margin: 0; max-width: 62ch; }
+.toc { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.toc a { text-decoration: none; color: var(--navy); background: var(--surface); border: 1px solid var(--line);
+  padding: 6px 14px; border-radius: 999px; font-size: 13.5px; font-weight: 500; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+section.plan { display: flex; flex-direction: column; gap: 20px; }
+h2 { font-size: 22px; margin: 0; color: var(--navy); display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; text-wrap: balance; }
+h2 .tag { font-size: 12px; font-weight: 500; color: var(--muted); background: var(--surface); border: 1px solid var(--line); padding: 2px 10px; border-radius: 999px; }
+h3 { font-size: 16px; margin: 0; }
+p { margin: 0; max-width: 65ch; }
+.block { display: flex; flex-direction: column; gap: 10px; }
+.why { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.why .label { font-size: 12px; font-weight: 700; color: var(--bad); }
+
+code, .mono { font-family: var(--f-mono); font-size: 13px; background: var(--code-bg); padding: 1px 6px; border-radius: 4px; direction: ltr; unicode-bidi: isolate; }
+pre { margin: 0; background: var(--code-bg); border-radius: 10px; padding: 14px 16px; overflow-x: auto; direction: ltr; text-align: left; }
+pre code { background: none; padding: 0; font-size: 12.8px; line-height: 1.6; }
+
+ol.steps { margin: 0; padding: 0; list-style: none; counter-reset: s; display: flex; flex-direction: column; gap: 12px; }
+ol.steps > li { counter-increment: s; display: grid; grid-template-columns: 32px 1fr; gap: 12px; min-width: 0; }
+ol.steps > li::before { content: counter(s); width: 28px; height: 28px; border-radius: 50%; background: var(--navy); color: var(--surface);
+  display: grid; place-items: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+ol.steps > li > div { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+
+.done { background: var(--good-soft); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; }
+.done h3 { color: var(--good); }
+.done ul, .plain { margin: 0; padding-inline-start: 20px; display: flex; flex-direction: column; gap: 4px; }
+.ask { border-inline-start: 3px solid var(--accent); padding-inline-start: 12px; display: flex; flex-direction: column; gap: 4px; }
+.ask b { color: var(--accent); }
+
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 540px; font-size: 13.5px; }
+th, td { text-align: start; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; color: var(--muted); font-weight: 500; }
+tr:last-child td { border-bottom: 0; }
+
+/* phone mocks: always light, like the app */
+.mocks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 600px) { .mocks { grid-template-columns: 1fr; } h1 { font-size: 25px; } }
+figure { margin: 0; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+figcaption { font-size: 13px; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+figcaption .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.dot.before { background: var(--bad); } .dot.after { background: var(--good); }
+.phone { background: var(--app-bg); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; font-family: var(--f-app); direction: ltr; color: var(--app-text); }
+.bar { background: #fff; height: 46px; display: flex; align-items: center; justify-content: center; position: relative; font-weight: 700; color: var(--app-navy); font-size: 14px; }
+.bar .back { position: absolute; left: 10px; width: 26px; height: 26px; border-radius: 50%; background: var(--app-navy); }
+.bar .bm { position: absolute; right: 12px; width: 10px; height: 14px; border: 2px solid var(--app-navy); border-bottom-width: 0; }
+.ph-body { padding: 12px; display: flex; flex-direction: column; gap: 10px; min-height: 150px; }
+.ph-body.tight { padding-top: 0; }
+.mcard { background: var(--app-card); border-radius: 10px; height: 40px; box-shadow: 0 1px 2px rgba(18,19,110,.06); }
+.oldsw { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 11px; height: 28px; }
+.oldsw i { width: 40px; height: 20px; border-radius: 10px; background: #2E3570; position: relative; }
+.oldsw i::after { content: ""; position: absolute; left: 3px; top: 3px; width: 14px; height: 14px; border-radius: 50%; background: #fff; }
+.seg { background: #E9EBF5; border-radius: 999px; padding: 3px; display: grid; grid-template-columns: 1fr 1fr; font-size: 11.5px; font-weight: 600; }
+.seg span { text-align: center; padding: 6px 0; border-radius: 999px; color: #6B6F93; }
+.seg span.on { background: #fff; color: var(--app-navy); box-shadow: 0 1px 3px rgba(18,19,110,.12); }
+.empty { display: flex; flex-direction: column; align-items: center; gap: 6px; padding-block: 22px; text-align: center; }
+.empty .ic { width: 56px; height: 56px; border-radius: 50%; background: #E7F0FD; display: grid; place-items: center; }
+.empty .ic svg { width: 26px; height: 26px; }
+.empty b { font-size: 13px; color: var(--app-text); }
+.empty small { font-size: 11px; color: var(--app-sub); max-width: 26ch; line-height: 1.5; }
+.empty .cta { margin-top: 6px; font-size: 11px; font-weight: 600; color: #fff; background: var(--app-blue); padding: 6px 14px; border-radius: 999px; }
+.oldempty { display: flex; flex-direction: column; align-items: center; gap: 8px; padding-block: 28px; font-size: 11.5px; color: #8A8A8A; }
+.oldempty .a { width: 34px; height: 30px; border-radius: 4px; background: #6D6D6D; }
+.oldempty .b { width: 34px; height: 30px; border-radius: 50% 50% 4px 4px; border: 6px solid var(--app-navy); border-bottom-color: transparent; }
+.calbtn { background: var(--app-blue); color: #fff; border-radius: 999px; font-size: 11.5px; font-weight: 600; text-align: center; padding: 10px; }
+.calcard { background: #fff; border-radius: 12px; padding: 10px; display: flex; gap: 10px; align-items: center; box-shadow: 0 1px 2px rgba(18,19,110,.06); }
+.calcard .ib { width: 34px; height: 34px; border-radius: 9px; background: #E7F0FD; display: grid; place-items: center; flex: none; }
+.calcard .t { display: flex; flex-direction: column; flex: 1; min-width: 0; line-height: 1.35; }
+.calcard .t b { font-size: 12px; } .calcard .t small { font-size: 10.5px; color: var(--app-sub); }
+.calcard .chev { color: var(--app-sub); font-size: 14px; }
+.navyhead { background: var(--app-navy); color: #fff; height: 58px; border-radius: 0 0 16px 16px; display: grid; place-items: center; font-weight: 700; font-size: 14px; }
+footer { color: var(--muted); font-size: 13px; }
+
+.opts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 680px) { .opts { grid-template-columns: 1fr; } }
+.opt { background: var(--app-bg); border: 1px solid var(--line); border-radius: 16px; padding: 18px 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; font-family: var(--f-app); color: var(--app-text); text-align: center; position: relative; min-width: 0; }
+.opt.pick { border: 2px solid var(--good); }
+.opt .badge { position: absolute; top: 8px; inset-inline-end: 8px; font-family: var(--f-body); font-size: 11px; font-weight: 700; background: var(--good-soft); color: var(--good); padding: 1px 8px; border-radius: 6px; }
+.opt .name { font-family: var(--f-body); font-size: 12.5px; color: var(--muted); font-weight: 500; margin-top: 4px; }
+.opt b { font-size: 13px; } .opt small { font-size: 11px; color: var(--app-sub); line-height: 1.5; max-width: 24ch; }
+.logo { width: 34px; height: 34px; position: relative; }
+.logo::before { content: ""; position: absolute; inset: 4px 2px 2px; border: 6px solid var(--app-navy); border-bottom-color: transparent; border-radius: 50%; }
+.logo::after { content: ""; position: absolute; width: 8px; height: 8px; left: 13px; top: 15px; border-radius: 50%; background: var(--app-blue); }
+.o-disc { width: 92px; height: 92px; border-radius: 50%; background: #fff; display: grid; place-items: center; box-shadow: 0 8px 24px rgba(58,141,237,.18); }
+.o-tint { width: 76px; height: 76px; border-radius: 22px; background: #E7F0FD; display: grid; place-items: center; }
+.o-rings { width: 110px; height: 110px; border-radius: 50%; display: grid; place-items: center; background: radial-gradient(circle, transparent 38%, rgba(58,141,237,.10) 39%, rgba(58,141,237,.10) 40%, transparent 41%, transparent 58%, rgba(58,141,237,.07) 59%, rgba(58,141,237,.07) 60%, transparent 61%); }
+.o-rings .core { width: 58px; height: 58px; border-radius: 50%; background: #E7F0FD; display: grid; place-items: center; }
+.gapline { display: flex; flex-direction: column; font-family: var(--f-app); }
+.gaprow { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--muted); font-family: var(--f-body); }
+.gap { background: repeating-linear-gradient(45deg, rgba(194,54,75,.18) 0 4px, transparent 4px 8px); border-radius: 4px; }
+.gap.ok { background: repeating-linear-gradient(45deg, rgba(31,138,91,.22) 0 4px, transparent 4px 8px); }
+
+.chip { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: var(--app-blue); background: #E7F0FD; border: 1px solid #C9DDF8; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+.rcard { background: #fff; border-radius: 12px; padding: 10px; display: flex; align-items: center; gap: 10px; box-shadow: 0 1px 2px rgba(18,19,110,.06); }
+.av { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--app-blue); background: #E7F0FD; flex: none; display: grid; place-items: center; font-size: 11px; font-weight: 700; color: var(--app-blue); }
+.rt { flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.35; }
+.rt b { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .rt small { font-size: 10.5px; color: var(--app-sub); }
+.chev2 { color: var(--app-sub); font-size: 15px; }
+.oldcard { background: #fff; border: 1px solid #EEE; border-radius: 6px; padding: 10px; display: flex; flex-direction: column; gap: 4px; }
+.oldcard b { font-size: 12px; font-weight: 500; } .oldcard small { font-size: 10.5px; color: var(--app-sub); }
+.fabx { align-self: flex-end; background: var(--app-blue); color: #fff; font-size: 11.5px; font-weight: 600; padding: 10px 14px; border-radius: 14px; }
+.fab { align-self: flex-end; width: 40px; height: 40px; border-radius: 50%; background: var(--app-blue); color: #fff; display: grid; place-items: center; font-size: 20px; box-shadow: 0 4px 10px rgba(58,141,237,.35); }
+.bigname { text-align: center; font-size: 19px; font-weight: 400; padding-block: 4px; }
+.blackbar { background: #000; height: 16px; }
+.bp { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 600px) { .bp { grid-template-columns: 1fr; } }
+.bpc { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.bpc .w { font-family: var(--f-mono); font-size: 12px; color: var(--accent); direction: ltr; text-align: start; }
+.bpc b { font-size: 15px; } .bpc ul { margin: 0; padding-inline-start: 18px; font-size: 13.5px; color: var(--muted); display: flex; flex-direction: column; gap: 2px; }
+.dev { display: flex; gap: 8px; align-items: flex-end; height: 70px; direction: ltr; }
+.dev span { background: var(--accent-soft); border: 1.5px solid var(--accent); border-radius: 6px; }
+</style>
+
+<div class="wrap" dir="rtl" lang="ar">
+  <header>
+    <span class="eyebrow">TEAM MIND · خطة تعديل · الجولة التالتة</span>
+    <h1>توحيد شكل الشاشات في Team Mind</h1>
+    <p class="lead">خمس مشاكل من الصور، وكل واحدة منهم هتتحل على مستوى الأبلكيشن كله، مش في الشاشة اللي في الصورة بس. وبعدهم خطة كاملة علشان الأبلكيشن يشتغل كويس على الموبايل الصغير والكبير والتابلت والكمبيوتر.</p>
+    <nav class="toc" aria-label="المحتوى">
+      <a href="#black">١ · الشريط الأسود</a>
+      <a href="#arrow">٢ · السهم في Reports</a>
+      <a href="#name">٣ · الاسم الكبير في Fingerprint</a>
+      <a href="#team">٤ · كروت Team Fingerprint</a>
+      <a href="#fab">٥ · زرار Add Report</a>
+      <a href="#responsive">٦ · Responsive</a>
+      <a href="#order">ترتيب التنفيذ</a>
+    </nav>
+  </header>
+
+  <!-- 1 -->
+  <section class="plan" id="black">
+    <h2>شريط أسود فوق وتحت (Blogs) <span class="tag">5 شاشات</span></h2>
+    <div class="why"><span class="label">السبب</span>
+      <p>الـ <code>Scaffold</code> متحط <b>جوه</b> <code>SafeArea</code>. فالمساحة اللي ورا الـ notch وورا الـ home indicator برا الشاشة نفسها، وبتطلع سودا. والصح العكس: الـ <code>Scaffold</code> برا، والـ <code>SafeArea</code> جوه الـ body لو محتاجينه.</p>
+      <p>ونفس الغلطة موجودة في 5 أماكن: <code>pages/default_list_page</code> (Blogs) و<code>pages/default_page</code> و<code>points_categories_screen</code> و<code>prize_screen</code> و<code>comments/list_comments</code>.</p>
+      <p>وكمان Blogs شكلها مختلف عن باقي الأبلكيشن: الـ app bar معمول بإيده، والعنوان أسود Capital بدل الكحلي، والخلفية بيضا بدل لون الخلفية بتاع الأبلكيشن.</p></div>
+    <div class="mocks">
+      <figure><div class="phone"><div class="blackbar"></div><div class="bar" style="color:#000">BLOGS<span class="back"></span></div><div class="ph-body" style="background:#fff"><div class="mcard"></div></div><div class="blackbar"></div></div><figcaption><span class="dot before"></span>دلوقتي: شريط أسود، وعنوان أسود Capital</figcaption></figure>
+      <figure><div class="phone"><div class="bar"><span class="back"></span>Blogs<span class="bm"></span></div><div class="ph-body"><div class="mcard"></div><div class="mcard"></div></div></div><figcaption><span class="dot after"></span>بعد: زي أي شاشة تانية</figcaption></figure>
+    </div>
+    <ol class="steps">
+      <li><div><b>أشيل <code>SafeArea</code> اللي حوالين الـ <code>Scaffold</code> في الـ 5 أماكن.</b><p>ولو جزء من الـ body محتاج يبعد عن حواف الموبايل، يتحط <code>SafeArea(top: false)</code> حواليه هو بس.</p></div></li>
+      <li><div><b>Blogs وDefault page يستخدموا <code>TemplatePage</code>.</b><p>كده هياخدوا نفس الـ app bar والعنوان الكحلي العادي من غير Capital، ولون خلفية الأبلكيشن، والـ FAB اللي بيختفي مع الـ scroll.</p></div></li>
+      <li><div><b>قاعدة 9 في <code>app_design.dart</code>.</b><p>"ممنوع <code>SafeArea</code> حوالين <code>Scaffold</code>". وأدوّر في الكود كله على أي مكان تاني فيه نفس الغلطة.</p></div></li>
+    </ol>
+  </section>
+
+  <!-- 2 -->
+  <section class="plan" id="arrow">
+    <h2>السهم في Reports</h2>
+    <div class="why"><span class="label">السبب</span>
+      <p>الـ chip معمول بـ <code>AppStatusBadge</code>، والـ widget ده بيحط الأيقونة <b>قبل</b> الكلام دايماً. وكمان الـ chip بيكرر اسم القسم اللي العنوان بتاعه فوق الكروت أصلاً (Mobile Reports تحت عنوان Mobile Reports)، وبياخد مساحة كبيرة، فأسماء التقارير بتتقطع: "Annual Leave Entitl…" و"Employee Leave Sc…".</p></div>
+    <div class="mocks">
+      <figure><div class="phone"><div class="ph-body"><div class="rcard"><span class="av">▤</span><span class="rt"><b>Annual Leave Entitl…</b></span><span class="chip">→ Mobile Reports</span></div></div></div><figcaption><span class="dot before"></span>دلوقتي: السهم في الأول، والاسم مقطوع</figcaption></figure>
+      <figure><div class="phone"><div class="ph-body"><div class="rcard"><span class="av">▤</span><span class="rt"><b>Annual Leave Entitlement</b><small>Mobile report</small></span><span class="chev2">›</span></div></div></div><figcaption><span class="dot after"></span>اقتراحي: الاسم كامل، والنوع سطر صغير تحته، وسهم في الآخر</figcaption></figure>
+    </div>
+    <ol class="steps">
+      <li><div><b>parameter اسمه <code>trailingIcon</code> في <code>AppStatusBadge</code>.</b><p>الأيقونة تتحط بعد الكلام، وبتتقلب لوحدها في العربي. ده الحل المباشر لطلبك.</p></div></li>
+      <li><div><b>اقتراحي في Reports نفسها: الـ chip يتشال.</b><p>نوع التقرير يبقى سطر صغير تحت الاسم، و<code>›</code> في آخر الكارت بيتقلب في RTL. كده الاسم ياخد مساحة سطرين ومش هيتقطع. ونفس الكارت ده هو <code>AppCard.listItem</code> اللي مستخدمينه في باقي الأبلكيشن.</p></div></li>
+    </ol>
+    <div class="ask"><b>محتاج منك قرار</b><p>نعمل السهم بعد الكلام في الـ chip بس، ولا نشيل الـ chip خالص ونحط السهم في آخر الكارت (اقتراحي)؟</p></div>
+  </section>
+
+  <!-- 3 -->
+  <section class="plan" id="name">
+    <h2>الاسم الكبير في شاشة Fingerprint</h2>
+    <div class="why"><span class="label">السبب</span>
+      <p>في <code>finger_print_view_screen.dart</code> اسم الموظف مكتوب بحجم 22 و<code>w400</code> في نص الشاشة، فبيبان أكبر من عنوان الشاشة نفسه ومش متناسق مع الكروت اللي تحته.</p></div>
+    <div class="mocks">
+      <figure><div class="phone"><div class="bar"><span class="back"></span>Fingerprint<span class="bm"></span></div><div class="ph-body"><div class="bigname">Ahmed Mohamed</div><div class="mcard"></div></div></div><figcaption><span class="dot before"></span>دلوقتي</figcaption></figure>
+      <figure><div class="phone"><div class="bar"><span class="back"></span>Ahmed Mohamed<span class="bm"></span></div><div class="ph-body"><div class="mcard"></div><div class="mcard"></div></div></div><figcaption><span class="dot after"></span>بعد: الاسم هو عنوان الـ app bar</figcaption></figure>
+    </div>
+    <ol class="steps">
+      <li><div><b>الاسم يبقى عنوان الشاشة.</b><p>لما الشاشة بتتفتح لموظف معين من Team Fingerprint، عنوان الـ app bar يبقى اسمه بدل "Fingerprint"، وده بيوفر صف كامل. ولو المستخدم فاتح بصماته هو، العنوان يفضل "Fingerprint".</p></div></li>
+      <li><div><b>لو عايز الاسم يفضل تحت الـ app bar.</b><p>يبقى حجمه 16 و<code>w600</code>، ومحاذي لبداية السطر زي <code>AppSectionHeader</code>، وبينه وبين أول كارت 8.</p></div></li>
+    </ol>
+  </section>
+
+  <!-- 4 -->
+  <section class="plan" id="team">
+    <h2>كروت Team Fingerprint مش شبه باقي الأبلكيشن</h2>
+    <div class="why"><span class="label">السبب</span>
+      <p>الكارت معمول بإيده جوه دالة <code>defaultTeamEmp</code>: <code>Container</code> بـ radius ‏8 بدل 12، ومفيهوش صورة ولا initials ولا سهم، فمش باين إنه بيتداس. والمسافة بين الكروت 25 (separator ‏15 + margin ‏10) بدل <code>cardGap</code> اللي هو 10. والنص كله رمادي، وفيه شرطة بين القسم والمواعيد.</p></div>
+    <div class="mocks">
+      <figure><div class="phone"><div class="ph-body" style="gap:18px"><div class="oldcard"><b>financial manager</b><small>financial department - From 07:00:00 To 03:00:00</small></div><div class="oldcard"><b>Lookup CEO</b><small>HR Management - From 07:00:00 To 03:00:00</small></div></div></div><figcaption><span class="dot before"></span>دلوقتي</figcaption></figure>
+      <figure><div class="phone"><div class="ph-body"><div class="rcard"><span class="av">FM</span><span class="rt"><b>financial manager</b><small>Financial department · 07:00 – 15:00</small></span><span class="chev2">›</span></div><div class="rcard"><span class="av">LC</span><span class="rt"><b>Lookup CEO</b><small>HR Management · 07:00 – 15:00</small></span><span class="chev2">›</span></div></div></div><figcaption><span class="dot after"></span>بعد: <code>AppCard.listItem</code> زي باقي الكروت</figcaption></figure>
+    </div>
+    <ol class="steps">
+      <li><div><b>الكارت يبقى <code>AppCard.listItem</code>.</b><p>initials الموظف في دايرة، واسمه 14 <code>w600</code>، والقسم والمواعيد سطر صغير مفصول بـ <code>·</code>، وسهم بيتقلب في RTL.</p></div></li>
+      <li><div><b>المسافات.</b><p><code>AppSpacing.listPadding</code> للليست، و<code>cardGap</code> ‏(10) بين الكروت. وأشيل الـ margin والـ separator ‏15.</p></div></li>
+      <li><div><b>شكل المواعيد.</b><p>المواعيد تتعرض <code>07:00 – 15:00</code> من غير ثواني، وبنظام 24 ساعة. ولو مفيش قسم تظهر "بدون قسم" بس.</p></div></li>
+      <li><div><b>أراجع باقي الكروت المعمولة باليد.</b><p>أدوّر على أي <code>Container</code> معمول ككارت لليست في الأبلكيشن، وأحوّله لـ <code>AppCard</code>. ده تطبيق لقاعدة 4 في <code>app_design.dart</code>.</p></div></li>
+    </ol>
+  </section>
+
+  <!-- 5 -->
+  <section class="plan" id="fab">
+    <h2>زرار "Add Report" <span class="tag">2 مكان</span></h2>
+    <div class="why"><span class="label">السبب</span>
+      <p>Daily reports بتستخدم <code>FloatingActionButton.extended</code> (أيقونة وكلام). ومفيش غيرها في الأبلكيشن غير My CV في الـ free services. باقي الشاشات كلها زرار دايري فيه <code>+</code> بس.</p></div>
+    <div class="mocks">
+      <figure><div class="phone"><div class="ph-body"><div class="mcard"></div><div class="fabx">＋ Add Report</div></div></div><figcaption><span class="dot before"></span>دلوقتي</figcaption></figure>
+      <figure><div class="phone"><div class="ph-body"><div class="mcard"></div><div class="fab">＋</div></div></div><figcaption><span class="dot after"></span>بعد: نفس الـ FAB اللي في Requests</figcaption></figure>
+    </div>
+    <ol class="steps">
+      <li><div><b>Daily reports وMy CV.</b><p>يبقوا <code>FloatingActionButton</code> عادي بأيقونة <code>add.png</code> (<code>AppImages.addFloatingActionButtonIcon</code>)، وبنفس اللون والحجم اللي في Requests. والكلام "Add Report" يتحط في <code>tooltip</code> علشان قارئ الشاشة يقراه.</p></div></li>
+      <li><div><b>قاعدة.</b><p>"الـ FAB دايماً أيقونة بس". وتتكتب مع قاعدة 6 في <code>app_design.dart</code>.</p></div></li>
+    </ol>
+  </section>
+
+  <!-- 6 -->
+  <section class="plan" id="responsive">
+    <h2>Responsive على كل الشاشات</h2>
+    <div class="why"><span class="label">الوضع دلوقتي</span>
+      <ul class="plain">
+        <li><b>المقاسات مش متفقة.</b> <code>LayoutService</code> فيه 3 تعريفات مختلفة: <code>isMobile</code> أقل من 900 وportrait، و<code>isPhoneLayout</code> أقل من 600 ومش web، و<code>isTablet</code> من 900 لـ 1200 أو landscape. فالتابلت الـ portrait (820) بيتحسب mobile وphone layout مع بعض.</li>
+        <li><b>ScreenUtil بيكبّر كل حاجة.</b> التصميم مقاسه 375، وفيه حوالي 96 مكان بيستخدم <code>.w/.h/.sp</code>. على iPad أو الكمبيوتر الأرقام دي بتتضرب في 2 أو 3، فالخطوط والأيقونات بتبقى ضخمة.</li>
+        <li><b>ارتفاعات بنسبة من الشاشة.</b> فيه حوالي 69 مكان بيستخدم <code>.sh</code>، زي <code>0.6.sh</code> في الشاشات الفاضية و<code>0.25 × height</code> اللي كانت في More. ده بيبوظ في landscape والشاشات القصيرة.</li>
+        <li><b>العرض مش متحدد.</b> فيه 51 <code>ConstrainedBox(maxWidth: double.infinity)</code>، يعني حد كان ناوي يحط أقصى عرض للمحتوى وما كملش. فعلى الكمبيوتر الكارت بيتمد على 1400 بكسل.</li>
+        <li><b>التنقل.</b> الـ bottom bar هو الوحيد في كل المقاسات، حتى على شاشة كمبيوتر عريضة.</li>
+      </ul></div>
+
+    <div class="block">
+      <h3>3 مقاسات بس، بالعرض بس</h3>
+      <div class="dev"><span style="width:26px;height:46px"></span><span style="width:34px;height:58px"></span><span style="width:52px;height:66px"></span><span style="width:84px;height:58px"></span><span style="width:120px;height:68px"></span></div>
+      <div class="bp">
+        <div class="bpc"><span class="w">compact · &lt; 600</span><b>موبايل</b><ul><li>bottom bar</li><li>عمود واحد</li><li>ScreenUtil شغال زي دلوقتي</li></ul></div>
+        <div class="bpc"><span class="w">medium · 600 – 1023</span><b>تابلت portrait / شباك صغير</b><ul><li>bottom bar</li><li>المحتوى أقصاه 720 وفي النص</li><li>الكروت عمودين لو الليست بسيطة</li><li>الحجم الحقيقي من غير تكبير</li></ul></div>
+        <div class="bpc"><span class="w">expanded · ≥ 1024</span><b>تابلت landscape / كمبيوتر</b><ul><li><code>NavigationRail</code> على الجنب بدل الـ bottom bar</li><li>المحتوى أقصاه 960</li><li>الكروت عمودين أو تلاتة</li><li>الحجم الحقيقي من غير تكبير</li></ul></div>
+      </div>
+      <p>ودي نفس تقسيمة Material 3 (window size classes)، فأي widget جديد هيفهمها.</p>
+    </div>
+
+    <div class="block">
+      <h3>الخطوات</h3>
+      <ol class="steps">
+        <li><div><b><code>LayoutService.sizeClass(context)</code>.</b><p>بيرجع <code>compact</code> أو <code>medium</code> أو <code>expanded</code> حسب العرض بس، ومعاه <code>isCompact</code> و<code>isMedium</code> و<code>isExpanded</code>. الدوال القديمة تفضل موجودة وتنادي الجديدة من جوه، علشان مفيش حاجة تبوظ، وأعلّمها <code>@Deprecated</code>.</p></div></li>
+        <li><div><b>ScreenUtil يكبّر على الموبايل بس.</b><p>في <code>app.dart</code>، الـ <code>designSize</code> يبقى 375×812 على compact، وعلى الأكبر منه يبقى مقاس الشاشة نفسها. كده <code>.w</code> و<code>.sp</code> بيرجعوا الرقم زي ما هو، والـ 96 مكان يتظبطوا من غير ما أعدّل فيهم سطر.</p></div></li>
+        <li><div><b>أقصى عرض في مكان واحد.</b><p><code>TemplatePage</code> و<code>CoreMobileScaffold</code> يحطوا الـ body جوه <code>Center → ConstrainedBox(maxWidth: AppSizes.contentMaxWidth)</code>، والقيمة 720 على medium و960 على expanded، والفورمز 560. وبعدها أشيل الـ 51 <code>maxWidth: double.infinity</code> اللي مالهمش لازمة.</p></div></li>
+        <li><div><b><code>AppAdaptiveList</code> في <code>core/widgets</code>.</b><p>على compact بيبقى <code>ListView</code> عادي، وعلى الأكبر بيبقى grid بعمودين أو تلاتة بنفس <code>cardGap</code>. نطبقه على الليستات البسيطة: Reports وTeam fingerprint والموظفين والملفات والـ Blogs. وطلبات الإجازة تفضل عمود واحد لأن الكارت بتاعها عريض.</p></div></li>
+        <li><div><b>التنقل على الشاشات العريضة.</b><p><code>MainLayoutScreen</code> على expanded يحط <code>NavigationRail</code> كحلي على الجنب بنفس التابات والأيقونات، والـ FAB يفضل في الركن. وعلى compact وmedium الـ bottom bar زي ما هو.</p></div></li>
+        <li><div><b>أشيل الارتفاعات اللي بنسبة من الشاشة.</b><p>الشاشة الفاضية تاخد المساحة الفاضية من غير <code>height</code> (ودي بقت بتتحط أعلى من النص شوية لوحدها). والهيدرز تبقى بأرقام ثابتة من <code>AppSizes</code>، وأستخدم <code>LayoutBuilder</code> لما الارتفاع لازم يتحسب.</p></div></li>
+        <li><div><b>الهيدر الكحلي والكاروسيل.</b><p>على medium وexpanded كروت الرصيد تبقى عرض ثابت (حوالي 160) بدل تلت الشاشة، والهيدر يفضل ممدود على العرض كله والمحتوى جواه في النص.</p></div></li>
+        <li><div><b>القواعد تتكتب.</b><p>قاعدة 10 في <code>app_design.dart</code>: "المقاسات من <code>sizeClass</code> بس، ممنوع <code>.sh</code> للأحجام، وأقصى عرض من <code>TemplatePage</code>". وأحدّث README بتاع <code>core/services</code> و<code>core/widgets</code>.</p></div></li>
+      </ol>
+    </div>
+
+    <div class="block">
+      <h3>هجرّب على إيه</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>الجهاز</th><th>المقاس</th><th>الـ class</th><th>هبص على إيه</th></tr></thead>
+        <tbody>
+          <tr><td>Android صغير</td><td>360×640</td><td>compact</td><td>النصوص مش بتتقطع، والهيدر والكاروسيل</td></tr>
+          <tr><td>iPhone SE</td><td>375×667</td><td>compact</td><td>الشاشة الفاضية والـ More header</td></tr>
+          <tr><td>iPhone Pro Max</td><td>430×932</td><td>compact</td><td>المسافات والـ FAB</td></tr>
+          <tr><td>iPad portrait</td><td>820×1180</td><td>medium</td><td>أقصى عرض، والعمودين، والخط مش متكبّر</td></tr>
+          <tr><td>iPad landscape</td><td>1180×820</td><td>expanded</td><td>NavigationRail، والارتفاعات</td></tr>
+          <tr><td>Web</td><td>1440×900</td><td>expanded</td><td>التلات أعمدة والمحتوى في النص</td></tr>
+        </tbody>
+      </table></div>
+      <p>وكل جهاز هجربه في العربي والإنجليزي.</p>
+    </div>
+  </section>
+
+  <section class="plan" id="order">
+    <h2>ترتيب التنفيذ</h2>
+    <ol class="steps">
+      <li><div><b>الشريط الأسود وBlogs</b><p>صغيرة وواضحة، وبتتشاف على طول.</p></div></li>
+      <li><div><b>FAB الـ Daily reports وMy CV</b><p>سطرين في كل مكان.</p></div></li>
+      <li><div><b>كروت Team Fingerprint والاسم في Fingerprint</b><p>تحويل للـ <code>AppCard</code>.</p></div></li>
+      <li><div><b>Reports</b><p>بعد ما تقرر: السهم في الـ chip، ولا نشيل الـ chip.</p></div></li>
+      <li><div><b>Responsive</b><p>الأساس الأول: <code>sizeClass</code> وScreenUtil وأقصى عرض. وبعده <code>AppAdaptiveList</code>، وآخر حاجة الـ <code>NavigationRail</code>. كل خطوة commit لوحدها، وكل خطوة هجربها على الأجهزة اللي في الجدول.</p></div></li>
+    </ol>
+    <p>وأي نص جديد هيبقى له key في <code>en.json</code> و<code>ar.json</code> و<code>AppStrings</code>.</p>
+  </section>
+
+  <footer>اتعملت من الكود على branch ‏<span class="mono">new-version2</span>. خطة الجولة التانية محفوظة في <span class="mono">docs/plans/ui_consistency_plan_round2.html</span>. الأشكال هنا توضيح تقريبي.</footer>
+</div>

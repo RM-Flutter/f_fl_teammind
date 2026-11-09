@@ -24,7 +24,6 @@ class EvalutaionSectionWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          gapH12,
              ListView.separated(
                  reverse: false,
                  shrinkWrap: true,

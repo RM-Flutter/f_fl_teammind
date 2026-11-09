@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 
+import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 
+/// One pulsing placeholder block. Colours, speed and default corner come from [AppShimmer],
+/// so every loading state in the app pulses the same way.
+///
+/// For a whole list of cards use [AppShimmerList] / [AppShimmerCard] instead of building
+/// placeholders by hand.
 class ShimmerAnimatedLoading extends StatefulWidget {
   final double? height, width, circularRaduis, maxHeight, maxWidth;
 
   const ShimmerAnimatedLoading(
       {super.key,
-        this.height,
-        this.width,
-        this.circularRaduis,
-        this.maxHeight,
-        this.maxWidth});
+      this.height,
+      this.width,
+      this.circularRaduis,
+      this.maxHeight,
+      this.maxWidth});
 
   @override
   State<ShimmerAnimatedLoading> createState() => _ShimmerAnimatedLoadingState();
@@ -25,13 +31,12 @@ class _ShimmerAnimatedLoadingState extends State<ShimmerAnimatedLoading>
   @override
   void initState() {
     _animationController = AnimationController(
-      duration: const Duration(seconds: 1),
+      duration: AppShimmer.period,
       vsync: this,
     )..repeat(reverse: true);
-    _color = ColorTween(
-        begin: Colors.black.withOpacity(.02),
-        end: Colors.black.withOpacity(.09))
-        .animate(_animationController);
+    _color = ColorTween(begin: AppShimmer.base, end: AppShimmer.highlight)
+        .animate(CurvedAnimation(
+            parent: _animationController, curve: Curves.easeInOut));
     super.initState();
   }
 
@@ -57,7 +62,7 @@ class _ShimmerAnimatedLoadingState extends State<ShimmerAnimatedLoading>
           decoration: BoxDecoration(
               color: _color.value,
               borderRadius: BorderRadius.all(
-                  Radius.circular(widget.circularRaduis ?? 1))),
+                  Radius.circular(widget.circularRaduis ?? AppShimmer.radius))),
         );
       },
     );

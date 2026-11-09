@@ -1,3 +1,4 @@
+import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/widgets/approvable_card_widget.dart';
 
@@ -61,18 +62,9 @@ if (controller.error != null) {
             );
           }
           if (controller.interviews.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.inbox, size: 64, color: Color(AppColors.iconSecondary)),
-                  const SizedBox(height: 16),
-                  Text(
-                    "No interviews assigned.".tr(),
-                    style: TextStyle(fontSize: 16, color: Color(AppColors.subTitleText)),
-                  ),
-                ],
-              ),
+            return NoExistingPlaceholderScreen(
+              title: "No interviews assigned.".tr(),
+              message: "Interviews scheduled for you will show up here.".tr(),
             );
           }
 

@@ -57,6 +57,8 @@ Follow the existing structure as it is. Do not reorganize folders, rename existi
 | Low-level UI helpers (scaffold, dropdown, shimmer) | `core/utils/` |
 | Routes | `AppRoutes` enum + `GoRoute` in `core/routing/app_router.dart` |
 
+**Layout rules:** the layout rules of the app are written at the top of `core/constants/app_design.dart` and every screen follows them: page edges are always `AppSpacing.page` (16) and only the outermost widget pads (sections/cards add no horizontal padding, carousels pad their scroll view), `AppSpacing.section` / `sectionHeaderGap` / `cardGap` for vertical rhythm, section titles use `AppSectionHeader`, cards use `AppCard`, list loading uses `AppShimmerList`, FABs hide on scroll (`HideOnScrollFabHost`, automatic in `CoreMobileScaffold` / `TemplatePage`), animations use `AppMotion`. No raw padding numbers for page edges.
+
 **Styling rule:** never create a new file for styling or sizes. New design values become tokens in `AppSizes` / `AppColors` / `AppThemeService` / `AppStyles`, so they are shared across the app. Prefer changing the theme over per-widget overrides.
 
 **`lib/features/<feature>/`: one folder per business feature, `snake_case`.** New code uses this layout (the dominant one in the repo):

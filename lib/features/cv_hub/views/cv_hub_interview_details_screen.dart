@@ -98,7 +98,7 @@ class _CvHubInterviewDetailsScreenState extends State<CvHubInterviewDetailsScree
               Expanded(
                 child: SingleChildScrollView(
                   physics: const BouncingScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page, vertical: AppSpacing.xl),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -474,7 +474,7 @@ class _EvaluationFormState extends State<_EvaluationForm> {
                             position: PopupMenuPosition.under,
                             color: Colors.white,
                             surfaceTintColor: Colors.transparent,
-                            elevation: 4,
+                            elevation: AppElevation.raised,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(AppRadius.md),
                               side: BorderSide(color: Colors.grey.shade200),

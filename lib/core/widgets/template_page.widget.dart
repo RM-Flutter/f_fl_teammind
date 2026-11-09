@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import '../constants/app_colors.dart';
+import '../constants/app_design.dart';
+import '../constants/app_images.dart';
 import 'app_bar_with_bookmark.widget.dart';
+import 'app_content_width.widget.dart';
+import 'hide_on_scroll_fab.widget.dart';
 
 class TemplatePage extends StatelessWidget {
   final String title;
@@ -15,6 +20,13 @@ class TemplatePage extends StatelessWidget {
   final TextStyle? titleStyle;
   final dynamic popResult;
   final bool showBookmark;
+
+  /// Hide [floatingActionButton] smoothly while scrolling down (layout rule 6).
+  final bool hideFabOnScroll;
+
+  /// Use the home header look: navy background with the header texture, rounded bottom
+  /// corners and white title / icons. Good for tab pages with a carousel in [bottomAppbarWidget].
+  final bool brandedHeader;
 
   /// used if you want to active [PULLTOREFRESH] option to page.
   final Future<void> Function()? onRefresh;
@@ -31,24 +43,54 @@ class TemplatePage extends StatelessWidget {
       this.onRefresh,
       this.popResult,
       this.showBookmark = true,
+      this.hideFabOnScroll = true,
+      this.brandedHeader = false,
       this.routeName});
+
+  static const BorderRadius _headerRadius = BorderRadius.only(
+    bottomLeft: Radius.circular(AppRadius.xl),
+    bottomRight: Radius.circular(AppRadius.xl),
+  );
 
   @override
   Widget build(context) {
     final canPop = context.canPop() || Navigator.of(context).canPop();
-    return Scaffold(
+    final navy = Color(AppColors.secondaryButton);
+    return HideOnScrollFabHost(
+      enabled: hideFabOnScroll,
+      builder: (context, wrapFab) => Scaffold(
       backgroundColor: backgroundColor,
-      floatingActionButton: floatingActionButton,
+      floatingActionButton: wrapFab(floatingActionButton),
       appBar: AppBarWithBookmark(
         actions: actions,
-        backgroundColor: Colors.white,
+        backgroundColor: brandedHeader ? navy : Colors.white,
         title: title,
         titleStyle: titleStyle ??
             TextStyle(
-              fontSize: 16,
+              fontSize: brandedHeader ? 18 : 16,
               fontWeight: FontWeight.w700,
-              color: Color(AppColors.secondaryButton),
+              color: brandedHeader ? Colors.white : navy,
             ),
+        bookmarkIconColor: brandedHeader ? Colors.white : null,
+        shape: brandedHeader
+            ? const RoundedRectangleBorder(borderRadius: _headerRadius)
+            : null,
+        systemOverlayStyle:
+            brandedHeader ? SystemUiOverlayStyle.light : null,
+        flexibleSpace: brandedHeader
+            ? ClipRRect(
+                borderRadius: _headerRadius,
+                child: Opacity(
+                  opacity: 0.5,
+                  child: Image.asset(
+                    AppImages.brandedHeaderBackground,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                    height: double.infinity,
+                  ),
+                ),
+              )
+            : null,
         bottom: bottomAppbarWidget,
         routeName: routeName,
         defaultTitle: title,
@@ -60,17 +102,20 @@ class TemplatePage extends StatelessWidget {
               )
             : const SizedBox.shrink(),
       ),
-      body: onRefresh != null
-          ? RefreshIndicator.adaptive(
-              onRefresh: onRefresh!,
-              child: ListView(
-                clipBehavior: Clip.none,
-                children: [
-                  body,
-                ],
-              ),
-            )
-          : body,
+      body: AppContentWidth(
+        child: onRefresh != null
+            ? RefreshIndicator.adaptive(
+                onRefresh: onRefresh!,
+                child: ListView(
+                  clipBehavior: Clip.none,
+                  children: [
+                    body,
+                  ],
+                ),
+              )
+            : body,
+      ),
+      ),
     );
   }
 }

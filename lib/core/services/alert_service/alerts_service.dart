@@ -404,7 +404,7 @@ abstract class AlertsService {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppRadius.xl),
         ),
-        elevation: 12,
+        elevation: AppElevation.overlay,
         backgroundColor: Colors.white,
         insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
         child: ConstrainedBox(

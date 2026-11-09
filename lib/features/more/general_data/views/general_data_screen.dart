@@ -26,7 +26,7 @@ class GeneralDataScreen extends StatelessWidget {
             body: (!value.isLoading)?Container(
                 width: 1.sw,
                 height: 1.sh,
-                padding: EdgeInsets.symmetric(horizontal: AppSizes.s15),
+                padding: AppSpacing.pagePadding,
                 child: SingleChildScrollView(
                   keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
                   child: Column(

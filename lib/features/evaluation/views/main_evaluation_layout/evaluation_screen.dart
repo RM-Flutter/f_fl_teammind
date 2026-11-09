@@ -69,7 +69,7 @@ class _FingerprintScreenState extends State<EvaluationScreen> {
                 ),
                 child: Consumer<EvaluationController>(
                     builder: (context, viewModel, child) => viewModel.isLoading
-                        ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget()
+                        ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget(padding: EdgeInsets.zero)
                         : viewModel.evaluations?.isEmpty == true ||
                         viewModel.evaluations == null
                         ? NoExistingPlaceholderScreen(

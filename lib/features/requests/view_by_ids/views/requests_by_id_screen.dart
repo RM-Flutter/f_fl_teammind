@@ -1,3 +1,4 @@
+import 'package:app_test/core/widgets/app_shortcut_card.widget.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/constants/app_colors.dart';
@@ -19,8 +20,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/routing/app_router.dart' show AppRoutes;
-import '../../shared/ui/widgets/custom_requests_page_button.widget.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class RequestsByTypeIdScreen extends StatefulWidget {
   final String requestTypeId;
@@ -87,10 +88,10 @@ class _RequestsByTypeIdScreenState extends State<RequestsByTypeIdScreen> {
                   maxWidth: double.infinity
               ),
               child: Padding(
-                  padding: const EdgeInsets.all(12),
+                  padding: AppSpacing.pageAll,
                   child: Consumer<RequestsWithTypeIdViewModel>(
                       builder: (context, viewModel, child) => viewModel.isLoading
-                          ? const LoadingPageWidget()
+                          ? const LoadingPageWidget(padding: EdgeInsets.zero)
                           : viewModel.requestsById == null ||
                           viewModel.requestsById?.isEmpty == true
                           ? Column(
@@ -129,13 +130,13 @@ class _RequestsByTypeIdScreenState extends State<RequestsByTypeIdScreen> {
                           softWrap: true,
                         ),
                         if( (rulesMessage ?? viewModel.rulesMessage) != null &&  (rulesMessage ?? viewModel.rulesMessage) != "")  SizedBox(height: 16),
-                        if (viewModel.summaryReports != null && viewModel.summaryReports?.isNotEmpty == true)CustomRequestsPageButton(
-                          onPressed: () async => viewModel
+                        if (viewModel.summaryReports != null && viewModel.summaryReports?.isNotEmpty == true)AppShortcutCard(
+                          onTap: () async => viewModel
                               .showSummaryReports(context: context),
                           title: AppStrings.summaryReports.tr(),
                           icon: Icons.folder_copy_outlined,
                         ),
-                        if(viewModel.summaryReports != null && viewModel.summaryReports?.isNotEmpty == true)SizedBox(height: 16),
+                        if(viewModel.summaryReports != null && viewModel.summaryReports?.isNotEmpty == true)const SizedBox(height: AppSpacing.cardGap),
                         if (viewModel.requestsById != null &&
                             viewModel.requestsById!.isNotEmpty)
                           ...viewModel.requestsById!.map(

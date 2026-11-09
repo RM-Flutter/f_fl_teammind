@@ -146,7 +146,7 @@ class HomeAppbarWidget extends StatelessWidget {
                   },
                   child: Container(
                     color: Colors.yellow,
-                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    padding: AppSpacing.pagePadding,
                     child: Row(
                       children: [
                         Icon(Icons.warning, color: Colors.red, size: 24),
@@ -164,14 +164,12 @@ class HomeAppbarWidget extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(
-                    top: 5,
-                    right: LocalizationService.isArabic(context: context) ? 15 : 0, left: LocalizationService.isArabic(context: context) ? 0 : 15,
-                  ),
+                  // The carousel below pads itself, so it can scroll to the screen edge.
+                  padding: const EdgeInsets.only(top: AppSpacing.xs),
                   child: Column(
                     children: [
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        padding: AppSpacing.pagePadding,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [

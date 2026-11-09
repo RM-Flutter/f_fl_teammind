@@ -420,13 +420,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
               color: Colors.white,
               borderRadius: BorderRadius.circular(AppRadius.md),
               border: Border.all(color: Colors.grey[300]!),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withValues(alpha: 0.1),
-                  blurRadius: 4,
-                  offset: const Offset(0, 2),
-                ),
-              ],
+              boxShadow: AppShadows.card,
             ),
             child: Row(
               children: [

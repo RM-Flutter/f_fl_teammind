@@ -118,17 +118,14 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
                     padding: EdgeInsets.symmetric(vertical: AppSizes.s12),
                     child: Consumer<EmployeesListViewModel>(
                         builder: (context, viewModel, child) => viewModel.isLoading
-                            ? const LoadingPageWidget(
-                                reverse: true,
-                                height: AppSizes.s75,
-                              )
+                            ? const LoadingPageWidget(padding: AppSpacing.pagePadding)
                             : viewModel.employees == null ||
                                     viewModel.employees?.isEmpty == true
                                 ? NoExistingPlaceholderScreen(
                                     height: LayoutService.getHeight(context) * 0.6,
                                     title: AppStrings.thereIsNoEmployees.tr())
                                 : Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                                    padding: AppSpacing.pagePadding,
                                     child: Column(children: [
                                       ...viewModel.filteredEmployees.map((employee) {
                                         final String phoneStr = (employee.phone != null &&

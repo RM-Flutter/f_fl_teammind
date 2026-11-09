@@ -134,7 +134,6 @@ class _ExpenseClaimListScreenState extends State<ExpenseClaimListScreen> {
                           controller.toggleIncomingView(value, context),
                     ),
                   ),
-                  const SizedBox(height: 10),
                 ],
                 if (controller.isIncomingView) ...[
                   _ScopeSelectorRow(
@@ -144,7 +143,6 @@ class _ExpenseClaimListScreenState extends State<ExpenseClaimListScreen> {
                     onSelected: (scope) =>
                         controller.setIncomingScope(scope, context),
                   ),
-                  const SizedBox(height: 10),
                 ],
                 ActiveFiltersRowWidget(
                   empName: controller.filterEmpName,
@@ -229,7 +227,7 @@ class _ExpenseClaimListScreenState extends State<ExpenseClaimListScreen> {
             clipBehavior: Clip.none,
             physics: const AlwaysScrollableScrollPhysics(),
             // Room so the floating add button doesn't cover the last card
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 80),
+            padding: AppSpacing.listPadding,
             itemCount: requests.length +
                 (isIncoming
                     ? (controller.incomingIsLoadingMore ? 1 : 0)
@@ -313,7 +311,7 @@ class _ScopeSelectorRow extends StatelessWidget {
     ];
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.page, AppSpacing.md, AppSpacing.page, 0),
       child: Center(
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,

@@ -39,7 +39,7 @@ class PayrollDetailsBodyWidget extends StatelessWidget {
 
     return SingleChildScrollView(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: AppSizes.s12),
+        padding: AppSpacing.pagePadding,
         child: Column(
           children: [
             gapH24,

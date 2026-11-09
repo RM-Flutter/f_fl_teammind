@@ -28,7 +28,7 @@ Future<bool?> showAppActionConfirmationDialog({
       return Dialog(
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
-        elevation: 12,
+        elevation: AppElevation.overlay,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
         ),

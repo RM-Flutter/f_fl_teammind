@@ -701,7 +701,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
             left: 0,
             right: 0,
             child: Material(
-              elevation: 6,
+              elevation: AppElevation.raised,
               color: Colors.black87,
               child: Container(
                 padding:

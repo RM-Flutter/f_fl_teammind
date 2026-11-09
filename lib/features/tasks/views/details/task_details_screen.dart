@@ -24,6 +24,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/widgets/hide_on_scroll_fab.widget.dart';
 
 class TaskDetailsScreen extends StatefulWidget {
   var id;
@@ -71,8 +72,8 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
           }
           return Consumer<CommentProvider>(
             builder: (context, values, child) {
-              return Scaffold(
-                floatingActionButton: value.getOneTaskModel != null && gCache != null &&
+              return HideOnScrollFabHost(builder: (context, wrapFab) => Scaffold(
+                floatingActionButton: wrapFab(value.getOneTaskModel != null && gCache != null &&
                         ((gCache['is_teamleader_in'] != null && gCache['is_teamleader_in'] is List && gCache['is_teamleader_in'].isNotEmpty) ||
                          (gCache['is_manager_in'] != null && gCache['is_manager_in'] is List && gCache['is_manager_in'].isNotEmpty) ||
                          (gCache['top_management'] == true) ||
@@ -103,7 +104,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                       ),
                     ) ,
                   ),
-                ): null,
+                ): null),
                 body: value.getOneTaskModel == null || value.getOneTaskModel!.task == null  ?
                 const DetailsLoadingWidget():RefreshIndicator.adaptive(
                   onRefresh: ()async{
@@ -125,7 +126,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                             constraints: const BoxConstraints(
                                 maxWidth: double.infinity
                             ),
-                            child: Padding(padding: EdgeInsets.symmetric(horizontal: 15),
+                            child: Padding(padding: AppSpacing.pagePadding,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -418,7 +419,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                     ),
                   ),
                 ),
-              );
+              ));
             },);
         },
       ),

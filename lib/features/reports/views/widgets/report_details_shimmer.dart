@@ -17,13 +17,7 @@ class ReportDetailsShimmer extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(AppRadius.sm),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
-                  blurRadius: 5,
-                  spreadRadius: 1,
-                ),
-              ],
+              boxShadow: AppShadows.card,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,13 +48,7 @@ class ReportDetailsShimmer extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(AppRadius.sm),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
-                  blurRadius: 5,
-                  spreadRadius: 1,
-                ),
-              ],
+              boxShadow: AppShadows.card,
             ),
             child: Row(
               children: [

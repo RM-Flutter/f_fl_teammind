@@ -2,6 +2,24 @@ import 'package:flutter/material.dart';
 
 /// Constant sizes to be used in the app (paddings, gaps, rounded corners etc.)
 abstract class AppSizes {
+  // Employee profile header
+  static const double profileHeaderAvatar = 72;
+
+  // More screen
+  /// Height of the navy header under the status bar, up to where the white card starts.
+  static const double moreHeaderBelowSafeArea = 112;
+  static const double moreAvatar = 96;
+  static const double moreIconBox = 32;
+
+  // Responsive: widest the page content gets on bigger windows (it is centred)
+  static const double contentMaxWidthMedium = 720;
+  static const double contentMaxWidthExpanded = 960;
+  /// Width of the side navigation rail on expanded windows.
+  static const double navRailWidth = 88;
+
+  // Shortcut card (calendar / summary entry above lists)
+  static const double shortcutIconBox = 40;
+
   static const s0 = 0.0;
   static const s1 = 1.0;
   static const s2 = 2.0;
@@ -94,7 +112,9 @@ abstract class AppSizes {
 
 /// Constant gap widths
 const gapW4 = SizedBox(width: AppSizes.s4);
+const gapW6 = SizedBox(width: AppSizes.s6);
 const gapW8 = SizedBox(width: AppSizes.s8);
+const gapW10 = SizedBox(width: AppSizes.s10);
 const gapW12 = SizedBox(width: AppSizes.s12);
 const gapW16 = SizedBox(width: AppSizes.s16);
 const gapW20 = SizedBox(width: AppSizes.s20);
@@ -104,9 +124,11 @@ const gapW48 = SizedBox(width: AppSizes.s48);
 const gapW64 = SizedBox(width: AppSizes.s64);
 
 /// Constant gap heights
+const gapH2 = SizedBox(height: AppSizes.s2);
 const gapH4 = SizedBox(height: AppSizes.s4);
 const gapH6 = SizedBox(height: AppSizes.s6);
 const gapH8 = SizedBox(height: AppSizes.s8);
+const gapH10 = SizedBox(height: AppSizes.s10);
 const gapH12 = SizedBox(height: AppSizes.s12);
 const gapH14 = SizedBox(height: AppSizes.s14);
 const gapH16 = SizedBox(height: AppSizes.s16);

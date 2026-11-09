@@ -1,3 +1,4 @@
+import 'package:app_test/core/widgets/app_fab.widget.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,6 +21,7 @@ import '../../../../core/widgets/active_filters_row_widget.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/widgets/app_card.widget.dart';
 import 'package:app_test/core/widgets/app_status_badge.widget.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/app_shimmer_list.dart';
 
 class DailyReportsListScreen extends StatefulWidget {
   final Map<String, dynamic>? extra;
@@ -93,13 +95,7 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(AppRadius.xl),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 30,
-                    offset: const Offset(0, 10),
-                  ),
-                ],
+                boxShadow: AppShadows.card,
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -227,11 +223,9 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
               },
             ),
           ],
-          floatingActionButton: provider.isManagerOrHr && provider.isForDepartment ? null : FloatingActionButton.extended(
+          floatingActionButton: provider.isManagerOrHr && provider.isForDepartment ? null : AppFab(
             heroTag: 'add_daily_report',
-            backgroundColor: Color(AppColors.buttons),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg)),
-            elevation: 4,
+            tooltip: AppStrings.addReport.tr(),
             onPressed: () {
                context.pushNamed(
                  AppRoutes.addEditDailyReportScreen.name,
@@ -243,13 +237,10 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
                  }
                });
             },
-            icon: const Icon(Icons.add, color: Colors.white),
-            label: Text(AppStrings.addReport.tr(), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14)),
           ),
           body: Column(
             children: [
               if (provider.isManagerOrHr) ...[
-                SizedBox(height: 10),
                 SwitchRowNotification(
                   value: provider.isForDepartment,
                   leftText: AppStrings.personalReports.tr(),
@@ -258,7 +249,6 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
                     provider.toggleDepartmentView(val, context);
                   },
                 ),
-                SizedBox(height: 10),
               ],
               ActiveFiltersRowWidget(
                 empName: provider.filterEmpName,
@@ -272,7 +262,7 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
               ),
               Expanded(
                 child: provider.isLoading 
-                  ? const Center(child: CircularProgressIndicator())
+                  ? const AppShimmerList()
                   : provider.isForDepartment
                     ? _buildList(provider.incomingReports, provider, isIncoming: true)
                     : _buildList(provider.personalReports, provider, isIncoming: false),
@@ -306,7 +296,7 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
       child: ListView.builder(
         controller: _scrollController,
         clipBehavior: Clip.none,
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 100),
+        padding: AppSpacing.listPadding,
         physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
         itemCount: list.length + (provider.isForDepartment ? (provider.incomingIsLoadingMore ? 1 : 0) : (provider.personalIsLoadingMore ? 1 : 0)),
         itemBuilder: (context, index) {

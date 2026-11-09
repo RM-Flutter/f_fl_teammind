@@ -19,6 +19,7 @@ import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_p
 import 'package:app_test/core/widgets/template_page.widget.dart';
 import 'package:app_test/features/evaluation/shared/widgets/payrolls_and_penalties_and_rewards_loading_screens.widget.dart';
 import 'package:app_test/features/payrolls/shared/models/payroll_model.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class PayrollsListScreen extends StatefulWidget {
   final String? empId;
@@ -91,11 +92,11 @@ class _FingerprintScreenState extends State<PayrollsListScreen> {
               ),
               child: SingleChildScrollView(
                 clipBehavior: Clip.none,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page, vertical: AppSpacing.md),
                 child: Consumer<PayrollsListViewModel>(
                     builder: (context, viewModel, child) => viewModel
                             .isLoading
-                        ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget()
+                        ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget(padding: EdgeInsets.zero)
                         : viewModel.payrolls?.isEmpty == true ||
                                 viewModel.payrolls == null
                             ? NoExistingPlaceholderScreen(

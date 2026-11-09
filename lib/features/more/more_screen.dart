@@ -1,9 +1,7 @@
 import 'package:app_test/core/widgets/profile_avatar_menu_widget.dart';
 import 'package:app_test/core/utils/app_styles.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:convert';
 import 'package:app_test/core/platform/platform_is.dart';
-import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/services/requests_services.dart';
 import 'package:app_test/core/services/general_listener.dart';
 import 'package:app_test/features/more/company_structure/company_structure_screen.dart';
@@ -29,6 +27,7 @@ import '../../core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import '../personal_profile/controllers/personal_profile_controller.dart';
 import 'package:app_test/core/helpers/package_helper.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/utils/request_scope_helper.dart';
 
 class MoreScreen extends StatefulWidget {
@@ -94,13 +93,17 @@ class _MoreScreenState extends State<MoreScreen> {
 
     return Consumer<HomeController>(
       builder: (context, value, child) {
-        return Stack(alignment: Alignment.center, children: [
+        final safeTop = MediaQuery.paddingOf(context).top;
+        // Where the white card starts; the avatar straddles this line.
+        final cardTop = safeTop + AppSizes.moreHeaderBelowSafeArea;
+        const avatar = AppSizes.moreAvatar;
+        return Stack(alignment: Alignment.topCenter, children: [
           Container(
-            padding: EdgeInsets.zero,
             alignment: Alignment.topCenter,
             color: Color(AppColors.secondaryButton),
             child: SizedBox(
-              height: MediaQuery.sizeOf(context).height * 0.25,
+              height: cardTop + AppRadius.xl,
+              width: double.infinity,
               child: Image.asset(
                 "assets/images/png/more_back.png",
                 fit: BoxFit.cover,
@@ -108,9 +111,8 @@ class _MoreScreenState extends State<MoreScreen> {
             ),
           ),
           Positioned.fill(
-            top: MediaQuery.sizeOf(context).height * 0.25,
+            top: cardTop,
             child: Container(
-              // height: MediaQuery.sizeOf(context).height * 0.66,
               decoration: ShapeDecoration(
                 gradient: LinearGradient(
                   begin: const Alignment(0, 0),
@@ -120,7 +122,7 @@ class _MoreScreenState extends State<MoreScreen> {
                     Color(AppColors.cardBackground)
                   ],
                 ),
-                shape: RoundedRectangleBorder(
+                shape: const RoundedRectangleBorder(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(AppRadius.xl),
                     topRight: Radius.circular(AppRadius.xl),
@@ -129,13 +131,45 @@ class _MoreScreenState extends State<MoreScreen> {
               ),
               child: Column(
                 children: [
-                  SizedBox(
-                    height: MediaQuery.sizeOf(context).height * 0.14,
+                  // Room for the lower half of the avatar, then name and job title.
+                  const SizedBox(height: avatar / 2 + AppSpacing.md),
+                  Padding(
+                    padding: AppSpacing.pagePadding,
+                    child: Text(
+                      (gCache['name'] ?? '').toString().toUpperCase(),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: AppStyles.heading(context).copyWith(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                   ),
+                  if ((gCache['job_title'] ?? '').toString().isNotEmpty) ...[
+                    const SizedBox(height: AppSpacing.xs),
+                    Padding(
+                      padding: AppSpacing.pagePadding,
+                      child: Text(
+                        gCache['job_title'].toString(),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: AppStyles.greyContent(context).copyWith(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                  const SizedBox(height: AppSpacing.lg),
                   Expanded(
                     child: Padding(
                       padding: EdgeInsets.zero,
                       child: ListView(
+                        // A ListView adds the status-bar height on top by itself (extra ~60 of
+                        // empty space under the job title); this page already sits below it.
+                        padding: const EdgeInsets.only(bottom: AppSpacing.md),
                         children: [
                           DefaultListTile(
                             title: AppStrings.teamMindAssistant.tr(),
@@ -146,22 +180,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                   'lang': context.locale.languageCode
                                 }),
                           ),
-                          SizedBox(height: 15),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 24),
-                            child: Container(
-                              alignment:
-                                  LocalizationService.isArabic(context: context)
-                                      ? Alignment.centerRight
-                                      : Alignment.centerLeft,
-                              child: Text(AppStrings.myWork.tr().toUpperCase(),
-                                  style: AppStyles.primaryContent(context)
-                                      .copyWith(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600)),
-                            ),
-                          ),
-                          SizedBox(height: 15),
+                          _MoreSectionLabel(AppStrings.myWork.tr()),
                           DefaultListTile(
                             title: AppStrings.tasks.tr(),
                             src: AppIcons.tasks,
@@ -216,22 +235,11 @@ class _MoreScreenState extends State<MoreScreen> {
                                     'lang': context.locale.languageCode
                                   }),
                             ),
-                          SizedBox(height: 15),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 24),
-                            child: Container(
-                              alignment:
-                                  LocalizationService.isArabic(context: context)
-                                      ? Alignment.centerRight
-                                      : Alignment.centerLeft,
-                              child: Text(AppStrings.myRequests.tr().toUpperCase(),
-                                  style: AppStyles.primaryContent(context)
-                                      .copyWith(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600)),
-                            ),
-                          ),
-                          SizedBox(height: 15),
+                          if (PackageHelper.hasPackage('emp-requests') ||
+                              PackageHelper.hasPackage('fingerprint-sys') ||
+                              PackageHelper.hasPackage('emp-payroll') ||
+                              isShiftsEmployee)
+                            _MoreSectionLabel(AppStrings.myRequests.tr()),
                           if (PackageHelper.hasPackage('emp-requests'))
                             DefaultListTile(
                               title: AppStrings.myRequests.tr(),
@@ -286,22 +294,8 @@ class _MoreScreenState extends State<MoreScreen> {
                                     'lang': context.locale.languageCode
                                   }),
                             ),
-                          SizedBox(height: 15),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 24),
-                            child: Container(
-                              alignment:
-                                  LocalizationService.isArabic(context: context)
-                                      ? Alignment.centerRight
-                                      : Alignment.centerLeft,
-                              child: Text(AppStrings.myPay.tr().toUpperCase(),
-                                  style: AppStyles.primaryContent(context)
-                                      .copyWith(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600)),
-                            ),
-                          ),
-                          SizedBox(height: 15),
+                          if (PackageHelper.hasPackage('emp-payroll'))
+                            _MoreSectionLabel(AppStrings.myPay.tr()),
                           // Removed redundant block
                           if (PackageHelper.hasPackage('emp-payroll'))
                             DefaultListTile(
@@ -344,24 +338,9 @@ class _MoreScreenState extends State<MoreScreen> {
                               ),
                             ),
                           // "Management" section: other departments / all company are open to every employee
-                          if (RequestScopeHelper.canSeeTeam || PackageHelper.hasPackage('emp-requests'))
-                            SizedBox(height: 15),
-                          if (RequestScopeHelper.canSeeTeam || PackageHelper.hasPackage('emp-requests'))
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 24),
-                              child: Container(
-                                alignment: LocalizationService.isArabic(
-                                        context: context)
-                                    ? Alignment.centerRight
-                                    : Alignment.centerLeft,
-                                child: Text(
-                                    AppStrings.management.tr().toUpperCase(),
-                                    style: AppStyles.primaryContent(context)
-                                        .copyWith(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600)),
-                              ),
-                            ),
+                          if (RequestScopeHelper.canSeeTeam ||
+                              PackageHelper.hasPackage('emp-requests'))
+                            _MoreSectionLabel(AppStrings.management.tr()),
                           if (gCache['is_teamleader_in'].isNotEmpty ||
                               gCache['is_manager_in'].isNotEmpty ||
                               gCache['is_hr'] == true ||
@@ -381,33 +360,32 @@ class _MoreScreenState extends State<MoreScreen> {
                                 },
                               ),
                           if (PackageHelper.hasPackage('emp-requests'))
-                              DefaultListTile(
-                                title: AppStrings.otherDepartmentsRequests.tr(),
-                                src: AppIcons.otherDepartments,
-                                onTap: () async {
-                                  await context.pushNamed(
-                                      AppRoutes.requests2.name,
-                                      pathParameters: {
-                                        'type': GetRequestsTypes
-                                            .otherDepartment.name,
-                                        'lang': context.locale.languageCode
-                                      });
-                                },
-                              ),
+                            DefaultListTile(
+                              title: AppStrings.otherDepartmentsRequests.tr(),
+                              src: AppIcons.otherDepartments,
+                              onTap: () async {
+                                await context.pushNamed(
+                                    AppRoutes.requests2.name,
+                                    pathParameters: {
+                                      'type':
+                                          GetRequestsTypes.otherDepartment.name,
+                                      'lang': context.locale.languageCode
+                                    });
+                              },
+                            ),
                           if (PackageHelper.hasPackage('emp-requests'))
-                              DefaultListTile(
-                                title: 'all_company_requests'.tr(),
-                                icon: Icons.business, // Fallback icon
-                                onTap: () async {
-                                  await context.pushNamed(
-                                      AppRoutes.requests2.name,
-                                      pathParameters: {
-                                        'type':
-                                            GetRequestsTypes.allCompany.name,
-                                        'lang': context.locale.languageCode
-                                      });
-                                },
-                              ),
+                            DefaultListTile(
+                              title: 'all_company_requests'.tr(),
+                              icon: Icons.business, // Fallback icon
+                              onTap: () async {
+                                await context.pushNamed(
+                                    AppRoutes.requests2.name,
+                                    pathParameters: {
+                                      'type': GetRequestsTypes.allCompany.name,
+                                      'lang': context.locale.languageCode
+                                    });
+                              },
+                            ),
                           if (gCache['is_teamleader_in'].isNotEmpty ||
                               gCache['is_manager_in'].isNotEmpty ||
                               gCache['is_hr'] == true ||
@@ -439,22 +417,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                       });
                                 },
                               ),
-                          SizedBox(height: 15),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 24),
-                            child: Container(
-                              alignment:
-                                  LocalizationService.isArabic(context: context)
-                                      ? Alignment.centerRight
-                                      : Alignment.centerLeft,
-                              child: Text(AppStrings.company.tr().toUpperCase(),
-                                  style: AppStyles.primaryContent(context)
-                                      .copyWith(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600)),
-                            ),
-                          ),
-                          SizedBox(height: 15),
+                          _MoreSectionLabel(AppStrings.company.tr()),
                           if (PackageHelper.hasPackage('emp-requests'))
                             DefaultListTile(
                               title: AppStrings.employeesDirectory.tr(),
@@ -584,22 +547,7 @@ class _MoreScreenState extends State<MoreScreen> {
                             },
                           ),
 
-                          SizedBox(height: 15),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 24),
-                            child: Container(
-                              alignment:
-                                  LocalizationService.isArabic(context: context)
-                                      ? Alignment.centerRight
-                                      : Alignment.centerLeft,
-                              child: Text(AppStrings.helpAndPolicies.tr().toUpperCase(),
-                                  style: AppStyles.primaryContent(context)
-                                      .copyWith(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600)),
-                            ),
-                          ),
-                          SizedBox(height: 15),
+                          _MoreSectionLabel(AppStrings.helpAndPolicies.tr()),
                           if (PackageHelper.hasPackage('emp-requests'))
                             DefaultListTile(
                               title: AppStrings.ticketSystem.tr(),
@@ -657,22 +605,7 @@ class _MoreScreenState extends State<MoreScreen> {
                               );
                             },
                           ),
-                          SizedBox(height: 15),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 24),
-                            child: Container(
-                              alignment:
-                                  LocalizationService.isArabic(context: context)
-                                      ? Alignment.centerRight
-                                      : Alignment.centerLeft,
-                              child: Text(AppStrings.myAccount.tr().toUpperCase(),
-                                  style: AppStyles.primaryContent(context)
-                                      .copyWith(
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w600)),
-                            ),
-                          ),
-                          SizedBox(height: 15),
+                          _MoreSectionLabel(AppStrings.myAccount.tr()),
                           DefaultListTile(
                             title: AppStrings.personalInfo.tr(),
                             src: "assets/images/svg/mpi.svg",
@@ -744,7 +677,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                 );
                               },
                             ),
-                          SizedBox(height: 15),
+                          const SizedBox(height: AppSpacing.section),
                           DefaultListTile(
                             title: AppStrings.logout.tr(),
                             src: "assets/images/svg/mlo.svg",
@@ -773,91 +706,94 @@ class _MoreScreenState extends State<MoreScreen> {
             ),
           ),
           Positioned(
-            top: MediaQuery.sizeOf(context).height * 0.15,
-            child: Column(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(AppRadius.pill),
-                  child: ProfileAvatarMenuWidget(
-                    employeeProfileId: gCache?['employee_profile_id'],
-                    child: kIsWeb
-                        ? Image.network(
-                            (gCache != null)
-                                ? gCache['photo'] ?? ""
-                                : "https://th.bing.com/th/id/OIP.NV-x3Km5_nHK2ZcRuqV5OgHaHa?rs=1&pid=ImgDetMain",
-                            fit: BoxFit.cover,
-                            height: 124,
-                            width: 124,
-                            errorBuilder: (context, error, stackTrace) =>
-                                Container(
-                              color: Colors.grey[200],
-                              height: 124,
-                              width: 124,
-                              child: Icon(
-                                Icons.person,
-                                size: 64,
-                                color: Colors.grey[400],
-                              ),
-                            ),
-                          )
-                        : CachedNetworkImage(
-                            imageUrl: (gCache != null)
-                                ? gCache['photo'] ?? ""
-                                : "https://th.bing.com/th/id/OIP.NV-x3Km5_nHK2ZcRuqV5OgHaHa?rs=1&pid=ImgDetMain",
-                            fit: BoxFit.cover,
-                            height: 124,
-                            width: 124,
-                            placeholder: (context, url) =>
-                                ShimmerAnimatedLoading(
-                              width: 63.0,
-                              height: 63,
-                              circularRaduis: 63,
-                            ),
-                            errorWidget: (context, url, error) => Container(
-                              color: Colors.grey[200],
-                              child: Icon(
-                                Icons.person,
-                                size: 64,
-                                color: Colors.grey[400],
-                              ),
+            top: cardTop - avatar / 2,
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white, width: 3),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(AppRadius.pill),
+                child: ProfileAvatarMenuWidget(
+                  employeeProfileId: gCache?['employee_profile_id'],
+                  child: kIsWeb
+                      ? Image.network(
+                          (gCache != null)
+                              ? gCache['photo'] ?? ""
+                              : "https://th.bing.com/th/id/OIP.NV-x3Km5_nHK2ZcRuqV5OgHaHa?rs=1&pid=ImgDetMain",
+                          fit: BoxFit.cover,
+                          height: avatar,
+                          width: avatar,
+                          errorBuilder: (context, error, stackTrace) =>
+                              Container(
+                            color: Colors.grey[200],
+                            height: avatar,
+                            width: avatar,
+                            child: Icon(
+                              Icons.person,
+                              size: 48,
+                              color: Colors.grey[400],
                             ),
                           ),
-                  ),
+                        )
+                      : CachedNetworkImage(
+                          imageUrl: (gCache != null)
+                              ? gCache['photo'] ?? ""
+                              : "https://th.bing.com/th/id/OIP.NV-x3Km5_nHK2ZcRuqV5OgHaHa?rs=1&pid=ImgDetMain",
+                          fit: BoxFit.cover,
+                          height: avatar,
+                          width: avatar,
+                          placeholder: (context, url) => ShimmerAnimatedLoading(
+                            width: avatar,
+                            height: avatar,
+                            circularRaduis: avatar,
+                          ),
+                          errorWidget: (context, url, error) => Container(
+                            color: Colors.grey[200],
+                            child: Icon(
+                              Icons.person,
+                              size: 48,
+                              color: Colors.grey[400],
+                            ),
+                          ),
+                        ),
                 ),
-                SizedBox(height: 15),
-                Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.symmetric(horizontal: 50),
-                  width: MediaQuery.sizeOf(context).width,
-                  child: Text(
-                    (gCache['name'] ?? '').toUpperCase(),
-                    maxLines: 1,
-                    textAlign: TextAlign.center,
-                    style: AppStyles.heading(context).copyWith(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 8),
-                Container(
-                  alignment: Alignment.center,
-                  width: MediaQuery.sizeOf(context).width * 0.5,
-                  child: Text(
-                    gCache['job_title'] ?? "",
-                    maxLines: 2,
-                    textAlign: TextAlign.center,
-                    style: AppStyles.greyContent(context).copyWith(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                )
-              ],
+              ),
             ),
-          )
+          ),
         ]);
       },
+    );
+  }
+}
+
+/// Small uppercase caption above a group of menu rows. 16 above it, 8 below it, so it reads as
+/// the title of the rows that follow (layout rule 3).
+class _MoreSectionLabel extends StatelessWidget {
+  final String title;
+
+  const _MoreSectionLabel(this.title);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsetsDirectional.fromSTEB(
+        AppSpacing.page,
+        AppSpacing.section,
+        AppSpacing.page,
+        AppSpacing.sectionHeaderGap,
+      ),
+      child: Align(
+        alignment: AlignmentDirectional.centerStart,
+        child: Text(
+          title.toUpperCase(),
+          style: AppStyles.primaryContent(context).copyWith(
+            fontSize: 12,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.6,
+          ),
+        ),
+      ),
     );
   }
 }
@@ -878,38 +814,51 @@ class DefaultListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final accent = Color(AppColors.buttons);
     return Column(
       children: [
         ListTile(
-          contentPadding: EdgeInsets.symmetric(horizontal: 24, vertical: 4),
-          leading: icon != null
-              ? Icon(
-                  icon,
-                  color: Color(AppColors.buttons),
-                  size: 20,
-                )
-              : SvgPicture.asset(
-                  src ?? "",
-                  color: Color(AppColors.buttons),
-                  fit: BoxFit.scaleDown,
-                  width: 20,
-                  height: 20,
-                ),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: AppSpacing.page),
+          minVerticalPadding: 0,
+          visualDensity: VisualDensity.compact,
+          horizontalTitleGap: AppSpacing.md,
+          // Icon in a soft square, same look as the icons on the home cards.
+          leading: Container(
+            width: AppSizes.moreIconBox,
+            height: AppSizes.moreIconBox,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: accent.withValues(alpha: 0.10),
+              borderRadius: BorderRadius.circular(AppRadius.sm),
+            ),
+            child: icon != null
+                ? Icon(icon, color: accent, size: 18)
+                : SvgPicture.asset(
+                    src ?? "",
+                    colorFilter: ColorFilter.mode(accent, BlendMode.srcIn),
+                    fit: BoxFit.scaleDown,
+                    width: 18,
+                    height: 18,
+                  ),
+          ),
           title: Text(
-            title.toUpperCase(),
+            title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: AppStyles.darkContent(context).copyWith(
-              fontSize: 12,
+              fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
           ),
           onTap: onTap ?? () {},
         ),
         Divider(
-          height: 1.3,
-          thickness: 2,
-          color: const Color(0xFFF3F3F3),
-          // Light gray divider
-          indent: 0,
+          height: 1,
+          thickness: 1,
+          color: Color(AppColors.divider),
+          // Starts under the text, not under the icon box.
+          indent: AppSpacing.page + AppSizes.moreIconBox + AppSpacing.md,
           endIndent: 0,
         ),
       ],

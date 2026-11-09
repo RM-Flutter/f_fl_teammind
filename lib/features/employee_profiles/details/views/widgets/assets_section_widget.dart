@@ -1,3 +1,4 @@
+import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:app_test/core/services/app_toast.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
@@ -29,11 +30,9 @@ class AssetsSectionWidget extends StatelessWidget {
         employee?.empCustomData != null && employee!.empCustomData!.isNotEmpty;
 
     if (!hasAssets && !hasCustomData) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Text(AppStrings.noDataFounded.tr()),
-        ),
+      return NoExistingPlaceholderScreen(
+        compact: true,
+        title: AppStrings.noDataFounded.tr(),
       );
     }
 
@@ -41,7 +40,6 @@ class AssetsSectionWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          gapH12,
           if (hasAssets) ...[
             _SectionLabel(AppStrings.assets.tr()),
             gapH12,

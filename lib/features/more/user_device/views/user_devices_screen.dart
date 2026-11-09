@@ -6,7 +6,6 @@ import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/features/more/user_device/controllers/user_device_controller.dart';
@@ -16,6 +15,7 @@ import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
 import 'package:app_test/core/widgets/app_card.widget.dart';
 import 'package:app_test/core/widgets/app_status_badge.widget.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/app_shimmer_list.dart';
 
 class UserDeviceScreen extends StatefulWidget {
   const UserDeviceScreen({super.key});
@@ -93,21 +93,7 @@ class _UserDeviceScreenState extends State<UserDeviceScreen> {
                   scrollDirection: Axis.vertical,
                   itemBuilder: (context, index) {
                     if (value.isLoading) {
-                      return Shimmer.fromColors(
-                        baseColor: Colors.grey[300]!,
-                        highlightColor: Colors.grey[100]!,
-                        child: Container(
-                          margin:
-                              const EdgeInsets.symmetric(vertical: AppSizes.s4),
-                          padding: const EdgeInsetsDirectional.symmetric(
-                              horizontal: AppSizes.s15, vertical: AppSizes.s12),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(AppRadius.md),
-                          ),
-                          height: 70,
-                        ),
-                      );
+                      return const AppShimmerCard();
                     }
                     final device = value.devices[index];
                     final isLaptop = device['device_type'] == "PC/Laptop";

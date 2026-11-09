@@ -17,6 +17,7 @@ import 'package:app_test/features/complaints/views/complains_details/widgets/req
 import 'package:app_test/features/complaints/views/complains_details/widgets/request_details_loading_screen.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:app_test/core/widgets/gradient_bg_image.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 
 class ComplainDetailsScreen extends StatefulWidget {
@@ -83,7 +84,7 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
              getOneRequestModel: value.getOneRequestModel,
             ),
             SizedBox(height: 20,),
-            Padding(padding: EdgeInsets.symmetric(horizontal: 15),
+            Padding(padding: AppSpacing.pagePadding,
              child: Center(
               child: ConstrainedBox(
                constraints: const BoxConstraints(

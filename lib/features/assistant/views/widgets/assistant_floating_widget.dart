@@ -72,12 +72,9 @@ class AssistantFloatingWidget extends StatelessWidget {
         ],
       ),
       child: DecoratedBox(
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black26, blurRadius: 24, offset: Offset(0, -4))
-          ],
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
+          boxShadow: AppShadows.raised,
         ),
         child: Material(
           color: Colors.white,

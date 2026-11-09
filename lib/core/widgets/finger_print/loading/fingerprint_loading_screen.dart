@@ -20,14 +20,7 @@ class FingerprintLoadingScreenWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(AppRadius.sm),
                 color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color:
-                        Color(AppColors.buttons).withOpacity(0.2),
-                    offset: const Offset(0, 0),
-                    blurRadius: 2.5,
-                  ),
-                ],
+                boxShadow: AppShadows.card,
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,

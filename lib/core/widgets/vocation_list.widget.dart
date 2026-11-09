@@ -5,7 +5,6 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_sizes.dart';
@@ -92,7 +91,7 @@ class VacationListWidget extends StatelessWidget {
 
       vacationWidgets = vacationBalance
           .map((entry) => Padding(
-        padding: EdgeInsets.only(right: paddingBetweenVocations!),
+        padding: EdgeInsetsDirectional.only(end: paddingBetweenVocations!),
         child: VacationCard(
           vocation: entry,
           tap: tap,
@@ -106,7 +105,7 @@ class VacationListWidget extends StatelessWidget {
     vacationWidgets.insert(
       0,
       Padding(
-          padding: EdgeInsets.only(right: paddingBetweenVocations!),
+          padding: EdgeInsetsDirectional.only(end: paddingBetweenVocations!),
           child: InkWell(
             onTap: () async => await context.pushNamed(
                 AppRoutes.requestsCalendar.name,
@@ -120,24 +119,38 @@ class VacationListWidget extends StatelessWidget {
               height: 128,
               padding: const EdgeInsets.symmetric(vertical: AppSizes.s10, horizontal: AppSizes.s6),
               decoration: BoxDecoration(
-                color: Color(AppColors.buttons),
+                // Glass tile: reads as a shortcut on the navy header, not as one more balance card.
+                color: Colors.white.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(AppRadius.md),
+                border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.35), width: 1),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SvgPicture.asset("assets/images/svg/calendar.svg"),
+                  Container(
+                    width: 44,
+                    height: 44,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(AppColors.buttons),
+                    ),
+                    alignment: Alignment.center,
+                    child: const Icon(Icons.calendar_month_rounded,
+                        color: Colors.white, size: 22),
+                  ),
                   gapH8,
                   Text(
-                    AppStrings.viewOnCalendar.tr().toUpperCase(),
+                    AppStrings.viewOnCalendar.tr(),
                     textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w900,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
                       color: Colors.white,
-                      height: 1.0,
-                      letterSpacing: 0.5,
+                      height: 1.2,
                     ),
                   ),
                 ],
@@ -151,12 +164,15 @@ class VacationListWidget extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: AppSizes.s32),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
+        // Page padding lives on the scroll view: the first card lines up with the page edge
+        // and the list still scrolls to the screen edge (layout rule 1).
+        padding: AppSpacing.pagePadding,
         child: Row(
           children: gCache == null
               ? List.generate(
               3,
                   (index) => Padding(
-                  padding: EdgeInsets.only(right: paddingBetweenVocations!),
+                  padding: EdgeInsetsDirectional.only(end: paddingBetweenVocations!),
                   child: ShimmerAnimatedLoading(
                     width: (LayoutService.getWidth(context) -
                         (AppSizes.s32 +
@@ -164,6 +180,7 @@ class VacationListWidget extends StatelessWidget {
                                 3))) /
                         3,
                     height: 110,
+                    circularRaduis: AppRadius.md,
                   )))
               : (animateEntrance
                   ? [

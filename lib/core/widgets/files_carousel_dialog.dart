@@ -83,13 +83,7 @@ void showFilesCarouselDialog({
                               width: isCurrent ? 2 : 1,
                             ),
                             boxShadow: isCurrent
-                                ? [
-                                    BoxShadow(
-                                      color: mainColor.withOpacity(0.25),
-                                      blurRadius: 16,
-                                      offset: const Offset(0, 6),
-                                    ),
-                                  ]
+                                ? AppShadows.overlay
                                 : null,
                           ),
                           child: Column(

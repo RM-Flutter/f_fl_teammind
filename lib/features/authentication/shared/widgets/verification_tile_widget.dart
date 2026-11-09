@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_design.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
@@ -54,7 +55,7 @@ class VerificationTileWidget extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppSizes.s10.r),
       ),
-      elevation: 5,
+      elevation: AppElevation.raised,
       child: ListTile(
           leading: Icon(
             iconData,

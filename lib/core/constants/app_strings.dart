@@ -566,6 +566,7 @@ abstract class AppStrings {
   static const allCompanyRequests = 'allCompanyRequests';
   static const thereIsNoRequests = 'thereIsNoRequests';
   static const viewTeamRequestsOnCalendar = 'viewTeamRequestsOnCalendar';
+  static const calendarShortcutHint = 'calendarShortcutHint';
   static const requestsC = 'requestsC';
   static const summaryReports = 'summaryReports';
   static const newRequest = 'newRequest';

@@ -104,10 +104,10 @@ class _PersonalProfileHeaderWidgetState
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             decoration: BoxDecoration(
-              color: Color(AppColors.warningYellow).withOpacity(0.12),
+              color: AppColors.statusTones(Color(AppColors.warningYellow)).tint,
               borderRadius: BorderRadius.circular(AppRadius.md),
               border: Border.all(
-                color: Color(AppColors.warningYellow).withOpacity(0.35),
+                color: AppColors.statusTones(Color(AppColors.warningYellow)).border,
               ),
             ),
             child: Row(

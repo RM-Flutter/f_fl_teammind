@@ -1,84 +1,26 @@
-import 'package:app_test/core/services/layout_service.dart';
 import 'package:flutter/material.dart';
-import '../constants/app_sizes.dart';
-import '../utils/custom_shimmer_loading/shimmer_animated_loading.dart';
-import 'package:app_test/core/constants/app_design.dart';
 
+import '../utils/custom_shimmer_loading/app_shimmer_list.dart';
+
+/// Loading state of a list page. Kept for the existing call sites; it is just an
+/// [AppShimmerList] (cards shaped like [AppCard.listItem]) so every list loads the same way.
+///
+/// [height] and [reverse] are ignored now (all placeholders share one shape) and only kept so
+/// old call sites still compile.
 class LoadingPageWidget extends StatelessWidget {
   final double? height;
   final bool? reverse;
-  const LoadingPageWidget({super.key, this.height, this.reverse});
+
+  /// Padding around the placeholders. Defaults to the page padding; pass [EdgeInsets.zero]
+  /// when the parent already pads the page.
+  final EdgeInsetsGeometry? padding;
+
+  const LoadingPageWidget({super.key, this.height, this.reverse, this.padding});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-        children: List.generate(
-            5,
-                (index) => Container(
-              height: height,
-              padding: const EdgeInsets.symmetric(
-                  vertical: AppSizes.s14, horizontal: AppSizes.s16),
-              margin: const EdgeInsets.only(bottom: AppSizes.s16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(AppRadius.sm),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 8,
-                    spreadRadius: 1,
-                  )
-                ],
-              ),
-              child: Row(
-                children: reverse == true
-                    ? [
-                  const ShimmerAnimatedLoading(
-                    width: AppSizes.s40,
-                    height: AppSizes.s40,
-                    circularRaduis: AppSizes.s40,
-                  ),
-                  gapW8,
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ShimmerAnimatedLoading(
-                        height: AppSizes.s18,
-                        width: LayoutService.getWidth(context) / 2,
-                      ),
-                      gapH4,
-                      ShimmerAnimatedLoading(
-                        height: AppSizes.s18,
-                        width: LayoutService.getWidth(context) / 2,
-                      ),
-                    ],
-                  ),
-                ]
-                    : [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ShimmerAnimatedLoading(
-                        height: AppSizes.s18,
-                        width: LayoutService.getWidth(context) / 2,
-                      ),
-                      gapH4,
-                      ShimmerAnimatedLoading(
-                        height: AppSizes.s18,
-                        width: LayoutService.getWidth(context) / 2,
-                      ),
-                    ],
-                  ),
-                  const Spacer(),
-                  const ShimmerAnimatedLoading(
-                    width: AppSizes.s40,
-                    height: AppSizes.s40,
-                    circularRaduis: AppSizes.s40,
-                  )
-                ],
-              ),
-            )));
+    return padding == null
+        ? const AppShimmerList()
+        : AppShimmerList(padding: padding!);
   }
 }

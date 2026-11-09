@@ -285,7 +285,7 @@ class _LiveGroupMapScreenState extends State<LiveGroupMapScreen> {
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.92),
                       borderRadius: BorderRadius.circular(AppRadius.sm),
-                      boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4)],
+                      boxShadow: AppShadows.raised,
                     ),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
@@ -437,13 +437,7 @@ class _EmployeeDetailsCardState extends State<_EmployeeDetailsCard> {
           borderRadius: BorderRadius.circular(AppRadius.md),
           side: BorderSide(color: widget.color.withOpacity(0.5), width: 1.5),
         ),
-        shadows: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        shadows: AppShadows.raised,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

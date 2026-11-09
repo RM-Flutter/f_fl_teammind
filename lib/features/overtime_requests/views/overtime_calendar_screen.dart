@@ -124,7 +124,7 @@ class OvertimeCalendarScreen extends StatelessWidget {
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: double.infinity),
                   child: Padding(
-                    padding: const EdgeInsets.all(12),
+                    padding: AppSpacing.pageAll,
                     child: Column(
                       children: [
                         SizedBox(

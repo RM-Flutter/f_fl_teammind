@@ -20,13 +20,7 @@ class ChargePhoneBottomBar extends StatelessWidget {
           decoration: BoxDecoration(
             color: const Color(0xffFFFFFF),
             borderRadius: BorderRadius.circular(AppRadius.xl),
-            boxShadow: [
-              BoxShadow(
-                  color: const Color(0xff000000).withOpacity(0.1),
-                  blurRadius: 11,
-                  spreadRadius: 0,
-                  offset: const Offset(0, -4))
-            ],
+            boxShadow: AppShadows.raised,
           ),
           padding: const EdgeInsets.all(16.0),
           child: (value.isPostPayLoading == false)?ButtonWidget(

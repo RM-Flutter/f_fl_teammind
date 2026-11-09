@@ -22,7 +22,9 @@ class DefaultDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(create: (context) => BlogProviderModel()..getOneBlog(context,type: type, id: id.toString()),
+    return ChangeNotifierProvider(
+      create: (context) => BlogProviderModel()
+        ..getOneBlog(context, type: type, id: id.toString()),
       child: Consumer<BlogProviderModel>(
         builder: (context, value, child) {
           return Scaffold(
@@ -32,141 +34,187 @@ class DefaultDetails extends StatelessWidget {
               child: Container(
                   width: 1.sw,
                   height: 1.sh,
-                  padding: EdgeInsets.symmetric(horizontal: AppSizes.s15),
-                  child: (value.getOneBlogModel != null)? SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          color: Colors.transparent,
-                          height: 90,
-                          width: double.infinity,
-                          alignment: Alignment.bottomCenter,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  padding: AppSpacing.pagePadding,
+                  child: (value.getOneBlogModel != null)
+                      ? SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              IconButton(
-                                icon: Icon(Icons.arrow_back, color: const Color(0xff224982), size: 24,),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
+                              Container(
+                                color: Colors.transparent,
+                                height: 90,
+                                width: double.infinity,
+                                alignment: Alignment.bottomCenter,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(
+                                        Icons.arrow_back,
+                                        color: const Color(0xff224982),
+                                        size: 24,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                    Text(
+                                      type == "rmnotifications"
+                                          ? AppStrings.notifications
+                                              .tr()
+                                              .toUpperCase()
+                                          : type.toString().tr().toUpperCase(),
+                                      style: AppStyles.heading(context)
+                                          .copyWith(
+                                              color: const Color(0xff224982),
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 16),
+                                    ),
+                                    IconButton(
+                                        icon: Icon(
+                                          Icons.arrow_back,
+                                          color: Colors.transparent,
+                                          size: 24,
+                                        ),
+                                        onPressed: () {}),
+                                  ],
+                                ),
                               ),
+                              gapH16,
+                              if (value.getOneBlogModel!.item!.mainThumbnail !=
+                                      null &&
+                                  value.getOneBlogModel!.item!.mainThumbnail!
+                                      .isNotEmpty)
+                                ClipRRect(
+                                  borderRadius:
+                                      BorderRadius.circular(AppRadius.xl),
+                                  child: CachedNetworkImage(
+                                    width: 1.sw,
+                                    height: 0.225.sh,
+                                    fit: BoxFit.cover,
+                                    imageUrl: value.getOneBlogModel!.item!
+                                            .mainThumbnail![0].file ??
+                                        "",
+                                    placeholder: (context, url) =>
+                                        const ShimmerAnimatedLoading(),
+                                    errorWidget: (context, url, error) => Icon(
+                                      Icons.image_not_supported_outlined,
+                                      size: AppSizes.s32,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              if (value.getOneBlogModel!.item!.mainThumbnail !=
+                                      null &&
+                                  value.getOneBlogModel!.item!.mainThumbnail!
+                                      .isNotEmpty)
+                                gapH24,
+                              Row(
+                                children: [
+                                  Text(
+                                    (value.getOneBlogModel!.item!.createdAt !=
+                                            null)
+                                        ? value
+                                            .getOneBlogModel!.item!.createdAt!
+                                        : "",
+                                    style:
+                                        AppStyles.c1Content(context).copyWith(
+                                      fontSize: AppSizes.s10,
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 20,
+                                  ),
+                                  if (value.getOneBlogModel!.item!.category
+                                          ?.title !=
+                                      null)
+                                    Row(
+                                      children: [
+                                        Icon(
+                                          Icons.category,
+                                          color: Colors.black,
+                                          size: 16,
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          value.getOneBlogModel!.item!.category!
+                                              .title!
+                                              .toUpperCase(),
+                                          style: AppStyles.c1Content(context)
+                                              .copyWith(
+                                            fontSize: AppSizes.s10,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    )
+                                ],
+                              ),
+                              gapH14,
                               Text(
-                                type == "rmnotifications" ? AppStrings.notifications.tr().toUpperCase() : type.toString().tr().toUpperCase(),
-                                style: AppStyles.heading(context).copyWith(color: const Color(0xff224982), fontWeight: FontWeight.bold, fontSize: 16),
+                                value.getOneBlogModel!.item!.title ?? "",
+                                style: AppStyles.heading(context).copyWith(
+                                    fontSize: AppSizes.s16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(AppColors.c1)),
                               ),
-                              IconButton(
-                                  icon: Icon(Icons.arrow_back, color: Colors.transparent, size: 24,),
-                                  onPressed: (){}
+                              gapH14,
+                              Html(
+                                  data: value.getOneBlogModel!.item!.content ??
+                                      "",
+                                  style: TextsStyles.htmlStyle),
+                            ],
+                          ),
+                        )
+                      : Shimmer.fromColors(
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                height: 90,
+                                color: Colors.grey,
+                              ),
+                              SizedBox(height: 16),
+                              Container(
+                                width: double.infinity,
+                                height: 0.225.sh,
+                                color: Colors.grey,
+                              ),
+                              SizedBox(height: 24),
+                              Container(
+                                height: 12,
+                                width: 150,
+                                color: Colors.grey,
+                              ),
+                              SizedBox(height: 14),
+                              Container(
+                                height: 16,
+                                width: double.infinity,
+                                color: Colors.grey,
+                              ),
+                              SizedBox(height: 14),
+                              Container(
+                                height: 12,
+                                width: double.infinity,
+                                color: Colors.grey,
+                              ),
+                              SizedBox(height: 12),
+                              Container(
+                                height: 12,
+                                width: double.infinity,
+                                color: Colors.grey,
                               ),
                             ],
                           ),
-                        ),
-                        gapH16,
-                        if(value.getOneBlogModel!.item!.mainThumbnail != null && value.getOneBlogModel!.item!.mainThumbnail!.isNotEmpty ) ClipRRect(
-                          borderRadius: BorderRadius.circular(AppRadius.xl),
-                          child: CachedNetworkImage(
-                            width: 1.sw,
-                            height: 0.225.sh,
-                            fit: BoxFit.cover,
-                            imageUrl: value.getOneBlogModel!.item!.mainThumbnail![0].file ?? "",
-                            placeholder: (context, url) =>
-                            const ShimmerAnimatedLoading(),
-                            errorWidget: (context, url, error) => Icon(
-                              Icons.image_not_supported_outlined,
-                              size: AppSizes.s32,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                        if(value.getOneBlogModel!.item!.mainThumbnail != null && value.getOneBlogModel!.item!.mainThumbnail!.isNotEmpty)   gapH24,
-                        Row(
-                          children: [
-                            Text(
-                              (value.getOneBlogModel!.item!.createdAt != null )?value.getOneBlogModel!.item!.createdAt! : "",
-                              style: AppStyles.c1Content(context).copyWith(
-                                  fontSize: AppSizes.s10,
-                                  fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                            SizedBox(width: 20,),
-
-                                if(value.getOneBlogModel!.item!.category?.title != null) Row(
-                              children: [
-                                Icon(Icons.category, color: Colors.black,
-                                  size: 16,),
-                                SizedBox(width: 5,),
-                                Text(
-                                  value.getOneBlogModel!.item!.category!.title!
-                                      .toUpperCase(),
-                                  style: AppStyles.c1Content(context).copyWith(
-                                    fontSize: AppSizes.s10,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                                )
-                              ],
-                            ),
-                        gapH14,
-                        Text(
-                          value.getOneBlogModel!.item!.title ?? "",
-                          style: AppStyles.heading(context).copyWith(
-                              fontSize: AppSizes.s16,
-                              fontWeight: FontWeight.bold,
-                              color: Color(AppColors.c1)),
-                        ),
-                        gapH14,
-                        Html(
-                            data:   value.getOneBlogModel!.item!.content ?? "",
-                            style: TextsStyles.htmlStyle),
-                      ],
-                    ),
-                  ): Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!,
-                    highlightColor: Colors.grey[100]!,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: 90,
-                          color: Colors.grey,
-                        ),
-                        SizedBox(height: 16),
-                        Container(
-                          width: double.infinity,
-                          height: 0.225.sh,
-                          color: Colors.grey,
-                        ),
-                        SizedBox(height: 24),
-                        Container(
-                          height: 12,
-                          width: 150,
-                          color: Colors.grey,
-                        ),
-                        SizedBox(height: 14),
-                        Container(
-                          height: 16,
-                          width: double.infinity,
-                          color: Colors.grey,
-                        ),
-                        SizedBox(height: 14),
-                        Container(
-                          height: 12,
-                          width: double.infinity,
-                          color: Colors.grey,
-                        ),
-                        SizedBox(height: 12),
-                        Container(
-                          height: 12,
-                          width: double.infinity,
-                          color: Colors.grey,
-                        ),
-                      ],
-                    ),
-                  )),
+                        )),
             ),
           );
         },

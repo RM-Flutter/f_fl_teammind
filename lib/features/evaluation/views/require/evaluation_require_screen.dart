@@ -86,7 +86,7 @@ class _EvaluationRequireScreenState extends State<EvaluationRequireScreen> {
                     if(viewModel.evaluations.isEmpty == true) const SizedBox(height: 20),
                     Consumer<EvaluationController>(
                         builder: (context, viewModel, child) => viewModel.isLoading
-                            ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget()
+                            ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget(padding: EdgeInsets.zero)
                             : viewModel.evaluations.isEmpty == true
                             ? NoExistingPlaceholderScreen(
                             height: LayoutService.getHeight(context) * 0.6,

@@ -224,12 +224,12 @@ class RequestCard extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.all(6),
                 decoration: BoxDecoration(
-                  color: Color(AppColors.warningYellow).withOpacity(0.12),
+                  color: AppColors.statusTones(Color(AppColors.warningYellow)).tint,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   Icons.people_alt_rounded,
-                  color: Color(AppColors.warningYellow),
+                  color: AppColors.statusTones(Color(AppColors.warningYellow)).text,
                   size: 18,
                 ),
               ),

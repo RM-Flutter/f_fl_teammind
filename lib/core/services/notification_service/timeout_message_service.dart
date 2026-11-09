@@ -171,7 +171,7 @@ class TimeoutMessageDialogState extends State<TimeoutMessageDialog>
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(AppRadius.md)),
                 color: Color(AppColors.buttons),
-                elevation: 10.0,
+                elevation: AppElevation.overlay,
                 child: Padding(
                   padding: const EdgeInsets.all(5.0),
                   child: Column(

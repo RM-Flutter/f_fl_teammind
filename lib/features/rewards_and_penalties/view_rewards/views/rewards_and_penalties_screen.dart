@@ -23,6 +23,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../controllers/rewards_and_penalties_controller.dart';
 import 'package:app_test/features/more/notifications/views/widgets/switch_row_notification.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 
 class RewardsAndPenaltiesScreen extends StatefulWidget {
@@ -128,7 +129,7 @@ class _RewardsAndPenaltiesScreenState extends State<RewardsAndPenaltiesScreen> {
                 maxWidth: double.infinity,
               ),
               child: Padding(
-                padding: EdgeInsets.all(AppSizes.s12),
+                padding: EdgeInsets.zero,
                 child: RefreshIndicator.adaptive(
                   onRefresh: () async {
                     String? targetEmpId = widget.empId;
@@ -145,10 +146,11 @@ class _RewardsAndPenaltiesScreenState extends State<RewardsAndPenaltiesScreen> {
                   child: SingleChildScrollView(
                     physics: const AlwaysScrollableScrollPhysics(),
                     controller: _scrollController,
+                    padding: AppSpacing.listPadding,
                     child: Consumer<RewardsAndPenaltiesViewModel>(
                         builder: (context, viewModel, child) {
                           if (viewModel.isLoading) {
-                            return const PayrollsAndPenaltiesRewardsLoadingScreensWidget();
+                            return const PayrollsAndPenaltiesRewardsLoadingScreensWidget(padding: EdgeInsets.zero);
                           }
                           
                           final bool isManager = gCache != null && 
@@ -159,7 +161,6 @@ class _RewardsAndPenaltiesScreenState extends State<RewardsAndPenaltiesScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               if (isManager) ...[
-                                const SizedBox(height: 10),
                                 SwitchRowNotification(
                                   value: viewModel.isForTeam,
                                   leftText: AppStrings.myRewardsAndPenalties.tr(),
@@ -168,7 +169,7 @@ class _RewardsAndPenaltiesScreenState extends State<RewardsAndPenaltiesScreen> {
                                     viewModel.toggleTeamView(val, context);
                                   },
                                 ),
-                                const SizedBox(height: 20),
+                                const SizedBox(height: AppSpacing.md),
                               ],
                               
                               if (!viewModel.isForTeam) ...[

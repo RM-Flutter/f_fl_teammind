@@ -2,6 +2,7 @@ import 'package:app_test/core/utils/app_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart' as locale;
 import 'package:flutter/material.dart';
+import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import '../../../../../core/constants/app_colors.dart';
@@ -29,40 +30,44 @@ class SwitchRowNotification extends StatelessWidget {
         ? AppStyles.blackContent(context).copyWith(fontSize: 12)
         : AppStyles.blackContent(context).copyWith(fontSize: 12);
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Expanded(
-          child: Text(
-            leftText ?? AppStrings.allNotifications.tr(),
-            style: textStyle,
-            textAlign: TextAlign.end,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
+    // Every header row owns its 12 above (layout rule 8): app bar -> row, row -> row, row -> list.
+    return Padding(
+      padding: const EdgeInsets.only(top: AppSpacing.md),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Text(
+              leftText ?? AppStrings.allNotifications.tr(),
+              style: textStyle,
+              textAlign: TextAlign.end,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
-        ),
-        SizedBox(width: 8),
-        CustomSwitchButton(
-          width: 60,
-          height: 30,
-          padding: 4,
-          circleSize: 22,
-          value: value,
-          activeColor:  Color(AppColors.buttons),
-          inactiveColor: const Color(AppColors.navyBlue),
-          onChanged: onChanged,
-        ),
-        SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            rightText ?? AppStrings.myDepartment.tr(),
-            style: textStyle,
-            textAlign: TextAlign.start,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
+          SizedBox(width: 8),
+          CustomSwitchButton(
+            width: 60,
+            height: 30,
+            padding: 4,
+            circleSize: 22,
+            value: value,
+            activeColor: Color(AppColors.buttons),
+            inactiveColor: const Color(AppColors.navyBlue),
+            onChanged: onChanged,
           ),
-        ),
-      ],
+          SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              rightText ?? AppStrings.myDepartment.tr(),
+              style: textStyle,
+              textAlign: TextAlign.start,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

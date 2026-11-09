@@ -168,14 +168,13 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                               maxWidth: double.infinity
                           ),
                           child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: AppSizes.s8,
-                                vertical: AppSizes.s12),
+                            // Same 16 page edge as every other screen; tabs and content line up.
+                            padding: const EdgeInsets.fromLTRB(
+                                AppSpacing.page, AppSpacing.md, AppSpacing.page, 0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                  margin: EdgeInsets.symmetric(horizontal: 4),
                                   decoration: BoxDecoration(
                                     color:  Color(AppColors.secondaryButton),
                                     borderRadius: BorderRadius.circular(AppRadius.xl),
@@ -204,9 +203,8 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                 ),
                                 Expanded(
                                   child: Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: AppSizes.s8,
-                                        vertical: AppSizes.s8),
+                                    // 12 under the tab bar, the same step as inside every section.
+                                    padding: const EdgeInsets.only(top: AppSpacing.md),
                                     child: Builder(
                                       builder: (context) {
                                         if (availableTabs.isEmpty) return const SizedBox.shrink();

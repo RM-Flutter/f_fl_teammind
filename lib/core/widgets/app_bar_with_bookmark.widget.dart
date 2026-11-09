@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_sizes.dart';
@@ -69,7 +70,15 @@ class AppBarWithBookmark extends StatelessWidget implements PreferredSizeWidget 
   final bool showBookmark;
   final bool automaticallyImplyLeading;
 
+  /// Optional shape (e.g. rounded bottom corners) and background layer for branded headers.
+  final ShapeBorder? shape;
+  final Widget? flexibleSpace;
+  final SystemUiOverlayStyle? systemOverlayStyle;
+
   const AppBarWithBookmark({
+    this.shape,
+    this.flexibleSpace,
+    this.systemOverlayStyle,
     super.key,
     this.title,
     this.titleWidget,
@@ -165,6 +174,9 @@ class AppBarWithBookmark extends StatelessWidget implements PreferredSizeWidget 
       elevation: elevation,
       bottom: bottom,
       surfaceTintColor: surfaceTintColor ?? Colors.transparent,
+      shape: shape,
+      flexibleSpace: flexibleSpace,
+      systemOverlayStyle: systemOverlayStyle,
       toolbarHeight: bottom != null ? kToolbarHeight : null,
       actionsIconTheme: const IconThemeData(size: 24),
     );

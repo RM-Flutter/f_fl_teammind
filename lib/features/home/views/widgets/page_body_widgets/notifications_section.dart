@@ -16,6 +16,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import 'package:app_test/features/more/notifications/views/notification_screen.dart';
+import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/widgets/app_section_header.widget.dart';
 
 class NotificationsSection extends StatelessWidget {
   final List<NotificationModel> notifications;
@@ -37,61 +39,42 @@ class NotificationsSection extends StatelessWidget {
         constraints: const BoxConstraints(maxWidth: double.infinity),
         child: Container(
           alignment: Alignment.topCenter,
-          padding: EdgeInsets.symmetric(horizontal: AppSizes.s12, vertical: AppSizes.s20),
-          // color: isFreeService ? Color(AppColors.secondaryButton) : Colors.transparent,
-          color:  Color(AppColors.secondaryButton),
+          // Full-bleed dark block; content keeps the page padding so it lines up (rule 2).
+          padding: AppSpacing.sectionPadding,
+          color: Color(AppColors.secondaryButton),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(AppStrings.myNotifications.tr(),
-                      style: AppStyles.titleTextContent(context).copyWith(
-                        fontSize: 16, 
-                        fontWeight: FontWeight.w700,
-                        // color: isFreeService ? const Color(AppColors.pink) : null,
-                        color: isFreeService ? const Color(AppColors.pink) : Colors.white,
-                        letterSpacing: kIsWeb ? 0.3 : null,
-                      )),
-                  GestureDetector(
-                    onTap: () {
-                      if (isFreeService) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const NotificationScreen(true),
-                          ),
-                        );
-                      } else {
-                        Provider.of<MainLayoutController>(context, listen: false)
-                            .onItemTapped(
-                          context: context,
-                          page: NavbarPages.page,
-                        );
-                      }
-                    },
-                    child: Text(
-                      AppStrings.viewAll.tr(),
-                      style: AppStyles.titleTextContent(context).copyWith(
-                        fontSize: 12,
-                        // color: isFreeService ? Colors.white.withValues(alpha: 0.8) : null,
-                        color:  Colors.white.withValues(alpha: 0.8),
+              AppSectionHeader(
+                title: AppStrings.myNotifications.tr(),
+                color: isFreeService ? const Color(AppColors.pink) : Colors.white,
+                actionColor: Colors.white.withValues(alpha: 0.8),
+                onViewAll: () {
+                  if (isFreeService) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const NotificationScreen(true),
                       ),
-                    ),
-                  ),
-                ],
+                    );
+                  } else {
+                    Provider.of<MainLayoutController>(context, listen: false)
+                        .onItemTapped(
+                      context: context,
+                      page: NavbarPages.page,
+                    );
+                  }
+                },
               ),
-              SizedBox(height: 15,),
-              ListView.separated(
-                padding: EdgeInsets.zero,
+              const SizedBox(height: AppSpacing.sectionHeaderGap),
+              // NotificationCard already adds AppSpacing.cardGap under itself.
+              ListView.builder(
+                  padding: EdgeInsets.zero,
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
-                  reverse: false,
                   itemBuilder: (context, index) => NotificationCard(
                     notification: unreadNotifications[index],
                   ),
-                  separatorBuilder: (context, index) => SizedBox(height: 8,),
                   itemCount: (unreadNotifications.length > 8)? 8 : unreadNotifications.length)
             ],
           ),

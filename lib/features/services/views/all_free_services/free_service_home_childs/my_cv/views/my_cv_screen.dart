@@ -1,3 +1,4 @@
+import 'package:app_test/core/widgets/app_fab.widget.dart';
 import 'dart:convert';
 
 import 'package:app_test/core/constants/app_colors.dart';
@@ -125,15 +126,11 @@ class _MyCVScreenState extends State<MyCVScreen> with SingleTickerProviderStateM
             final bool hasRealCV = viewModel.cvData?.jobInfo?.jobId != null || 
                                    (viewModel.cvData?.education?.isNotEmpty ?? false) || 
                                    (viewModel.cvData?.jobInfo?.experiences?.isNotEmpty ?? false);
-            return FloatingActionButton.extended(
+            return AppFab(
+              heroTag: 'my_cv_fab',
               onPressed: _navigateToEdit,
-              backgroundColor: Color(AppColors.buttons),
-              shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
-              icon: Icon(hasRealCV ? Icons.edit : Icons.add, color: Colors.white, size: 20),
-              label: Text(
-                hasRealCV ? AppStrings.edit.tr() : AppStrings.createCV.tr(),
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 13),
-              ),
+              tooltip: hasRealCV ? AppStrings.edit.tr() : AppStrings.createCV.tr(),
+              icon: hasRealCV ? Icons.edit_outlined : null,
             );
           },
         ),

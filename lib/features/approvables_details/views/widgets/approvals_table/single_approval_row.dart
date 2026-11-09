@@ -33,7 +33,7 @@ class SingleApprovalRow extends StatelessWidget {
       case 'waiting':
       case 'waiting_seen':
       case 'pending':
-        return Colors.orange;
+        return Color(AppColors.warningYellow);
       default:
         return Colors.blue;
     }

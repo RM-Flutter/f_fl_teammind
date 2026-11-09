@@ -133,7 +133,6 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
               children: [
                 // every employee can open "Other" (other departments / all company); "Team" is managers only
                 ...[
-                  SizedBox(height: 10),
                   SwitchRowNotification(
                     value: controller.isIncomingView,
                     leftText: 'my_requests'.tr(),
@@ -142,7 +141,6 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
                       controller.toggleIncomingView(val, context);
                     },
                   ),
-                  SizedBox(height: 10),
                 ],
                 if (controller.isIncomingView) ...[
                   _ScopeSelectorRow(
@@ -151,7 +149,6 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
                     showTeam: RequestScopeHelper.canSeeTeam,
                     onSelected: (scope) => controller.setIncomingScope(scope, context),
                   ),
-                  SizedBox(height: 10),
                 ],
                 ActiveFiltersRowWidget(
                   empName: controller.filterEmpName,
@@ -234,7 +231,7 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
           child: ListView.builder(
             controller: _scrollController,
             clipBehavior: Clip.none,
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 80),
+            padding: AppSpacing.listPadding,
             physics: const AlwaysScrollableScrollPhysics(),
             itemCount: requests.length + (isIncoming ? (controller.incomingIsLoadingMore ? 1 : 0) : (controller.personalIsLoadingMore ? 1 : 0)),
               itemBuilder: (context, index) {
@@ -320,7 +317,7 @@ class _ScopeSelectorRow extends StatelessWidget {
         },
     ];
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.page, AppSpacing.md, AppSpacing.page, 0),
       child: Center(
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,

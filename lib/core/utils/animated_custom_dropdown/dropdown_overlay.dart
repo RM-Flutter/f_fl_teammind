@@ -184,13 +184,7 @@ class _DropdownOverlayState extends State<_DropdownOverlay> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: borderRadius,
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: 24.0,
-                      color: Colors.black.withOpacity(.08),
-                      offset: _overlayShadowOffset,
-                    ),
-                  ],
+                  boxShadow: AppShadows.overlay,
                 ),
                 child: Material(
                   color: Colors.transparent,

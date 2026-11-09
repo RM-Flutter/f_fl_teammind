@@ -214,7 +214,7 @@ class _AddShiftChangeRequestScreenState
 
           return SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page, vertical: AppSpacing.lg),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -315,13 +315,7 @@ class _AddShiftChangeRequestScreenState
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(AppRadius.md),
                     border: Border.all(color: Colors.grey.shade200),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.03),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
+                    boxShadow: AppShadows.card,
                   ),
                   child: TextField(
                     controller: _reasonController,
@@ -512,13 +506,7 @@ class _AddShiftChangeRequestScreenState
                       : Colors.grey.shade200,
                   width: isSelected ? 1.8 : 1.0,
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.03),
-                    blurRadius: 8,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
+                boxShadow: AppShadows.card,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

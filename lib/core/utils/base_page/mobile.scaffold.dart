@@ -1,4 +1,6 @@
+import 'package:app_test/core/widgets/app_content_width.widget.dart';
 import 'mobile_header.dart';
+import '../../widgets/hide_on_scroll_fab.widget.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_animated/auto_animated.dart' as animation;
@@ -41,6 +43,9 @@ class CoreMobileScaffold extends StatelessWidget {
   final String? restorationId;
   final EdgeInsets? padding;
 
+  /// Hide [floatingActionButton] smoothly while scrolling down (layout rule 6).
+  final bool hideFabOnScroll;
+
   const CoreMobileScaffold({
     super.key,
     this.padding,
@@ -77,6 +82,7 @@ class CoreMobileScaffold extends StatelessWidget {
     this.drawerEdgeDragWidth,
     this.endDrawerEnableOpenDragGesture = true,
     this.restorationId,
+    this.hideFabOnScroll = true,
   }) : assert(
             body != null ||
                 children != null ||
@@ -86,8 +92,10 @@ class CoreMobileScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: floatingActionButton,
+    return HideOnScrollFabHost(
+      enabled: hideFabOnScroll,
+      builder: (context, wrapFab) => Scaffold(
+      floatingActionButton: wrapFab(floatingActionButton),
       backgroundColor: backgroundColor,
       key: key,
       appBar: appBar,
@@ -112,9 +120,12 @@ class CoreMobileScaffold extends StatelessWidget {
       drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
       endDrawerEnableOpenDragGesture: endDrawerEnableOpenDragGesture,
       restorationId: restorationId,
-      body: Padding(
-          padding: padding ?? const EdgeInsets.all(0.0),
-          child: body != null && bodyWithoutScroll ? body : getChild()),
+      body: AppContentWidth(
+        child: Padding(
+            padding: padding ?? const EdgeInsets.all(0.0),
+            child: body != null && bodyWithoutScroll ? body : getChild()),
+      ),
+      ),
     );
   }
 

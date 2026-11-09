@@ -112,14 +112,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                           width: 1,
                         ),
                       ),
-                      shadows: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 8,
-                          offset: const Offset(0, 4),
-                          spreadRadius: 0,
-                        )
-                      ],
+                      shadows: AppShadows.raised,
                     ),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,

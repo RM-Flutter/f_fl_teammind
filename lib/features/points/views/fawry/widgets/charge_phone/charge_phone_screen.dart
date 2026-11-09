@@ -152,13 +152,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(AppRadius.xl),
                               color: Color(0xffFFFFFF),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color(0xffC9CFD2).withOpacity(0.5),
-                                  blurRadius: AppSizes.s5,
-                                  spreadRadius: 1,
-                                )
-                              ],
+                              boxShadow: AppShadows.card,
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -357,13 +351,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(AppRadius.xl),
                               color: Color(0xffFFFFFF),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color(0xffC9CFD2).withOpacity(0.5),
-                                  blurRadius: AppSizes.s5,
-                                  spreadRadius: 1,
-                                )
-                              ],
+                              boxShadow: AppShadows.card,
                             ),
                             child: Column(
                               children: [

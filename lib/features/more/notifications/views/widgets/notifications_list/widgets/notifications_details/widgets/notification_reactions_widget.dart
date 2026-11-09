@@ -74,13 +74,7 @@ class _NotificationReactionsWidgetState
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(AppRadius.xl),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
+                boxShadow: AppShadows.none,
                 border: Border.all(color: Colors.grey.shade200),
               ),
               child: FittedBox(

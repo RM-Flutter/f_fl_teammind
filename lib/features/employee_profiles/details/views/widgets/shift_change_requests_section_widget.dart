@@ -1,10 +1,10 @@
+import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'dart:convert';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/widgets/approvable_card_widget.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/features/employee_profiles/shared/models/employee_profile_model.dart';
@@ -30,14 +30,9 @@ class ShiftChangeRequestsSectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (requests == null || requests!.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Text(
-            AppStrings.noDataFounded.tr(),
-            style: AppStyles.greyContent(context),
-          ),
-        ),
+      return NoExistingPlaceholderScreen(
+        compact: true,
+        title: AppStrings.noDataFounded.tr(),
       );
     }
 
@@ -46,7 +41,6 @@ class ShiftChangeRequestsSectionWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          gapH12,
           ListView.separated(
             reverse: false,
             shrinkWrap: true,

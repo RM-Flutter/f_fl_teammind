@@ -23,10 +23,11 @@ import 'package:app_test/features/more/notifications/views/widgets/notifications
 import 'package:app_test/features/more/notifications/views/widgets/switch_row_notification.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../../../../core/utils/gradient_bg_image.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/widgets/hide_on_scroll_fab.widget.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/app_shimmer_list.dart';
 
 class NotificationScreen extends StatefulWidget {
   final bool viewArrow;
@@ -100,14 +101,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
           as Map<String, dynamic>; // Convert String back to JSON
           UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
         }
-        return Scaffold(
+        return HideOnScrollFabHost(builder: (context, wrapFab) => Scaffold(
           backgroundColor: Color(AppColors.background),
           appBar: AppBarWithBookmark(
             surfaceTintColor: Colors.transparent,
             title: AppStrings.notifications.tr(),
             routeName: AppRoutes.notifications.name,
           ),
-          floatingActionButton: (gCache['is_teamleader_in'].isNotEmpty ||
+          floatingActionButton: wrapFab((gCache['is_teamleader_in'].isNotEmpty ||
               gCache['is_manager_in'].isNotEmpty)?Container(
             padding: EdgeInsets.symmetric(
                 horizontal: LocalizationService.isArabic(context: context)
@@ -133,7 +134,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 ),
               ),
             ),
-          ) : const SizedBox.shrink(),
+          ) : const SizedBox.shrink()),
           body: RefreshIndicator.adaptive(
             onRefresh: ()async{
               setState(() {
@@ -163,7 +164,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                         );
                       },
                     ),
-                    SizedBox(height: 25),
+                    const SizedBox(height: AppSpacing.md),
                     ListView.builder(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       clipBehavior: Clip.none,
@@ -175,19 +176,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           : notificationProviderModel.notifications.length,
                       itemBuilder: (context, index) {
                         if (notificationProviderModel.isGetNotificationLoading && notificationProviderModel.currentPage == 1) {
-                          return Shimmer.fromColors(
-                            baseColor: Colors.grey[300]!,
-                            highlightColor: Colors.grey[100]!,
-                            child: Container(
-                              margin: EdgeInsets.symmetric(vertical: AppSizes.s12),
-                              padding: EdgeInsetsDirectional.symmetric(horizontal: AppSizes.s15, vertical: AppSizes.s12),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(AppRadius.md),
-                              ),
-                              height: 100,
-                            ),
-                          );
+                          return const Padding(padding: EdgeInsets.only(bottom: AppSpacing.cardGap), child: AppShimmerCard());
                         } else {
                           return PainterNotificationListViewItem(
                             notifications: notificationProviderModel.notifications,
@@ -197,7 +186,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       },
                     ),
                     if(!notificationProviderModel.isGetNotificationLoading && notificationProviderModel.notifications.isEmpty) Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      padding: AppSpacing.pagePadding,
                       child:  NoExistingPlaceholderScreen(
                           height: LayoutService.getHeight(context) *
                               0.6,
@@ -249,7 +238,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               ),
             ),
           ),
-        );
+        ));
       },
     );
   }

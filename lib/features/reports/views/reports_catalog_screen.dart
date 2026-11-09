@@ -1,3 +1,4 @@
+import 'package:app_test/core/widgets/app_adaptive_wrap.widget.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/widgets/template_page.widget.dart';
@@ -79,14 +80,14 @@ class ReportsCatalogScreen extends StatelessWidget {
       children: [
         if (flutterReports.isNotEmpty) ...[
           _buildSectionLabel(context, 'mobile_reports'.tr(), Icons.phone_android_outlined),
-          const SizedBox(height: 12),
-          ...flutterReports.map((r) => _buildReportItem(context, r)),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSpacing.sectionHeaderGap),
+          AppAdaptiveWrap(children: flutterReports.map((r) => _buildReportItem(context, r)).toList()),
+          const SizedBox(height: AppSpacing.section),
         ],
         if (webviewReports.isNotEmpty) ...[
           _buildSectionLabel(context, 'browser_reports'.tr(), Icons.open_in_browser_outlined),
-          const SizedBox(height: 12),
-          ...webviewReports.map((r) => _buildReportItem(context, r)),
+          const SizedBox(height: AppSpacing.sectionHeaderGap),
+          AppAdaptiveWrap(children: webviewReports.map((r) => _buildReportItem(context, r)).toList()),
         ],
       ],
     );
@@ -111,9 +112,7 @@ class ReportsCatalogScreen extends StatelessWidget {
   Widget _buildReportItem(BuildContext context, ReportCatalogModel report) {
     final bool isFlutter = report.viewType == 'flutter';
     final Color accentColor = Color(AppColors.buttons);
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.cardGap),
-      child: AppCard(
+    return AppCard(
         onTap: () {
           Navigator.push(
             context,
@@ -143,11 +142,10 @@ class ReportsCatalogScreen extends StatelessWidget {
             AppStatusBadge(
               label: isFlutter ? 'mobile_reports'.tr() : 'browser_reports'.tr(),
               color: accentColor,
-              icon: Icons.arrow_forward_rounded,
+              trailingIcon: Icons.arrow_forward_rounded,
             ),
           ],
         ),
-      ),
     );
   }
 }

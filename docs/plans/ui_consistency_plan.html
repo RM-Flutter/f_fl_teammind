@@ -1,0 +1,315 @@
+<title>Team Mind UI Consistency</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&family=Poppins:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one reading column; four fixes, each = problem → cause → proposal (with a phone-sized mock) → steps → done-when */
+:root {
+  --bg: #F5F6FB; --surface: #FFFFFF; --fg: #171A3A; --muted: #5E6283; --line: #E2E4F0;
+  --navy: #12136E; --accent: #3A8DED; --accent-soft: #E7F0FD;
+  --bad: #C2364B; --bad-soft: #FBE9EC; --good: #1F8A5B; --good-soft: #E4F4EC; --code-bg: #EEF0F8;
+  --app-bg: #F6F7FB; --app-card: #FFFFFF; --app-navy: #12136E; --app-blue: #3A8DED; --app-text: #1B1D3A; --app-sub: #8A8DA8;
+  --f-body: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+  --f-app: "Poppins", "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0D0F24; --surface: #161936; --fg: #E8E9F6; --muted: #A2A5C6; --line: #2A2E55;
+  --navy: #AEB2FF; --accent: #6AAAF5; --accent-soft: #1B2A4A; --bad: #F08597; --bad-soft: #3A1A24;
+  --good: #6BD3A2; --good-soft: #163327; --code-bg: #1F2347; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0D0F24; --surface: #161936; --fg: #E8E9F6; --muted: #A2A5C6; --line: #2A2E55;
+  --navy: #AEB2FF; --accent: #6AAAF5; --accent-soft: #1B2A4A; --bad: #F08597; --bad-soft: #3A1A24;
+  --good: #6BD3A2; --good-soft: #163327; --code-bg: #1F2347; color-scheme: dark; }
+
+body { background: var(--bg); color: var(--fg); font-family: var(--f-body); font-size: 15.5px; line-height: 1.75; }
+.wrap { max-width: 780px; margin: 0 auto; padding-block: 40px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 44px; }
+header { display: flex; flex-direction: column; gap: 8px; }
+.eyebrow { font-size: 12px; letter-spacing: .06em; color: var(--accent); font-weight: 700; }
+h1 { font-size: 30px; line-height: 1.3; margin: 0; color: var(--navy); text-wrap: balance; }
+.lead { color: var(--muted); margin: 0; max-width: 62ch; }
+.toc { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.toc a { text-decoration: none; color: var(--navy); background: var(--surface); border: 1px solid var(--line);
+  padding: 6px 14px; border-radius: 999px; font-size: 13.5px; font-weight: 500; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+section.plan { display: flex; flex-direction: column; gap: 20px; }
+h2 { font-size: 22px; margin: 0; color: var(--navy); display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; text-wrap: balance; }
+h2 .tag { font-size: 12px; font-weight: 500; color: var(--muted); background: var(--surface); border: 1px solid var(--line); padding: 2px 10px; border-radius: 999px; }
+h3 { font-size: 16px; margin: 0; }
+p { margin: 0; max-width: 65ch; }
+.block { display: flex; flex-direction: column; gap: 10px; }
+.why { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.why .label { font-size: 12px; font-weight: 700; color: var(--bad); }
+
+code, .mono { font-family: var(--f-mono); font-size: 13px; background: var(--code-bg); padding: 1px 6px; border-radius: 4px; direction: ltr; unicode-bidi: isolate; }
+pre { margin: 0; background: var(--code-bg); border-radius: 10px; padding: 14px 16px; overflow-x: auto; direction: ltr; text-align: left; }
+pre code { background: none; padding: 0; font-size: 12.8px; line-height: 1.6; }
+
+ol.steps { margin: 0; padding: 0; list-style: none; counter-reset: s; display: flex; flex-direction: column; gap: 12px; }
+ol.steps > li { counter-increment: s; display: grid; grid-template-columns: 32px 1fr; gap: 12px; min-width: 0; }
+ol.steps > li::before { content: counter(s); width: 28px; height: 28px; border-radius: 50%; background: var(--navy); color: var(--surface);
+  display: grid; place-items: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+ol.steps > li > div { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+
+.done { background: var(--good-soft); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; }
+.done h3 { color: var(--good); }
+.done ul, .plain { margin: 0; padding-inline-start: 20px; display: flex; flex-direction: column; gap: 4px; }
+.ask { border-inline-start: 3px solid var(--accent); padding-inline-start: 12px; display: flex; flex-direction: column; gap: 4px; }
+.ask b { color: var(--accent); }
+
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 540px; font-size: 13.5px; }
+th, td { text-align: start; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; color: var(--muted); font-weight: 500; }
+tr:last-child td { border-bottom: 0; }
+
+/* phone mocks: always light, like the app */
+.mocks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 600px) { .mocks { grid-template-columns: 1fr; } h1 { font-size: 25px; } }
+figure { margin: 0; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+figcaption { font-size: 13px; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+figcaption .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.dot.before { background: var(--bad); } .dot.after { background: var(--good); }
+.phone { background: var(--app-bg); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; font-family: var(--f-app); direction: ltr; color: var(--app-text); }
+.bar { background: #fff; height: 46px; display: flex; align-items: center; justify-content: center; position: relative; font-weight: 700; color: var(--app-navy); font-size: 14px; }
+.bar .back { position: absolute; left: 10px; width: 26px; height: 26px; border-radius: 50%; background: var(--app-navy); }
+.bar .bm { position: absolute; right: 12px; width: 10px; height: 14px; border: 2px solid var(--app-navy); border-bottom-width: 0; }
+.ph-body { padding: 12px; display: flex; flex-direction: column; gap: 10px; min-height: 150px; }
+.ph-body.tight { padding-top: 0; }
+.mcard { background: var(--app-card); border-radius: 10px; height: 40px; box-shadow: 0 1px 2px rgba(18,19,110,.06); }
+.oldsw { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 11px; height: 28px; }
+.oldsw i { width: 40px; height: 20px; border-radius: 10px; background: #2E3570; position: relative; }
+.oldsw i::after { content: ""; position: absolute; left: 3px; top: 3px; width: 14px; height: 14px; border-radius: 50%; background: #fff; }
+.seg { background: #E9EBF5; border-radius: 999px; padding: 3px; display: grid; grid-template-columns: 1fr 1fr; font-size: 11.5px; font-weight: 600; }
+.seg span { text-align: center; padding: 6px 0; border-radius: 999px; color: #6B6F93; }
+.seg span.on { background: #fff; color: var(--app-navy); box-shadow: 0 1px 3px rgba(18,19,110,.12); }
+.empty { display: flex; flex-direction: column; align-items: center; gap: 6px; padding-block: 22px; text-align: center; }
+.empty .ic { width: 56px; height: 56px; border-radius: 50%; background: #E7F0FD; display: grid; place-items: center; }
+.empty .ic svg { width: 26px; height: 26px; }
+.empty b { font-size: 13px; color: var(--app-text); }
+.empty small { font-size: 11px; color: var(--app-sub); max-width: 26ch; line-height: 1.5; }
+.empty .cta { margin-top: 6px; font-size: 11px; font-weight: 600; color: #fff; background: var(--app-blue); padding: 6px 14px; border-radius: 999px; }
+.oldempty { display: flex; flex-direction: column; align-items: center; gap: 8px; padding-block: 28px; font-size: 11.5px; color: #8A8A8A; }
+.oldempty .a { width: 34px; height: 30px; border-radius: 4px; background: #6D6D6D; }
+.oldempty .b { width: 34px; height: 30px; border-radius: 50% 50% 4px 4px; border: 6px solid var(--app-navy); border-bottom-color: transparent; }
+.calbtn { background: var(--app-blue); color: #fff; border-radius: 999px; font-size: 11.5px; font-weight: 600; text-align: center; padding: 10px; }
+.calcard { background: #fff; border-radius: 12px; padding: 10px; display: flex; gap: 10px; align-items: center; box-shadow: 0 1px 2px rgba(18,19,110,.06); }
+.calcard .ib { width: 34px; height: 34px; border-radius: 9px; background: #E7F0FD; display: grid; place-items: center; flex: none; }
+.calcard .t { display: flex; flex-direction: column; flex: 1; min-width: 0; line-height: 1.35; }
+.calcard .t b { font-size: 12px; } .calcard .t small { font-size: 10.5px; color: var(--app-sub); }
+.calcard .chev { color: var(--app-sub); font-size: 14px; }
+.navyhead { background: var(--app-navy); color: #fff; height: 58px; border-radius: 0 0 16px 16px; display: grid; place-items: center; font-weight: 700; font-size: 14px; }
+footer { color: var(--muted); font-size: 13px; }
+
+.opts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 680px) { .opts { grid-template-columns: 1fr; } }
+.opt { background: var(--app-bg); border: 1px solid var(--line); border-radius: 16px; padding: 18px 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; font-family: var(--f-app); color: var(--app-text); text-align: center; position: relative; min-width: 0; }
+.opt.pick { border: 2px solid var(--good); }
+.opt .badge { position: absolute; top: 8px; inset-inline-end: 8px; font-family: var(--f-body); font-size: 11px; font-weight: 700; background: var(--good-soft); color: var(--good); padding: 1px 8px; border-radius: 6px; }
+.opt .name { font-family: var(--f-body); font-size: 12.5px; color: var(--muted); font-weight: 500; margin-top: 4px; }
+.opt b { font-size: 13px; } .opt small { font-size: 11px; color: var(--app-sub); line-height: 1.5; max-width: 24ch; }
+.logo { width: 34px; height: 34px; position: relative; }
+.logo::before { content: ""; position: absolute; inset: 4px 2px 2px; border: 6px solid var(--app-navy); border-bottom-color: transparent; border-radius: 50%; }
+.logo::after { content: ""; position: absolute; width: 8px; height: 8px; left: 13px; top: 15px; border-radius: 50%; background: var(--app-blue); }
+.o-disc { width: 92px; height: 92px; border-radius: 50%; background: #fff; display: grid; place-items: center; box-shadow: 0 8px 24px rgba(58,141,237,.18); }
+.o-tint { width: 76px; height: 76px; border-radius: 22px; background: #E7F0FD; display: grid; place-items: center; }
+.o-rings { width: 110px; height: 110px; border-radius: 50%; display: grid; place-items: center; background: radial-gradient(circle, transparent 38%, rgba(58,141,237,.10) 39%, rgba(58,141,237,.10) 40%, transparent 41%, transparent 58%, rgba(58,141,237,.07) 59%, rgba(58,141,237,.07) 60%, transparent 61%); }
+.o-rings .core { width: 58px; height: 58px; border-radius: 50%; background: #E7F0FD; display: grid; place-items: center; }
+.gapline { display: flex; flex-direction: column; font-family: var(--f-app); }
+.gaprow { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--muted); font-family: var(--f-body); }
+.gap { background: repeating-linear-gradient(45deg, rgba(194,54,75,.18) 0 4px, transparent 4px 8px); border-radius: 4px; }
+.gap.ok { background: repeating-linear-gradient(45deg, rgba(31,138,91,.22) 0 4px, transparent 4px 8px); }
+
+.chip { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: var(--app-blue); background: #E7F0FD; border: 1px solid #C9DDF8; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+.rcard { background: #fff; border-radius: 12px; padding: 10px; display: flex; align-items: center; gap: 10px; box-shadow: 0 1px 2px rgba(18,19,110,.06); }
+.av { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--app-blue); background: #E7F0FD; flex: none; display: grid; place-items: center; font-size: 11px; font-weight: 700; color: var(--app-blue); }
+.rt { flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.35; }
+.rt b { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .rt small { font-size: 10.5px; color: var(--app-sub); }
+.chev2 { color: var(--app-sub); font-size: 15px; }
+.oldcard { background: #fff; border: 1px solid #EEE; border-radius: 6px; padding: 10px; display: flex; flex-direction: column; gap: 4px; }
+.oldcard b { font-size: 12px; font-weight: 500; } .oldcard small { font-size: 10.5px; color: var(--app-sub); }
+.fabx { align-self: flex-end; background: var(--app-blue); color: #fff; font-size: 11.5px; font-weight: 600; padding: 10px 14px; border-radius: 14px; }
+.fab { align-self: flex-end; width: 40px; height: 40px; border-radius: 50%; background: var(--app-blue); color: #fff; display: grid; place-items: center; font-size: 20px; box-shadow: 0 4px 10px rgba(58,141,237,.35); }
+.bigname { text-align: center; font-size: 19px; font-weight: 400; padding-block: 4px; }
+.blackbar { background: #000; height: 16px; }
+.bp { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 600px) { .bp { grid-template-columns: 1fr; } }
+.bpc { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.bpc .w { font-family: var(--f-mono); font-size: 12px; color: var(--accent); direction: ltr; text-align: start; }
+.bpc b { font-size: 15px; } .bpc ul { margin: 0; padding-inline-start: 18px; font-size: 13.5px; color: var(--muted); display: flex; flex-direction: column; gap: 2px; }
+.dev { display: flex; gap: 8px; align-items: flex-end; height: 70px; direction: ltr; }
+.dev span { background: var(--accent-soft); border: 1.5px solid var(--accent); border-radius: 6px; }
+
+.sw { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+@media (max-width: 600px) { .sw { grid-template-columns: 1fr; } }
+.swc { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px; font-family: var(--f-app); min-width: 0; }
+.swc .t { font-family: var(--f-body); font-size: 12.5px; color: var(--muted); }
+.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.bdg { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 999px; }
+.ring { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; }
+.dots { display: flex; gap: 6px; } .dots span { width: 28px; height: 28px; border-radius: 8px; border: 1px solid rgba(0,0,0,.06); }
+.contrast { font-family: var(--f-mono); font-size: 11.5px; direction: ltr; text-align: start; }
+.over { display: flex; gap: 6px; align-items: center; font-size: 11px; font-family: var(--f-app); white-space: nowrap; overflow: hidden; position: relative; }
+.over .c { padding: 4px 10px; border-radius: 999px; border: 1px solid #ccc; }
+.over .stripe { position: absolute; inset-inline-end: 0; top: 0; bottom: 0; width: 22px; background: repeating-linear-gradient(45deg,#f5d000 0 5px,#222 5px 10px); }
+.sechead { display: flex; justify-content: space-between; align-items: center; font-family: var(--f-app); font-size: 12px; font-weight: 600; }
+.sechead a { color: var(--app-blue); font-size: 11px; text-decoration: none; }
+.chips { display: flex; gap: 6px; overflow: hidden; font-family: var(--f-app); font-size: 11px; }
+.chips span { padding: 4px 10px; border-radius: 999px; border: 1px solid #ddd; white-space: nowrap; }
+.chips span.on { background: var(--app-blue); color: #fff; border-color: var(--app-blue); }
+
+.hd-old { background: #12136E; color: #fff; height: 150px; border-radius: 0 0 16px 16px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 14px; gap: 3px; font-family: var(--f-app); }
+.hd-old .pic, .hd-new .pic { border-radius: 50%; background: #9FB3C8; border: 2px solid rgba(255,255,255,.6); }
+.hd-old b { font-size: 14px; } .hd-old small { font-size: 9.5px; opacity: .8; letter-spacing: .05em; }
+.hd-new { background: #12136E; color: #fff; border-radius: 0 0 16px 16px; padding: 40px 12px 14px; display: flex; gap: 10px; align-items: center; font-family: var(--f-app); }
+.hd-new .t { display: flex; flex-direction: column; line-height: 1.35; min-width: 0; }
+.hd-new b { font-size: 13px; } .hd-new small { font-size: 10px; opacity: .8; }
+.ruler { font-family: var(--f-mono); font-size: 11px; color: var(--muted); direction: ltr; text-align: center; }
+.shadow-row { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; }
+@media (max-width: 640px) { .shadow-row { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+.sh { background: #F6F7FB; border: 1px solid var(--line); border-radius: 14px; padding: 18px 12px 12px; display: flex; flex-direction: column; align-items: center; gap: 10px; min-width: 0; }
+.sh .box { width: 100%; height: 44px; background: #fff; border-radius: 12px; }
+.sh .n { font-family: var(--f-mono); font-size: 12px; color: var(--accent); direction: ltr; }
+.sh .u { font-size: 12px; color: var(--muted); text-align: center; }
+.login { position: relative; height: 230px; background: linear-gradient(180deg,#6b7bb5,#12136E); border-radius: 14px; overflow: hidden; font-family: var(--f-app); color: #fff; }
+.login .btn { position: absolute; left: 50%; transform: translateX(-50%); background: #3A8DED; border-radius: 999px; font-size: 10.5px; font-weight: 600; padding: 6px 26px; }
+.login .cna { position: absolute; left: 0; right: 0; text-align: center; font-size: 10px; letter-spacing: .05em; }
+.login .pill { position: absolute; left: 50%; transform: translateX(-50%); background: rgba(80,80,80,.55); border-radius: 999px; font-size: 10px; padding: 5px 14px; white-space: nowrap; }
+.login .overlap { outline: 2px dashed #F08597; outline-offset: 2px; }
+.loginok { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 8px; padding-bottom: 12px; }
+.loginok .btn, .loginok .cna, .loginok .pill { position: static; transform: none; }
+</style>
+
+<div class="wrap" dir="rtl" lang="ar">
+  <header>
+    <span class="eyebrow">TEAM MIND · خطة تعديل · الجولة الخامسة</span>
+    <h1>توحيد شكل الشاشات في Team Mind</h1>
+    <p class="lead">4 حاجات: "View all" اللي اتقطع، والهيدر الكبير في Employee Info، والـ shadows بحيث تبقى واحدة في كل الأبلكيشن، وتداخل الكلام في آخر شاشة الـ Login على الموبايل والويب.</p>
+    <nav class="toc" aria-label="المحتوى">
+      <a href="#viewall">١ · View all</a>
+      <a href="#header">٢ · هيدر Employee Info</a>
+      <a href="#shadows">٣ · توحيد الـ shadows</a>
+      <a href="#login">٤ · آخر شاشة الـ Login</a>
+      <a href="#order">ترتيب التنفيذ</a>
+    </nav>
+  </header>
+
+  <!-- 1 -->
+  <section class="plan" id="viewall">
+    <h2>فين "View all"؟ <span class="tag">غلط من الجولة اللي فاتت</span></h2>
+    <div class="why"><span class="label">السبب</span>
+      <p>في الجولة اللي فاتت خليت ارتفاع صف العنوان 24 علشان المسافات تبقى متساوية. لكن زرار "View all" جوه <code>AppSectionHeader</code> عليه padding ‏8 من فوق و8 من تحت، يعني محتاج حوالي 34. فالصف بيقص الزرار، وبيبان منه سطر نازل من فوق ("VIEW ALL" مقصوصة).</p></div>
+    <ol class="steps">
+      <li><div><b>الـ padding بتاع الزرار يتحسب من ارتفاع الصف.</b><p>الـ padding الرأسي يبقى <code>max(0, (height − 20) / 2)</code>، يعني 8 مع الارتفاع العادي 36 و2 مع 24. والنص في نص الصف بالظبط (<code>Center</code>)، فمش هيتقص مع أي ارتفاع.</p></div></li>
+      <li><div><b>مساحة الضغط تفضل كبيرة.</b><p>ساحة الضغط حوالين "View all" تبقى 44 على الأقل (<code>InkWell</code> برا الصف بـ <code>Transform</code>/<code>OverflowBox</code>)، علشان الزرار يفضل سهل الضغط مع إن الصف 24 بس.</p></div></li>
+      <li><div><b>أدوّر على كل مكان بيستخدم <code>height</code>.</b><p>دلوقتي مكان واحد بس (Rewards &amp; penalties). وهتأكد إن الـ 3 حاجات (العنوان والـ chips والكارت) فوق بعض بمسافة 12 من غير ما حاجة تتقص.</p></div></li>
+    </ol>
+  </section>
+
+  <!-- 2 -->
+  <section class="plan" id="header">
+    <h2>هيدر Employee Info واخد مساحة كبيرة <span class="tag">profile_details_header</span></h2>
+    <div class="why"><span class="label">الوضع دلوقتي</span>
+      <p>الهيدر ارتفاعه ثابت <code>370</code>، وجواه صورة 100، والاسم 22، وتحته المسمى الوظيفي والقسم كل واحد في سطر لوحده، وكله في نص الشاشة. على iPhone ده تقريباً <b>40%</b> من الشاشة قبل ما تشوف أي تاب، والمحتوى المفيد بيبدأ من تحت النص. وكمان الـ 370 رقم ثابت، فعلى موبايل قصير أو في landscape بياكل الشاشة كلها تقريباً.</p></div>
+    <div class="mocks">
+      <figure><div class="phone"><div class="hd-old"><span class="pic" style="width:52px;height:52px"></span><b>mohamed ryad</b><small>MANAGER</small><small>Department: HR MANAGEMENT</small></div><div class="ph-body"><div class="mcard"></div></div></div><figcaption><span class="dot before"></span>دلوقتي: 370 ثابت، وكله في عمود في النص</figcaption></figure>
+      <figure><div class="phone"><div class="hd-new"><span class="pic" style="width:46px;height:46px;flex:none"></span><span class="t"><b>Mohamed Ryad</b><small>Manager · HR Management</small></span></div><div class="ph-body"><div class="mcard"></div><div class="mcard"></div></div></div><figcaption><span class="dot after"></span>المقترح: صف واحد، والارتفاع حسب المحتوى</figcaption></figure>
+    </div>
+    <p class="ruler">370 → safeTop + 56 (app bar) + 88 + 16 ≈ 220 on iPhone · saves ~150</p>
+    <ol class="steps">
+      <li><div><b>الارتفاع يتحدد من المحتوى.</b><p>بدل الـ 370 الثابت: الـ status bar، وبعده الـ app bar ‏(56)، وبعده صف بيانات الموظف، وبعده 16. والخلفية الكحلي والصورة بتاعتها بتغطي ده بس، وتنتهي بنفس الحواف المدوّرة <code>AppRadius.xl</code>.</p></div></li>
+      <li><div><b>صف أفقي بدل العمود.</b><p>الصورة 72 على البداية، وجنبها الاسم 18 <code>w700</code> بالحروف العادية (مش Capital)، وتحت الاسم سطر واحد فيه المسمى الوظيفي والقسم مفصولين بـ <code>·</code>، بحجم 13 وأبيض 80%. كده "Department:" مش محتاجة تتكتب. وفي RTL الصف بيتقلب لوحده.</p></div></li>
+      <li><div><b>Tokens.</b><p>مقاس الصورة (72) والمسافة اللي تحت الصف (16) يتحطوا في <code>AppSizes</code> (<code>profileHeaderAvatar</code>). مفيش أرقام في الـ widget نفسه، وأشيل <code>LayoutService.getWidth</code> لأن الهيدر بياخد العرض كله لوحده.</p></div></li>
+      <li><div><b>الشاشات اللي بتستخدم نفس الهيدر.</b><p>أدوّر على الأماكن اللي بتستخدم <code>EmployeeDetailsHeader</code> أو هيدر شبهه (Personal profile)، وأخليهم بنفس الشكل علشان الأبلكيشن يبقى متسق.</p></div></li>
+    </ol>
+    <div class="ask"><b>اختياري</b><p>ممكن الهيدر كمان يصغر وهو بيعمل scroll: يبقى app bar بس، وفيه الاسم صغير جنب زرار الرجوع. ده محتاج نحوّل الشاشة لـ <code>CustomScrollView</code> بـ <code>SliverAppBar</code>. أنا شايف إن الصف الأفقي لوحده كفاية، ولو عايز الـ collapse قولي.</p></div>
+  </section>
+
+  <!-- 3 -->
+  <section class="plan" id="shadows">
+    <h2>shadow واحدة لكل نوع، في كل الأبلكيشن <span class="tag">87 مكان في 55 ملف</span></h2>
+    <div class="why"><span class="label">الوضع دلوقتي</span>
+      <ul class="plain">
+        <li>فيه <b>87</b> <code>BoxShadow(</code> مكتوبة بإيد في <b>55</b> ملف، وكل واحدة بلون وشفافية وblur وoffset مختلفين. وأكتر حاجة في points (10) وcore (11) وreports (8) والـ free services (7).</li>
+        <li><code>AppShadows.card</code> موجودة ومستخدمة في 30 مكان بس.</li>
+        <li>فيه <b>13</b> <code>elevation</code> بأرقام 2 و4 و5 و6 و8 و10 و12، وده بيرسم shadow الـ Material الرمادية التقيلة، ومعاهم 11 <code>Card(</code>.</li>
+        <li>الـ border بتاع الكارت (<code>AppBorders.card</code>) والـ radius (<code>AppRadius.md</code>) مش متطبقين في كل حتة. فيه كروت radius بتاعها 6 أو 8 أو 16 أو 20.</li>
+      </ul></div>
+
+    <div class="block">
+      <h3>4 مستويات بس</h3>
+      <div class="shadow-row">
+        <div class="sh"><span class="box" style="box-shadow:none;border:1px solid #E6E8F0"></span><span class="n">AppShadows.none</span><span class="u">الحقول، والكروت جوه كارت، والـ chips</span></div>
+        <div class="sh"><span class="box" style="box-shadow:0 1px 2px rgba(16,24,40,.04),0 2px 6px rgba(16,24,40,.04);border:1px solid #EEF0F5"></span><span class="n">AppShadows.card</span><span class="u">كل الكروت، والـ shimmer، والكروت اللي بتتداس</span></div>
+        <div class="sh"><span class="box" style="box-shadow:0 8px 24px rgba(16,24,40,.10)"></span><span class="n">AppShadows.raised</span><span class="u">الـ FAB، والأشرطة الثابتة تحت، والـ banners اللي فوق الخريطة</span></div>
+        <div class="sh"><span class="box" style="box-shadow:0 16px 40px rgba(16,24,40,.16)"></span><span class="n">AppShadows.overlay</span><span class="u">الـ bottom sheets، والـ dialogs، والـ dropdown overlay</span></div>
+      </div>
+      <p>لون الـ shadow كحلي غامق جداً (<code>#101828</code>) مش أسود، علشان يبان دافي ومتناسق مع الكحلي بتاع الأبلكيشن. والكارت دايماً: <code>AppRadius.md</code> (12) و<code>AppBorders.card</code> و<code>AppShadows.card</code>. وده نفسه اللي بيعمله <code>AppCard</code> و<code>AppDecorations.card()</code>.</p>
+    </div>
+
+    <div class="block">
+      <h3>الخطوات</h3>
+      <ol class="steps">
+        <li><div><b>الـ tokens.</b><p>في <code>AppShadows</code> (‏<code>app_design.dart</code>): <code>none</code> و<code>card</code> (طبقتين خفاف) و<code>raised</code> و<code>overlay</code>. و<code>card</code> الحالية (أسود 3%) تتعدّل للقيمة الجديدة، فالـ 30 مكان اللي بيستخدموها يتغيروا لوحدهم.</p></div></li>
+        <li><div><b>الثيم.</b><p>في <code>AppThemeService</code>: الـ <code>cardTheme</code> بـ <code>elevation: 0</code> وshape بالـ radius والـ border، والـ <code>bottomSheetTheme</code> والـ <code>dialogTheme</code> بـ <code>elevation: 0</code> ولون shadow شفاف (والـ shadow الـ overlay بتتحط من الـ widget نفسه)، والـ <code>floatingActionButtonTheme</code> بـ elevation واحدة ثابتة. كده أي <code>Card</code> أو sheet أو dialog من غير ما نلمسه يبقى متسق.</p></div></li>
+        <li><div><b>الـ 87 مكان.</b><p>كل واحد يتحوّل لواحد من الـ 4 مستويات حسب دوره. التقسيمة المبدئية من أسماء الملفات (وهتأكد منها ملف ملف):</p>
+          <div class="table-wrap"><table>
+            <thead><tr><th>المستوى</th><th>الأماكن</th></tr></thead>
+            <tbody>
+              <tr><td><code>card</code></td><td>كروت التقارير الـ 8 وshimmer بتاعها، وبطاقات points/fawry، والـ free services (templates وsmart card وad banner)، و<code>bookmark_list_widget</code>، و<code>daily_reports</code>، و<code>cached_network_image_widget</code>، و<code>fingerprint_loading_screen</code></td></tr>
+              <tr><td><code>raised</code></td><td><code>assistant_floating_widget</code>، و<code>charge_phone_bottom_bar</code>، و<code>tracking_home_preview_banner</code>، و<code>live_group_map_screen</code>، وأزرار الحفظ اللي ثابتة تحت في شاشات الإضافة (overtime وexpense وsalary advance وcomplaints وshift change)، و<code>send_comment_widget</code></td></tr>
+              <tr><td><code>overlay</code></td><td><code>all_bottom_sheet</code>، و<code>overlapping_vacations_sheet</code>، و<code>bottom_sheet_external_success</code>، و<code>files_carousel_dialog</code>، و<code>tracking_map_view_dialog</code>، و<code>dropdown_overlay</code>، و<code>search_filter_widget</code>، و<code>history_drop_down_widget</code></td></tr>
+              <tr><td><code>none</code></td><td><code>all_text_field</code>، و<code>text_form_widget</code> (الحقل بيبان بالـ border بس)، و<code>notification_reactions_widget</code>، و<code>language_setting_screen</code>، والكروت اللي جوه كارت تاني</td></tr>
+            </tbody>
+          </table></div></div></li>
+        <li><div><b>الـ 13 <code>elevation</code>.</b><p>تبقى 0، والـ shadow تتحط من الـ tokens. القايمة: home ‏(8)، وrequests calendar ‏(4)، وrequest details header ‏(6)، وcv hub ‏(4)، وrewards modal ‏(2×2)، وverification tile ‏(5)، وexpandable fab ‏(4×2)، وtimeout message ‏(10)، وalerts service ‏(12)، وconfirmation dialog ‏(12)، والثيم ‏(1).</p></div></li>
+        <li><div><b>الكروت المعمولة باليد.</b><p>أي <code>Container</code> فيه <code>BoxDecoration</code> بلون أبيض وradius يتحول لـ <code>AppCard</code>، أو لـ <code>AppDecorations.card()</code> لو مش ينفع يبقى <code>AppCard</code>. وأي radius 6 أو 8 أو 16 أو 20 على كارت يتحول لـ <code>AppRadius.md</code>.</p></div></li>
+        <li><div><b>القاعدة وفحص قبل أي commit.</b><p>قاعدة 13 في <code>app_design.dart</code>: "ممنوع <code>BoxShadow(</code> أو <code>elevation</code> رقمي برا <code>app_design.dart</code>". وsكريبت صغير <code>tool/check_design_tokens.sh</code> بيعمل grep ويطبع أي مخالفة، علشان المشكلة ما ترجعش تاني.</p></div></li>
+      </ol>
+    </div>
+    <div class="done"><h3>هنعتبره خلص لما</h3><ul>
+      <li><code>grep -rn "BoxShadow(" lib</code> ما يطلعش غير <code>app_design.dart</code>.</li>
+      <li>مفيش <code>elevation</code> برقم أكبر من 0 برا الثيم.</li>
+      <li>كارت في الهوم، وكارت في Reports، وكارت في Points، وكارت في Free services: نفس الـ shadow والـ border والـ radius بالظبط.</li>
+    </ul></div>
+  </section>
+
+  <!-- 4 -->
+  <section class="plan" id="login">
+    <h2>آخر شاشة الـ Login <span class="tag">login_screen.dart</span></h2>
+    <div class="why"><span class="label">السبب</span>
+      <p>"CREATE NEW ACCOUNT" وشريط الدومين (<code>approvals.r-m.dev</code>) متحطوطين بـ <code>Positioned</code> على مسافة ثابتة من تحت الشاشة: الأول على 62 والتاني على 0. لكن شريط الدومين جوه <code>SafeArea</code>، فبيتزق لفوق بارتفاع الـ home indicator (حوالي 34) وبعده 12 padding. فبيوصل لحوالي 86 من تحت، يعني فوق الـ 62 بتاعة "CREATE NEW ACCOUNT"، فبيتركبوا على بعض زي ما في صورتك.</p>
+      <p>وعلى الويب: الاتنين ثابتين فوق المحتوى، والمحتوى بيعمل scroll تحتهم، فالحقول والزراير بتعدّي من تحت "CREATE NEW ACCOUNT" وشريط الدومين ويبانوا داخلين في بعض. والـ <code>SizedBox(150)</code> اللي في آخر المحتوى كان حل مؤقت للمشكلة دي.</p></div>
+    <div class="mocks">
+      <figure><div class="login"><span class="btn" style="bottom:120px">LOGIN</span><span class="cna overlap" style="bottom:62px">CREATE NEW ACCOUNT</span><span class="pill overlap" style="bottom:52px">🌐 approvals.r-m.dev</span></div><figcaption><span class="dot before"></span>دلوقتي: الاتنين متركبين على بعض</figcaption></figure>
+      <figure><div class="login loginok"><span class="btn">LOGIN</span><span style="height:30px"></span><span class="cna">CREATE NEW ACCOUNT</span><span class="pill">🌐 approvals.r-m.dev</span></div><figcaption><span class="dot after"></span>بعد: footer تحت المحتوى، والاتنين فوق بعض بمسافة ثابتة</figcaption></figure>
+    </div>
+    <ol class="steps">
+      <li><div><b>أشيل الـ <code>Positioned</code> الاتنين.</b><p>"CREATE NEW ACCOUNT" وشريط الدومين يبقوا <b>footer</b> في آخر نفس الـ scroll بتاع الفورم، مش فوقه. والـ <code>SizedBox(150)</code> يتشال.</p></div></li>
+      <li><div><b>الـ footer يفضل تحت لما الشاشة فاضية.</b><p>بـ <code>LayoutBuilder</code> و<code>ConstrainedBox(minHeight: viewport)</code> و<code>Column</code> فيه <code>Spacer</code>: لو المحتوى قصير الـ footer بيفضل تحت الشاشة، ولو طويل (موبايل صغير أو الكيبورد مفتوح) بيعمل scroll مع الصفحة. كده مستحيل حاجة تعدي فوق حاجة.</p></div></li>
+      <li><div><b>الترتيب.</b><p>من فوق لتحت: "CREATE NEW ACCOUNT"، وبعده 8، وبعده شريط الدومين، وبعده <code>SafeArea</code> من تحت بس. الشريط نفسه يبطل يلف نفسه بـ <code>SafeArea</code>، لأن الـ footer هو اللي بيحسب الـ inset.</p></div></li>
+      <li><div><b>الويب والتابلت.</b><p>الفورم والـ footer في عمود أقصى عرض له 420، وفي نص الشاشة (<code>AppSizes.loginMaxWidth</code>). والخلفية المتحركة تفضل على الشاشة كلها. والزراير اللي فوق (Saved accounts واللغة) تفضل في الـ header ثابتة، والمحتوى يعمل scroll تحتها بمسافة كافية تحت الـ status bar، فمش هيعدّي تحتها.</p></div></li>
+      <li><div><b>تنضيف بسيط وأنا هناك.</b><p>"Login to Right Mind" مكتوب أبيض على صورة فاتحة ومش مقروء (في صورتك). هحط ظل خفيف ورا الكلام، أو أغمّق الـ gradient اللي فوق الصورة في الجزء ده. و"BY EMAIL / BY PHONE" نفس الكلام.</p></div></li>
+    </ol>
+    <div class="done"><h3>هنعتبره خلص لما</h3><ul>
+      <li>على iPhone (بالـ home indicator)، وAndroid صغير 360×640، وiPad، والويب 1440: "CREATE NEW ACCOUNT" وشريط الدومين ما يتلمسوش.</li>
+      <li>على الويب، لما تعمل scroll لآخر الصفحة مفيش أي حاجة بتعدي تحت حاجة.</li>
+      <li>لما الكيبورد يتفتح، الحقل اللي بتكتب فيه يفضل باين، والـ footer يتزق مع المحتوى.</li>
+    </ul></div>
+  </section>
+
+  <section class="plan" id="order">
+    <h2>ترتيب التنفيذ</h2>
+    <ol class="steps">
+      <li><div><b>View all</b><p>غلطة صغيرة من الجولة اللي فاتت، تتصلح الأول.</p></div></li>
+      <li><div><b>الـ Login</b><p>ملف واحد وwidgetين، وبيتشاف على طول.</p></div></li>
+      <li><div><b>هيدر Employee Info</b><p>widget واحد، وبعده Personal profile لو بيستخدم نفس الشكل.</p></div></li>
+      <li><div><b>الـ shadows</b><p>الـ tokens والثيم الأول، فنص الأبلكيشن يتظبط لوحده. وبعدهم الـ 87 مكان على 4 دفعات (core، وreports، وpoints وservices، والباقي). وفي الآخر الـ elevations والسكريبت.</p></div></li>
+    </ol>
+    <p>كل جزء commit لوحده، وكل نص جديد يبقى له key في <code>en.json</code> و<code>ar.json</code>.</p>
+  </section>
+
+  <footer>اتعملت من الكود على branch ‏<span class="mono">new-version2</span>. الجولة الرابعة محفوظة في <span class="mono">docs/plans/ui_consistency_plan_round4.html</span>. الأشكال هنا توضيح تقريبي.</footer>
+</div>

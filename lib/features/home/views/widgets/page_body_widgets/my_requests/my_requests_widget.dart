@@ -13,6 +13,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/widgets/app_section_header.widget.dart';
 
 /// Used to get requests for current user ( my requests - my team requests - other Departments requests
 class RequestsWidget extends StatelessWidget {
@@ -24,8 +26,6 @@ class RequestsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     /// get request type String from GetRequestsTypes
-    print("requests is --> ${requests.length}");
-    print("requests is --> ${requests[0].reason}");
     String getRequestsTypeStr() {
       switch (requestType) {
         case GetRequestsTypes.mine:
@@ -51,33 +51,17 @@ class RequestsWidget extends StatelessWidget {
       });
     }
 
-    return Container(
-      padding: EdgeInsets.symmetric(
-          horizontal: 24, vertical: 6),
+    return Padding(
+      padding: AppSpacing.pagePadding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                   Text(getRequestsTypeStr(),
-                      style: AppStyles.titleTextContent(context).copyWith(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.black,
-                      ),),
-                  TextButton(
-                    onPressed: () async =>
-                        await pushToRequestsScreenWithRequestsType(
-                            context: context, reqType: requestType),
-                    child: Text(AppStrings.viewAll.tr(),
-                        style: AppStyles.titleTextContent(context).copyWith(
-                          fontSize: 10,
-                        )),
-                  ),
-                ],
+              AppSectionHeader(
+                title: getRequestsTypeStr(),
+                onViewAll: () async => await pushToRequestsScreenWithRequestsType(
+                    context: context, reqType: requestType),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: AppSpacing.sectionHeaderGap),
               ...requests.take(5).toList().asMap().entries.map(
                 (entry) => ScrollRevealItem(
                   initialDelay: Duration(milliseconds: 120 * entry.key),

@@ -239,14 +239,7 @@ class _SelectSmartCardTemplateScreenState
                       color: isSelected ? Colors.blue : Colors.grey[300]!,
                       width: isSelected ? 3 : 1,
                     ),
-                    boxShadow: [
-                      if (isSelected)
-                        BoxShadow(
-                          color: Colors.blue.withValues(alpha: 0.3),
-                          blurRadius: 4,
-                          spreadRadius: 2,
-                        ),
-                    ],
+                    boxShadow: AppShadows.card,
                   ),
                   child: isSelected
                       ? Icon(
@@ -468,13 +461,7 @@ class _SelectSmartCardTemplateScreenState
         border: isSelected
             ? Border.all(color: Color(AppColors.buttons), width: 3)
             : Border.all(color: Colors.grey[300]!, width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withValues(alpha: 0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        boxShadow: AppShadows.card,
       ),
       child: Stack(
         children: [

@@ -117,7 +117,7 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
           builder: (context, provider, filterController, child) {
             return SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page, vertical: AppSpacing.xl),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -198,13 +198,7 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(AppRadius.md),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.04),
-                blurRadius: 15,
-                offset: const Offset(0, 5),
-              ),
-            ],
+            boxShadow: AppShadows.card,
             border: Border.all(color: Colors.grey.shade100),
           ),
           child: child,

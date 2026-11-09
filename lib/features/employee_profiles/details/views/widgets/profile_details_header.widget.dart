@@ -3,7 +3,6 @@ import 'package:app_test/core/constants/app_images.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/routing/app_router.dart';
-import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
@@ -28,49 +27,110 @@ class EmployeeDetailsHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const avatar = AppSizes.profileHeaderAvatar;
+    final name = employee?.name ?? '';
+    final job = employee?.jobTitle?.trim() ?? '';
+    final dept = employee?.department?.trim() ?? '';
+    // "Manager · HR Management": one line instead of two.
+    final subtitle = [job, dept].where((e) => e.isNotEmpty).join(' · ');
+
+    Widget avatarWidget() {
+      if (employee?.avatar == null) {
+        return CircleAvatar(
+          radius: avatar / 2,
+          child: Image.asset(AppImages.profilePlaceHolder, fit: BoxFit.cover),
+        );
+      }
+      return GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => FullScreenImageViewer(
+                initialIndex: 0,
+                imageUrls: [""],
+                one: true,
+                url: false,
+                image: employee!.avatar!,
+              ),
+            ),
+          );
+        },
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(AppRadius.pill),
+          child: kIsWeb
+              ? Image.network(
+                  employee!.avatar!,
+                  width: avatar,
+                  height: avatar,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => const Icon(
+                    Icons.image_not_supported_outlined,
+                    size: AppSizes.s32,
+                    color: Colors.white,
+                  ),
+                )
+              : CachedNetworkImage(
+                  width: avatar,
+                  height: avatar,
+                  fit: BoxFit.cover,
+                  imageUrl: employee!.avatar!,
+                  placeholder: (context, url) => const ShimmerAnimatedLoading(),
+                  errorWidget: (context, url, error) => const Icon(
+                    Icons.image_not_supported_outlined,
+                    size: AppSizes.s32,
+                    color: Colors.white,
+                  ),
+                ),
+        ),
+      );
+    }
+
+    const radius = BorderRadius.only(
+        bottomLeft: Radius.circular(AppRadius.xl),
+        bottomRight: Radius.circular(AppRadius.xl));
+
+    // Height comes from the content (status bar + app bar + one profile row), not a fixed 370.
     return Container(
-      height: 370,
-      width: LayoutService.getWidth(context),
+      width: double.infinity,
       decoration: BoxDecoration(
         color: Color(AppColors.secondaryButton),
-        borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(AppRadius.xl),
-            bottomRight: Radius.circular(AppRadius.xl)),
+        borderRadius: radius,
       ),
       child: Stack(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(AppRadius.xl),
-                bottomRight: Radius.circular(AppRadius.xl)),
-            child: Image.asset(
-              "assets/images/profile-app-bar.png",
-              fit: BoxFit.cover,
-              alignment: const Alignment(0.5, 0.0),
-              width: double.infinity,
-              height: 370,
+          Positioned.fill(
+            child: ClipRRect(
+              borderRadius: radius,
+              child: Image.asset(
+                "assets/images/profile-app-bar.png",
+                fit: BoxFit.cover,
+                alignment: const Alignment(0.5, 0.0),
+              ),
             ),
           ),
           Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
               AppBarWithBookmark(
                 backgroundColor: Colors.transparent,
                 elevation: 0,
                 title: AppStrings.employeeInfo.tr(),
-                titleStyle: AppStyles.whiteHeading(context).copyWith(fontSize: 18, fontWeight: FontWeight.w600),
+                titleStyle: AppStyles.whiteHeading(context)
+                    .copyWith(fontSize: 18, fontWeight: FontWeight.w600),
                 centerTitle: true,
                 routeName: AppRoutes.employeeDetails.name,
                 defaultTitle: AppStrings.employeeInfo.tr(),
                 bookmarkIconColor: Colors.white,
                 leading: Padding(
-                  padding: EdgeInsets.all(AppSizes.s10),
+                  padding: const EdgeInsets.all(AppSizes.s10),
                   child: InkWell(
                     onTap: () => context.pop(),
                     child: Container(
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: Colors.white.withOpacity(0.2)),
-                      child: Icon(
+                      child: const Icon(
                         Icons.arrow_back_sharp,
                         color: Colors.white,
                         size: AppSizes.s18,
@@ -79,93 +139,43 @@ class EmployeeDetailsHeader extends StatelessWidget {
                   ),
                 ),
               ),
-              gapH12,
-              Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                      maxWidth: double.infinity
-                  ),
-                  child: Column(
-                    children: [
-                      employee?.avatar != null
-                          ? GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => FullScreenImageViewer(
-                                initialIndex: 0,
-                                imageUrls: [""],
-                                one: true,
-                                url: false,
-                                image: employee!.avatar!,
-                              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.page, AppSpacing.sm, AppSpacing.page, AppSpacing.lg),
+                child: Row(
+                  children: [
+                    avatarWidget(),
+                    const SizedBox(width: AppSpacing.lg),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppStyles.whiteHeading(context).copyWith(
+                                fontSize: 18, fontWeight: FontWeight.w700),
+                          ),
+                          if (subtitle.isNotEmpty) ...[
+                            const SizedBox(height: 2),
+                            Text(
+                              subtitle,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppStyles.whiteContent(context).copyWith(
+                                  color: Colors.white.withOpacity(0.8),
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w400),
                             ),
-                          );
-                        },
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(AppRadius.pill),
-                          child: kIsWeb
-                              ? Image.network(
-                                  employee!.avatar!,
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) => Icon(
-                                    Icons.image_not_supported_outlined,
-                                    size: AppSizes.s32,
-                                    color: Colors.white,
-                                  ),
-                                )
-                              : CachedNetworkImage(
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                  imageUrl: employee!.avatar!,
-                                  placeholder: (context, url) =>
-                                      const ShimmerAnimatedLoading(),
-                                  errorWidget: (context, url, error) => Icon(
-                                    Icons.image_not_supported_outlined,
-                                    size: AppSizes.s32,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                        ),
-                      )
-                          : CircleAvatar(
-                        radius: 50,
-                        child: Image.asset(
-                          AppImages.profilePlaceHolder,
-                          fit: BoxFit.cover,
-                        ),
+                          ],
+                        ],
                       ),
-                      gapH12,
-                      Text(
-                        employee?.name ?? '',
-                        style: AppStyles.whiteHeading(context).copyWith(
-                            fontSize: 22,
-                            fontWeight: FontWeight.w700),
-                      ),
-                      Text(
-                        employee?.jobTitle?.toUpperCase() ?? '',
-                        textAlign: TextAlign.center,
-                        style: AppStyles.whiteHeading(context).copyWith(
-                            fontSize: 14,
-                            letterSpacing: 1.2,
-                            fontWeight: FontWeight.w600),
-                      ) ,
-                      if(employee?.department != null && employee?.department!.isNotEmpty == true) Text(
-                        "${AppStrings.department.tr()}: ${employee!.department!.toUpperCase()}",
-                        style: AppStyles.whiteContent(context).copyWith(
-                            color: Colors.white.withOpacity(0.8),
-                            fontSize: 14,
-                            letterSpacing: 1.2,
-                            fontWeight: FontWeight.w400),
-                      ) ,
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              )
+              ),
             ],
           ),
         ],

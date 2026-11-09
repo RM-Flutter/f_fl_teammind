@@ -114,7 +114,7 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
         builder: (context, provider, child) {
           return SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page, vertical: AppSpacing.xl),
             child: Form(
               key: _formKey,
               child: Column(
@@ -257,13 +257,7 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.lg),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 20,
-            offset: const Offset(0, 5),
-          ),
-        ],
+        boxShadow: AppShadows.card,
         border: Border.all(color: Colors.grey.shade100, width: 1.5),
       ),
       child: Column(
@@ -345,13 +339,7 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
       height: 55,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(AppRadius.lg),
-        boxShadow: [
-          BoxShadow(
-            color: Color(AppColors.buttons).withOpacity(0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          ),
-        ],
+        boxShadow: AppShadows.card,
       ),
       child: ElevatedButton(
         onPressed: provider.isActionLoading ? null : _submit,

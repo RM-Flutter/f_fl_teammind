@@ -687,17 +687,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
       height: height,
       decoration: BoxDecoration(
         color:  color,
-        boxShadow: [
-          (color == Color(AppColors.background))? BoxShadow(
-            color: Color(AppColors.disableButton).withOpacity(0.7),
-            blurRadius: 0.5,
-            spreadRadius: 0.5,
-          ): const BoxShadow(
-            color: Colors.transparent,
-            blurRadius: AppSizes.s5,
-            spreadRadius: 1,
-          )
-        ],
+        boxShadow: AppShadows.overlay,
         borderRadius: BorderRadius.circular(radius),
 
       ),

@@ -1,6 +1,69 @@
+import 'package:flutter/painting.dart';
+
 import '../services/dynamic_app_config_service.dart';
 
+/// The four shades a status colour is drawn with, so a light colour (orange, yellow, light blue)
+/// is still readable as text and calm as a background. Built from ANY base colour, including
+/// ones that come from the server. See [AppColors.statusTones].
+class StatusTones {
+  /// Text and small icons: darkened until it reaches 4.5:1 on [tint].
+  final Color text;
+
+  /// Ring / outline of avatars and icon circles.
+  final Color ring;
+
+  /// Thin borders of badges.
+  final Color border;
+
+  /// Soft background of badges and avatars.
+  final Color tint;
+  const StatusTones(
+      {required this.text,
+      required this.ring,
+      required this.border,
+      required this.tint});
+}
+
 abstract class AppColors {
+  static final Map<int, StatusTones> _toneCache = {};
+
+  /// Splits one status colour into [StatusTones] (HSL based, so it also works for colours the
+  /// company picks on the server). Use this instead of drawing text/borders in the raw colour.
+  static StatusTones statusTones(Color base) {
+    return _toneCache.putIfAbsent(base.toARGB32(), () {
+      final hsl = HSLColor.fromColor(base);
+      // Greys (no hue) keep their saturation at 0.
+      final sat = hsl.saturation;
+      final tint = hsl
+          .withSaturation((sat * 0.9).clamp(0.0, 0.9))
+          .withLightness(0.95)
+          .toColor();
+      final border = hsl
+          .withSaturation((sat * 0.8).clamp(0.0, 0.8))
+          .withLightness(0.82)
+          .toColor();
+      final ring = hsl
+          .withSaturation((sat * 0.85).clamp(0.0, 1.0))
+          .withLightness(hsl.lightness.clamp(0.0, 0.58))
+          .toColor();
+      // Darken the text step by step until it is readable on the tint (4.5:1).
+      var l = hsl.lightness.clamp(0.0, 0.42);
+      var text = hsl.withLightness(l).toColor();
+      while (_contrast(text, tint) < 4.5 && l > 0.12) {
+        l -= 0.02;
+        text = hsl.withLightness(l).toColor();
+      }
+      return StatusTones(text: text, ring: ring, border: border, tint: tint);
+    });
+  }
+
+  static double _contrast(Color a, Color b) {
+    final la = a.computeLuminance();
+    final lb = b.computeLuminance();
+    final hi = la > lb ? la : lb;
+    final lo = la > lb ? lb : la;
+    return (hi + 0.05) / (lo + 0.05);
+  }
 
   static int get buttonColor =>
       DynamicAppConfigService.hexToInt(
@@ -145,7 +208,7 @@ abstract class AppColors {
   static int get warningColor =>
       DynamicAppConfigService.hexToInt(
         DynamicAppConfigService.getColorValue('warningColor'),
-        0xffFCA652,
+        0xffF0A04B,
       );
 
   static int get infoColor =>

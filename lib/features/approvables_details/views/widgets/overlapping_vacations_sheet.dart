@@ -100,12 +100,12 @@ class _OverlappingVacationsSheetState
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: Color(AppColors.warningYellow).withOpacity(0.12),
+                      color: AppColors.statusTones(Color(AppColors.warningYellow)).tint,
                       borderRadius: BorderRadius.circular(AppRadius.sm),
                     ),
                     child: Icon(
                       Icons.people_alt_rounded,
-                      color: Color(AppColors.warningYellow),
+                      color: AppColors.statusTones(Color(AppColors.warningYellow)).text,
                       size: 20,
                     ),
                   ),
@@ -191,13 +191,7 @@ class _VacationCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.md),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.06),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: AppShadows.overlay,
         border: Border.all(color: _statusColor.withOpacity(0.2)),
       ),
       child: IntrinsicHeight(

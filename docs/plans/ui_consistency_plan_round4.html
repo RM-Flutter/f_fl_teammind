@@ -1,0 +1,240 @@
+<title>Team Mind UI Consistency</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&family=Poppins:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one reading column; four fixes, each = problem → cause → proposal (with a phone-sized mock) → steps → done-when */
+:root {
+  --bg: #F5F6FB; --surface: #FFFFFF; --fg: #171A3A; --muted: #5E6283; --line: #E2E4F0;
+  --navy: #12136E; --accent: #3A8DED; --accent-soft: #E7F0FD;
+  --bad: #C2364B; --bad-soft: #FBE9EC; --good: #1F8A5B; --good-soft: #E4F4EC; --code-bg: #EEF0F8;
+  --app-bg: #F6F7FB; --app-card: #FFFFFF; --app-navy: #12136E; --app-blue: #3A8DED; --app-text: #1B1D3A; --app-sub: #8A8DA8;
+  --f-body: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+  --f-app: "Poppins", "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0D0F24; --surface: #161936; --fg: #E8E9F6; --muted: #A2A5C6; --line: #2A2E55;
+  --navy: #AEB2FF; --accent: #6AAAF5; --accent-soft: #1B2A4A; --bad: #F08597; --bad-soft: #3A1A24;
+  --good: #6BD3A2; --good-soft: #163327; --code-bg: #1F2347; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0D0F24; --surface: #161936; --fg: #E8E9F6; --muted: #A2A5C6; --line: #2A2E55;
+  --navy: #AEB2FF; --accent: #6AAAF5; --accent-soft: #1B2A4A; --bad: #F08597; --bad-soft: #3A1A24;
+  --good: #6BD3A2; --good-soft: #163327; --code-bg: #1F2347; color-scheme: dark; }
+
+body { background: var(--bg); color: var(--fg); font-family: var(--f-body); font-size: 15.5px; line-height: 1.75; }
+.wrap { max-width: 780px; margin: 0 auto; padding-block: 40px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 44px; }
+header { display: flex; flex-direction: column; gap: 8px; }
+.eyebrow { font-size: 12px; letter-spacing: .06em; color: var(--accent); font-weight: 700; }
+h1 { font-size: 30px; line-height: 1.3; margin: 0; color: var(--navy); text-wrap: balance; }
+.lead { color: var(--muted); margin: 0; max-width: 62ch; }
+.toc { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.toc a { text-decoration: none; color: var(--navy); background: var(--surface); border: 1px solid var(--line);
+  padding: 6px 14px; border-radius: 999px; font-size: 13.5px; font-weight: 500; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+section.plan { display: flex; flex-direction: column; gap: 20px; }
+h2 { font-size: 22px; margin: 0; color: var(--navy); display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; text-wrap: balance; }
+h2 .tag { font-size: 12px; font-weight: 500; color: var(--muted); background: var(--surface); border: 1px solid var(--line); padding: 2px 10px; border-radius: 999px; }
+h3 { font-size: 16px; margin: 0; }
+p { margin: 0; max-width: 65ch; }
+.block { display: flex; flex-direction: column; gap: 10px; }
+.why { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.why .label { font-size: 12px; font-weight: 700; color: var(--bad); }
+
+code, .mono { font-family: var(--f-mono); font-size: 13px; background: var(--code-bg); padding: 1px 6px; border-radius: 4px; direction: ltr; unicode-bidi: isolate; }
+pre { margin: 0; background: var(--code-bg); border-radius: 10px; padding: 14px 16px; overflow-x: auto; direction: ltr; text-align: left; }
+pre code { background: none; padding: 0; font-size: 12.8px; line-height: 1.6; }
+
+ol.steps { margin: 0; padding: 0; list-style: none; counter-reset: s; display: flex; flex-direction: column; gap: 12px; }
+ol.steps > li { counter-increment: s; display: grid; grid-template-columns: 32px 1fr; gap: 12px; min-width: 0; }
+ol.steps > li::before { content: counter(s); width: 28px; height: 28px; border-radius: 50%; background: var(--navy); color: var(--surface);
+  display: grid; place-items: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+ol.steps > li > div { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+
+.done { background: var(--good-soft); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; }
+.done h3 { color: var(--good); }
+.done ul, .plain { margin: 0; padding-inline-start: 20px; display: flex; flex-direction: column; gap: 4px; }
+.ask { border-inline-start: 3px solid var(--accent); padding-inline-start: 12px; display: flex; flex-direction: column; gap: 4px; }
+.ask b { color: var(--accent); }
+
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 540px; font-size: 13.5px; }
+th, td { text-align: start; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; color: var(--muted); font-weight: 500; }
+tr:last-child td { border-bottom: 0; }
+
+/* phone mocks: always light, like the app */
+.mocks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 600px) { .mocks { grid-template-columns: 1fr; } h1 { font-size: 25px; } }
+figure { margin: 0; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+figcaption { font-size: 13px; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+figcaption .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.dot.before { background: var(--bad); } .dot.after { background: var(--good); }
+.phone { background: var(--app-bg); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; font-family: var(--f-app); direction: ltr; color: var(--app-text); }
+.bar { background: #fff; height: 46px; display: flex; align-items: center; justify-content: center; position: relative; font-weight: 700; color: var(--app-navy); font-size: 14px; }
+.bar .back { position: absolute; left: 10px; width: 26px; height: 26px; border-radius: 50%; background: var(--app-navy); }
+.bar .bm { position: absolute; right: 12px; width: 10px; height: 14px; border: 2px solid var(--app-navy); border-bottom-width: 0; }
+.ph-body { padding: 12px; display: flex; flex-direction: column; gap: 10px; min-height: 150px; }
+.ph-body.tight { padding-top: 0; }
+.mcard { background: var(--app-card); border-radius: 10px; height: 40px; box-shadow: 0 1px 2px rgba(18,19,110,.06); }
+.oldsw { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 11px; height: 28px; }
+.oldsw i { width: 40px; height: 20px; border-radius: 10px; background: #2E3570; position: relative; }
+.oldsw i::after { content: ""; position: absolute; left: 3px; top: 3px; width: 14px; height: 14px; border-radius: 50%; background: #fff; }
+.seg { background: #E9EBF5; border-radius: 999px; padding: 3px; display: grid; grid-template-columns: 1fr 1fr; font-size: 11.5px; font-weight: 600; }
+.seg span { text-align: center; padding: 6px 0; border-radius: 999px; color: #6B6F93; }
+.seg span.on { background: #fff; color: var(--app-navy); box-shadow: 0 1px 3px rgba(18,19,110,.12); }
+.empty { display: flex; flex-direction: column; align-items: center; gap: 6px; padding-block: 22px; text-align: center; }
+.empty .ic { width: 56px; height: 56px; border-radius: 50%; background: #E7F0FD; display: grid; place-items: center; }
+.empty .ic svg { width: 26px; height: 26px; }
+.empty b { font-size: 13px; color: var(--app-text); }
+.empty small { font-size: 11px; color: var(--app-sub); max-width: 26ch; line-height: 1.5; }
+.empty .cta { margin-top: 6px; font-size: 11px; font-weight: 600; color: #fff; background: var(--app-blue); padding: 6px 14px; border-radius: 999px; }
+.oldempty { display: flex; flex-direction: column; align-items: center; gap: 8px; padding-block: 28px; font-size: 11.5px; color: #8A8A8A; }
+.oldempty .a { width: 34px; height: 30px; border-radius: 4px; background: #6D6D6D; }
+.oldempty .b { width: 34px; height: 30px; border-radius: 50% 50% 4px 4px; border: 6px solid var(--app-navy); border-bottom-color: transparent; }
+.calbtn { background: var(--app-blue); color: #fff; border-radius: 999px; font-size: 11.5px; font-weight: 600; text-align: center; padding: 10px; }
+.calcard { background: #fff; border-radius: 12px; padding: 10px; display: flex; gap: 10px; align-items: center; box-shadow: 0 1px 2px rgba(18,19,110,.06); }
+.calcard .ib { width: 34px; height: 34px; border-radius: 9px; background: #E7F0FD; display: grid; place-items: center; flex: none; }
+.calcard .t { display: flex; flex-direction: column; flex: 1; min-width: 0; line-height: 1.35; }
+.calcard .t b { font-size: 12px; } .calcard .t small { font-size: 10.5px; color: var(--app-sub); }
+.calcard .chev { color: var(--app-sub); font-size: 14px; }
+.navyhead { background: var(--app-navy); color: #fff; height: 58px; border-radius: 0 0 16px 16px; display: grid; place-items: center; font-weight: 700; font-size: 14px; }
+footer { color: var(--muted); font-size: 13px; }
+
+.opts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 680px) { .opts { grid-template-columns: 1fr; } }
+.opt { background: var(--app-bg); border: 1px solid var(--line); border-radius: 16px; padding: 18px 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; font-family: var(--f-app); color: var(--app-text); text-align: center; position: relative; min-width: 0; }
+.opt.pick { border: 2px solid var(--good); }
+.opt .badge { position: absolute; top: 8px; inset-inline-end: 8px; font-family: var(--f-body); font-size: 11px; font-weight: 700; background: var(--good-soft); color: var(--good); padding: 1px 8px; border-radius: 6px; }
+.opt .name { font-family: var(--f-body); font-size: 12.5px; color: var(--muted); font-weight: 500; margin-top: 4px; }
+.opt b { font-size: 13px; } .opt small { font-size: 11px; color: var(--app-sub); line-height: 1.5; max-width: 24ch; }
+.logo { width: 34px; height: 34px; position: relative; }
+.logo::before { content: ""; position: absolute; inset: 4px 2px 2px; border: 6px solid var(--app-navy); border-bottom-color: transparent; border-radius: 50%; }
+.logo::after { content: ""; position: absolute; width: 8px; height: 8px; left: 13px; top: 15px; border-radius: 50%; background: var(--app-blue); }
+.o-disc { width: 92px; height: 92px; border-radius: 50%; background: #fff; display: grid; place-items: center; box-shadow: 0 8px 24px rgba(58,141,237,.18); }
+.o-tint { width: 76px; height: 76px; border-radius: 22px; background: #E7F0FD; display: grid; place-items: center; }
+.o-rings { width: 110px; height: 110px; border-radius: 50%; display: grid; place-items: center; background: radial-gradient(circle, transparent 38%, rgba(58,141,237,.10) 39%, rgba(58,141,237,.10) 40%, transparent 41%, transparent 58%, rgba(58,141,237,.07) 59%, rgba(58,141,237,.07) 60%, transparent 61%); }
+.o-rings .core { width: 58px; height: 58px; border-radius: 50%; background: #E7F0FD; display: grid; place-items: center; }
+.gapline { display: flex; flex-direction: column; font-family: var(--f-app); }
+.gaprow { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--muted); font-family: var(--f-body); }
+.gap { background: repeating-linear-gradient(45deg, rgba(194,54,75,.18) 0 4px, transparent 4px 8px); border-radius: 4px; }
+.gap.ok { background: repeating-linear-gradient(45deg, rgba(31,138,91,.22) 0 4px, transparent 4px 8px); }
+
+.chip { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: var(--app-blue); background: #E7F0FD; border: 1px solid #C9DDF8; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+.rcard { background: #fff; border-radius: 12px; padding: 10px; display: flex; align-items: center; gap: 10px; box-shadow: 0 1px 2px rgba(18,19,110,.06); }
+.av { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--app-blue); background: #E7F0FD; flex: none; display: grid; place-items: center; font-size: 11px; font-weight: 700; color: var(--app-blue); }
+.rt { flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.35; }
+.rt b { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .rt small { font-size: 10.5px; color: var(--app-sub); }
+.chev2 { color: var(--app-sub); font-size: 15px; }
+.oldcard { background: #fff; border: 1px solid #EEE; border-radius: 6px; padding: 10px; display: flex; flex-direction: column; gap: 4px; }
+.oldcard b { font-size: 12px; font-weight: 500; } .oldcard small { font-size: 10.5px; color: var(--app-sub); }
+.fabx { align-self: flex-end; background: var(--app-blue); color: #fff; font-size: 11.5px; font-weight: 600; padding: 10px 14px; border-radius: 14px; }
+.fab { align-self: flex-end; width: 40px; height: 40px; border-radius: 50%; background: var(--app-blue); color: #fff; display: grid; place-items: center; font-size: 20px; box-shadow: 0 4px 10px rgba(58,141,237,.35); }
+.bigname { text-align: center; font-size: 19px; font-weight: 400; padding-block: 4px; }
+.blackbar { background: #000; height: 16px; }
+.bp { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 600px) { .bp { grid-template-columns: 1fr; } }
+.bpc { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.bpc .w { font-family: var(--f-mono); font-size: 12px; color: var(--accent); direction: ltr; text-align: start; }
+.bpc b { font-size: 15px; } .bpc ul { margin: 0; padding-inline-start: 18px; font-size: 13.5px; color: var(--muted); display: flex; flex-direction: column; gap: 2px; }
+.dev { display: flex; gap: 8px; align-items: flex-end; height: 70px; direction: ltr; }
+.dev span { background: var(--accent-soft); border: 1.5px solid var(--accent); border-radius: 6px; }
+
+.sw { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+@media (max-width: 600px) { .sw { grid-template-columns: 1fr; } }
+.swc { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px; font-family: var(--f-app); min-width: 0; }
+.swc .t { font-family: var(--f-body); font-size: 12.5px; color: var(--muted); }
+.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.bdg { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 999px; }
+.ring { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; }
+.dots { display: flex; gap: 6px; } .dots span { width: 28px; height: 28px; border-radius: 8px; border: 1px solid rgba(0,0,0,.06); }
+.contrast { font-family: var(--f-mono); font-size: 11.5px; direction: ltr; text-align: start; }
+.over { display: flex; gap: 6px; align-items: center; font-size: 11px; font-family: var(--f-app); white-space: nowrap; overflow: hidden; position: relative; }
+.over .c { padding: 4px 10px; border-radius: 999px; border: 1px solid #ccc; }
+.over .stripe { position: absolute; inset-inline-end: 0; top: 0; bottom: 0; width: 22px; background: repeating-linear-gradient(45deg,#f5d000 0 5px,#222 5px 10px); }
+.sechead { display: flex; justify-content: space-between; align-items: center; font-family: var(--f-app); font-size: 12px; font-weight: 600; }
+.sechead a { color: var(--app-blue); font-size: 11px; text-decoration: none; }
+.chips { display: flex; gap: 6px; overflow: hidden; font-family: var(--f-app); font-size: 11px; }
+.chips span { padding: 4px 10px; border-radius: 999px; border: 1px solid #ddd; white-space: nowrap; }
+.chips span.on { background: var(--app-blue); color: #fff; border-color: var(--app-blue); }
+</style>
+
+<div class="wrap" dir="rtl" lang="ar">
+  <header>
+    <span class="eyebrow">TEAM MIND · خطة تعديل · الجولة الرابعة</span>
+    <h1>توحيد شكل الشاشات في Team Mind</h1>
+    <p class="lead">حاجتين من صفحة Employee Info: overflow في صف فلاتر Rewards &amp; Penalties، واللون البرتقاني الفاقع اللي في Waiting وAct as Someone وأيقونات المصروفات. والـ Responsive مستني رأيك بعد ما تجربه على Chrome.</p>
+    <nav class="toc" aria-label="المحتوى">
+      <a href="#overflow">١ · الـ overflow</a>
+      <a href="#orange">٢ · اللون البرتقاني</a>
+      <a href="#order">ترتيب التنفيذ</a>
+    </nav>
+  </header>
+
+  <section class="plan" id="overflow">
+    <h2>Overflow في Rewards &amp; Penalties <span class="tag">employee_profiles</span></h2>
+    <div class="why"><span class="label">السبب</span>
+      <p>في <code>rewards_and_penalties_section_widget.dart</code> فيه <code>Row</code> واحد جواه 3 chips (All وRewards وPenalties) وبعدهم <code>Spacer</code> وزرار "View all". الـ <code>Row</code> مبيعملش scroll ولا بيلف لسطر تاني. فعلى موبايل عرضه 390 أو أقل، أو لما الكلام يبقى بالعربي وأطول، بيطلع برا الشاشة بـ 13 بكسل، وده الشريط الأصفر والأسود اللي في صورتك.</p>
+      <p>وكمان "View all" مكتوب بحجم 10 بس، ومحطوط في نفس صف الفلاتر، فمش واضح هو تبع إيه.</p></div>
+    <div class="mocks">
+      <figure><div class="phone"><div class="ph-body"><div class="over"><span class="c" style="background:#3A8DED;color:#fff;border-color:#3A8DED">All 1</span><span class="c">Rewards 0</span><span class="c">Penalties 1</span><span>VIEW AL</span><span class="stripe"></span></div><div class="mcard"></div></div></div><figcaption><span class="dot before"></span>دلوقتي: صف واحد بيطلع برا الشاشة</figcaption></figure>
+      <figure><div class="phone"><div class="ph-body"><div class="sechead">Rewards &amp; Penalties <a>View all ›</a></div><div class="chips"><span class="on">All 1</span><span>Rewards 0</span><span>Penalties 1</span></div><div class="mcard"></div></div></div><figcaption><span class="dot after"></span>بعد: View all في سطر العنوان، والـ chips بتعمل scroll</figcaption></figure>
+    </div>
+    <ol class="steps">
+      <li><div><b>"View all" يطلع في سطر لوحده فوق.</b><p>سطر بـ <code>AppSectionHeader</code> فيه عنوان القسم وعلى الناحية التانية "View all"، بنفس شكل "View all" اللي في الهوم.</p></div></li>
+      <li><div><b>الـ chips في سطر بيعمل scroll.</b><p>جوه <code>SingleChildScrollView</code> أفقي، ومسافة 8 بينهم. كده مش ممكن تعمل overflow مهما الكلام طول في العربي، ومهما الموبايل كان صغير.</p></div></li>
+      <li><div><b>ألوان الـ chips.</b><p>الأخضر <code>0xFF2D6A4F</code> والأحمر <code>0xFFC72C41</code> مكتوبين كأرقام في الكود. هستبدلهم بـ <code>AppColors.successGreen</code> و<code>AppColors.failureRed</code> علشان لو الشركة غيرت الألوان من السيرفر يتغيروا معاها.</p></div></li>
+      <li><div><b>أدوّر على نفس المشكلة في أماكن تانية.</b><p>أدوّر في الكود على أي <code>Row</code> فيه <code>Spacer</code> وأكتر من chip أو زرار من غير <code>Expanded</code> أو <code>Flexible</code> أو scroll. أبدأ بأقسام Employee profile وصفوف الفلاتر، وأجرب كل واحد على موبايل عرضه 360 في العربي.</p></div></li>
+    </ol>
+    <div class="done"><h3>هنعتبره خلص لما</h3><ul>
+      <li>مفيش شريط overflow على موبايل عرضه 360، في العربي والإنجليزي.</li>
+      <li>"View all" واضح ومقروء، ومكانه فوق على الناحية التانية من العنوان.</li>
+    </ul></div>
+  </section>
+
+  <section class="plan" id="orange">
+    <h2>اللون البرتقاني الفاقع <span class="tag">warningColor</span></h2>
+    <div class="why"><span class="label">السبب</span>
+      <p>لون التحذير <code>AppColors.warningColor</code> ‏(<code>#FCA652</code>، وممكن ييجي من السيرفر). اللون ده فاتح أوي، والمشكلة إننا بنستخدمه بنفس الدرجة <b>لكل حاجة</b>: لون الكلام، والأيقونة، وإطار الدايرة، والخلفية بشفافية 10%. فالكلام البرتقاني على الأبيض بيبان باهت ومش مقروء، وفي نفس الوقت الإطار والدايرة بيبانوا فاقعين.</p>
+      <p class="contrast">#FCA652 on white ≈ 2.0 : 1 (needs 4.5 : 1 for text)</p>
+      <p>والأخضر والأزرق الفاتحين ممكن تحصل معاهم نفس المشكلة، لو الشركة اختارت ألوان فاتحة من السيرفر.</p></div>
+
+    <div class="sw">
+      <div class="swc"><span class="t">دلوقتي</span>
+        <div class="row"><span class="bdg" style="background:rgba(252,166,82,.10);border:1px solid rgba(252,166,82,.30);color:#FCA652">⌛ Waiting</span><span class="bdg" style="background:rgba(252,166,82,.10);border:1px solid rgba(252,166,82,.30);color:#FCA652">Act as Someone</span><span class="ring" style="border:2px solid #FCA652;background:rgba(252,166,82,.12);color:#FCA652">▤</span></div>
+        <div class="dots"><span style="background:#FCA652"></span><span style="background:rgba(252,166,82,.10)"></span></div></div>
+      <div class="swc"><span class="t">المقترح: نفس اللون، بس الكلام والأيقونة أغمق</span>
+        <div class="row"><span class="bdg" style="background:#FFF4E5;border:1px solid #F6D7AE;color:#9A5B00">⌛ Waiting</span><span class="bdg" style="background:#FFF4E5;border:1px solid #F6D7AE;color:#9A5B00">Act as Someone</span><span class="ring" style="border:2px solid #E9A35A;background:#FFF4E5;color:#9A5B00">▤</span></div>
+        <div class="dots"><span style="background:#9A5B00"></span><span style="background:#E9A35A"></span><span style="background:#F6D7AE"></span><span style="background:#FFF4E5"></span></div>
+        <span class="contrast">#9A5B00 on #FFF4E5 ≈ 5.3 : 1 ✓</span></div>
+    </div>
+
+    <ol class="steps">
+      <li><div><b>كل لون حالة يطلع منه 4 درجات بدل درجة واحدة.</b><p>دالة اسمها <code>AppColors.statusTones(Color)</code> بترجع: <b>text</b> (نفس اللون بس أغمق لحد ما يبقى مقروء على الخلفية)، و<b>ring</b> (أغمق شوية من الأصلي)، و<b>border</b> (فاتح)، و<b>tint</b> (خلفية فاتحة جداً). والدرجات بتتحسب بالـ HSL من اللون الأصلي، فلو الشركة بعتت لونها من السيرفر هيتحسب منه برضه.</p></div></li>
+      <li><div><b>الكلام لازم يبقى مقروء.</b><p>درجة الـ text بتغمق خطوة خطوة لحد ما الـ contrast يوصل 4.5:1 على الـ tint. كده حتى لو الشركة اختارت أصفر فاتح جداً، الكلام هيفضل مقروء.</p></div></li>
+      <li><div><b>المكانين اللي بيرسموا اللون.</b><p><code>AppStatusBadge</code> يستخدم tint للخلفية وborder للإطار وtext للكلام والأيقونة. و<code>AppCardLeadingAvatar</code> يستخدم ring للإطار وtint للخلفية وtext للأيقونة والـ initials. التعديل في المكانين دول بيصلح كل الكروت في الأبلكيشن.</p></div></li>
+      <li><div><b>البرتقاني نفسه أهدى شوية.</b><p>اللون الافتراضي (لما السيرفر مش باعت لون) يبقى <code>#F0A04B</code> بدل <code>#FCA652</code>: أقل لمعان وأقرب للكحلي والأزرق اللي في الأبلكيشن. وأي لون جاي من السيرفر مش هلمسه.</p></div></li>
+      <li><div><b>الأماكن اللي بتستخدم اللون مباشرة.</b><p>فيه 15 ملف بيستخدموا <code>warningYellow</code> من غير الـ badge، زي <code>request_card</code> و<code>approvable_card_widget</code> و<code>team_today_status</code> و<code>commission_card</code> والـ tracking. هخليهم يستخدموا الدرجات بدل اللون الخام، وأي مكان فيه <code>Colors.orange</code> مكتوب بإيده يتحول لـ <code>AppColors</code>.</p></div></li>
+      <li><div><b>نفس الشيء للأخضر والأزرق والأحمر.</b><p>نفس الدرجات هتتطبق على كل ألوان الحالات (Approved وSeen وRejected)، فكل الـ badges تبقى بنفس الهدوء ونفس الوضوح.</p></div></li>
+    </ol>
+    <div class="ask"><b>محتاج منك قرار</b><p>أغيّر اللون الافتراضي نفسه لـ <code>#F0A04B</code>، ولا أسيبه زي ما هو وأكتفي بإن الكلام والإطار يبقوا أغمق؟ الخطوة التانية لوحدها بتحل معظم المشكلة.</p></div>
+    <div class="done"><h3>هنعتبره خلص لما</h3><ul>
+      <li>كلام Waiting وAct as Someone مقروء (4.5:1 على الأقل) ومش فاقع.</li>
+      <li>دايرة أيقونة المصروفات هادية، ومبتشدش العين أكتر من العنوان.</li>
+      <li>نفس الشكل في الهوم والطلبات والمصروفات وEmployee Info.</li>
+    </ul></div>
+  </section>
+
+  <section class="plan" id="order">
+    <h2>ترتيب التنفيذ</h2>
+    <ol class="steps">
+      <li><div><b>الـ overflow</b><p>ملف واحد، وبعده أدوّر على نفس المشكلة في باقي الأماكن.</p></div></li>
+      <li><div><b>درجات الألوان</b><p><code>statusTones</code>، وبعدها <code>AppStatusBadge</code> و<code>AppCardLeadingAvatar</code>، وبعدها الـ 15 ملف.</p></div></li>
+      <li><div><b>Responsive</b><p>مستني ملاحظاتك بعد ما تجربه على Chrome.</p></div></li>
+    </ol>
+  </section>
+
+  <footer>اتعملت من الكود على branch ‏<span class="mono">new-version2</span>. الجولة التالتة محفوظة في <span class="mono">docs/plans/ui_consistency_plan_round3.html</span>. الألوان هنا توضيح تقريبي، والقيم النهائية هتتحسب من لون الشركة.</footer>
+</div>

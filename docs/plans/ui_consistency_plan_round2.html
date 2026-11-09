@@ -1,0 +1,266 @@
+<title>Team Mind UI Consistency</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&family=Poppins:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one reading column; four fixes, each = problem → cause → proposal (with a phone-sized mock) → steps → done-when */
+:root {
+  --bg: #F5F6FB; --surface: #FFFFFF; --fg: #171A3A; --muted: #5E6283; --line: #E2E4F0;
+  --navy: #12136E; --accent: #3A8DED; --accent-soft: #E7F0FD;
+  --bad: #C2364B; --bad-soft: #FBE9EC; --good: #1F8A5B; --good-soft: #E4F4EC; --code-bg: #EEF0F8;
+  --app-bg: #F6F7FB; --app-card: #FFFFFF; --app-navy: #12136E; --app-blue: #3A8DED; --app-text: #1B1D3A; --app-sub: #8A8DA8;
+  --f-body: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+  --f-app: "Poppins", "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0D0F24; --surface: #161936; --fg: #E8E9F6; --muted: #A2A5C6; --line: #2A2E55;
+  --navy: #AEB2FF; --accent: #6AAAF5; --accent-soft: #1B2A4A; --bad: #F08597; --bad-soft: #3A1A24;
+  --good: #6BD3A2; --good-soft: #163327; --code-bg: #1F2347; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0D0F24; --surface: #161936; --fg: #E8E9F6; --muted: #A2A5C6; --line: #2A2E55;
+  --navy: #AEB2FF; --accent: #6AAAF5; --accent-soft: #1B2A4A; --bad: #F08597; --bad-soft: #3A1A24;
+  --good: #6BD3A2; --good-soft: #163327; --code-bg: #1F2347; color-scheme: dark; }
+
+body { background: var(--bg); color: var(--fg); font-family: var(--f-body); font-size: 15.5px; line-height: 1.75; }
+.wrap { max-width: 780px; margin: 0 auto; padding-block: 40px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 44px; }
+header { display: flex; flex-direction: column; gap: 8px; }
+.eyebrow { font-size: 12px; letter-spacing: .06em; color: var(--accent); font-weight: 700; }
+h1 { font-size: 30px; line-height: 1.3; margin: 0; color: var(--navy); text-wrap: balance; }
+.lead { color: var(--muted); margin: 0; max-width: 62ch; }
+.toc { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.toc a { text-decoration: none; color: var(--navy); background: var(--surface); border: 1px solid var(--line);
+  padding: 6px 14px; border-radius: 999px; font-size: 13.5px; font-weight: 500; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+section.plan { display: flex; flex-direction: column; gap: 20px; }
+h2 { font-size: 22px; margin: 0; color: var(--navy); display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; text-wrap: balance; }
+h2 .tag { font-size: 12px; font-weight: 500; color: var(--muted); background: var(--surface); border: 1px solid var(--line); padding: 2px 10px; border-radius: 999px; }
+h3 { font-size: 16px; margin: 0; }
+p { margin: 0; max-width: 65ch; }
+.block { display: flex; flex-direction: column; gap: 10px; }
+.why { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.why .label { font-size: 12px; font-weight: 700; color: var(--bad); }
+
+code, .mono { font-family: var(--f-mono); font-size: 13px; background: var(--code-bg); padding: 1px 6px; border-radius: 4px; direction: ltr; unicode-bidi: isolate; }
+pre { margin: 0; background: var(--code-bg); border-radius: 10px; padding: 14px 16px; overflow-x: auto; direction: ltr; text-align: left; }
+pre code { background: none; padding: 0; font-size: 12.8px; line-height: 1.6; }
+
+ol.steps { margin: 0; padding: 0; list-style: none; counter-reset: s; display: flex; flex-direction: column; gap: 12px; }
+ol.steps > li { counter-increment: s; display: grid; grid-template-columns: 32px 1fr; gap: 12px; min-width: 0; }
+ol.steps > li::before { content: counter(s); width: 28px; height: 28px; border-radius: 50%; background: var(--navy); color: var(--surface);
+  display: grid; place-items: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+ol.steps > li > div { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+
+.done { background: var(--good-soft); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; }
+.done h3 { color: var(--good); }
+.done ul, .plain { margin: 0; padding-inline-start: 20px; display: flex; flex-direction: column; gap: 4px; }
+.ask { border-inline-start: 3px solid var(--accent); padding-inline-start: 12px; display: flex; flex-direction: column; gap: 4px; }
+.ask b { color: var(--accent); }
+
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 540px; font-size: 13.5px; }
+th, td { text-align: start; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; color: var(--muted); font-weight: 500; }
+tr:last-child td { border-bottom: 0; }
+
+/* phone mocks: always light, like the app */
+.mocks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 600px) { .mocks { grid-template-columns: 1fr; } h1 { font-size: 25px; } }
+figure { margin: 0; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+figcaption { font-size: 13px; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+figcaption .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.dot.before { background: var(--bad); } .dot.after { background: var(--good); }
+.phone { background: var(--app-bg); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; font-family: var(--f-app); direction: ltr; color: var(--app-text); }
+.bar { background: #fff; height: 46px; display: flex; align-items: center; justify-content: center; position: relative; font-weight: 700; color: var(--app-navy); font-size: 14px; }
+.bar .back { position: absolute; left: 10px; width: 26px; height: 26px; border-radius: 50%; background: var(--app-navy); }
+.bar .bm { position: absolute; right: 12px; width: 10px; height: 14px; border: 2px solid var(--app-navy); border-bottom-width: 0; }
+.ph-body { padding: 12px; display: flex; flex-direction: column; gap: 10px; min-height: 150px; }
+.ph-body.tight { padding-top: 0; }
+.mcard { background: var(--app-card); border-radius: 10px; height: 40px; box-shadow: 0 1px 2px rgba(18,19,110,.06); }
+.oldsw { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 11px; height: 28px; }
+.oldsw i { width: 40px; height: 20px; border-radius: 10px; background: #2E3570; position: relative; }
+.oldsw i::after { content: ""; position: absolute; left: 3px; top: 3px; width: 14px; height: 14px; border-radius: 50%; background: #fff; }
+.seg { background: #E9EBF5; border-radius: 999px; padding: 3px; display: grid; grid-template-columns: 1fr 1fr; font-size: 11.5px; font-weight: 600; }
+.seg span { text-align: center; padding: 6px 0; border-radius: 999px; color: #6B6F93; }
+.seg span.on { background: #fff; color: var(--app-navy); box-shadow: 0 1px 3px rgba(18,19,110,.12); }
+.empty { display: flex; flex-direction: column; align-items: center; gap: 6px; padding-block: 22px; text-align: center; }
+.empty .ic { width: 56px; height: 56px; border-radius: 50%; background: #E7F0FD; display: grid; place-items: center; }
+.empty .ic svg { width: 26px; height: 26px; }
+.empty b { font-size: 13px; color: var(--app-text); }
+.empty small { font-size: 11px; color: var(--app-sub); max-width: 26ch; line-height: 1.5; }
+.empty .cta { margin-top: 6px; font-size: 11px; font-weight: 600; color: #fff; background: var(--app-blue); padding: 6px 14px; border-radius: 999px; }
+.oldempty { display: flex; flex-direction: column; align-items: center; gap: 8px; padding-block: 28px; font-size: 11.5px; color: #8A8A8A; }
+.oldempty .a { width: 34px; height: 30px; border-radius: 4px; background: #6D6D6D; }
+.oldempty .b { width: 34px; height: 30px; border-radius: 50% 50% 4px 4px; border: 6px solid var(--app-navy); border-bottom-color: transparent; }
+.calbtn { background: var(--app-blue); color: #fff; border-radius: 999px; font-size: 11.5px; font-weight: 600; text-align: center; padding: 10px; }
+.calcard { background: #fff; border-radius: 12px; padding: 10px; display: flex; gap: 10px; align-items: center; box-shadow: 0 1px 2px rgba(18,19,110,.06); }
+.calcard .ib { width: 34px; height: 34px; border-radius: 9px; background: #E7F0FD; display: grid; place-items: center; flex: none; }
+.calcard .t { display: flex; flex-direction: column; flex: 1; min-width: 0; line-height: 1.35; }
+.calcard .t b { font-size: 12px; } .calcard .t small { font-size: 10.5px; color: var(--app-sub); }
+.calcard .chev { color: var(--app-sub); font-size: 14px; }
+.navyhead { background: var(--app-navy); color: #fff; height: 58px; border-radius: 0 0 16px 16px; display: grid; place-items: center; font-weight: 700; font-size: 14px; }
+footer { color: var(--muted); font-size: 13px; }
+
+.opts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 680px) { .opts { grid-template-columns: 1fr; } }
+.opt { background: var(--app-bg); border: 1px solid var(--line); border-radius: 16px; padding: 18px 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; font-family: var(--f-app); color: var(--app-text); text-align: center; position: relative; min-width: 0; }
+.opt.pick { border: 2px solid var(--good); }
+.opt .badge { position: absolute; top: 8px; inset-inline-end: 8px; font-family: var(--f-body); font-size: 11px; font-weight: 700; background: var(--good-soft); color: var(--good); padding: 1px 8px; border-radius: 6px; }
+.opt .name { font-family: var(--f-body); font-size: 12.5px; color: var(--muted); font-weight: 500; margin-top: 4px; }
+.opt b { font-size: 13px; } .opt small { font-size: 11px; color: var(--app-sub); line-height: 1.5; max-width: 24ch; }
+.logo { width: 34px; height: 34px; position: relative; }
+.logo::before { content: ""; position: absolute; inset: 4px 2px 2px; border: 6px solid var(--app-navy); border-bottom-color: transparent; border-radius: 50%; }
+.logo::after { content: ""; position: absolute; width: 8px; height: 8px; left: 13px; top: 15px; border-radius: 50%; background: var(--app-blue); }
+.o-disc { width: 92px; height: 92px; border-radius: 50%; background: #fff; display: grid; place-items: center; box-shadow: 0 8px 24px rgba(58,141,237,.18); }
+.o-tint { width: 76px; height: 76px; border-radius: 22px; background: #E7F0FD; display: grid; place-items: center; }
+.o-rings { width: 110px; height: 110px; border-radius: 50%; display: grid; place-items: center; background: radial-gradient(circle, transparent 38%, rgba(58,141,237,.10) 39%, rgba(58,141,237,.10) 40%, transparent 41%, transparent 58%, rgba(58,141,237,.07) 59%, rgba(58,141,237,.07) 60%, transparent 61%); }
+.o-rings .core { width: 58px; height: 58px; border-radius: 50%; background: #E7F0FD; display: grid; place-items: center; }
+.gapline { display: flex; flex-direction: column; font-family: var(--f-app); }
+.gaprow { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--muted); font-family: var(--f-body); }
+.gap { background: repeating-linear-gradient(45deg, rgba(194,54,75,.18) 0 4px, transparent 4px 8px); border-radius: 4px; }
+.gap.ok { background: repeating-linear-gradient(45deg, rgba(31,138,91,.22) 0 4px, transparent 4px 8px); }
+</style>
+
+<div class="wrap" dir="rtl" lang="ar">
+  <header>
+    <span class="eyebrow">TEAM MIND · خطة تعديل · الجولة التانية</span>
+    <h1>توحيد شكل الشاشات في Team Mind</h1>
+    <p class="lead">بعد ما جربت الجولة الأولى: الشاشة الفاضية شكلها مش لطيف، وMy Requests اللي بتتفتح من More لازم تبقى زي الهوم، والمسافات حوالين السويتشر لسه مش متساوية. الخطة دي بتحل التلاتة.</p>
+    <nav class="toc" aria-label="المحتوى">
+      <a href="#empty">١ · الشاشة الفاضية</a>
+      <a href="#myreq">٢ · هيدر My Requests</a>
+      <a href="#spacing">٣ · المسافات حوالين السويتشر</a>
+      <a href="#order">ترتيب التنفيذ</a>
+    </nav>
+  </header>
+
+  <!-- ============ 1. EMPTY ============ -->
+  <section class="plan" id="empty">
+    <h2>الشاشة الفاضية <span class="tag">NoExistingPlaceholderScreen</span></h2>
+    <div class="why">
+      <span class="label">إيه اللي مش لطيف في اللي اتعمل</span>
+      <ul class="plain">
+        <li>القرص الأبيض كبير جداً (حوالي 132) وعليه ظل أزرق، فشكله زي زرار مش زي رسالة. واللوجو صغير جواه فالمساحة الفاضية حواليه كبيرة.</li>
+        <li>القرص الأبيض على خلفية رمادية فاتحة بيبان ككتلة تقيلة في نص الشاشة.</li>
+        <li>البلوك كله في النص بالظبط، فالشاشة شكلها فاضي من فوق ومن تحت بنفس الدرجة. العين بترتاح أكتر لما الحاجة تبقى أعلى من النص شوية.</li>
+        <li>السطر التاني عريض أوي وطالع لحد حواف الشاشة تقريباً.</li>
+      </ul>
+    </div>
+
+    <div class="block">
+      <h3>3 اقتراحات، كلهم باللوجو</h3>
+      <div class="opts">
+        <div class="opt"><span class="o-disc"><span class="logo"></span></span><b>No interviews assigned.</b><small>Interviews scheduled for you will show up here.</small><span class="name">الحالي: قرص أبيض بظل</span></div>
+        <div class="opt"><span class="o-tint"><span class="logo"></span></span><b>No interviews yet</b><small>Interviews scheduled for you will show up here.</small><span class="name">أ · مربع ملون خفيف</span></div>
+        <div class="opt pick"><span class="badge">اقتراحي</span><span class="o-rings"><span class="core"><span class="logo"></span></span></span><b>No interviews yet</b><small>Interviews scheduled for you will show up here.</small><span class="name">ب · دواير إشارة حوالين اللوجو</span></div>
+      </div>
+      <p>اقتراحي هو <b>ب</b>: لوجو Team Mind أصلاً على شكل إشارة بتطلع من نقطة، فالدواير الرفيعة اللي حواليه بتكمّل نفس الفكرة. والدواير بتتحرك لبرا ببطء وتختفي (ripple) كل حوالي 3 ثواني، فالشاشة تبقى عايشة من غير ما تبقى مزعجة. ومفيش أي قرص أبيض ولا ظل.</p>
+    </div>
+
+    <div class="block">
+      <h3>الخطوات</h3>
+      <ol class="steps">
+        <li><div><b>الشكل.</b>
+          <p>اللوجو 48 جوه دايرة 80 بلون <code>buttons</code> شفاف 10%، وحواليها دايرتين رفاع (1.5) بنفس اللون شفاف 15% و8%. في <code>compact</code> الأحجام بتقل للنص تقريباً.</p></div></li>
+        <li><div><b>الحركة.</b>
+          <p><code>AnimationController</code> واحد بيتكرر كل 3 ثواني، والدايرتين بيكبروا ويختفوا ورا بعض. ولو المستخدم قافل الحركة من إعدادات الموبايل (<code>MediaQuery.disableAnimations</code>) بيفضلوا ثابتين. وأول ما الشاشة تظهر البلوك بيعمل fade وبيطلع لفوق 8 بكسل، بـ <code>AppMotion.slow</code>.</p></div></li>
+        <li><div><b>الكلام.</b>
+          <p>العنوان 17 <code>w600</code> بلون <code>secondaryButton</code> الكحلي بدل الأسود. الرسالة 13 رمادي وارتفاع السطر 1.5، وأقصى عرض لها 280 علشان تتكسر على سطرين بشكل مريح. وبين العنوان والرسالة 6.</p></div></li>
+        <li><div><b>المكان.</b>
+          <p>البلوك يتحط أعلى من النص بحوالي 10% من ارتفاعه (<code>Alignment(0, -0.2)</code>) بدل النص بالظبط.</p></div></li>
+        <li><div><b>رسائل أنضف.</b>
+          <p>أراجع عناوين الـ empty state الموجودة وأخليها أبسط وأوضح، زي "There Is No Requests" اللي تبقى "No requests yet"، وأعدّل العربي معاها. والتعديل بيبقى في الـ <b>values</b> بس جوه <code>en.json</code> و<code>ar.json</code>، والـ keys زي ما هي.</p></div></li>
+      </ol>
+    </div>
+    <div class="ask"><b>محتاج منك قرار</b><p>نمشي على <b>ب</b> (دواير الإشارة)، ولا <b>أ</b> (مربع ملون من غير حركة)؟</p></div>
+  </section>
+
+  <!-- ============ 2. MY REQUESTS ============ -->
+  <section class="plan" id="myreq">
+    <h2>My Requests من More تبقى زي الهوم</h2>
+    <div class="why">
+      <span class="label">السبب</span>
+      <p>في الجولة اللي فاتت حطيت الهيدر الكحلي لتاب الـ bottom bar بس. فـ My Requests لما تتفتح من More طلعت بـ app bar أبيض، والمربع الزجاجي بتاع الكاليندر بقى أبيض على أبيض وشكله غريب، زي ما في صورتك.</p>
+    </div>
+    <div class="block">
+      <h3>الخطوات</h3>
+      <ol class="steps">
+        <li><div><b>القاعدة تبقى حسب نوع الطلبات، مش حسب جاية منين.</b>
+          <p><code>brandedHeader: requestsType == mine</code>. يعني My Requests بالهيدر الكحلي والكاروسيل في أي مكان تتفتح منه، وTeam وOther departments وAll company بالـ app bar الأبيض.</p></div></li>
+        <li><div><b>أشيل <code>isMainTab</code>.</b>
+          <p>مبقاش له لازمة، فأشيله من <code>RequestsScreen</code> والـ router و<code>main_controller</code>.</p></div></li>
+        <li><div><b>زرار الرجوع على الكحلي.</b>
+          <p>زرار الرجوع دايرة كحلي وجواها سهم أبيض، فعلى الهيدر الكحلي الدايرة مش هتبان وهيبان السهم بس. ده نفس اللي كان في Team Requests قبل كده. ولو عايز الدايرة تبان، ممكن تبقى بيضا شفافة 15%.</p></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ 3. SPACING ============ -->
+  <section class="plan" id="spacing">
+    <h2>المسافات حوالين السويتشر <span class="tag">7 شاشات</span></h2>
+    <div class="why">
+      <span class="label">ليه المسافة لسه مش متساوية</span>
+      <p>أنا حطيت 12 فوق السويتشر و8 تحته جوه الـ widget نفسه. بس كل شاشة لسه بتضيف حاجات تحته، فالمسافة تحت بتوصل لحوالي 30:</p>
+      <div class="gapline">
+        <div class="gaprow"><span class="gap" style="width:24px;height:12px"></span>فوق السويتشر: 12</div>
+        <div class="gaprow"><span class="gap" style="width:60px;height:12px"></span>تحته: 8 من الـ widget + <code>SizedBox(10)</code> في الشاشة + padding أول الليست (12 أو 16 أو 6 حسب الشاشة) = حوالي 30</div>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>الشاشة</th><th>اللي تحت السويتشر دلوقتي</th></tr></thead>
+        <tbody>
+          <tr><td>Expense claims</td><td><code>SizedBox(10)</code>، وبعدها scope chips و<code>SizedBox(10)</code>، والليست</td></tr>
+          <tr><td>Salary advance</td><td>نفس Expense، والليست <code>listPadding</code> (12 فوق)</td></tr>
+          <tr><td>Overtime</td><td><code>SizedBox(10)</code>، وبعده كارت الكاليندر بـ <code>vertical: 6</code>، والليست</td></tr>
+          <tr><td>Shift change</td><td><code>SizedBox(10)</code> مرتين، والليست بـ padding بتاعها</td></tr>
+          <tr><td>Daily reports</td><td><code>SizedBox(10)</code>، والليست <code>listPadding</code></td></tr>
+          <tr><td>Rewards &amp; penalties</td><td><code>SizedBox(20)</code></td></tr>
+          <tr><td>Notifications</td><td><code>SizedBox(25)</code></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="block">
+      <h3>القاعدة اللي هتمشي على كل الشاشات</h3>
+      <div class="gapline">
+        <div class="gaprow"><span class="gap ok" style="width:24px;height:12px"></span>app bar ↔ أول عنصر = 12</div>
+        <div class="gaprow"><span class="gap ok" style="width:24px;height:12px"></span>بين أي صفين في الهيدر (سويتشر، chips، فلاتر، كارت الكاليندر) = 12</div>
+        <div class="gaprow"><span class="gap ok" style="width:24px;height:12px"></span>آخر صف ↔ أول كارت في الليست = 12</div>
+      </div>
+      <p>يعني المسافة اللي فوق السويتشر هي هي اللي تحته، وهي هي اللي بين أي حاجتين قبل الليست. والقيمة دي <code>AppSpacing.md</code>.</p>
+    </div>
+
+    <div class="block">
+      <h3>الخطوات</h3>
+      <ol class="steps">
+        <li><div><b><code>AppListHeader</code> في <code>core/widgets/</code>.</b>
+          <p>widget بياخد list من الصفوف اللي فوق الليست (السويتشر، الـ scope chips، الفلاتر، كارت الكاليندر)، ويحطهم ورا بعض بمسافة 12 بينهم و12 قبل أول واحد، ويتجاهل أي صف فاضي. كده المسافة متحسبة في مكان واحد بدل ما كل شاشة تحسبها بإيدها.</p></div></li>
+        <li><div><b>السويتشر يرجع من غير padding.</b>
+          <p><code>SwitchRowNotification</code> يرجع من غير padding، لأن <code>AppListHeader</code> هو اللي بيحط المسافات. وشكل السويتشر نفسه مش هيتغير زي ما طلبت.</p></div></li>
+        <li><div><b>الليست تبدأ من غير فراغ فوق.</b>
+          <p>الليست اللي بعد الهيدر تبدأ بـ <code>top: 12</code> بالظبط: <code>AppSpacing.listPadding</code> هو أصلاً <code>md</code>، فهوحّد عليه الشاشات اللي فيها 6 أو 16. وهشيل كل <code>SizedBox(10/20/25)</code> اللي بين الصفوف.</p></div></li>
+        <li><div><b>الشاشات.</b>
+          <p>Expense claims وSalary advance وOvertime وShift change وDaily reports وRewards &amp; penalties وNotifications. وكمان Requests (Team / Other / All) علشان كارت الكاليندر فيها يمشي على نفس القاعدة.</p></div></li>
+        <li><div><b>القاعدة تتكتب.</b>
+          <p>أضيفها كقاعدة رقم 8 في أول <code>app_design.dart</code>، وفي README بتاع <code>core/widgets</code>، علشان أي شاشة جديدة تمشي عليها.</p></div></li>
+      </ol>
+    </div>
+    <div class="done"><h3>هنعتبره خلص لما</h3><ul>
+      <li>في الـ 7 شاشات: المسافة من الـ app bar للسويتشر = من السويتشر لأول كارت = 12، وده لما مفيش فلاتر.</li>
+      <li>لما يبقى فيه scope chips أو فلاتر شغالة: كل مسافة بين صفين = 12 برضه.</li>
+    </ul></div>
+  </section>
+
+  <section class="plan" id="order">
+    <h2>ترتيب التنفيذ</h2>
+    <ol class="steps">
+      <li><div><b>هيدر My Requests</b><p>تعديل سطرين، وبيصلح المربع الأبيض على أبيض.</p></div></li>
+      <li><div><b>المسافات</b><p><code>AppListHeader</code> والـ 8 شاشات، وكل شاشة commit لوحدها.</p></div></li>
+      <li><div><b>الشاشة الفاضية</b><p>بعد ما تختار أ أو ب.</p></div></li>
+    </ol>
+    <p>وفي كل مرة: أي نص جديد يبقى له key في <code>en.json</code> و<code>ar.json</code> و<code>AppStrings</code>، والتغيير يتشاف بعد full restart مش hot reload.</p>
+  </section>
+
+  <footer>اتعملت من الكود على branch ‏<span class="mono">new-version2</span>. الأشكال اللي في الصفحة توضيح تقريبي.</footer>
+</div>

@@ -34,10 +34,10 @@ class _CancelTrackingModalState extends State<CancelTrackingModal> {
           Container(
             padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              color: Color(AppColors.warningYellow).withOpacity(0.15),
+              color: AppColors.statusTones(Color(AppColors.warningYellow)).tint,
               shape: BoxShape.circle,
             ),
-            child: Icon(Icons.warning_amber_rounded, color: Color(AppColors.warningYellow), size: 24),
+            child: Icon(Icons.warning_amber_rounded, color: AppColors.statusTones(Color(AppColors.warningYellow)).text, size: 24),
           ),
           const SizedBox(width: 10),
           Expanded(

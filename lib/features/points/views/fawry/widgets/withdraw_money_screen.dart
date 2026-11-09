@@ -112,13 +112,7 @@ class _WithdrawMoneyScreenState extends State<WithdrawMoneyScreen> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(AppRadius.xl),
                               color: Color(0xffFFFFFF),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color(0xffC9CFD2).withOpacity(0.5),
-                                  blurRadius: AppSizes.s5,
-                                  spreadRadius: 1,
-                                )
-                              ],
+                              boxShadow: AppShadows.card,
                             ),
                             child: Column(
                               children: [
@@ -251,13 +245,7 @@ class _WithdrawMoneyScreenState extends State<WithdrawMoneyScreen> {
               decoration: BoxDecoration(
                 color: const Color(0xffFFFFFF),
                 borderRadius: BorderRadius.circular(AppRadius.xl),
-                boxShadow: [
-                  BoxShadow(
-                      color: const Color(0xff000000).withOpacity(0.1),
-                      blurRadius: 11,
-                      spreadRadius: 0,
-                      offset: const Offset(0, -4))
-                ],
+                boxShadow: AppShadows.card,
               ),
               padding: const EdgeInsets.all(16.0),
               child: (value.isPostPayLoading == false)?ButtonWidget(

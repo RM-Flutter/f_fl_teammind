@@ -99,6 +99,8 @@ abstract class AppImages {
       '$_homeImagesDirectory/floating_actions_buttons_images/fp.png';
   static const String addFloatingActionButtonIcon =
       '$_homeImagesDirectory/floating_actions_buttons_images/add.png';
+  /// Texture drawn at 50% opacity over the navy branded headers (home, requests).
+  static const String brandedHeaderBackground = 'assets/images/png/home-app-bar.png';
   // Notifications images
   static const String notificationGeneral =
       '$_notificationsImagesDirectory/general.png';

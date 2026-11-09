@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/layout_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
@@ -27,8 +28,15 @@ class MyApp extends StatelessWidget {
     }
     // precacheImage(const AssetImage(AppImages.splashScreenBackground), context);
     final appGoRouter = goRouter(context);
-    return ScreenUtilInit(
-      designSize: const Size(375, 812), // Standard mobile mockup size
+    // `.w` / `.h` / `.sp` scale the 375x812 Figma sizes on phones only. On tablets and desktop the
+    // design size is the real window, so they return the number as written (no giant text).
+    return MediaQuery.fromView(
+      view: View.of(context),
+      child: Builder(builder: (context) {
+      final size = MediaQuery.sizeOf(context);
+      final isPhone = LayoutService.sizeClassForWidth(size.width) == SizeClass.compact;
+      return ScreenUtilInit(
+      designSize: isPhone ? const Size(375, 812) : size,
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
@@ -50,6 +58,8 @@ class MyApp extends StatelessWidget {
           },
         );
       },
+    );
+      }),
     );
   }
 }

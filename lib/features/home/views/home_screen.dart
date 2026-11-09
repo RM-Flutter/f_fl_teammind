@@ -39,6 +39,7 @@ import '../../tracking/views/widgets/tracking_home_preview_banner.dart';
 import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/widgets/app_section_header.widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -282,7 +283,9 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context, viewModel, child) => viewModel.isLoading
                   ? const HomeLoadingPage()
                   : Padding(
-                      padding: EdgeInsets.only(top: AppSizes.s12),
+                      // No extra bottom room: the FAB hides on scroll and the last
+                      // section already ends with its AppSpacing.section margin.
+                      padding: const EdgeInsets.only(top: AppSpacing.md),
                       child: _buildReorderableWidgets(viewModel),
                     ),
             )
@@ -368,7 +371,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
         // Customize Button Row
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          padding: const EdgeInsets.fromLTRB(
+              AppSpacing.page, 0, AppSpacing.page, AppSpacing.sm),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -391,7 +395,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         size: 16,
                         color: _isEditMode ? Colors.red : Color(AppColors.secondaryButton),
                       ),
-                      const SizedBox(width: 4),
+                      gapW4,
                       Text(
                         _isEditMode 
                           ? ('done'.tr())
@@ -441,7 +445,7 @@ class _HomeScreenState extends State<HomeScreen> {
               proxyDecorator: (child, index, animation) {
                 _isDragging = true;
                 return Material(
-                  elevation: 8,
+                  elevation: AppElevation.overlay,
                   shadowColor: Color(AppColors.shadow).withValues(alpha: 0.4),
                   borderRadius: BorderRadius.circular(AppRadius.md),
                   child: child,
@@ -507,8 +511,9 @@ class _HomeScreenState extends State<HomeScreen> {
     if (isHidden && !_isEditMode) {
       return Container(
         key: ValueKey(widgetType.id),
-        margin: EdgeInsets.only(bottom: AppSizes.s8, top: AppSizes.s4),
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
+        margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+        padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.page, vertical: AppSpacing.xs),
         child: Row(
           children: [
             _editCircleButton(widgetType, isHidden: true),
@@ -532,10 +537,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Container(
       key: ValueKey(widgetType.id),
-      margin: EdgeInsets.only(
-        bottom: AppSizes.s12,
-        top: AppSizes.s8,
-      ),
+      // One rule for the space between home sections (rule 3).
+      margin: const EdgeInsets.only(bottom: AppSpacing.section),
       child: FadeSlideIn(
         delay: Duration(milliseconds: 90 * index),
         offsetY: 0.02,
@@ -631,7 +634,8 @@ class _HomeScreenState extends State<HomeScreen> {
           KeyedSubtree(
             key: const ValueKey('edit-controls'),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 2),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.page, vertical: AppSpacing.xs / 2),
               child: Row(
                 children: [
                   _editCircleButton(widgetType, isHidden: isHidden),
@@ -728,7 +732,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return SizedBox(
       height: 120,
       child: ListView.separated(
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: AppSpacing.pagePadding,
         scrollDirection: Axis.horizontal,
         itemCount: items.length,
         separatorBuilder: (context, index) => SizedBox(width: 12),
@@ -775,34 +779,17 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildTasksSection(BuildContext context, List tasks) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+    return Padding(
+      padding: AppSpacing.pagePadding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                AppStrings.myTasksHeader.tr(),
-                style: AppStyles.heading(context).copyWith(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              TextButton(
-                onPressed: () => context.pushNamed(AppRoutes.taskScreen.name,
-                    pathParameters: {'lang': context.locale.languageCode}),
-                child: Text(
-                  AppStrings.viewAll.tr(),
-                  style: AppStyles.titleTextContent(context).copyWith(
-                    fontSize: 10,
-                  ),
-                ),
-              ),
-            ],
+          AppSectionHeader(
+            title: AppStrings.myTasksHeader.tr(),
+            onViewAll: () => context.pushNamed(AppRoutes.taskScreen.name,
+                pathParameters: {'lang': context.locale.languageCode}),
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.sectionHeaderGap),
           ...tasks.take(3).map((task) {
             // Mapping the dynamic task from home API to the TaskListTileWidget
             // If the model is different, we adjust the fields

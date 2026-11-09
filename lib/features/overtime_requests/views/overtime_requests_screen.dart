@@ -1,3 +1,4 @@
+import 'package:app_test/core/widgets/app_shortcut_card.widget.dart';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -18,10 +19,10 @@ import '../../../../core/utils/placeholder_no_existing_screen/no_existing_placeh
 import '../../../../core/widgets/shared_list_filter_widget.dart'
     as app_test_filter;
 import '../../../../core/widgets/active_filters_row_widget.dart';
-import '../../requests/shared/ui/widgets/custom_requests_page_button.widget.dart';
 import 'overtime_calendar_screen.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/utils/request_scope_helper.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/app_shimmer_list.dart';
 
 class OvertimeRequestsScreen extends StatefulWidget {
   final Map<String, dynamic>? extra;
@@ -115,7 +116,7 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
     if (status.toLowerCase().contains('approved')) return Colors.green;
     if (status.toLowerCase().contains('rejected') ||
         status.toLowerCase().contains('refused')) return Colors.red;
-    return Colors.orange;
+    return Color(AppColors.warningYellow);
   }
 
   String formatDuration(int? totalMinutes) {
@@ -201,7 +202,7 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
       body: Consumer<OvertimeRequestsProvider>(
         builder: (context, provider, child) {
           if (provider.isLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const AppShimmerList();
           }
 
           final list = provider.isForDepartment
@@ -212,7 +213,6 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
             children: [
               // every employee can open "Other" (other departments / all company); "Team" is managers only
               ...[
-                SizedBox(height: 10),
                 SwitchRowNotification(
                   value: provider.isForDepartment,
                   leftText: AppStrings.myRequests.tr(),
@@ -221,7 +221,6 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
                     provider.toggleDepartmentView(val, context);
                   },
                 ),
-                SizedBox(height: 10),
               ],
               if (provider.isForDepartment) ...[
                 _ScopeSelectorRow(
@@ -231,7 +230,6 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
                   onSelected: (scope) =>
                       provider.setIncomingScope(scope, context),
                 ),
-                SizedBox(height: 10),
               ],
               ActiveFiltersRowWidget(
                 empName: provider.filterEmpName,
@@ -244,12 +242,13 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
                 onClearStatus: () {},
               ),
               Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                child: CustomRequestsPageButton(
+                padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.page, AppSpacing.md, AppSpacing.page, 0),
+                child: AppShortcutCard(
                   title: _getCalendarButtonTitle(context, provider),
+                  subtitle: AppStrings.calendarShortcutHint.tr(),
                   icon: Icons.calendar_month_outlined,
-                  onPressed: () {
+                  onTap: () {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (_) => OvertimeCalendarScreen(
@@ -277,9 +276,8 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
                           controller: _scrollController,
                           clipBehavior: Clip.none,
                           physics: const AlwaysScrollableScrollPhysics(),
-                          padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 8)
-                              .copyWith(bottom: 80),
+                          padding: const EdgeInsets.fromLTRB(
+                              AppSpacing.page, AppSpacing.md, AppSpacing.page, 80),
                           itemCount: list.length +
                               (provider.isForDepartment
                                   ? (provider.incomingIsLoadingMore ? 1 : 0)
@@ -350,7 +348,7 @@ class _ScopeSelectorRow extends StatelessWidget {
         },
     ];
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.page, AppSpacing.md, AppSpacing.page, 0),
       child: Center(
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,

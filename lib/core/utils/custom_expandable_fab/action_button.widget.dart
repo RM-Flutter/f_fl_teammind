@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_design.dart';
 import 'package:flutter/material.dart';
 
 class ActionButton extends StatefulWidget {
@@ -29,7 +30,7 @@ class _ActionButtonState extends State<ActionButton> {
       shape: const CircleBorder(),
       clipBehavior: Clip.antiAlias,
       color: theme.colorScheme.secondary,
-      elevation: 4.0,
+      elevation: AppElevation.raised,
       child: IconButton(
         onPressed: _isLoading ? () {} : _handlePressed,
         icon: widget.icon,

@@ -100,13 +100,7 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
                                   padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
                                   decoration: BoxDecoration(
                                       color: Color(AppColors.background),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Color(AppColors.disableButton).withOpacity(0.5),
-                                          blurRadius: AppSizes.s5,
-                                          spreadRadius: 1,
-                                        )
-                                      ]
+                                      boxShadow: AppShadows.none
                                   ),
                                   child: Row(
                                     crossAxisAlignment: CrossAxisAlignment.center,

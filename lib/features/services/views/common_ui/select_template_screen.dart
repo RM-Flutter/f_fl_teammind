@@ -211,13 +211,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
         border: isSelected
             ? Border.all(color: Color(AppColors.buttons), width: 3)
             : Border.all(color: Colors.grey[300]!, width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withValues(alpha: 0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        boxShadow: AppShadows.card,
       ),
       child: Stack(
         children: [

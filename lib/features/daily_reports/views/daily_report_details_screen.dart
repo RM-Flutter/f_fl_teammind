@@ -138,13 +138,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
           bottomLeft: Radius.circular(AppRadius.xl),
           bottomRight: Radius.circular(AppRadius.xl),
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Color(AppColors.secondaryButton).withOpacity(0.2),
-            blurRadius: 20,
-            offset: const Offset(0, 10),
-          )
-        ],
+        boxShadow: AppShadows.card,
       ),
       child: Stack(
         children: [
@@ -377,13 +371,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.lg),
         border: Border.all(color: Colors.grey.shade100, width: 1.5),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.02),
-            blurRadius: 16,
-            offset: const Offset(0, 8),
-          ),
-        ],
+        boxShadow: AppShadows.card,
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(AppRadius.lg),
@@ -452,13 +440,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.xl),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 24,
-            offset: const Offset(0, 8),
-          ),
-        ],
+        boxShadow: AppShadows.card,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -597,9 +579,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                               child: Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(AppRadius.lg),
-                                  boxShadow: [
-                                    BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))
-                                  ],
+                                  boxShadow: AppShadows.card,
                                 ),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(AppRadius.lg),

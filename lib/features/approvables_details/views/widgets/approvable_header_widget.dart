@@ -28,7 +28,7 @@ class ApprovableHeaderWidget extends StatelessWidget {
       case 'waiting':
       case 'waiting_seen':
       case 'pending':
-        return const Color(0xFFFF9800);
+        return Color(AppColors.warningYellow);
       default:
         return Colors.blue;
     }

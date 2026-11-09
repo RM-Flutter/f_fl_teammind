@@ -388,17 +388,17 @@ class ApprovableCardWidget extends StatelessWidget {
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: Color(AppColors.warningYellow).withOpacity(0.12),
+                  color: AppColors.statusTones(Color(AppColors.warningYellow)).tint,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(Icons.manage_accounts_rounded,
-                    color: Color(AppColors.warningYellow), size: 22),
+                    color: AppColors.statusTones(Color(AppColors.warningYellow)).text, size: 22),
               ),
               const SizedBox(height: 4),
               Text(
                 'as_someone'.tr(),
                 style: TextStyle(
-                  color: Color(AppColors.warningYellow),
+                  color: AppColors.statusTones(Color(AppColors.warningYellow)).text,
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
                 ),
@@ -492,8 +492,9 @@ class ApprovableCardWidget extends StatelessWidget {
       onTap: onTap,
       onLongPress: onLongPress,
       padding: AppSpacing.cardPadding,
+      // No horizontal margin: slidable and normal cards must share the same edges (rule 1).
       margin: slideActions.isNotEmpty
-          ? const EdgeInsets.symmetric(horizontal: 1, vertical: 2)
+          ? const EdgeInsets.symmetric(vertical: 2)
           : null,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -638,13 +639,12 @@ class ApprovableCardWidget extends StatelessWidget {
                         child: Container(
                           padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
-                            color: Color(AppColors.warningYellow)
-                                .withOpacity(0.12),
+                            color: AppColors.statusTones(Color(AppColors.warningYellow)).tint,
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
                             Icons.people_alt_rounded,
-                            color: Color(AppColors.warningYellow),
+                            color: AppColors.statusTones(Color(AppColors.warningYellow)).text,
                             size: 18,
                           ),
                         ),

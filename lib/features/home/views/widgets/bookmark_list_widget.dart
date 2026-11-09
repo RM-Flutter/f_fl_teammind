@@ -182,13 +182,7 @@ class _BookmarkListWidgetState extends State<BookmarkListWidget> {
         decoration: BoxDecoration(
           color: Color(AppColors.secondaryButton),
           borderRadius: BorderRadius.circular(AppRadius.md),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
+          boxShadow: AppShadows.card,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

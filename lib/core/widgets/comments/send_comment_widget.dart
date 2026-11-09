@@ -529,9 +529,7 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(18),
-                            boxShadow: const [
-                              BoxShadow(color: Color(0x22000000), blurRadius: 8)
-                            ],
+                            boxShadow: AppShadows.raised,
                           ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,

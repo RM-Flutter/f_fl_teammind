@@ -1,8 +1,58 @@
 import 'package:flutter/material.dart';
 
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/platform/platform_is.dart';
 
+/// The three window sizes the whole app is built for (same split as Material 3 window size
+/// classes). Decide layout from the WIDTH only, never from the platform or the orientation.
+enum SizeClass { compact, medium, expanded }
+
 class LayoutService {
+  static const double compactMaxWidth = 600;
+  static const double mediumMaxWidth = 1024;
+
+  /// compact < 600 (phones), medium 600..1023 (tablet portrait, small windows),
+  /// expanded >= 1024 (tablet landscape, desktop, web).
+  static SizeClass sizeClassOf(BuildContext context) =>
+      sizeClassForWidth(MediaQuery.sizeOf(context).width);
+
+  static SizeClass sizeClassForWidth(double width) {
+    if (width < compactMaxWidth) return SizeClass.compact;
+    if (width < mediumMaxWidth) return SizeClass.medium;
+    return SizeClass.expanded;
+  }
+
+  static bool isCompact(BuildContext context) =>
+      sizeClassOf(context) == SizeClass.compact;
+  static bool isMedium(BuildContext context) =>
+      sizeClassOf(context) == SizeClass.medium;
+  static bool isExpanded(BuildContext context) =>
+      sizeClassOf(context) == SizeClass.expanded;
+
+  /// Widest the page content may get; wider windows centre it (see AppSizes.contentMaxWidth*).
+  static double contentMaxWidth(BuildContext context) {
+    switch (sizeClassOf(context)) {
+      case SizeClass.compact:
+        return double.infinity;
+      case SizeClass.medium:
+        return AppSizes.contentMaxWidthMedium;
+      case SizeClass.expanded:
+        return AppSizes.contentMaxWidthExpanded;
+    }
+  }
+
+  /// How many columns a list of simple cards gets.
+  static int listColumns(BuildContext context) {
+    switch (sizeClassOf(context)) {
+      case SizeClass.compact:
+        return 1;
+      case SizeClass.medium:
+        return 2;
+      case SizeClass.expanded:
+        return 3;
+    }
+  }
+
   /// check if the device is mobile
   static bool isMobile(BuildContext context) {
     return MediaQuery.of(context).size.width < 900 &&

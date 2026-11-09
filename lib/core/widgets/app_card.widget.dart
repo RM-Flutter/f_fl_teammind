@@ -198,8 +198,8 @@ class AppCardLeadingAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveColor =
-        borderColor ?? accentColor ?? Color(AppColors.buttons);
+    final tones = AppColors.statusTones(
+        borderColor ?? accentColor ?? Color(AppColors.buttons));
     final hasImage = imageUrl != null &&
         imageUrl!.trim().isNotEmpty &&
         imageUrl!.startsWith('http');
@@ -211,7 +211,7 @@ class AppCardLeadingAvatar extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(color: effectiveColor, width: 2),
+        border: Border.all(color: tones.ring, width: 2),
       ),
       child: ClipOval(
         child: hasImage
@@ -219,25 +219,25 @@ class AppCardLeadingAvatar extends StatelessWidget {
                 imageUrl: imageUrl!,
                 fit: BoxFit.cover,
                 errorWidget: (_, __, ___) =>
-                    _buildFallback(initials, effectiveColor),
+                    _buildFallback(initials, tones),
                 placeholder: (_, __) =>
-                    _buildFallback(initials, effectiveColor),
+                    _buildFallback(initials, tones),
               )
-            : _buildFallback(initials, effectiveColor),
+            : _buildFallback(initials, tones),
       ),
     );
   }
 
-  Widget _buildFallback(String initials, Color effectiveColor) {
+  Widget _buildFallback(String initials, StatusTones tones) {
     return Container(
-      color: effectiveColor.withOpacity(0.12),
+      color: tones.tint,
       alignment: Alignment.center,
       child: icon != null
-          ? Icon(icon, color: effectiveColor, size: size * 0.45)
+          ? Icon(icon, color: tones.text, size: size * 0.45)
           : Text(
               initials,
               style: TextStyle(
-                color: effectiveColor,
+                color: tones.text,
                 fontWeight: FontWeight.bold,
                 fontSize: size * 0.32,
               ),

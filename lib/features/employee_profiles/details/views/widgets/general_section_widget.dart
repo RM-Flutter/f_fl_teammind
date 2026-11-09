@@ -85,7 +85,7 @@ class GeneralSectionWidget extends StatelessWidget {
           if (employee?.jobDescription != null &&
               employee?.jobDescription?.isNotEmpty == true) ...[
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15),
+              padding: AppSpacing.pagePadding,
               child: Text(
                 AppStrings.jopDescription.tr().toUpperCase(),
                 style: textStyle,
@@ -93,7 +93,7 @@ class GeneralSectionWidget extends StatelessWidget {
             ),
             SizedBox(height: 12),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15),
+              padding: AppSpacing.pagePadding,
               child: ExpandableTextWidget(
                 text: employee!.jobDescription!,
                 style: AppStyles.greyContent(context).copyWith(
@@ -126,7 +126,7 @@ class GeneralSectionWidget extends StatelessWidget {
               (employee?.weekends != null &&
                   employee?.weekends?.isNotEmpty == true)) ...[
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15),
+              padding: AppSpacing.pagePadding,
               child: Text(
                 AppStrings.generalInfo.tr().toUpperCase(),
                 style: textStyle,

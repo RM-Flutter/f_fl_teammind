@@ -35,7 +35,7 @@ class ActiveFiltersRowWidget extends StatelessWidget {
     if (!hasFilters) return const SizedBox.shrink();
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.page, AppSpacing.md, AppSpacing.page, 0),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(

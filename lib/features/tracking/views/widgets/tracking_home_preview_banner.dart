@@ -24,13 +24,7 @@ class TrackingHomePreviewBanner extends StatelessWidget {
           end: Alignment.bottomLeft,
         ),
         borderRadius: BorderRadius.circular(AppRadius.lg),
-        boxShadow: [
-          BoxShadow(
-            color: Color(AppColors.secondaryButton).withOpacity(0.3),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: AppShadows.raised,
       ),
       child: Material(
         color: Colors.transparent,

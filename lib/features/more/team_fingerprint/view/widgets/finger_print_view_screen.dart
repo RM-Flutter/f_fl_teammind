@@ -19,6 +19,7 @@ import '../../../../../core/constants/app_sizes.dart' show AppSizes, gapH12;
 import '../../../../fingerprint/data/models/fingerprint_model.dart';
 import '../../../../fingerprint/controller/fingerprint_controller.dart';
 import '../../../../../core/widgets/finger_print/loading/fingerprint_loading_screen.dart';
+import 'package:app_test/core/constants/app_design.dart';
 
 class FingerPrintViewScreen extends StatefulWidget {
   final String? empId;
@@ -64,11 +65,16 @@ class _FingerPrintViewScreenState extends State<FingerPrintViewScreen> {
             ),
           ),
           pageContext: context,
-          title: AppStrings.fingerprintsTitle.tr(),
+          // Opened for one employee: his name is the title, so no big name row under the app bar.
+          title: (widget.empName != null &&
+                  widget.empName!.isNotEmpty &&
+                  widget.empName != "noName")
+              ? widget.empName!
+              : AppStrings.fingerprintsTitle.tr(),
           onRefresh: () async => await viewModel.initializeFingerprintScreen(
               context: context, empId: widget.empId),
           body: Padding(
-            padding: EdgeInsets.all(AppSizes.s12),
+            padding: AppSpacing.pageAll,
             child: SingleChildScrollView(
               child: Consumer<FingerprintViewModel>(
                   builder: (context, viewModel, child) => viewModel.isLoading
@@ -81,28 +87,6 @@ class _FingerPrintViewScreenState extends State<FingerPrintViewScreen> {
                           : Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                  if (widget.empName != null &&
-                                      widget.empName!.isNotEmpty &&
-                                      widget.empName != "noName")
-                                    Container(
-                                      width: double.infinity,
-                                      alignment: Alignment.center,
-                                      child: Center(
-                                        child: Text(
-                                          widget.empName!,
-                                          style: AppStyles.heading(context).copyWith(
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 22),
-                                        ),
-                                      ),
-                                    ),
-                                  if (widget.empName != null &&
-                                      widget.empName!.isNotEmpty &&
-                                      widget.empName != "noName")
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-
                                   /// general screen message widget for other requests types
                                   // GeneralScreenMessageWidget(
                                   //     screenId: '/fingerprints'),

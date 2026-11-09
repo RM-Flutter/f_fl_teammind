@@ -94,14 +94,7 @@ class _FawryProviderScreenState extends State<FawryProviderScreen> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(AppRadius.md),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.15),
-                      blurRadius: 10,
-                      spreadRadius: 2,
-                      offset: Offset(0, 4),
-                    ),
-                  ],
+                  boxShadow: AppShadows.card,
                 ),
                 child: Padding(
                   padding: EdgeInsets.only(bottom: LocalizationService.isArabic(context: context) ?20 : 30,top: 50, left: 5, right: 5),

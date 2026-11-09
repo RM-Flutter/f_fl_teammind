@@ -1,3 +1,4 @@
+import 'package:app_test/core/widgets/app_shortcut_card.widget.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_images.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
@@ -35,7 +36,6 @@ import 'package:app_test/core/widgets/approvable_card_widget.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import '../../shared/ui/widgets/custom_requests_page_button.widget.dart';
 import 'widgets/loading_appbar_loading_widget.dart';
 import 'package:app_test/core/constants/app_design.dart';
 
@@ -130,6 +130,8 @@ class _RequestsScreenState extends State<RequestsScreen> {
       child: TemplatePage(
           pageContext: context,
           routeName: AppRoutes.requests.name,
+          // Same navy header as home, with the balance carousel inside it ("mine" only, wherever it is opened from).
+          brandedHeader: widget.requestsType == GetRequestsTypes.mine,
           floatingActionButton: Container(
             padding: EdgeInsets.symmetric(horizontal: LocalizationService.isArabic(context: context) ? 35 : 0),
             width: double.infinity,
@@ -293,10 +295,8 @@ class _RequestsScreenState extends State<RequestsScreen> {
             preferredSize: const Size.fromHeight(170),
             child: Consumer<RequestsViewModel>(
                 builder: (context, viewModel, child) => Padding(
-                  padding: const EdgeInsets.only(
-                      left: 12,
-                      right: 12,
-                      top: 10),
+                  // Horizontal page padding is inside the carousel / its loader (rule 1).
+                  padding: const EdgeInsets.only(top: AppSpacing.sm),
                   child: viewModel.isLoading
                       ? const RequestsAppbarLoading()
                       : VacationListWidget(
@@ -363,7 +363,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
 
                             if (!hasRequests) {
                               return Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                padding: AppSpacing.pagePadding,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
@@ -405,14 +405,14 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                 child: ListView(
                                   controller: _scrollController,
                                   clipBehavior: Clip.none,
-                                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 140), // keep last card clear of the FABs
+                                  padding: const EdgeInsets.fromLTRB(AppSpacing.page, AppSpacing.md, AppSpacing.page, 140), // keep last card clear of the FABs
                                   children: [
                                     /// calendar button
                                     if (widget.requestsType == GetRequestsTypes.myTeam ||
                                         widget.requestsType == GetRequestsTypes.otherDepartment ||
                                         widget.requestsType == GetRequestsTypes.allCompany)
-                                      CustomRequestsPageButton(
-                                        onPressed: () async => await context.pushNamed(
+                                      AppShortcutCard(
+                                        onTap: () async => await context.pushNamed(
                                           AppRoutes.requestsCalendar.name,
                                           pathParameters: {
                                             'type': widget.requestsType?.name ?? 'mine',
@@ -431,10 +431,11 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                             : widget.requestsType == GetRequestsTypes.allCompany
                                                 ? AppStrings.allCompanyRequests.tr()
                                                 : AppStrings.viewTeamRequestsOnCalendar.tr(),
+                                        subtitle: AppStrings.calendarShortcutHint.tr(),
                                         icon: Icons.calendar_month_outlined,
                                       ),
 
-                                    const SizedBox(height: 10),
+                                    const SizedBox(height: AppSpacing.cardGap),
 
                                     if (viewModel.rulesMessage != null && viewModel.rulesMessage != "")
                                       AutoSizeText(

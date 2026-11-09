@@ -17,8 +17,8 @@ class HomeAppbarLoading extends StatelessWidget {
       ),
       padding: EdgeInsets.only(
           top: MediaQuery.of(context).padding.top,
-          left: AppSizes.s16,
-          right: AppSizes.s16),
+          left: AppSpacing.page,
+          right: AppSpacing.page),
       child: Column(
         children: [
           gapH18,
@@ -48,12 +48,14 @@ class HomeAppbarLoading extends StatelessWidget {
               children: List.generate(
                   3,
                   (index) => Padding(
-                      padding: const EdgeInsets.only(right: AppSizes.s12),
+                      padding: EdgeInsetsDirectional.only(
+                          end: index < 2 ? AppSizes.s12 : 0),
                       child: ShimmerAnimatedLoading(
                         width: (LayoutService.getWidth(context) -
-                                (AppSizes.s32 + ((AppSizes.s12) * 3))) /
+                                (AppSpacing.page * 2 + AppSizes.s12 * 2)) /
                             3,
                         height: AppSizes.s120,
+                        circularRaduis: AppRadius.md,
                       ))))
         ],
       ),

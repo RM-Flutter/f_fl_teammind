@@ -18,3 +18,4 @@ Login, sign-up and password recovery.
 2. The server may answer with a verification or TFA step. The app then asks for the code and validates it against the `uuid` it received.
 3. On success, `AppConfigService.setAuthenticationStatusWithToken(token, isLogin: true)` is called and the user is sent to the **splash screen**, which reloads the settings for that user and routes to home.
 4. Social login (Google, Facebook, LinkedIn, Apple) opens `AppConstants.socialLogin*` URLs with the device id. The backend redirects back with the token.
+

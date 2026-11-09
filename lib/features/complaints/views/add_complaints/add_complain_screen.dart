@@ -206,14 +206,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
                       color: isSelected ? Color(AppColors.buttons) : const Color(0xffE3E5E5),
                       width: 1.5,
                     ),
-                    boxShadow: [
-                      if (isSelected)
-                        BoxShadow(
-                          color: Color(AppColors.buttons).withValues(alpha: 0.25),
-                          blurRadius: 6,
-                          offset: const Offset(0, 2),
-                        ),
-                    ],
+                    boxShadow: AppShadows.card,
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -277,14 +270,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
                       color: isSelected ? Color(AppColors.buttons) : const Color(0xffE3E5E5),
                       width: 1.5,
                     ),
-                    boxShadow: [
-                      if (isSelected)
-                        BoxShadow(
-                          color: Color(AppColors.buttons).withValues(alpha: 0.25),
-                          blurRadius: 6,
-                          offset: const Offset(0, 2),
-                        ),
-                    ],
+                    boxShadow: AppShadows.card,
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,

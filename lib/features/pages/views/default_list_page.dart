@@ -1,4 +1,3 @@
-
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/features/more/blog/controllers/blog_controller.dart';
-import 'package:shimmer/shimmer.dart';
 
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -19,6 +17,7 @@ import 'package:app_test/core/utils/gradient_bg_image.dart';
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/app_shimmer_list.dart';
 
 class DefaultListPage extends StatefulWidget {
   var type;
@@ -37,121 +36,119 @@ class _DefaultListPageState extends State<DefaultListPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       PointsController = Provider.of<BlogProviderModel>(context, listen: false);
-      PointsController.getBlog(context,"${widget.type}" ,page: 1);
+      PointsController.getBlog(context, "${widget.type}", page: 1);
     });
     _scrollController.addListener(() {
-      debugPrint("Current scroll position: ${_scrollController.position.pixels}");
-      debugPrint("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
+      debugPrint(
+          "Current scroll position: ${_scrollController.position.pixels}");
+      debugPrint(
+          "Max scroll extent: ${_scrollController.position.maxScrollExtent}");
 
-      if ((_scrollController.position.maxScrollExtent - _scrollController.position.pixels).abs() < 10 &&
+      if ((_scrollController.position.maxScrollExtent -
+                      _scrollController.position.pixels)
+                  .abs() <
+              10 &&
           !PointsController.isGetBlogLoading &&
           PointsController.hasMore) {
         debugPrint("BOTTOM BOTTOM");
-        if(PointsController.hasMore == true) {
-          PointsController.getBlog(
-              context, "${widget.type}",page: PointsController.currentPage);
-        }else{
+        if (PointsController.hasMore == true) {
+          PointsController.getBlog(context, "${widget.type}",
+              page: PointsController.currentPage);
+        } else {
           debugPrint("NO DATA MORE");
         }
       }
     });
-
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<BlogProviderModel>(
       builder: (context, points, child) {
-        return SafeArea(
-          child: Scaffold(
-            resizeToAvoidBottomInset: true,
-            backgroundColor: const Color(0xffFFFFFF),
-            appBar: AppBarWithBookmark(
-              title: widget.type == "rmnotifications"
-                  ? AppStrings.notifications.tr().toUpperCase()
-                  : widget.type.toString().tr().toUpperCase(),
-              centerTitle: true,
-              backgroundColor: Colors.white,
-              elevation: 0,
-            ),
-            body: SingleChildScrollView(
-              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-              controller: _scrollController,
-              child: GradientBgImage(
-                padding: EdgeInsets.zero,
-                child: Column(
-                  children: [
-                    SizedBox(height: AppSizes.s16),
-                    if(points.blogs.isEmpty)Container(
+        return Scaffold(
+          resizeToAvoidBottomInset: true,
+          backgroundColor: Color(AppColors.background),
+          appBar: AppBarWithBookmark(
+            title: widget.type == "rmnotifications"
+                ? AppStrings.notifications.tr()
+                : widget.type.toString().tr(),
+          ),
+          body: SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            controller: _scrollController,
+            child: GradientBgImage(
+              padding: EdgeInsets.zero,
+              child: Column(
+                children: [
+                  SizedBox(height: AppSizes.s16),
+                  if (points.blogs.isEmpty)
+                    Container(
                       height: 0.8.sh,
                       alignment: Alignment.center,
                       child: NoExistingPlaceholderScreen(
-                          height: 0.4.sh,
-                          title: AppStrings.noDataFounded.tr()),
+                          height: 0.4.sh, title: AppStrings.noDataFounded.tr()),
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 15),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 15),
-                        child: GridView.extent(
-                            maxCrossAxisExtent: 220,
-                            mainAxisSpacing: 15,
-                            crossAxisSpacing: 15,
-                            childAspectRatio: 1/1.1,
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            children: List.generate((points.isGetBlogLoading && points.currentPage == 1)?8 :
-                            points.blogs.length, (index){
-                              return (points.isGetBlogLoading && points.currentPage == 1)?
-                              Shimmer.fromColors(
-                                baseColor: Colors.grey[300]!,
-                                highlightColor: Colors.grey[100]!,
-                                child: Container(
-                                  width: double.infinity,
-                                  height: 100, // Adjust height based on your UI
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(AppRadius.sm), // Adjust as needed
-                                  ),
-                                ),
-                              ):
-                              defaultProjectCard(
-                                points.blogs[index]['title'] ??"",
-                                id: points.blogs[index]['id'] ??"",
-                                type: widget.type,
-                                (points.blogs[index]['main_thumbnail'] != null && points.blogs[index]['main_thumbnail'].isNotEmpty)?
-                                points.blogs[index]['main_thumbnail'][0]['file'] : "",
-                                onTap: (){
-                                  // if(points.blogs[index]['title'] == AppStrings.fawry.tr()){
-                                  //   context.pushNamed(
-                                  //       AppRoutes.fawryProviderScreen
-                                  //           .name,
-                                  //       pathParameters: {
-                                  //         'lang': context.locale
-                                  //             .languageCode,
-                                  //       });
-                                  // }else {
-                                  //   context.pushNamed(
-                                  //       AppRoutes.prizePointsViewScreen
-                                  //           .name,
-                                  //       pathParameters: {
-                                  //         'lang': context.locale
-                                  //             .languageCode,
-                                  //         'id': points
-                                  //             .blogs[index]['id']
-                                  //             .toString(),
-                                  //       });
-                                  // }
-                                },
-                              );
-                            })
-                        ),
-                      ),
+                  Padding(
+                    padding: AppSpacing.pagePadding,
+                    child: Padding(
+                      padding: EdgeInsets.zero,
+                      child: GridView.extent(
+                          maxCrossAxisExtent: 220,
+                          mainAxisSpacing: 15,
+                          crossAxisSpacing: 15,
+                          childAspectRatio: 1 / 1.1,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          children: List.generate(
+                              (points.isGetBlogLoading &&
+                                      points.currentPage == 1)
+                                  ? 8
+                                  : points.blogs.length, (index) {
+                            return (points.isGetBlogLoading &&
+                                    points.currentPage == 1)
+                                ? const ShimmerAnimatedLoading(
+                                    circularRaduis: AppRadius.md)
+                                : defaultProjectCard(
+                                    points.blogs[index]['title'] ?? "",
+                                    id: points.blogs[index]['id'] ?? "",
+                                    type: widget.type,
+                                    (points.blogs[index]['main_thumbnail'] !=
+                                                null &&
+                                            points
+                                                .blogs[index]['main_thumbnail']
+                                                .isNotEmpty)
+                                        ? points.blogs[index]['main_thumbnail']
+                                            [0]['file']
+                                        : "",
+                                    onTap: () {
+                                      // if(points.blogs[index]['title'] == AppStrings.fawry.tr()){
+                                      //   context.pushNamed(
+                                      //       AppRoutes.fawryProviderScreen
+                                      //           .name,
+                                      //       pathParameters: {
+                                      //         'lang': context.locale
+                                      //             .languageCode,
+                                      //       });
+                                      // }else {
+                                      //   context.pushNamed(
+                                      //       AppRoutes.prizePointsViewScreen
+                                      //           .name,
+                                      //       pathParameters: {
+                                      //         'lang': context.locale
+                                      //             .languageCode,
+                                      //         'id': points
+                                      //             .blogs[index]['id']
+                                      //             .toString(),
+                                      //       });
+                                      // }
+                                    },
+                                  );
+                          })),
                     ),
-                    if (points.isGetBlogLoading && points.currentPage != 1)
-                      const Center(child: CircularProgressIndicator()),
-                  ],
-                ),
+                  ),
+                  if (points.isGetBlogLoading && points.currentPage != 1)
+                    const Center(child: CircularProgressIndicator()),
+                ],
               ),
             ),
           ),
@@ -159,14 +156,15 @@ class _DefaultListPageState extends State<DefaultListPage> {
       },
     );
   }
+
   Widget defaultProjectCard(String? title1, src, {onTap, type, id}) {
     return GestureDetector(
-      onTap: (){
-        context.pushNamed(AppRoutes.defaultSinglePage.name,
-            pathParameters: {'lang': context.locale.languageCode,
-              "id" : id.toString(),
-              "type" : type,
-            });
+      onTap: () {
+        context.pushNamed(AppRoutes.defaultSinglePage.name, pathParameters: {
+          'lang': context.locale.languageCode,
+          "id": id.toString(),
+          "type": type,
+        });
       },
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 0),
@@ -184,13 +182,13 @@ class _DefaultListPageState extends State<DefaultListPage> {
                   borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(AppRadius.md),
                       topRight: Radius.circular(AppRadius.md)),
-                  child:  CachedNetworkImage(
+                  child: CachedNetworkImage(
                     fit: BoxFit.cover,
                     width: double.infinity,
                     imageUrl: src,
                     placeholder: (context, url) =>
-                    const ShimmerAnimatedLoading(),
-                    errorWidget: (context, url, error) =>  Icon(
+                        const ShimmerAnimatedLoading(),
+                    errorWidget: (context, url, error) => Icon(
                       Icons.image_not_supported_outlined,
                       size: AppSizes.s32,
                       color: Colors.grey,
@@ -198,23 +196,22 @@ class _DefaultListPageState extends State<DefaultListPage> {
                   ),
                 ),
               ),
-              SizedBox(height: 5,),
+              SizedBox(
+                height: 5,
+              ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      title1 ?? "".toUpperCase(),
-                      maxLines: 2, 
-                      textAlign: TextAlign.center,
-                      overflow: TextOverflow.ellipsis, 
-                      style: AppStyles.primaryContent(context).copyWith(
-                        fontWeight: FontWeight.w600, 
-                        fontSize: 13, 
-                        color: Color(AppColors.secondaryButton)
-                      )
-                    ),
+                    Text(title1 ?? "".toUpperCase(),
+                        maxLines: 2,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppStyles.primaryContent(context).copyWith(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 13,
+                            color: Color(AppColors.secondaryButton))),
                   ],
                 ),
               ),

@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_design.dart';
 import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
@@ -76,7 +77,7 @@ class ExpandableFabState extends State<ExpandableFab>
         child: Material(
           shape: const CircleBorder(),
           clipBehavior: Clip.antiAlias,
-          elevation: 4,
+          elevation: AppElevation.raised,
           child: InkWell(
             onTap: _toggle,
             child: Padding(

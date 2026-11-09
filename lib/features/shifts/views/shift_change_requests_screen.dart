@@ -17,6 +17,7 @@ import '../../more/notifications/views/widgets/switch_row_notification.dart';
 import '../controllers/shift_change_controller.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/utils/request_scope_helper.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/app_shimmer_list.dart';
 
 class ShiftChangeRequestsScreen extends StatefulWidget {
   final Map<String, dynamic>? extra;
@@ -157,7 +158,7 @@ class _ShiftChangeRequestsScreenState extends State<ShiftChangeRequestsScreen> {
           body: Builder(
             builder: (context) {
               if (provider.isLoading) {
-                return const Center(child: CircularProgressIndicator());
+                return const AppShimmerList();
               }
 
               final list = provider.isForDepartment
@@ -167,7 +168,6 @@ class _ShiftChangeRequestsScreenState extends State<ShiftChangeRequestsScreen> {
               return Column(
                 children: [
                   if (isShiftsEmployee) ...[
-                    const SizedBox(height: 10),
                     SwitchRowNotification(
                       value: provider.isForDepartment,
                       leftText: AppStrings.myRequests.tr(),
@@ -176,8 +176,6 @@ class _ShiftChangeRequestsScreenState extends State<ShiftChangeRequestsScreen> {
                         provider.toggleDepartmentView(val, context);
                       },
                     ),
-                    const SizedBox(height: 10),
-                  ] else if (provider.isForDepartment) ...[
                     const SizedBox(height: 10),
                   ],
               if (provider.isForDepartment) ...[
@@ -188,7 +186,6 @@ class _ShiftChangeRequestsScreenState extends State<ShiftChangeRequestsScreen> {
                   onSelected: (scope) =>
                       provider.setIncomingScope(scope, context),
                 ),
-                const SizedBox(height: 10),
               ],
               ActiveFiltersRowWidget(
                 empName: provider.filterEmpName,
@@ -215,10 +212,8 @@ class _ShiftChangeRequestsScreenState extends State<ShiftChangeRequestsScreen> {
                           controller: _scrollController,
                           clipBehavior: Clip.none,
                           physics: const AlwaysScrollableScrollPhysics(),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ).copyWith(bottom: 80),
+                          padding: const EdgeInsets.fromLTRB(
+                              AppSpacing.page, AppSpacing.md, AppSpacing.page, 80),
                           itemCount: list.length +
                               (provider.isForDepartment
                                   ? (provider.incomingIsLoadingMore ? 1 : 0)
@@ -297,7 +292,7 @@ class _ScopeSelectorRow extends StatelessWidget {
         },
     ];
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.page, AppSpacing.md, AppSpacing.page, 0),
       child: Center(
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,

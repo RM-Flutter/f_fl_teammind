@@ -393,7 +393,7 @@ class _RewardsAndPenaltiesDetailsModalState
                       shadowColor: Colors.transparent,
                       backgroundColor: Color(AppColors.secondaryButton),
                       foregroundColor: Colors.white,
-                      elevation: 2,
+                      elevation: AppElevation.card,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(AppRadius.xl),
                       ),
@@ -429,7 +429,7 @@ class _RewardsAndPenaltiesDetailsModalState
                       shadowColor: Colors.transparent,
                       backgroundColor: Colors.red,
                       foregroundColor: Colors.white,
-                      elevation: 2,
+                      elevation: AppElevation.card,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(AppRadius.xl),
                       ),

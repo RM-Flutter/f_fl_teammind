@@ -24,7 +24,7 @@ class RequestDetailsLoadingScreen extends StatelessWidget {
      ),
      SizedBox(height: 20),
      Padding(
-      padding: EdgeInsets.symmetric(horizontal: 15),
+      padding: AppSpacing.pagePadding,
       child: Column(
        children: [
         Shimmer.fromColors(

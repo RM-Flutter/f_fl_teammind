@@ -1,77 +1,30 @@
-import 'package:app_test/core/constants/app_sizes.dart';
-import 'package:app_test/core/services/layout_service.dart';
-import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
-import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/app_shimmer_list.dart';
+import 'package:flutter/material.dart';
 
+/// Home body while loading: two sections (title row + cards) shaped exactly like the loaded
+/// sections, with the same page padding.
 class HomeLoadingPage extends StatelessWidget {
   const HomeLoadingPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-          horizontal: AppSizes.s12, vertical: AppSizes.s12),
+    return const Padding(
+      padding: EdgeInsets.symmetric(vertical: AppSpacing.md),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ShimmerAnimatedLoading(
-                width: LayoutService.getWidth(context) / 3,
-                height: AppSizes.s28,
-              ),
-              ShimmerAnimatedLoading(
-                width: LayoutService.getWidth(context) / 4,
-                height: AppSizes.s28,
-              ),
-            ],
+          AppShimmerList(
+            count: 3,
+            showHeader: true,
+            padding: AppSpacing.pagePadding,
           ),
-          gapH16,
-          ...List.generate(
-              5,
-              (index) => Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: AppSizes.s14, horizontal: AppSizes.s16),
-                    margin: const EdgeInsets.only(bottom: AppSizes.s16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(AppRadius.sm),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 8,
-                          spreadRadius: 1,
-                        )
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            ShimmerAnimatedLoading(
-                              height: AppSizes.s18,
-                              width: LayoutService.getWidth(context) / 2,
-                            ),
-                            gapH4,
-                            ShimmerAnimatedLoading(
-                              height: AppSizes.s18,
-                              width: LayoutService.getWidth(context) / 2,
-                            ),
-                          ],
-                        ),
-                        const Spacer(),
-                        const ShimmerAnimatedLoading(
-                          width: AppSizes.s40,
-                          height: AppSizes.s40,
-                          circularRaduis: AppSizes.s40,
-                        )
-                      ],
-                    ),
-                  ))
+          SizedBox(height: AppSpacing.section),
+          AppShimmerList(
+            count: 2,
+            showHeader: true,
+            padding: AppSpacing.pagePadding,
+          ),
         ],
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -27,11 +28,9 @@ class SalaryAdvanceSectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (requests == null || requests!.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Text(AppStrings.noDataFounded.tr()),
-        ),
+      return NoExistingPlaceholderScreen(
+        compact: true,
+        title: AppStrings.noDataFounded.tr(),
       );
     }
     return SingleChildScrollView(
@@ -39,7 +38,6 @@ class SalaryAdvanceSectionWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          gapH12,
           ListView.separated(
             reverse: false,
             shrinkWrap: true,

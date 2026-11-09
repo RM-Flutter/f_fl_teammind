@@ -1,62 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../core/constants/app_colors.dart';
-import '../../../../core/constants/app_sizes.dart';
-import '../../../../core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
-import 'package:app_test/core/constants/app_design.dart';
 
+import '../../../../core/utils/custom_shimmer_loading/app_shimmer_list.dart';
+
+/// Loading state shared by payrolls, rewards & penalties, evaluations, commissions, salary
+/// advances and expense claims. Uses the app-wide [AppShimmerList] so it matches every other
+/// list in the app.
 class PayrollsAndPenaltiesRewardsLoadingScreensWidget extends StatelessWidget {
-  const PayrollsAndPenaltiesRewardsLoadingScreensWidget({super.key});
+  /// Padding around the placeholders. Defaults to the page padding; pass [EdgeInsets.zero]
+  /// when the parent already pads the page.
+  final EdgeInsetsGeometry? padding;
+
+  const PayrollsAndPenaltiesRewardsLoadingScreensWidget({super.key, this.padding});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: List.generate(
-        7,
-        (index) => Column(
-          children: [
-            Container(
-              padding: EdgeInsets.symmetric(
-                  vertical: AppSizes.s14, horizontal: AppSizes.s16),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(AppRadius.sm),
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color:
-                        Color(AppColors.buttons).withOpacity(0.2),
-                    offset: const Offset(0, 0),
-                    blurRadius: 2.5,
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ShimmerAnimatedLoading(
-                    width: AppSizes.s24,
-                    height: AppSizes.s24,
-                  ),
-                  SizedBox(width: 8),
-                  Expanded(
-                    child: ShimmerAnimatedLoading(
-                      height: AppSizes.s24,
-                    ),
-                  ),
-                  SizedBox(width: 12),
-                  ShimmerAnimatedLoading(
-                    width: AppSizes.s28,
-                    height: AppSizes.s28,
-                    circularRaduis: AppSizes.s50,
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 20)
-          ],
-        ),
-      ),
-    );
+    return padding == null
+        ? const AppShimmerList()
+        : AppShimmerList(padding: padding!);
   }
 }

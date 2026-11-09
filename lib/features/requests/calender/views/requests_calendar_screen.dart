@@ -181,7 +181,7 @@ class RequestsCalendarScreen extends StatelessWidget {
                   child: ConstrainedBox(
                     constraints: const BoxConstraints(maxWidth: double.infinity),
                     child: Padding(
-                      padding: EdgeInsets.all(12),
+                      padding: AppSpacing.pageAll,
                       child: Column(
                         children: [
                           SizedBox(
@@ -406,7 +406,7 @@ class RequestsCalendarScreen extends StatelessWidget {
                           ),
                           Card(
                             margin: EdgeInsets.all(16),
-                            elevation: 4,
+                            elevation: AppElevation.raised,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(AppRadius.lg)),
                             child: Padding(

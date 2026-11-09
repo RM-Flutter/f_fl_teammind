@@ -13,7 +13,6 @@ class PackageHelper {
     
     return license.allowedPackages!.contains(packageSlug);
   }
-
   static bool hasFeature(String featureSlug) {
     return true;
     // return true; // For now, always return true to avoid hiding features in the UI.

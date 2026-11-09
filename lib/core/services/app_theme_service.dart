@@ -207,8 +207,8 @@ abstract class AppThemeService {
         cardTheme: CardThemeData(
           color: Colors.white,
           surfaceTintColor: Colors.transparent,
-          shadowColor: Colors.black.withOpacity(0.08),
-          elevation: 1,
+          shadowColor: const Color(0x1F101828),
+          elevation: AppElevation.card,
           shape: RoundedRectangleBorder(
             borderRadius: AppRadius.card,
             side: AppBorders.cardSide,
@@ -226,6 +226,8 @@ abstract class AppThemeService {
         dialogTheme: DialogThemeData(
           backgroundColor: Color(AppColors.modalBackground),
           surfaceTintColor: Colors.transparent,
+          elevation: AppElevation.overlay,
+          shadowColor: const Color(0x29101828),
           shape: RoundedRectangleBorder(borderRadius: AppRadius.sheet),
         ),
         bottomSheetTheme: BottomSheetThemeData(
@@ -238,6 +240,7 @@ abstract class AppThemeService {
         // application fab theme
         floatingActionButtonTheme: FloatingActionButtonThemeData(
           backgroundColor: colorPalette.fabBackgroundColor.color,
+          elevation: AppElevation.raised,
           shape: const CircleBorder(),
         ),
         // application appbar theme (unified white bar + navy title)

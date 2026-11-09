@@ -71,7 +71,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                       child: SizedBox(
                         height: 1.sh,
                         child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 30),
+                            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page, vertical: AppSpacing.xxl),
                             child: Column(
                               children: [
                                 TextFormField(

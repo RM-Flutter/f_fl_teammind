@@ -157,14 +157,7 @@ Widget defaultDropdownField(
         ),
       ),
       shadows: (hasShadows == true)
-          ? const [
-        BoxShadow(
-          color: Color(AppColors.black),
-          blurRadius: 10,
-          offset: Offset(0, 1),
-          spreadRadius: 0,
-        )
-      ]
+          ? AppShadows.none
           : null,
     ),
     child: DropdownButton<String>(
@@ -222,14 +215,7 @@ Widget defaultTextFormField({
         ),
       ),
       shadows: (hasShadows == true)
-          ? const [
-        BoxShadow(
-          color: Color(AppColors.black),
-          blurRadius: 10,
-          offset: Offset(0, 1),
-          spreadRadius: 0,
-        )
-      ]
+          ? AppShadows.none
           : null,
     ),
     child: TextFormField(

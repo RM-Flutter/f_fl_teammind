@@ -23,13 +23,7 @@ class ReportCompareTabs extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.lg),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        boxShadow: AppShadows.card,
       ),
       padding: const EdgeInsets.all(6),
       child: Row(
@@ -81,13 +75,7 @@ class ReportCompareTabs extends StatelessWidget {
           color: isSelected ? Color(AppColors.buttons) : Color(AppColors.inputFill),
           borderRadius: BorderRadius.circular(AppRadius.md),
           boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: Color(AppColors.buttons).withOpacity(0.28),
-                    blurRadius: 6,
-                    offset: const Offset(0, 2),
-                  ),
-                ]
+              ? AppShadows.card
               : null,
         ),
         child: Column(

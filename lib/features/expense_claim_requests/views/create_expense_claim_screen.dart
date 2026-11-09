@@ -57,14 +57,7 @@ class _CreateExpenseClaimScreenState extends State<CreateExpenseClaimScreen> {
                 padding: EdgeInsets.all(AppSizes.s24),
                 backgroundColor: Colors.white,
                 opacity: 0.9,
-                boxShadow: [
-                  BoxShadow(
-                    color: Color(AppColors.buttonColor).withOpacity(0.08),
-                    blurRadius: 30,
-                    spreadRadius: 0,
-                    offset: const Offset(0, 15),
-                  ),
-                ],
+                boxShadow: AppShadows.card,
                 child: Form(
                   key: controller.formKey,
                   child: Column(

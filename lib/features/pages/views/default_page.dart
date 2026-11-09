@@ -20,15 +20,18 @@ import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/features/more/blog/controllers/blog_controller.dart';
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../../../core/services/general_listener.dart';
 import '../../more/blog/views/blog_list_view_item.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/widgets/hide_on_scroll_fab.widget.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/app_shimmer_list.dart';
 
 class DefaultPage extends StatefulWidget {
   var type;
-  DefaultPage(this.type,);
+  DefaultPage(
+    this.type,
+  );
 
   @override
   _DefaultPageState createState() => _DefaultPageState();
@@ -46,46 +49,62 @@ class _DefaultPageState extends State<DefaultPage> {
     var gCache;
     jsonString = CacheHelper.getString("USG");
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
-      gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
+      gCache = json.decode(jsonString)
+          as Map<String, dynamic>; // Convert String back to JSON
     }
     final popups = gCache?['popups'];
     if (popups != null && popups.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        generalListener.startAll(context, widget.type == "blogs" ?"blog" : "notification", popups);
+        generalListener.startAll(
+            context, widget.type == "blogs" ? "blog" : "notification", popups);
       });
     }
     WidgetsBinding.instance.addPostFrameCallback((_) {
       provider = Provider.of<BlogProviderModel>(context, listen: false);
-      if(CacheHelper.getBool("value") != null){
-        if(CacheHelper.getBool("value") == false){
-          provider.getBlog(context,"${widget.type}", page: 1,);
-        }else{
-          provider.getBlog(context,"${widget.type}", page: 1,);
+      if (CacheHelper.getBool("value") != null) {
+        if (CacheHelper.getBool("value") == false) {
+          provider.getBlog(
+            context,
+            "${widget.type}",
+            page: 1,
+          );
+        } else {
+          provider.getBlog(
+            context,
+            "${widget.type}",
+            page: 1,
+          );
         }
-      }else{
-        provider.getBlog(context,"${widget.type}", page: 1,);
+      } else {
+        provider.getBlog(
+          context,
+          "${widget.type}",
+          page: 1,
+        );
       }
     });
     _scrollController.addListener(() {
       print("Current scroll position: ${_scrollController.position.pixels}");
       print("Max scroll extent: ${_scrollController.position.maxScrollExtent}");
 
-      if ((_scrollController.position.maxScrollExtent - _scrollController.position.pixels).abs() < 10 &&
+      if ((_scrollController.position.maxScrollExtent -
+                      _scrollController.position.pixels)
+                  .abs() <
+              10 &&
           !provider.isGetBlogLoading &&
           provider.hasMoreBlogs) {
         print("BOTTOM BOTTOM");
-        if(CacheHelper.getBool("value") != null){
-          if(CacheHelper.getBool("value") == false){
-            provider.getBlog(context,widget.type, page: provider.currentPage);
-          }else{
-            provider.getBlog(context,widget.type, page: provider.currentPage);
+        if (CacheHelper.getBool("value") != null) {
+          if (CacheHelper.getBool("value") == false) {
+            provider.getBlog(context, widget.type, page: provider.currentPage);
+          } else {
+            provider.getBlog(context, widget.type, page: provider.currentPage);
           }
-        }else{
-          provider.getBlog(context,widget.type, page: provider.currentPage);
+        } else {
+          provider.getBlog(context, widget.type, page: provider.currentPage);
         }
       }
     });
-
   }
 
   @override
@@ -97,104 +116,102 @@ class _DefaultPageState extends State<DefaultPage> {
         jsonString = CacheHelper.getString("US1");
         if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
           gCache = json.decode(jsonString)
-          as Map<String, dynamic>; // Convert String back to JSON
+              as Map<String, dynamic>; // Convert String back to JSON
           UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
         }
-        return SafeArea(
-          child: Scaffold(
-            backgroundColor: Color(AppColors.background),
-            appBar: AppBarWithBookmark(
-              title: widget.type == "rmnotifications" ? AppStrings.notifications.tr().toUpperCase():widget.type.toString().tr().toUpperCase(),
-              titleStyle: AppStyles.heading(context).copyWith(fontSize: 16, fontWeight: FontWeight.w700),
-              backgroundColor: Colors.transparent,
-              surfaceTintColor: Colors.transparent,
-            ),
-            floatingActionButton: widget.type == "rmnotifications"? Container(
-              padding: EdgeInsets.symmetric(
-                  horizontal: LocalizationService.isArabic(context: context)
-                      ? 35
-                      : 0),
-              width: 1.sw,
-              alignment: Alignment.bottomRight,
-              child: FloatingActionButton(
-                heroTag: 'default_page_add_notification',
-                onPressed: () async => await context.pushNamed(
-                    AppRoutes.addNotification.name,
-                    pathParameters: {
-                      'lang': context.locale.languageCode
-                    }), // Icon inside FAB
-                backgroundColor: Color(AppColors.buttons), // Optional: change color
-                tooltip: 'Add',
-                child: Center(
-                  child: Image.asset(
-                    AppImages.addFloatingActionButtonIcon,
-                    color: AppThemeService.colorPalette.fabIconColor.color,
-                    width: AppSizes.s16,
-                    height: AppSizes.s16,
+        return HideOnScrollFabHost(
+            builder: (context, wrapFab) => Scaffold(
+                  backgroundColor: Color(AppColors.background),
+                  appBar: AppBarWithBookmark(
+                    title: widget.type == "rmnotifications"
+                        ? AppStrings.notifications.tr()
+                        : widget.type.toString().tr(),
                   ),
-                ),
-              ),
-            )
-                :const SizedBox.shrink(),
-            body: RefreshIndicator.adaptive(
-              onRefresh: ()async{
-                setState(() {
-                  CacheHelper.setBool("value", false);
-                });
-                await provider.getBlog(context,widget.type, page: 1);
-              },
-              child: ListView(
-                controller: _scrollController,
-                children: [
-                  SizedBox(height: 10,),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    child: ListView.builder(
-                      padding: EdgeInsets.zero,
-                      shrinkWrap: true,
-                      reverse: false,
-                      physics: const ClampingScrollPhysics(),
-                      itemCount: provider.isGetBlogLoading && provider.blogs.isEmpty
-                          ? 12 // Show 5 loading items initially
-                          : provider.blogs.length,
-                      itemBuilder: (context, index) {
-                        if (provider.isGetBlogLoading && provider.currentPage == 1) {
-                          return Shimmer.fromColors(
-                            baseColor: Colors.grey[300]!,
-                            highlightColor: Colors.grey[100]!,
-                            child: Container(
-                              margin: EdgeInsets.symmetric(vertical: AppSizes.s12),
-                              padding: EdgeInsetsDirectional.symmetric(horizontal: AppSizes.s15, vertical: AppSizes.s12),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(AppRadius.md),
+                  floatingActionButton: wrapFab(widget.type == "rmnotifications"
+                      ? Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal:
+                                  LocalizationService.isArabic(context: context)
+                                      ? 35
+                                      : 0),
+                          width: 1.sw,
+                          alignment: Alignment.bottomRight,
+                          child: FloatingActionButton(
+                            heroTag: 'default_page_add_notification',
+                            onPressed: () async => await context.pushNamed(
+                                AppRoutes.addNotification.name,
+                                pathParameters: {
+                                  'lang': context.locale.languageCode
+                                }), // Icon inside FAB
+                            backgroundColor: Color(
+                                AppColors.buttons), // Optional: change color
+                            tooltip: 'Add',
+                            child: Center(
+                              child: Image.asset(
+                                AppImages.addFloatingActionButtonIcon,
+                                color: AppThemeService
+                                    .colorPalette.fabIconColor.color,
+                                width: AppSizes.s16,
+                                height: AppSizes.s16,
                               ),
-                              height: 100,
                             ),
-                          );
-                        } else {
-                          return BlogListViewItem(
-                            blog: provider.blogs,
-                            index: index,
-                            type: widget.type,
-                          );
-                        }
-                      },
+                          ),
+                        )
+                      : const SizedBox.shrink()),
+                  body: RefreshIndicator.adaptive(
+                    onRefresh: () async {
+                      setState(() {
+                        CacheHelper.setBool("value", false);
+                      });
+                      await provider.getBlog(context, widget.type, page: 1);
+                    },
+                    child: ListView(
+                      controller: _scrollController,
+                      children: [
+                        gapH12,
+                        Padding(
+                          padding: AppSpacing.pagePadding,
+                          child: ListView.builder(
+                            padding: EdgeInsets.zero,
+                            shrinkWrap: true,
+                            reverse: false,
+                            physics: const ClampingScrollPhysics(),
+                            itemCount: provider.isGetBlogLoading &&
+                                    provider.blogs.isEmpty
+                                ? 12 // Show 5 loading items initially
+                                : provider.blogs.length,
+                            itemBuilder: (context, index) {
+                              if (provider.isGetBlogLoading &&
+                                  provider.currentPage == 1) {
+                                return const Padding(
+                                    padding: EdgeInsets.only(
+                                        bottom: AppSpacing.cardGap),
+                                    child: AppShimmerCard());
+                              } else {
+                                return BlogListViewItem(
+                                  blog: provider.blogs,
+                                  index: index,
+                                  type: widget.type,
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                        if (!provider.isGetBlogLoading &&
+                            provider.blogs.isEmpty)
+                          Padding(
+                            padding: AppSpacing.pagePadding,
+                            child: NoExistingPlaceholderScreen(
+                                height: 0.6.sh,
+                                title: AppStrings.thereIsNoNotifications.tr()),
+                          ),
+                        if (provider.isGetBlogLoading &&
+                            provider.currentPage != 1)
+                          const Center(child: CircularProgressIndicator()),
+                      ],
                     ),
                   ),
-                  if(!provider.isGetBlogLoading && provider.blogs.isEmpty) Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    child:  NoExistingPlaceholderScreen(
-                        height: 0.6.sh,
-                        title: AppStrings.thereIsNoNotifications.tr()),
-                  ),
-                  if (provider.isGetBlogLoading && provider.currentPage != 1)
-                    const Center(child: CircularProgressIndicator()),
-                ],
-              ),
-            ),
-          ),
-        );
+                ));
       },
     );
   }

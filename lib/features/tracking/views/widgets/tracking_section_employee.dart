@@ -239,13 +239,13 @@ class _TrackingSectionEmployeeState extends State<TrackingSectionEmployee> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
-                      color: Color(AppColors.warningYellow).withOpacity(0.15),
+                      color: AppColors.statusTones(Color(AppColors.warningYellow)).tint,
                       borderRadius: BorderRadius.circular(AppRadius.sm),
-                      border: Border.all(color: Color(AppColors.warningYellow).withOpacity(0.4)),
+                      border: Border.all(color: AppColors.statusTones(Color(AppColors.warningYellow)).border),
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.sync_problem_rounded, size: 16, color: Color(AppColors.warningYellow)),
+                        Icon(Icons.sync_problem_rounded, size: 16, color: AppColors.statusTones(Color(AppColors.warningYellow)).text),
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text('unsent_points_connection_lost'.tr(namedArgs: {'unuploaded_count': '$_unuploadedCount'}),

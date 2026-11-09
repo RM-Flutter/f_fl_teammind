@@ -43,14 +43,7 @@ class ReferralSection extends StatelessWidget {
                   width: 1.0,
                 ),
               ),
-              shadows: const [
-                BoxShadow(
-                  color: Color(0x0C000000),
-                  blurRadius: 10,
-                  offset: Offset(0, 1),
-                  spreadRadius: 0,
-                )
-              ],
+              shadows: AppShadows.card,
             ),
             child: Row(
               children: [

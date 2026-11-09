@@ -121,7 +121,7 @@ class _CommissionListScreenState extends State<CommissionListScreen> {
           child: ListView.builder(
             controller: _scrollController,
             clipBehavior: Clip.none,
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 80),
+            padding: AppSpacing.listPadding,
             physics: const AlwaysScrollableScrollPhysics(),
             itemCount: controller.commissions!.length +
                 (controller.isLoadingMore ? 1 : 0),

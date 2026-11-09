@@ -149,10 +149,7 @@ class _TaskScreenState extends State<TaskScreen> {
                     padding: EdgeInsets.symmetric(vertical: AppSizes.s12),
                     child: Consumer<TasksController>(
                         builder: (context, viewModel, child) => viewModel.isLoading
-                            ? const LoadingPageWidget(
-                          reverse: true,
-                          height: AppSizes.s75,
-                        )
+                            ? const LoadingPageWidget(padding: AppSpacing.pagePadding)
                             : SingleChildScrollView(
                           child: Column(
                             children: [
@@ -166,7 +163,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                     title: AppStrings.thereIsNoTasks.tr()),
                               if (viewModel.tasks.isNotEmpty)
                                 ListView.separated(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                                  padding: AppSpacing.pagePadding,
                                   clipBehavior: Clip.none,
                                   shrinkWrap: true,
                                   reverse: false,
