@@ -212,15 +212,8 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                 color: Color(AppColors.background)
                             ),
                             width: double.infinity,
-                            height: isWeb
-                                ? null
-                                : 0.6.sh,
-                            constraints: isWeb
-                                ? BoxConstraints(
-                              maxHeight: 0.8.sh,
-                            )
-                                : null,
-                            alignment: Alignment.topCenter,
+                            // Height follows the content, like every other filter sheet.
+                            constraints: BoxConstraints(maxHeight: 0.8.sh),
                             child: SingleChildScrollView(
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,

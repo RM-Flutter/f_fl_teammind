@@ -1,3 +1,4 @@
+import 'package:app_test/core/utils/custom_shimmer_loading/app_shimmer_list.dart';
 import 'dart:convert';
 import 'package:app_test/core/helpers/package_helper.dart';
 
@@ -213,7 +214,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                         } else if (actualIndex == 1) {
                                           return GeneralSectionWidget(employee: viewModel.employee);
                                         } else if (actualIndex == 2) {
-                                          if (viewModel.salaryAdvances == null) return const Center(child: CircularProgressIndicator());
+                                          if (viewModel.salaryAdvances == null) return const AppShimmerList(padding: EdgeInsets.zero, count: 3);
                                           return AccountsSectionWidget(
                                             employee: viewModel.employee,
                                             salaryAdvance: viewModel.salaryAdvances ?? [],
@@ -230,7 +231,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                             empName: viewModel.employee!.name.toString(),
                                           );
                                         } else if (actualIndex == 5) {
-                                          if (viewModel.dailyReports == null) return const Center(child: CircularProgressIndicator());
+                                          if (viewModel.dailyReports == null) return const AppShimmerList(padding: EdgeInsets.zero, count: 3);
                                           return DailyReportsSectionWidget(
                                             employee: viewModel.employee,
                                             reports: viewModel.dailyReports,
@@ -238,7 +239,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                             empName: viewModel.employee!.name.toString(),
                                           );
                                         } else if (actualIndex == 6) {
-                                          if (viewModel.overtimeRequests == null) return const Center(child: CircularProgressIndicator());
+                                          if (viewModel.overtimeRequests == null) return const AppShimmerList(padding: EdgeInsets.zero, count: 3);
                                           return OvertimeRequestsSectionWidget(
                                             employee: viewModel.employee,
                                             requests: viewModel.overtimeRequests,
@@ -246,7 +247,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                             empName: viewModel.employee!.name.toString(),
                                           );
                                         } else if (actualIndex == 7) {
-                                          if (viewModel.salaryAdvanceRequestsList == null) return const Center(child: CircularProgressIndicator());
+                                          if (viewModel.salaryAdvanceRequestsList == null) return const AppShimmerList(padding: EdgeInsets.zero, count: 3);
                                           return SalaryAdvanceSectionWidget(
                                             employee: viewModel.employee,
                                             requests: viewModel.salaryAdvanceRequestsList,
@@ -259,7 +260,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                           );
                                         
                                         } else if (actualIndex == 10) {
-                                          if (viewModel.expenseClaimRequestsList == null) return const Center(child: CircularProgressIndicator());
+                                          if (viewModel.expenseClaimRequestsList == null) return const AppShimmerList(padding: EdgeInsets.zero, count: 3);
                                           return ExpenseClaimsSectionWidget(
                                             employee: viewModel.employee,
                                             requests: viewModel.expenseClaimRequestsList,
@@ -267,7 +268,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                             empName: viewModel.employee!.name.toString(),
                                           );
                                         } else if (actualIndex == 11) {
-                                          if (viewModel.shiftChangeRequestsList == null) return const Center(child: CircularProgressIndicator());
+                                          if (viewModel.shiftChangeRequestsList == null) return const AppShimmerList(padding: EdgeInsets.zero, count: 3);
                                           return ShiftChangeRequestsSectionWidget(
                                             employee: viewModel.employee,
                                             requests: viewModel.shiftChangeRequestsList,

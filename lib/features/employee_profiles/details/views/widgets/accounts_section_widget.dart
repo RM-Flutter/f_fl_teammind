@@ -1,3 +1,4 @@
+import 'package:app_test/core/utils/custom_shimmer_loading/app_shimmer_list.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -77,12 +78,7 @@ class AccountsSectionWidget extends StatelessWidget {
             ),
             gapH12,
             if (isLoadingPayrolls)
-              const Center(
-                child: Padding(
-                  padding: EdgeInsets.all(AppSizes.s16),
-                  child: CircularProgressIndicator(),
-                ),
-              )
+              const AppShimmerList(padding: EdgeInsets.zero, count: 2)
             else
               ...payrolls!.map((payroll) => PayrollListItemWidget(payroll: payroll)),
             gapH12,

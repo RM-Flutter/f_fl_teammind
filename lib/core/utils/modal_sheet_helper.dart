@@ -82,7 +82,7 @@ abstract class ModalSheetHelper {
                     ],
                   ],
                 ),
-                gapH26,
+                const SizedBox(height: AppSpacing.lg),
                 // Modal Sheet content
                 Expanded(
                     child: SingleChildScrollView(

@@ -1,3 +1,4 @@
+import 'package:app_test/core/widgets/app_filter_actions.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -181,7 +182,7 @@ class _SharedListFilterWidgetState extends State<SharedListFilterWidget> {
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 25),
+                              SizedBox(height: AppSpacing.md),
 
                               if (widget.showDepartment) ...[
                                 SearchableDropdownSheet(
@@ -209,7 +210,7 @@ class _SharedListFilterWidgetState extends State<SharedListFilterWidget> {
                                     });
                                   },
                                 ),
-                                SizedBox(height: 15),
+                                SizedBox(height: AppSpacing.md),
                               ],
 
                               if (widget.showEmployee) ...[
@@ -238,7 +239,7 @@ class _SharedListFilterWidgetState extends State<SharedListFilterWidget> {
                                     });
                                   },
                                 ),
-                                SizedBox(height: 15),
+                                SizedBox(height: AppSpacing.md),
                               ],
 
                               if (widget.showStatus) ...[
@@ -267,7 +268,7 @@ class _SharedListFilterWidgetState extends State<SharedListFilterWidget> {
                                     });
                                   },
                                 ),
-                                SizedBox(height: 15),
+                                SizedBox(height: AppSpacing.md),
                               ],
 
                               if (widget.showDateRange) ...[
@@ -310,59 +311,15 @@ class _SharedListFilterWidgetState extends State<SharedListFilterWidget> {
                                 SizedBox(height: 30),
                               ],
 
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.pop(context, _buildFilterMap());
-                                    },
-                                    child: Container(
-                                      height: AppButtonSize.height,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        color: Color(AppColors.buttons),
-                                        borderRadius: AppRadius.button,
-                                      ),
-                                      padding: EdgeInsets.symmetric(horizontal: 40),
-                                      child: Text(
-                                        AppStrings.applyFilter.tr(),
-                                        style: AppStyles.whiteContent(context).copyWith(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      Navigator.pop(context, {
-                                        'empId': null,
-                                        'depId': null,
-                                        'status': null,
-                                        'from': null,
-                                        'to': null,
-                                      });
-                                    },
-                                    child: Container(
-                                      height: AppButtonSize.height,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        color: Color(AppColors.background),
-                                        borderRadius: AppRadius.button,
-                                        border: Border.all(color: Color(AppColors.secondaryButton), width: 1),
-                                      ),
-                                      padding: EdgeInsets.symmetric(horizontal: 20),
-                                      child: Text(
-                                        AppStrings.clear.tr(),
-                                        style: AppStyles.darkContent(context).copyWith(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                              AppFilterActions(
+                                onApply: () => Navigator.pop(context, _buildFilterMap()),
+                                onClear: () => Navigator.pop(context, {
+                                  'empId': null,
+                                  'depId': null,
+                                  'status': null,
+                                  'from': null,
+                                  'to': null,
+                                }),
                               ),
                               const SizedBox(height: 30),
                             ],

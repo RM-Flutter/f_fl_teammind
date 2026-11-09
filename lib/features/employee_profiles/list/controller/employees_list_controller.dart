@@ -1,3 +1,5 @@
+import 'package:app_test/core/widgets/app_filter_actions.widget.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:easy_localization/easy_localization.dart' as local;
 import 'package:flutter/material.dart';
@@ -133,44 +135,47 @@ class EmployeesListViewModel extends ChangeNotifier {
   }
 
   Future<void> showDepartmentFilterModal(BuildContext context) async {
-    await ModalSheetHelper.showModalSheet(
-      context: context,viewProfile: false,
-      height: AppSizes.s300,
-      title: AppStrings.filter.tr(),
-      modalContent: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          gapH20,
-          // Dropdown of Departments
-          CustomDropdown.search(
-              selectedValue: selectedDepartment?.toJson(),
-              borderRadius: BorderRadius.circular(AppRadius.md),
-              borderSide: Theme.of(context)
-                  .inputDecorationTheme
-                  .enabledBorder
-                  ?.borderSide,
-              hintText: AppStrings.selectDepartment.tr(),
-              hintStyle: Theme.of(context).inputDecorationTheme.hintStyle,
-              items: departments
-                  ?.whereType<DepartmentModel>()
-                  .map((dep) => dep.toJson())
-                  .toList(),
-              nameKey: "title",
-              onChanged: (value) => selectedDepartment = DepartmentModel.fromJson(value),
-              onRemoveClicked: () => selectedDepartment = null,
-              contentPadding: Theme.of(context)
-                  .inputDecorationTheme
-                  .contentPadding
-                  ?.resolve(LocalizationService.isArabic(context: context)
-                      ? TextDirection.rtl
-                      : TextDirection.ltr)),
-          gapH32,
-          Center(
-              child: CustomElevatedButton(
-                backgroundColor: Color(AppColors.secondaryButton),
-                  title: AppStrings.filter.tr(),
-                  onPressed: () async => Navigator.pop(context))),
-        ],
+    // Same sheet as the Requests / Files Center filters: centred title, field, Apply + Clear.
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      constraints: BoxConstraints(maxWidth: kIsWeb ? 550 : double.infinity),
+      builder: (sheetContext) => Padding(
+        padding: EdgeInsets.only(bottom: MediaQuery.of(sheetContext).viewInsets.bottom),
+        child: AppFilterSheetFrame(
+          title: AppStrings.filter.tr(),
+          onApply: () => Navigator.pop(sheetContext),
+          onClear: () {
+            selectedDepartment = null;
+            Navigator.pop(sheetContext);
+          },
+          children: [
+            CustomDropdown.search(
+                selectedValue: selectedDepartment?.toJson(),
+                borderRadius: BorderRadius.circular(AppRadius.md),
+                borderSide: Theme.of(context)
+                    .inputDecorationTheme
+                    .enabledBorder
+                    ?.borderSide,
+                hintText: AppStrings.selectDepartment.tr(),
+                hintStyle: Theme.of(context).inputDecorationTheme.hintStyle,
+                items: departments
+                    ?.whereType<DepartmentModel>()
+                    .map((dep) => dep.toJson())
+                    .toList(),
+                nameKey: "title",
+                onChanged: (value) =>
+                    selectedDepartment = DepartmentModel.fromJson(value),
+                onRemoveClicked: () => selectedDepartment = null,
+                contentPadding: Theme.of(context)
+                    .inputDecorationTheme
+                    .contentPadding
+                    ?.resolve(LocalizationService.isArabic(context: context)
+                        ? TextDirection.rtl
+                        : TextDirection.ltr)),
+          ],
+        ),
       ),
     );
     filterEmployees();

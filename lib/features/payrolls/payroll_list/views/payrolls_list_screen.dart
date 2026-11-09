@@ -85,20 +85,6 @@ class _FingerprintScreenState extends State<PayrollsListScreen> {
                             : Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                    gapH12,
-                                    if (widget.empName == null)
-                                      Text(
-                                        gCache['name'],
-                                        style: AppStyles.heading(context)
-                                            .copyWith(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                    SizedBox(
-                                      height: 20,
-                                    ),
-
                                     /// general screen message widget for other requests types
                                     // GeneralScreenMessageWidget(
                                     //     screenId: '/payrolls'),

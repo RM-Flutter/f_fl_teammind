@@ -1,3 +1,4 @@
+import 'package:app_test/core/widgets/app_filter_actions.widget.dart';
 import 'package:app_test/core/widgets/app_empty_scroll_view.widget.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
@@ -128,8 +129,8 @@ class _CommissionListScreenState extends State<CommissionListScreen> {
                 );
               }
               return TweenAnimationBuilder<double>(
-                duration: Duration(
-                    milliseconds: 350 + (index * 80).clamp(0, 500)),
+                duration:
+                    Duration(milliseconds: 350 + (index * 80).clamp(0, 500)),
                 tween: Tween(begin: 0.0, end: 1.0),
                 curve: Curves.easeOutQuart,
                 builder: (ctx, value, child) => Transform.translate(
@@ -388,163 +389,81 @@ class _CommissionFilterSheetState extends State<_CommissionFilterSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
-      ),
-      padding: EdgeInsets.fromLTRB(
-          24, 16, 24, MediaQuery.of(context).viewInsets.bottom + 24),
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Handle
-            Center(
-              child: Container(
-                width: 48,
-                height: 5,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(AppRadius.sm),
-                ),
-              ),
+    return AppFilterSheetFrame(
+      title: 'filter'.tr(),
+      onApply: () => Navigator.pop(context, {
+        'status': _status,
+        'from_date': _fromDate,
+        'to_date': _toDate,
+      }),
+      onClear: () => Navigator.pop(context, {
+        'status': null,
+        'from_date': null,
+        'to_date': null,
+      }),
+      children: [
+        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(
+            'status'.tr(),
+            style: AppStyles.primaryContent(context).copyWith(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
             ),
-            const SizedBox(height: 16),
-
-            Text(
-              'filter'.tr(),
-              style: AppStyles.heading(context).copyWith(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+          ),
+          const SizedBox(height: 8),
+          DropdownButtonFormField<String?>(
+            value: _status,
+            isExpanded: true,
+            decoration: _fieldDecoration(),
+            dropdownColor: Colors.white,
+            borderRadius: BorderRadius.circular(AppRadius.md),
+            items: [
+              DropdownMenuItem<String?>(
+                value: null,
+                child: Text('all'.tr(), style: AppStyles.content(context)),
               ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 20),
-
-            // ── Status Dropdown ────────────────────────────────────────────
-            Text(
-              'status'.tr(),
-              style: AppStyles.primaryContent(context).copyWith(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 8),
-            DropdownButtonFormField<String?>(
-              value: _status,
-              isExpanded: true,
-              decoration: _fieldDecoration(),
-              dropdownColor: Colors.white,
-              borderRadius: BorderRadius.circular(AppRadius.md),
-              items: [
-                DropdownMenuItem<String?>(
-                  value: null,
-                  child: Text('all'.tr(), style: AppStyles.content(context)),
-                ),
-                ..._statusOptions.map(
-                  (s) => DropdownMenuItem<String?>(
-                    value: s,
-                    child: Text(
-                      'commission_status_$s'.tr(),
-                      style: AppStyles.content(context),
-                    ),
+              ..._statusOptions.map(
+                (s) => DropdownMenuItem<String?>(
+                  value: s,
+                  child: Text(
+                    'commission_status_$s'.tr(),
+                    style: AppStyles.content(context),
                   ),
                 ),
-              ],
-              onChanged: (val) => setState(() => _status = val),
-            ),
-            const SizedBox(height: 16),
-
-            // ── From Date ──────────────────────────────────────────────────
-            _DatePickerField(
-              label: 'date_from'.tr(),
-              value: _fromDate,
-              decoration: _fieldDecoration(
-                suffixIcon: _fromDate != null
-                    ? IconButton(
-                        icon: const Icon(Icons.close, size: 18, color: Colors.red),
-                        onPressed: () => setState(() => _fromDate = null),
-                      )
-                    : Icon(Icons.calendar_today_outlined,
-                        size: 18, color: Color(AppColors.buttons)),
               ),
-              onPicked: (d) => setState(() => _fromDate = d),
-            ),
-            const SizedBox(height: 16),
-
-            // ── To Date ────────────────────────────────────────────────────
-            _DatePickerField(
-              label: 'date_to'.tr(),
-              value: _toDate,
-              decoration: _fieldDecoration(
-                suffixIcon: _toDate != null
-                    ? IconButton(
-                        icon: const Icon(Icons.close, size: 18, color: Colors.red),
-                        onPressed: () => setState(() => _toDate = null),
-                      )
-                    : Icon(Icons.calendar_today_outlined,
-                        size: 18, color: Color(AppColors.buttons)),
-              ),
-              onPicked: (d) => setState(() => _toDate = d),
-            ),
-            const SizedBox(height: 24),
-
-            // ── Apply & Clear buttons ──────────────────────────────────────
-            Row(
-              children: [
-                Expanded(
-                  child: SizedBox(
-                    height: AppButtonSize.height,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(AppColors.buttons),
-                        foregroundColor: Colors.white,
-                      ),
-                      onPressed: () => Navigator.pop(context, {
-                        'status': _status,
-                        'from_date': _fromDate,
-                        'to_date': _toDate,
-                      }),
-                      child: Text(
-                        'apply'.tr(),
-                        style: const TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                SizedBox(
-                  height: AppButtonSize.height,
-                  child: OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Color(AppColors.secondaryButton),
-                      side: BorderSide(color: Color(AppColors.secondaryButton)),
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                    ),
-                    onPressed: () => Navigator.pop(context, {
-                      'status': null,
-                      'from_date': null,
-                      'to_date': null,
-                    }),
-                    child: Text(
-                      AppStrings.clear.tr(),
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
+            ],
+            onChanged: (val) => setState(() => _status = val),
+          )
+        ]),
+        _DatePickerField(
+          label: 'date_from'.tr(),
+          value: _fromDate,
+          decoration: _fieldDecoration(
+            suffixIcon: _fromDate != null
+                ? IconButton(
+                    icon: const Icon(Icons.close, size: 18, color: Colors.red),
+                    onPressed: () => setState(() => _fromDate = null),
+                  )
+                : Icon(Icons.calendar_today_outlined,
+                    size: 18, color: Color(AppColors.buttons)),
+          ),
+          onPicked: (d) => setState(() => _fromDate = d),
         ),
-      ),
+        _DatePickerField(
+          label: 'date_to'.tr(),
+          value: _toDate,
+          decoration: _fieldDecoration(
+            suffixIcon: _toDate != null
+                ? IconButton(
+                    icon: const Icon(Icons.close, size: 18, color: Colors.red),
+                    onPressed: () => setState(() => _toDate = null),
+                  )
+                : Icon(Icons.calendar_today_outlined,
+                    size: 18, color: Color(AppColors.buttons)),
+          ),
+          onPicked: (d) => setState(() => _toDate = d),
+        ),
+      ],
     );
   }
 }

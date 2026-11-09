@@ -1,3 +1,6 @@
+import 'package:app_test/core/widgets/app_filter_actions.widget.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/app_shimmer_list.dart';
+import 'package:app_test/core/widgets/text_form_widget.dart';
 import 'package:app_test/core/services/app_toast.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_images.dart';
@@ -101,104 +104,45 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
               ))
             ];
 
-            return Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
-              ),
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 40, height: 4,
-                    margin: const EdgeInsets.only(bottom: 16),
-                    decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(AppRadius.xs)),
-                  ),
-                  Text(AppStrings.filter.tr(), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 20),
-                  
-                  // Status Filter
-                  Align(
-                    alignment: AlignmentDirectional.centerStart,
-                    child: Text("status".tr(), style: TextStyle(color: Colors.grey[700], fontSize: 14)),
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[300]!),
-                      borderRadius: BorderRadius.circular(AppRadius.sm),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        isExpanded: true,
-                        value: tempSelectedStatus ?? 'All',
-                        items: statusItems,
-                        onChanged: (value) {
-                          setModalState(() {
-                            tempSelectedStatus = value == 'All' ? null : value;
-                          });
-                        },
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Type Filter
-                  Align(
-                    alignment: AlignmentDirectional.centerStart,
-                    child: Text(AppStrings.type.tr(), style: TextStyle(color: Colors.grey[700], fontSize: 14)),
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey[300]!),
-                      borderRadius: BorderRadius.circular(AppRadius.sm),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        isExpanded: true,
-                        value: tempSelectedType?.id.toString() ?? 'All',
-                        items: typeItems,
-                        onChanged: (value) {
-                          setModalState(() {
-                            if (value == 'All') {
-                              tempSelectedType = null;
-                            } else {
-                              tempSelectedType = viewModel.fileTypes.firstWhere((t) => t.id.toString() == value);
-                            }
-                          });
-                        },
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  SizedBox(
-                    width: double.infinity,
-                    height: AppButtonSize.height,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(AppColors.buttons),
-                        foregroundColor: Colors.white,
-                        elevation: 0,
-                        padding: AppButtonSize.padding,
-                        shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
-                      ),
-                      onPressed: () {
-                        viewModel.selectedStatus = tempSelectedStatus;
-                        viewModel.selectedType = tempSelectedType;
-                        viewModel.applyFilters();
-                        Navigator.pop(context);
-                      },
-                      child: Text(AppStrings.applied.tr(), style: const TextStyle(color: Colors.white, fontSize: AppButtonSize.fontSize, fontWeight: FontWeight.w600)),
-                    ),
-                  ),
-                ],
-              ),
+            return AppFilterSheetFrame(
+              title: AppStrings.filter.tr(),
+              onApply: () {
+                viewModel.selectedStatus = tempSelectedStatus;
+                viewModel.selectedType = tempSelectedType;
+                viewModel.applyFilters();
+                Navigator.pop(context);
+              },
+              onClear: () {
+                _searchController.clear();
+                viewModel.clearFilters();
+                Navigator.pop(context);
+              },
+              children: [
+                defaultDropdownField(
+                  title: 'status'.tr(),
+                  value: tempSelectedStatus,
+                  items: statusItems,
+                  onChanged: (value) {
+                    setModalState(() {
+                      tempSelectedStatus = value == 'All' ? null : value;
+                    });
+                  },
+                ),
+                defaultDropdownField(
+                  title: AppStrings.type.tr(),
+                  value: tempSelectedType?.id.toString(),
+                  items: typeItems,
+                  onChanged: (value) {
+                    setModalState(() {
+                      if (value == 'All') {
+                        tempSelectedType = null;
+                      } else {
+                        tempSelectedType = viewModel.fileTypes.firstWhere((t) => t.id.toString() == value);
+                      }
+                    });
+                  },
+                ),
+              ],
             );
           },
         );
@@ -499,24 +443,6 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
                         ),
                       ),
                     ),
-                    InkWell(
-                      borderRadius: BorderRadius.circular(AppRadius.sm),
-                      onTap: () {
-                        _searchController.clear();
-                        viewModel.clearFilters();
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-                        child: Text(
-                          AppStrings.clear.tr(),
-                          style: TextStyle(
-                            color: Colors.red[400],
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -525,7 +451,7 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
                 child: Consumer<FilesCenterViewModel>(
                   builder: (context, vm, child) {
                     if (vm.isLoading) {
-                      return const Center(child: CircularProgressIndicator());
+                      return const AppShimmerList();
                     }
 
                     if (vm.errorMessage != null) {
