@@ -5,6 +5,7 @@ import 'package:app_test/core/models/notifications_model.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/services/app_theme_service.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/widgets/notification_card.widget.dart';
 import 'package:app_test/features/main_layout/controllers/main_controller.dart';
 import 'package:app_test/core/utils/app_styles.dart';
@@ -36,7 +37,7 @@ class NotificationsSection extends StatelessWidget {
     return Center(
       child: ConstrainedBox(
         // Width on web is set by the home screen (same as the other sections)
-        constraints: const BoxConstraints(maxWidth: double.infinity),
+        constraints: LayoutService.contentConstraints(context),
         child: Container(
           alignment: Alignment.topCenter,
           // Full-bleed dark block; content keeps the page padding so it lines up (rule 2).

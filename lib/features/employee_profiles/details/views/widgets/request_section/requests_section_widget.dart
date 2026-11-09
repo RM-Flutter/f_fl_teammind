@@ -46,7 +46,7 @@ class RequestsSectionWidget extends StatelessWidget {
               child: CustomElevatedButton(
                   backgroundColor: Color(AppColors.secondaryButton),
                   titleSize: AppSizes.s14,
-                  title: AppStrings.viewTheLatestReviews.tr().toUpperCase(),
+                  title: AppStrings.viewTheLatestReviews.tr(),
                   onPressed: () async{
                     var mine;
                     if(employee!.id.toString() == gCache['employee_profile_id'].toString()){

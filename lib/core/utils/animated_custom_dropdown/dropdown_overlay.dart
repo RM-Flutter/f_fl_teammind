@@ -157,11 +157,11 @@ class _DropdownOverlayState extends State<_DropdownOverlay> {
               }
             },
           )
-        : const Center(
+        : Center(
             child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 12.0),
+              padding: const EdgeInsets.symmetric(vertical: 12.0),
               child: Text(
-                'No result found.',
+                'no_result_found'.tr(),
                 style: TextStyle(fontSize: 16),
               ),
             ),

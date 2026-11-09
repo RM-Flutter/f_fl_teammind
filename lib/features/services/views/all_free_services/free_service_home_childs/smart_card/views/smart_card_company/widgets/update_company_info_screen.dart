@@ -89,10 +89,10 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
     _websiteController = TextEditingController();
     _whatsappController = TextEditingController();
     _tabs = [
-      AppStrings.personal.tr().toUpperCase(),
-      AppStrings.contact.tr().toUpperCase(),
-      AppStrings.jopInfo.tr().toUpperCase(),
-      AppStrings.portfolio.tr().toUpperCase(),
+      AppStrings.personal.tr(),
+      AppStrings.contact.tr(),
+      AppStrings.jopInfo.tr(),
+      AppStrings.portfolio.tr(),
     ];
     _loadFullCompanyAndRefs();
   }
@@ -677,7 +677,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
           items: _tabs,
           tapBarItemsWidth: MediaQuery.sizeOf(context).width * 0.95,
           selectIndex: _selectedTabIndex,
-          enableScroll: kIsWeb ? false : true,
+          enableScroll: true,
           onTapItem: (index) {
             setState(() => _selectedTabIndex = index);
           },

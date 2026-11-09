@@ -4,6 +4,7 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/services/app_toast.dart';
 import 'package:app_test/core/utils/app_styles.dart';
+import 'package:app_test/core/widgets/app_content_width.widget.dart';
 import 'package:app_test/features/more/ai_connect/controllers/ai_connect_controller.dart';
 import 'package:app_test/features/more/ai_connect/views/ai_connect_header.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -50,66 +51,68 @@ class _AiConnectViewState extends State<_AiConnectView> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Column(
-          children: [
-            AiConnectHeader(title: AppStrings.aiConnectTitle.tr()),
-            Expanded(
-              child: RefreshIndicator(
-                onRefresh: () => c.loadInfo(context),
-                child: ListView(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-                  children: [
-                    Text(AppStrings.aiConnectIntro.tr(),
-                        style: AppStyles.darkContent(context).copyWith(fontSize: 13, height: 1.5)),
-                    const SizedBox(height: 16),
-                    if (c.isInfoLoading)
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 40),
-                        child: Center(child: CircularProgressIndicator()),
-                      )
-                    else if (!c.enabled || c.mcpUrl == null)
-                      _Notice(
-                        icon: Icons.info_outline,
-                        color: Color(AppColors.warningYellow),
-                        text: c.errorMessage ?? c.disabledReason ?? AppStrings.aiConnectNotEnabled.tr(),
-                      )
-                    else ...[
-                      _LinkCard(url: c.mcpUrl!),
+        child: AppContentWidth(
+          child: Column(
+            children: [
+              AiConnectHeader(title: AppStrings.aiConnectTitle.tr()),
+              Expanded(
+                child: RefreshIndicator(
+                  onRefresh: () => c.loadInfo(context),
+                  child: ListView(
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+                    children: [
+                      Text(AppStrings.aiConnectIntro.tr(),
+                          style: AppStyles.darkContent(context).copyWith(fontSize: 13, height: 1.5)),
+                      const SizedBox(height: 16),
+                      if (c.isInfoLoading)
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 40),
+                          child: Center(child: CircularProgressIndicator()),
+                        )
+                      else if (!c.enabled || c.mcpUrl == null)
+                        _Notice(
+                          icon: Icons.info_outline,
+                          color: Color(AppColors.warningYellow),
+                          text: c.errorMessage ?? c.disabledReason ?? AppStrings.aiConnectNotEnabled.tr(),
+                        )
+                      else ...[
+                        _LinkCard(url: c.mcpUrl!),
+                        const SizedBox(height: 20),
+                        Text(AppStrings.aiConnectHowTo.tr(),
+                            style: AppStyles.heading(context).copyWith(fontSize: 14, fontWeight: FontWeight.w700)),
+                        const SizedBox(height: 10),
+                        _Step(number: 1, text: AppStrings.aiConnectStep1.tr()),
+                        _Step(number: 2, text: AppStrings.aiConnectStep2.tr()),
+                        _Step(number: 3, text: AppStrings.aiConnectStep3.tr()),
+                        _Step(number: 4, text: AppStrings.aiConnectStep4.tr()),
+                        const SizedBox(height: 12),
+                        _Notice(
+                          icon: Icons.lock_outline,
+                          color: Color(AppColors.successGreen),
+                          text: AppStrings.aiConnectPrivacy.tr(),
+                        ),
+                      ],
                       const SizedBox(height: 20),
-                      Text(AppStrings.aiConnectHowTo.tr(),
-                          style: AppStyles.heading(context).copyWith(fontSize: 14, fontWeight: FontWeight.w700)),
-                      const SizedBox(height: 10),
-                      _Step(number: 1, text: AppStrings.aiConnectStep1.tr()),
-                      _Step(number: 2, text: AppStrings.aiConnectStep2.tr()),
-                      _Step(number: 3, text: AppStrings.aiConnectStep3.tr()),
-                      _Step(number: 4, text: AppStrings.aiConnectStep4.tr()),
-                      const SizedBox(height: 12),
-                      _Notice(
-                        icon: Icons.lock_outline,
-                        color: Color(AppColors.successGreen),
-                        text: AppStrings.aiConnectPrivacy.tr(),
+                      OutlinedButton.icon(
+                        icon: const Icon(Icons.link_rounded),
+                        label: Text(AppStrings.aiConnectedApps.tr()),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Color(AppColors.buttons),
+                          side: BorderSide(color: Color(AppColors.buttons)),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
+                        ),
+                        onPressed: () => context.pushNamed(
+                          AppRoutes.aiConnectedApps.name,
+                          pathParameters: {'lang': context.locale.languageCode},
+                        ),
                       ),
                     ],
-                    const SizedBox(height: 20),
-                    OutlinedButton.icon(
-                      icon: const Icon(Icons.link_rounded),
-                      label: Text(AppStrings.aiConnectedApps.tr()),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Color(AppColors.buttons),
-                        side: BorderSide(color: Color(AppColors.buttons)),
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
-                      ),
-                      onPressed: () => context.pushNamed(
-                        AppRoutes.aiConnectedApps.name,
-                        pathParameters: {'lang': context.locale.languageCode},
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

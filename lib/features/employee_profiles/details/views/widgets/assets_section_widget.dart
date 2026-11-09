@@ -88,7 +88,7 @@ class _SectionLabel extends StatelessWidget {
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 4),
         child: Text(
-          text.toUpperCase(),
+          text,
           style: AppStyles.subtitleContent(context).copyWith(
               fontSize: 13, fontWeight: FontWeight.w700, letterSpacing: 0.6),
         ),
@@ -413,7 +413,7 @@ class _Badge extends StatelessWidget {
             ),
           ],
           Text(
-            label.toUpperCase(),
+            label,
             style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w800,

@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/features/more/notifications/controllers/notification_controller.dart';
 import 'package:app_test/features/more/notifications/views/widgets/notifications_list/widgets/notifications_details/widgets/notification_details_loading_screen.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
@@ -99,8 +100,7 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                 SizedBox(height: 20),
                                 Center(
                                   child: ConstrainedBox(
-                                    constraints: const BoxConstraints(
-                                        maxWidth: double.infinity),
+                                    constraints: LayoutService.contentConstraints(context),
                                     child: Padding(
                                       padding:
                                           EdgeInsets.symmetric(horizontal: 15),
@@ -338,7 +338,7 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                                 Text(
                                                   AppStrings.lastedComments
                                                       .tr()
-                                                      .toUpperCase(),
+                                                      ,
                                                   style: AppStyles.darkContent(
                                                           context)
                                                       .copyWith(

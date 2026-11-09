@@ -14,6 +14,7 @@ import 'package:app_test/features/salary_advance_requests/shared/models/salary_a
 import 'package:app_test/core/utils/modal_sheet_helper.dart';
 import 'package:app_test/features/salary_advance_requests/views/update_salary_advance_screen.dart';
 import 'package:app_test/features/requests/details/controller/request_details_controller.dart';
+import '../../../../core/services/layout_service.dart';
 import '../../../../core/services/localization_service.dart';
 import '../../cubit/approvable_details_cubit.dart';
 import '../../data/models/approvable_details_model.dart';
@@ -384,7 +385,7 @@ class ApprovableBottomActionBar extends StatelessWidget {
 
       rows.add(
         SizedBox(
-          height: kIsWeb ? 40 : 44,
+          height: 44,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -399,9 +400,7 @@ class ApprovableBottomActionBar extends StatelessWidget {
 
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(
-          maxWidth: double.infinity,
-        ),
+        constraints: LayoutService.contentConstraints(context),
         child: Container(
           padding: const EdgeInsets.symmetric(
             vertical: 4,

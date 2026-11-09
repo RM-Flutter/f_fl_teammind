@@ -79,10 +79,10 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
   }
 
   List<String> taps = [
-    AppStrings.personal.tr().toUpperCase(),
-    AppStrings.contact.tr().toUpperCase(),
-    AppStrings.jopInfo.tr().toUpperCase(),
-    AppStrings.education.tr().toUpperCase(),
+    AppStrings.personal.tr(),
+    AppStrings.contact.tr(),
+    AppStrings.jopInfo.tr(),
+    AppStrings.education.tr(),
   ];
 
   @override
@@ -685,7 +685,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
           items: taps,
           tapBarItemsWidth: MediaQuery.sizeOf(context).width * 0.95,
           selectIndex: selectIndex,
-          enableScroll: kIsWeb ? false : true,
+          enableScroll: true,
           onTapItem: (index) {
             setState(() => selectIndex = index);
           },

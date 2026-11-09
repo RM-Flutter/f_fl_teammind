@@ -12,7 +12,7 @@ class PdfViewerScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(
-        AppStrings.pdfViewer.tr().toUpperCase(),
+        AppStrings.pdfViewer.tr(),
         style: TextStyle(color: Color(AppColors.secondaryButton), fontWeight: FontWeight.bold, fontSize: 20),
       ),),
       body: localFilePath == null

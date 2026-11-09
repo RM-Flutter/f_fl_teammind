@@ -25,7 +25,7 @@ class RedeemNowButton extends StatelessWidget {
           if(friends == false) Image.asset("assets/images/png/icon.png"),
           if(friends == true) SvgPicture.asset("assets/images/svg/sFriend.svg"),
           gapW4,
-          Text(friends == false?AppStrings.redeemNow.tr().toUpperCase():AppStrings.sendToFriends.tr().toUpperCase(),style: const TextStyle(
+          Text(friends == false?AppStrings.redeemNow.tr():AppStrings.sendToFriends.tr(),style: const TextStyle(
             fontSize: 12,
             fontWeight: FontWeight.w500,
             color: Colors.white,

@@ -4,6 +4,7 @@ import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:app_test/core/widgets/template_page.widget.dart';
@@ -51,11 +52,11 @@ class _TeamTodayStatusScreenState extends State<TeamTodayStatusScreen> {
         builder: (context, controller, _) {
           return TemplatePage(
             pageContext: context,
-            title: AppStrings.teamTodayStatus.tr().toUpperCase(),
+            title: AppStrings.teamTodayStatus.tr(),
             onRefresh: () async => controller.fetchTeamStatus(context),
             body: Center(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: double.infinity),
+                constraints: LayoutService.contentConstraints(context),
                 child: controller.isLoading
                     ? const _LoadingShimmer()
                     : controller.errorMessage != null && controller.data == null
@@ -442,7 +443,7 @@ class _ErrorView extends StatelessWidget {
             ElevatedButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh_rounded, size: 18),
-              label: const Text('Retry'),
+              label: Text('retry'.tr()),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(AppColors.buttons),
                 foregroundColor: Colors.white,

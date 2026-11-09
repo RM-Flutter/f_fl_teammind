@@ -25,7 +25,7 @@ class ChargePhoneBottomBar extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: (value.isPostPayLoading == false)?ButtonWidget(
             title:
-            "${AppStrings.pay.tr().toUpperCase()} ${value.numberOfPointsController.text.isNotEmpty? value.numberOfPointsController.text : "0"  } ${AppStrings.point.tr().toUpperCase()}",
+            "${AppStrings.pay.tr()} ${value.numberOfPointsController.text.isNotEmpty? value.numberOfPointsController.text : "0"  } ${AppStrings.point.tr()}",
             svgIcon: "assets/images/svg/wallet.svg",
             onPressed: () {
               value.postPay(context,

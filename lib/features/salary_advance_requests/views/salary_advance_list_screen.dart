@@ -1,3 +1,4 @@
+import 'package:app_test/core/widgets/app_empty_scroll_view.widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/widgets/approvable_card_widget.dart';
@@ -12,6 +13,7 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/routing/app_router.dart';
+import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/widgets/template_page.widget.dart';
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
@@ -182,13 +184,7 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
     if (controller.personalRequests == null || controller.personalRequests!.isEmpty) {
       return RefreshIndicator.adaptive(
         onRefresh: () => controller.initializeScreen(context),
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: NoExistingPlaceholderScreen(
-            height: 0.6.sh,
-            title: 'no_requests'.tr(),
-          ),
-        ),
+        child: AppEmptyScrollView(title: 'no_requests'.tr()),
       );
     }
 
@@ -203,13 +199,7 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
     if (controller.incomingRequests == null || controller.incomingRequests!.isEmpty) {
       return RefreshIndicator.adaptive(
         onRefresh: () => controller.initializeScreen(context),
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: NoExistingPlaceholderScreen(
-            height: 0.6.sh,
-            title: 'no_incoming_requests'.tr(),
-          ),
-        ),
+        child: AppEmptyScrollView(title: 'no_incoming_requests'.tr()),
       );
     }
 
@@ -223,9 +213,7 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
 
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(
-          maxWidth: double.infinity,
-        ),
+        constraints: LayoutService.contentConstraints(context),
         child: RefreshIndicator.adaptive(
           onRefresh: () => controller.initializeScreen(context),
           child: ListView.builder(

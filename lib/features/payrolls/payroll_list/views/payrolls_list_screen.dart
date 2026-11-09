@@ -1,3 +1,4 @@
+import 'package:app_test/core/utils/string_extensions.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:convert';
@@ -56,40 +57,19 @@ class _FingerprintScreenState extends State<PayrollsListScreen> {
       create: (_) => viewModel,
       child: TemplatePage(
           pageContext: context,
-          bottomAppbarWidget: widget.empId != null &&
-                  widget.empId?.isNotEmpty == true &&
+          // Opened for another employee: his name is the title (same as Fingerprint).
+          title: (widget.empId != null &&
+                  widget.empId!.isNotEmpty &&
                   widget.empName != null &&
-                  widget.empName?.isNotEmpty == true &&
-                  viewModel.userSettings?.userId.toString() != widget.empId
-              ? PreferredSize(
-                  preferredSize: Size.fromHeight(AppSizes.s40),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: AppSizes.s12, vertical: AppSizes.s6),
-                    child: Container(
-                      width: double.infinity,
-                      alignment: Alignment.center,
-                      child: Text(
-                        widget.empName!,
-                        style: AppStyles.heading(context).copyWith(
-                            fontWeight: FontWeight.w600,
-                            fontSize: AppSizes.s20),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                )
-              : null,
-          title: AppStrings.payrolls.tr(),
+                  widget.empName!.isNotEmpty &&
+                  viewModel.userSettings?.userId.toString() != widget.empId)
+              ? widget.empName!.titleCase
+              : AppStrings.payrolls.tr(),
           onRefresh: () async => await viewModel.initializePayrollsListScreen(
               context: context, empId: widget.empId),
           body: Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxWidth: double.infinity,
-              ),
+              constraints: LayoutService.contentConstraints(context),
               child: SingleChildScrollView(
                 clipBehavior: Clip.none,
                 padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page, vertical: AppSpacing.md),

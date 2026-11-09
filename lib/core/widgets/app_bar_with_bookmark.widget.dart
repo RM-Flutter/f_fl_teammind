@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_sizes.dart';
 import '../services/backend_services/api_service/dio_api_service/shared.dart';
+import '../services/layout_service.dart';
 import '../utils/app_styles.dart';
+import 'app_content_width.widget.dart';
 import 'bookmark_widgets/bookmark_button.widget.dart';
 
 /// The single unified back button used in every AppBar across the app.
@@ -151,6 +153,7 @@ class AppBarWithBookmark extends StatelessWidget implements PreferredSizeWidget 
     }
 
     final canPop = context.canPop() || Navigator.of(context).canPop();
+    final hasLeading = leading != null || (automaticallyImplyLeading && canPop);
     final effectiveLeading = leading ??
         (automaticallyImplyLeading && canPop
             ? const AppBackButton()
@@ -163,22 +166,48 @@ class AppBarWithBookmark extends StatelessWidget implements PreferredSizeWidget 
           color: Color(AppColors.secondaryButton),
         );
 
-    return AppBar(
-      title: titleWidget ??
-          (title != null ? Text(title!, style: effectiveTitleStyle) : null),
-      leading: effectiveLeading,
-      automaticallyImplyLeading: automaticallyImplyLeading,
-      actions: allActions.isEmpty ? null : allActions,
-      backgroundColor: backgroundColor ?? Colors.white,
-      centerTitle: centerTitle,
-      elevation: elevation,
-      bottom: bottom,
-      surfaceTintColor: surfaceTintColor ?? Colors.transparent,
-      shape: shape,
-      flexibleSpace: flexibleSpace,
-      systemOverlayStyle: systemOverlayStyle,
-      toolbarHeight: bottom != null ? kToolbarHeight : null,
-      actionsIconTheme: const IconThemeData(size: 24),
+    final effectiveBottom = bottom == null
+        ? null
+        : PreferredSize(
+            preferredSize: bottom!.preferredSize,
+            child: AppContentWidth(child: bottom!),
+          );
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final sideInset =
+            LayoutService.sideInsetForContent(context, constraints.maxWidth);
+        final insetActions = <Widget>[
+          ...allActions,
+          if (sideInset > 0 && allActions.isNotEmpty) SizedBox(width: sideInset),
+        ];
+        final insetLeading = (sideInset > 0 && hasLeading)
+            ? Padding(
+                padding: EdgeInsetsDirectional.only(start: sideInset),
+                child: effectiveLeading,
+              )
+            : effectiveLeading;
+
+        return AppBar(
+          title: titleWidget ??
+              (title != null ? Text(title!, style: effectiveTitleStyle) : null),
+          leading: insetLeading,
+          leadingWidth:
+              (sideInset > 0 && hasLeading) ? kToolbarHeight + sideInset : null,
+          automaticallyImplyLeading: automaticallyImplyLeading,
+          actions: insetActions.isEmpty ? null : insetActions,
+          backgroundColor: backgroundColor ?? Colors.white,
+          centerTitle: centerTitle,
+          elevation: elevation,
+          bottom: effectiveBottom,
+          surfaceTintColor: surfaceTintColor ?? Colors.transparent,
+          shape: shape,
+          flexibleSpace: flexibleSpace,
+          systemOverlayStyle: systemOverlayStyle,
+          toolbarHeight: bottom != null ? kToolbarHeight : null,
+          actionsIconTheme: const IconThemeData(size: 24),
+        );
+      },
     );
   }
 

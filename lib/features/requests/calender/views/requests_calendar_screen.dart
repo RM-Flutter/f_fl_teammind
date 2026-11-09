@@ -10,6 +10,7 @@ import 'package:app_test/core/platform/platform_is.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/services/app_theme_service.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/services/requests_services.dart';
 import 'package:app_test/core/widgets/template_page.widget.dart';
@@ -179,7 +180,7 @@ class RequestsCalendarScreen extends StatelessWidget {
               body: SingleChildScrollView(
                 child: Center(
                   child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: double.infinity),
+                    constraints: LayoutService.contentConstraints(context),
                     child: Padding(
                       padding: AppSpacing.pageAll,
                       child: Column(
@@ -435,7 +436,7 @@ class RequestsCalendarScreen extends StatelessWidget {
                                                 fontWeight: FontWeight.bold),
                                       ),
                                       subtitle: Text(
-                                        "${formatDateArabic(DateTime.parse(holiday['from'].toString()), context)} ${AppStrings.to.tr().toUpperCase()} ${formatDateArabic(DateTime.parse(holiday['to'].toString()), context)}",
+                                        "${formatDateArabic(DateTime.parse(holiday['from'].toString()), context)} ${AppStrings.to.tr()} ${formatDateArabic(DateTime.parse(holiday['to'].toString()), context)}",
                                         style: AppStyles.greyContent(context)
                                             .copyWith(fontSize: 12),
                                       ),

@@ -1,3 +1,4 @@
+import 'package:app_test/core/widgets/app_empty_scroll_view.widget.dart';
 import 'package:app_test/core/widgets/app_fab.widget.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
@@ -280,13 +281,7 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
         onRefresh: () async {
           await provider.fetchReports(context, isIncoming: isIncoming);
         },
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: NoExistingPlaceholderScreen(
-            height: 300,
-            title: AppStrings.noDataFounded.tr(),
-          ),
-        ),
+        child: AppEmptyScrollView(title: AppStrings.noDataFounded.tr()),
       );
     }
     return RefreshIndicator(

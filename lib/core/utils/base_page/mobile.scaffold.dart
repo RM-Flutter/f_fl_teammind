@@ -120,16 +120,25 @@ class CoreMobileScaffold extends StatelessWidget {
       drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
       endDrawerEnableOpenDragGesture: endDrawerEnableOpenDragGesture,
       restorationId: restorationId,
-      body: AppContentWidth(
-        child: Padding(
-            padding: padding ?? const EdgeInsets.all(0.0),
-            child: body != null && bodyWithoutScroll ? body : getChild()),
-      ),
+      body: Padding(
+          padding: padding ?? const EdgeInsets.all(0.0),
+          child: body != null && bodyWithoutScroll
+              ? AppContentWidth(child: body!)
+              : getChild()),
       ),
     );
   }
 
   Widget getChild() {
+    Widget buildChildItem(BuildContext ctx, int i) {
+      final raw = (childrenBuilder ??
+              (children != null
+                  ? ((_, idx) => children![idx])
+                  : (_, idx) => const SizedBox()))
+          .call(ctx, i);
+      return AppContentWidth(child: raw);
+    }
+
     if (tabBarViewBody != null) {
       return NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -150,7 +159,7 @@ class CoreMobileScaffold extends StatelessWidget {
               ),
           ];
         },
-        body: tabBarViewBody ?? Container(),
+        body: AppContentWidth(child: tabBarViewBody ?? Container()),
       );
     } else {
       return CustomScrollView(
@@ -168,10 +177,7 @@ class CoreMobileScaffold extends StatelessWidget {
               (animationDuration == null
                   ? SliverList(
                       delegate: SliverChildBuilderDelegate(
-                      childrenBuilder ??
-                          (children != null
-                              ? ((_, i) => children![i])
-                              : (_, i) => const SizedBox()),
+                      buildChildItem,
                       childCount: childrenCount ?? children?.length ?? 0,
                     ))
                   : animation.LiveSliverList(
@@ -193,11 +199,7 @@ class CoreMobileScaffold extends StatelessWidget {
                                 begin: const Offset(-1.1, 1.1),
                                 end: Offset.zero,
                               ).animate(animation),
-                              child: (childrenBuilder ??
-                                      (children != null
-                                          ? ((_, i) => children![i])
-                                          : (_, i) => const SizedBox()))
-                                  .call(context, index),
+                              child: buildChildItem(context, index),
                             ));
                       },
                     )),

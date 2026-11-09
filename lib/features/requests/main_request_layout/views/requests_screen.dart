@@ -182,61 +182,23 @@ class _RequestsScreenState extends State<RequestsScreen> {
                 FloatingActionButton(
                   heroTag: 'requests_calendar',
                   onPressed: ()async {
-                    final Map<String, String?>? filterResult;
-                    if (kIsWeb) {
-                      // Use showDialog for web to ensure it's fully visible
-                      filterResult = await showDialog<Map<String, String?>>(
-                        context: context,
-                        barrierDismissible: true,
-                        builder: (BuildContext dialogContext) {
-                          final screenHeight = MediaQuery.of(dialogContext).size.height;
-                          final screenWidth = MediaQuery.of(dialogContext).size.width;
-                          return Dialog(
-                            alignment: Alignment.center,
-                            insetPadding: EdgeInsets.symmetric(
-                              horizontal: screenWidth * 0.15,
-                              vertical: screenHeight * 0.1,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(AppRadius.xl),
-                            ),
-                            child: ConstrainedBox(
-                              constraints: BoxConstraints(
-                                maxHeight: screenHeight * 0.8,
-                                maxWidth: 600,
-                              ),
-                              child: SearchFilterWidget(
-                                contexts: dialogContext,
-                                requestsType: widget.requestsType,
-                                isWeb: true,
-                                // underMyManagement: true,
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    } else {
-                      // Use showModalBottomSheet for mobile
-                      filterResult = await showModalBottomSheet<Map<String, String?>>(
-                        context: context,
-                        isScrollControlled: true,
-                        enableDrag: false,
-                        isDismissible: true,
-                        shape: const RoundedRectangleBorder(
-                          borderRadius:
-                          BorderRadius.vertical(
-                              top: Radius.circular(AppRadius.xl)),
-                        ),
-                        builder: (BuildContext context) {
-                          return SearchFilterWidget(
-                            contexts: context,
-                            requestsType: widget.requestsType,
-                            isWeb: false,
-                            // underMyManagement: true,
-                          );
-                        },
-                      );
-                    }
+                    final filterResult = await showModalBottomSheet<Map<String, String?>>(
+                      context: context,
+                      isScrollControlled: true,
+                      enableDrag: false,
+                      isDismissible: true,
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(AppRadius.xl)),
+                      ),
+                      builder: (BuildContext context) {
+                        return SearchFilterWidget(
+                          contexts: context,
+                          requestsType: widget.requestsType,
+                          isWeb: false,
+                        );
+                      },
+                    );
                     if (filterResult != null) {
                       final _v = (String? s) => (s == null || s.isEmpty) ? null : s;
                       viewModel.initializeRequestsScreen(
@@ -323,9 +285,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
           },
           body: Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                  maxWidth: double.infinity
-              ),
+              constraints: LayoutService.contentConstraints(context),
               child: Container(
                 alignment: Alignment.topCenter,
                 // TemplatePage puts the body in a ListView (unbounded height), so size it to the

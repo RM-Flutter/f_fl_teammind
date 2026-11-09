@@ -133,16 +133,14 @@ class _TaskScreenState extends State<TaskScreen> {
             ),
           )
               : null,
-          title: AppStrings.tasks.tr().toUpperCase(),
+          title: AppStrings.tasks.tr(),
           onRefresh: () async {
             viewModel.currentPage = 1;
             viewModel.getTask(context);
           },
           body: Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxWidth: double.infinity,
-              ),
+              constraints: LayoutService.contentConstraints(context),
               child: Column(
                 children: [
                   Padding(
@@ -224,7 +222,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                         ),
                                       ),
                                       child: Text(
-                                        AppStrings.loadMore.tr().toUpperCase(),
+                                        AppStrings.loadMore.tr(),
                                         style: AppStyles.whiteContent(context).copyWith(fontWeight: FontWeight.bold, fontSize: 14),
                                       ),
                                     ),

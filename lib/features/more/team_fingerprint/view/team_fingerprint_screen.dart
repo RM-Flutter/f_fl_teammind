@@ -56,11 +56,11 @@ class _TeamFingerprintScreenState extends State<TeamFingerprintScreen> {
       create: (_) => viewModel,
       child: TemplatePage(
           pageContext: context,
-          title: AppStrings.teamFingerprint.tr().toUpperCase(),
+          title: AppStrings.teamFingerprint.tr(),
           onRefresh: () async => await viewModel.getEmployees(context: context),
           body: Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: double.infinity),
+              constraints: LayoutService.contentConstraints(context),
               child: Padding(
                 padding: AppSpacing.pageAll,
                 child: SingleChildScrollView(
@@ -164,9 +164,7 @@ class _TeamFingerprintScreenState extends State<TeamFingerprintScreen> {
       subtitle: hours.isEmpty ? dept : '$dept · $hours',
       avatarInitialsText: t1?.toString(),
       trailing: Icon(
-        Localizations.localeOf(context).languageCode == 'ar'
-            ? Icons.chevron_left_rounded
-            : Icons.chevron_right_rounded,
+        Icons.chevron_right_rounded,
         color: Color(AppColors.buttons),
       ),
       onTap: onTap,

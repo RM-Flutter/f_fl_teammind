@@ -132,7 +132,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
             appBar: AppBarWithBookmark(
               backgroundColor: Colors.white,
               leading: const AppBackButton(),
-              title: widget.service['title'].toString().toUpperCase(),
+              title: widget.service['title'].toString(),
               showBookmark: false,
             ),
             body: SafeArea(
@@ -160,7 +160,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                                 Text(
                                   AppStrings.selectServiceProvider
                                       .tr()
-                                      .toUpperCase(),
+                                      ,
                                   style: const TextStyle(
                                       fontSize: AppSizes.s14,
                                       fontWeight: FontWeight.w700,
@@ -305,7 +305,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                         if (inquiry == true && value.isGetFawryCategoryLoading == false)
                           ButtonWidget(
                             title:
-                            AppStrings.proceedToPayment.tr().toUpperCase(),
+                            AppStrings.proceedToPayment.tr(),
                             svgIcon: "assets/images/svg/wallet.svg",
                             onPressed: () {
                               // if (inputs
@@ -375,7 +375,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                                         decoration: InputDecoration(
                                           hintText: AppStrings.rechargeAmount
                                               .tr()
-                                              .toUpperCase(),
+                                              ,
                                         ),
                                         validator: (value) => ValidationService
                                             .validateRequiredAmount(value),
@@ -429,7 +429,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                                         decoration: InputDecoration(
                                           hintText: AppStrings.numberOfPoints
                                               .tr()
-                                              .toUpperCase(),
+                                              ,
                                         ),
                                         onChanged: (String? values){
                                           if(values!.isEmpty){

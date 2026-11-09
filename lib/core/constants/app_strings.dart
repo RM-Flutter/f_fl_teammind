@@ -1248,4 +1248,16 @@ abstract class AppStrings {
   static const aiDisconnectTitle = "aiDisconnectTitle";
   static const aiDisconnectConfirm = "aiDisconnectConfirm";
   static const aiDisconnected = "aiDisconnected";
+  static const go_home = 'go_home';
+  static const no_result_found = 'no_result_found';
+  static const happy_birthday = 'happy_birthday';
+  static const birthday_wishes = 'birthday_wishes';
+  static const thank_you = 'thank_you';
+  static const no_url_to_open = 'no_url_to_open';
+  static const failed_to_load_image = 'failed_to_load_image';
+  static const reactions = 'reactions';
+  static const add_video = 'add_video';
+  static const start_time_before_end = 'start_time_before_end';
+  static const select_photo = 'select_photo';
+  static const close = 'close';
 }

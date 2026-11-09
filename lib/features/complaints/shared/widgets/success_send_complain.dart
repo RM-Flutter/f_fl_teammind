@@ -24,12 +24,12 @@ class SuccessfulSendRequestBottomsheet extends StatelessWidget {
      SizedBox(height: 30),
      SvgPicture.asset("assets/images/svg/success_meeting.svg"),
      SizedBox(height: 15,),
-     Text(AppStrings.successful.tr().toUpperCase(), style: AppStyles.primaryContent(context).copyWith(fontSize: 24,
+     Text(AppStrings.successful.tr(), style: AppStyles.primaryContent(context).copyWith(fontSize: 24,
        fontWeight: FontWeight.w700)),
      Padding(
       padding: EdgeInsets.all(15.0),
       child: Text(
-       AppStrings.youWillBeRepliedSoonThankYouForChoosingOurApp.tr().toUpperCase(),
+       AppStrings.youWillBeRepliedSoonThankYouForChoosingOurApp.tr(),
        textAlign: TextAlign.center,
        style: AppStyles.almostBlack1BContent(context).copyWith(
          fontWeight: FontWeight.w500,
@@ -41,7 +41,7 @@ class SuccessfulSendRequestBottomsheet extends StatelessWidget {
         Navigator.pop(context);
         Navigator.pop(context);
        },
-       title: AppStrings.backToMyRequests.tr().toUpperCase(),
+       title: AppStrings.backToMyRequests.tr(),
        isPrimaryBackground: true,
        isFuture: false),
      SizedBox(height: 20),

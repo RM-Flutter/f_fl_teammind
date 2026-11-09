@@ -33,42 +33,46 @@ class _HorizontalCalendarState extends State<HorizontalCalendar> {
   Widget build(BuildContext context) {
     return Consumer<TasksController>(
       builder: (context, viewModel, child){
-        return Row(
-          children: [
-            GestureDetector(
-              onTap: (){
-                viewModel.getTask(context, date: null);
-              },
-              child: Container(
-                height: 60,
-                width: 50,
-                margin: EdgeInsets.only(left: 10),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(AppRadius.sm),
-                  color: viewModel.selectedIndex == null ? Color(AppColors.buttons) : Colors.white,
-                  border: viewModel.selectedIndex == null ? null : Border.all(color: Colors.grey.shade300),
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  AppStrings.all.tr(),
-                  style: AppStyles.blackContent(context).copyWith(
-                    color: viewModel.selectedIndex == null ? Colors.white : Colors.black,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14,
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              child: Container(
-                height: 100,
-                color: Colors.white,
-                child: ListView.separated(
+        // "All" is the first item of the same list as the days, so it gets the same page padding
+        // and the same 10 gap, and scrolls with them (it used to sit outside, glued to the edge).
+        return Container(
+          height: 100,
+          color: Colors.white,
+          child: ListView.separated(
                   scrollDirection: Axis.horizontal,
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: monthDays.length,
-                  separatorBuilder: (_, __) => SizedBox(width: 10),
-                  itemBuilder: (context, index) {
+                  padding: AppSpacing.pagePadding,
+                  itemCount: monthDays.length + 1,
+                  separatorBuilder: (_, __) => const SizedBox(width: 10),
+                  itemBuilder: (context, listIndex) {
+                    if (listIndex == 0) {
+                      final selected = viewModel.selectedIndex == null;
+                      return Center(
+                        child: GestureDetector(
+                          onTap: () {
+                            viewModel.getTask(context, date: null);
+                          },
+                          child: Container(
+                            height: 60,
+                            width: 56,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(AppRadius.sm),
+                              color: selected ? Color(AppColors.buttons) : Colors.white,
+                              border: selected ? null : Border.all(color: Colors.grey.shade300),
+                            ),
+                            alignment: Alignment.center,
+                            child: Text(
+                              AppStrings.all.tr(),
+                              style: AppStyles.blackContent(context).copyWith(
+                                color: selected ? Colors.white : Colors.black,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                    final index = listIndex - 1;
                     final date = monthDays[index];
                     return GestureDetector(
                       onTap: () async{
@@ -122,9 +126,6 @@ class _HorizontalCalendarState extends State<HorizontalCalendar> {
                     );
                   },
                 ),
-              ),
-            ),
-          ],
         );
       }
     );

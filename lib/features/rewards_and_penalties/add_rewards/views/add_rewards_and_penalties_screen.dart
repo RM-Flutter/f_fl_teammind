@@ -7,6 +7,7 @@ import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/models/settings/general_settings.model.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/utils/animated_custom_dropdown/custom_dropdown.dart';
 import 'package:app_test/core/utils/app_styles.dart';
@@ -116,9 +117,7 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
             body: SingleChildScrollView(
               child: Center(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                      maxWidth: double.infinity
-                  ),
+                  constraints: LayoutService.contentConstraints(context),
                   child: Padding(
                     padding: EdgeInsets.symmetric(
                         vertical: AppSizes.s16, horizontal: AppSizes.s12),

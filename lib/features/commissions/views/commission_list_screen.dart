@@ -1,6 +1,8 @@
+import 'package:app_test/core/widgets/app_empty_scroll_view.widget.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:app_test/core/widgets/template_page.widget.dart';
@@ -102,20 +104,13 @@ class _CommissionListScreenState extends State<CommissionListScreen> {
     if (controller.commissions == null || controller.commissions!.isEmpty) {
       return RefreshIndicator.adaptive(
         onRefresh: () => controller.initializeScreen(context),
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: NoExistingPlaceholderScreen(
-            height: 0.6.sh,
-            title: 'no_commissions'.tr(),
-          ),
-        ),
+        child: AppEmptyScrollView(title: 'no_commissions'.tr()),
       );
     }
 
     return Center(
       child: ConstrainedBox(
-        constraints:
-            const BoxConstraints(maxWidth: double.infinity),
+        constraints: LayoutService.contentConstraints(context),
         child: RefreshIndicator.adaptive(
           onRefresh: () => controller.initializeScreen(context),
           child: ListView.builder(
@@ -183,7 +178,7 @@ class _ActiveFiltersBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: double.infinity),
+        constraints: LayoutService.contentConstraints(context),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(
             AppSizes.s12,

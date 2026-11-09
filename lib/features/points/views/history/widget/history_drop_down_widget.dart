@@ -65,7 +65,7 @@ class HistoryDropDownWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if(code != null && code != "") Text(AppStrings.voucherCouponCode.tr().toUpperCase(), style: const TextStyle(color: Color(AppColors.oc2), fontWeight: FontWeight.w400, fontSize: 12),),
+                  if(code != null && code != "") Text(AppStrings.voucherCouponCode.tr(), style: const TextStyle(color: Color(AppColors.oc2), fontWeight: FontWeight.w400, fontSize: 12),),
                   if(code != null && code != "")  const SizedBox(height: 15,),
                   if(code != null && code != "")   Container(
                     height: 50,
@@ -105,7 +105,7 @@ class HistoryDropDownWidget extends StatelessWidget {
                     ),
                   ),
                   if(notes != null && notes != "") const SizedBox(height: 30),
-                  if(notes != null && notes != "") Text(AppStrings.notes.tr().toUpperCase(), style: const TextStyle(color: Color(AppColors.oc2), fontWeight: FontWeight.w400, fontSize: 12),),
+                  if(notes != null && notes != "") Text(AppStrings.notes.tr(), style: const TextStyle(color: Color(AppColors.oc2), fontWeight: FontWeight.w400, fontSize: 12),),
                   if(notes != null && notes != "")  const SizedBox(height: 15,),
                   if(notes != null && notes != "")  Text(notes.toString(), style: const TextStyle(color: Color(AppColors.gray1), fontWeight: FontWeight.w400, fontSize: 14)),
 

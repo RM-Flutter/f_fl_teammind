@@ -53,7 +53,7 @@ class _PayBillScreenState extends State<PayBillScreen> {
               appBar: AppBarWithBookmark(
                 backgroundColor: Colors.white,
                 leading: const AppBackButton(),
-                title: widget.title.toString().toUpperCase(),
+                title: widget.title.toString(),
                 showBookmark: false,
               ),
               body: Container(
@@ -68,7 +68,7 @@ class _PayBillScreenState extends State<PayBillScreen> {
                           enabled: false,
                           controller: amountController,
                           decoration: InputDecoration(
-                            hintText: AppStrings.enterPhoneNumber.tr().toUpperCase(),
+                            hintText: AppStrings.enterPhoneNumber.tr(),
                           ),
                           onChanged: (String? value){
                             setState(() {
@@ -176,7 +176,7 @@ class _PayBillScreenState extends State<PayBillScreen> {
                                       keyboardType: TextInputType.number,
                                       controller: value.rechargeAmountController,
                                       decoration: InputDecoration(
-                                        hintText: AppStrings.withdrawalAmount.tr().toUpperCase(),
+                                        hintText: AppStrings.withdrawalAmount.tr(),
                                       ),
                                       validator: (value) =>
                                           ValidationService.validateRequiredAmount(
@@ -199,7 +199,7 @@ class _PayBillScreenState extends State<PayBillScreen> {
                                       readOnly: true,
                                       controller: value.numberOfPointsController,
                                       decoration: InputDecoration(
-                                        hintText: AppStrings.numberOfPoints.tr().toUpperCase(),
+                                        hintText: AppStrings.numberOfPoints.tr(),
                                       ),
                                       onChanged: (String? values){
                                         setState(() {
@@ -260,7 +260,7 @@ class _PayBillScreenState extends State<PayBillScreen> {
                 ),
                 padding: const EdgeInsets.all(16.0),
                 child: value.isPostPayLoading == false ?ButtonWidget(
-                  title: "${AppStrings.pay.tr().toUpperCase()} ${double.parse((payAmount != null)?payAmount.toStringAsFixed(0) : "0") * double.parse((widget.pointsPerOne != null)?widget.pointsPerOne : "0")} ${AppStrings.point.tr().toUpperCase()}",
+                  title: "${AppStrings.pay.tr()} ${double.parse((payAmount != null)?payAmount.toStringAsFixed(0) : "0") * double.parse((widget.pointsPerOne != null)?widget.pointsPerOne : "0")} ${AppStrings.point.tr()}",
                   svgIcon: "assets/images/svg/wallet.svg",
                   onPressed: () {
                     value.postPay(

@@ -17,14 +17,15 @@ class OverlayGradientWidget extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
+            // Photo stays visible at the top; a light tint there keeps the headline readable.
             colors: [
-              base.withOpacity(0),
-              base.withOpacity(0),
-              base.withOpacity(0.45),
-              base.withOpacity(0.85),
+              base.withOpacity(0.12),
+              base.withOpacity(0.18),
+              base.withOpacity(0.55),
+              base.withOpacity(0.88),
               base,
             ],
-            stops: const [0.0, 0.45, 0.62, 0.82, 0.95],
+            stops: const [0.0, 0.4, 0.6, 0.82, 0.95],
           ),
         ),
       ),

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
@@ -19,14 +20,14 @@ abstract class BirthdayChecker {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Happy Birthday!'),
-            content: const Text('Wishing you a wonderful birthday! 🎉'),
+            title: Text('happy_birthday'.tr()),
+            content: Text('${'birthday_wishes'.tr()} 🎉'),
             actions: <Widget>[
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: const Text('Thank you!'),
+                child: Text('thank_you'.tr()),
               ),
             ],
           );

@@ -49,7 +49,7 @@ class EvalutaionSectionWidget extends StatelessWidget {
               child: CustomElevatedButton(
                   backgroundColor: Color(AppColors.secondaryButton),
                   titleSize: AppSizes.s12,
-                  title: AppStrings.viewEvaluations.tr().toUpperCase(),
+                  title: AppStrings.viewEvaluations.tr(),
                   onPressed: ()async{
                     await context.pushNamed(
                         AppRoutes.evaluationScreen.name,

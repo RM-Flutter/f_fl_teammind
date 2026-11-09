@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_design.dart';
 import 'dart:convert';
 import 'dart:developer';
 
@@ -128,25 +129,21 @@ class LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
     // Figma sizes (scaled) on phones; web and tablets keep the fixed sizes.
     final compact = LayoutService.isPhoneLayout(context);
     final isWeb = kIsWeb || PlatformIs.web;
-    final topSpacer =
-        compact ? AppSizes.loginTopSpacer.h : (isWeb ? 40.0 : 60.0);
-    final logoTitleGap = compact
-        ? AppSizes.loginLogoTitleGap.h
-        : (isWeb ? AppSizes.s32 : AppSizes.s32.h);
-    final titleFormGap = compact
-        ? AppSizes.loginTitleFormGap.h
-        : (isWeb ? AppSizes.s32 : AppSizes.s32.h);
+    // Spacing of the form. Plain numbers (no .h): scaled gaps grew on tall phones and pushed
+    // the form down, leaving empty space under it.
+    final topSpacer = compact ? AppSizes.loginTopSpacer : AppSizes.s24;
+    final logoTitleGap = AppSizes.loginLogoTitleGap;
+    final titleFormGap = AppSizes.loginTitleFormGap;
     final belowButtonGap = compact
         ? AppSizes.loginBelowButtonGap.h
         : (isWeb ? AppSizes.s16 : AppSizes.s16.h);
+    // Form width: the screen minus 24 on each side on phones, at most 420 on wider windows.
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final contentWidth = compact
+        ? screenWidth - AppSizes.loginSidePadding * 2
+        : AppSizes.loginMaxWidth;
     final smallButtonWidth = compact ? AppSizes.buttonSmallWidth.w : null;
     final smallButtonHeight = compact ? AppSizes.buttonSmallHeight.h : null;
-    // Never lower than the domain pill needs, so they cannot overlap.
-    final createAccountBottom = compact
-        ? (AppSizes.createAccountBottom.h < 62
-            ? 62.0
-            : AppSizes.createAccountBottom.h)
-        : 72.0;
 
     return ChangeNotifierProvider<AuthenticationController>(
       create: (context) => viewModel,
@@ -161,45 +158,43 @@ class LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                 children: [
                   const LoginAnimatedBackground(),
                   const Positioned.fill(child: OverlayGradientWidget()),
-                  Container(
-                    width: double.infinity,
-                    height: (kIsWeb || PlatformIs.web) ? double.infinity : null,
-                    alignment:
-                        compact ? Alignment.topCenter : Alignment.center,
-                    child: SingleChildScrollView(
-                      child: Center(
-                        child: SizedBox(
-                          width: (compact ? AppSizes.loginContentWidth.w : null) ??
-                              (MediaQuery.of(context).size.width < 600
-                                  ? double.infinity
-                                  : 450),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: compact
-                                  ? 0
-                                  : (kIsWeb || PlatformIs.web)
-                                      ? AppSizes.s24
-                                      : AppSizes.s24.w,
-                              vertical:
-                                  (kIsWeb || PlatformIs.web) ? AppSizes.s32 : 0,
-                            ),
-                            child: Form(
-                              key: viewModel.formKey,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
+                  Positioned.fill(
+                    // One scroll for the whole page: the form first, then the footer (Create New
+                    // Account + the domain pill). minHeight + spaceBetween keeps the footer at the
+                    // bottom of a tall screen and lets it scroll after the form on a short one, so
+                    // nothing is pinned over anything. No Spacer / Expanded / IntrinsicHeight: the
+                    // form holds LayoutBuilders (AutoSizeText) that cannot be measured that way.
+                    child: LayoutBuilder(
+                      builder: (context, constraints) => SingleChildScrollView(
+                        child: ConstrainedBox(
+                          constraints:
+                              BoxConstraints(minHeight: constraints.maxHeight),
+                          child: Center(
+                            child: SizedBox(
+                              width: contentWidth,
+                              child: Form(
+                                key: viewModel.formKey,
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      children: [
+
+                                        // Clear of the Saved accounts / language buttons.
+                                        SizedBox(
+                                            height: MediaQuery.paddingOf(context).top +
+                                                AppSizes.loginTopBarClearance),
                                   SizedBox(height: topSpacer),
                                   const LoginLogo(),
-                                  SizedBox(height: logoTitleGap),
+                                  // SizedBox(height: logoTitleGap),
                                   // Login Page Headline
                                   AutoSizeText(
                                     "${AppStrings.loginTo.tr()}\n$accountText",
                                     textAlign: TextAlign.center,
                                     style: AppStyles.whiteHeading(context)
                                         .copyWith(
-                                      fontSize: (kIsWeb || PlatformIs.web)
-                                          ? 32
-                                          : 20.sp,
+                                      fontSize: 20.sp,
                                       fontWeight: FontWeight.w400,
                                       height: 1.1,
                                     ),
@@ -248,13 +243,25 @@ class LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                                     isLoginBySocial: isLoginBySocial,
                                   ),
 
-                                  // Room so the pinned CREATE NEW ACCOUNT button and the
-                                  // domain bar never cover the last widget.
-                                  SizedBox(
-                                      height: (kIsWeb || PlatformIs.web)
-                                          ? 150
-                                          : 150.h),
-                                ],
+                                      ],
+                                    ),
+                                    Column(
+                                      children: [
+                                        const SizedBox(height: AppSpacing.section),
+                                        CreateAccountSection(
+                                          gCache: gCache,
+                                          viewModel: viewModel,
+                                        ),
+                                        const SizedBox(height: AppSpacing.sm),
+                                        const LoginDomainBar(),
+                                        SizedBox(
+                                            height: MediaQuery.paddingOf(context)
+                                                    .bottom +
+                                                AppSpacing.md),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -266,25 +273,6 @@ class LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                   const LanguageDropdownButton()
                 ],
               ),
-            ),
-            // Pinned to the real bottom of the screen: it is not lifted by the
-            // keyboard, the keyboard simply covers it.
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: createAccountBottom,
-              child: Center(
-                child: CreateAccountSection(
-                  gCache: gCache,
-                  viewModel: viewModel,
-                ),
-              ),
-            ),
-            const Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: Center(child: LoginDomainBar()),
             ),
           ],
         ),

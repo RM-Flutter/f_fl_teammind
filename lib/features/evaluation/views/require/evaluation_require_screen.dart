@@ -59,9 +59,7 @@ class _EvaluationRequireScreenState extends State<EvaluationRequireScreen> {
           onRefresh: () async => await viewModel.getEvaluationRequired(context),
           body: Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                  maxWidth: double.infinity
-              ),
+              constraints: LayoutService.contentConstraints(context),
               child: SingleChildScrollView(
                 clipBehavior: Clip.none,
                 padding: const EdgeInsets.symmetric(
@@ -73,7 +71,7 @@ class _EvaluationRequireScreenState extends State<EvaluationRequireScreen> {
                     if(viewModel.evaluations.isEmpty == true) CustomElevatedButton(
                         backgroundColor: Color(AppColors.buttons),
                         titleSize: AppSizes.s12,
-                        title: AppStrings.myEvaluations.tr().toUpperCase(),
+                        title: AppStrings.myEvaluations.tr(),
                         onPressed: () async => await context.pushNamed(
                             AppRoutes.evaluationScreen.name,
                             extra: {

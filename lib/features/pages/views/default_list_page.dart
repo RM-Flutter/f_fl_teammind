@@ -17,6 +17,7 @@ import 'package:app_test/core/utils/gradient_bg_image.dart';
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
+import 'package:app_test/core/widgets/app_content_width.widget.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/app_shimmer_list.dart';
 
 class DefaultListPage extends StatefulWidget {
@@ -78,77 +79,58 @@ class _DefaultListPageState extends State<DefaultListPage> {
             controller: _scrollController,
             child: GradientBgImage(
               padding: EdgeInsets.zero,
-              child: Column(
-                children: [
-                  SizedBox(height: AppSizes.s16),
-                  if (points.blogs.isEmpty)
-                    Container(
-                      height: 0.8.sh,
-                      alignment: Alignment.center,
-                      child: NoExistingPlaceholderScreen(
-                          height: 0.4.sh, title: AppStrings.noDataFounded.tr()),
-                    ),
-                  Padding(
-                    padding: AppSpacing.pagePadding,
-                    child: Padding(
-                      padding: EdgeInsets.zero,
-                      child: GridView.extent(
-                          maxCrossAxisExtent: 220,
-                          mainAxisSpacing: 15,
-                          crossAxisSpacing: 15,
-                          childAspectRatio: 1 / 1.1,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          children: List.generate(
-                              (points.isGetBlogLoading &&
+              child: AppContentWidth(
+                child: Column(
+                  children: [
+                    SizedBox(height: AppSizes.s16),
+                    if (points.blogs.isEmpty)
+                      Container(
+                        height: 0.8.sh,
+                        alignment: Alignment.center,
+                        child: NoExistingPlaceholderScreen(
+                            height: 0.4.sh, title: AppStrings.noDataFounded.tr()),
+                      ),
+                    Padding(
+                      padding: AppSpacing.pagePadding,
+                      child: Padding(
+                        padding: EdgeInsets.zero,
+                        child: GridView.extent(
+                            maxCrossAxisExtent: 220,
+                            mainAxisSpacing: 15,
+                            crossAxisSpacing: 15,
+                            childAspectRatio: 1 / 1.1,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            children: List.generate(
+                                (points.isGetBlogLoading &&
+                                        points.currentPage == 1)
+                                    ? 8
+                                    : points.blogs.length, (index) {
+                              return (points.isGetBlogLoading &&
                                       points.currentPage == 1)
-                                  ? 8
-                                  : points.blogs.length, (index) {
-                            return (points.isGetBlogLoading &&
-                                    points.currentPage == 1)
-                                ? const ShimmerAnimatedLoading(
-                                    circularRaduis: AppRadius.md)
-                                : defaultProjectCard(
-                                    points.blogs[index]['title'] ?? "",
-                                    id: points.blogs[index]['id'] ?? "",
-                                    type: widget.type,
-                                    (points.blogs[index]['main_thumbnail'] !=
-                                                null &&
-                                            points
-                                                .blogs[index]['main_thumbnail']
-                                                .isNotEmpty)
-                                        ? points.blogs[index]['main_thumbnail']
-                                            [0]['file']
-                                        : "",
-                                    onTap: () {
-                                      // if(points.blogs[index]['title'] == AppStrings.fawry.tr()){
-                                      //   context.pushNamed(
-                                      //       AppRoutes.fawryProviderScreen
-                                      //           .name,
-                                      //       pathParameters: {
-                                      //         'lang': context.locale
-                                      //             .languageCode,
-                                      //       });
-                                      // }else {
-                                      //   context.pushNamed(
-                                      //       AppRoutes.prizePointsViewScreen
-                                      //           .name,
-                                      //       pathParameters: {
-                                      //         'lang': context.locale
-                                      //             .languageCode,
-                                      //         'id': points
-                                      //             .blogs[index]['id']
-                                      //             .toString(),
-                                      //       });
-                                      // }
-                                    },
-                                  );
-                          })),
+                                  ? const ShimmerAnimatedLoading(
+                                      circularRaduis: AppRadius.md)
+                                  : defaultProjectCard(
+                                      points.blogs[index]['title'] ?? "",
+                                      id: points.blogs[index]['id'] ?? "",
+                                      type: widget.type,
+                                      (points.blogs[index]['main_thumbnail'] !=
+                                                  null &&
+                                              points
+                                                  .blogs[index]['main_thumbnail']
+                                                  .isNotEmpty)
+                                          ? points.blogs[index]['main_thumbnail']
+                                              [0]['file']
+                                          : "",
+                                      onTap: () {},
+                                    );
+                            })),
+                      ),
                     ),
-                  ),
-                  if (points.isGetBlogLoading && points.currentPage != 1)
-                    const Center(child: CircularProgressIndicator()),
-                ],
+                    if (points.isGetBlogLoading && points.currentPage != 1)
+                      const Center(child: CircularProgressIndicator()),
+                  ],
+                ),
               ),
             ),
           ),
@@ -204,7 +186,7 @@ class _DefaultListPageState extends State<DefaultListPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(title1 ?? "".toUpperCase(),
+                    Text(title1 ?? "",
                         maxLines: 2,
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,

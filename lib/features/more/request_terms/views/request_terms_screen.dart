@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:app_test/core/widgets/template_page.widget.dart';
@@ -36,13 +37,11 @@ class _RequestTermsScreenState extends State<RequestTermsScreen> {
       create: (_) => viewModel,
       child: TemplatePage(
         pageContext: context,
-        title: AppStrings.requestTerms.tr().toUpperCase(),
+        title: AppStrings.requestTerms.tr(),
         onRefresh: () async => await viewModel.getRequestTypes(context: context),
         body: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxWidth: double.infinity,
-            ),
+            constraints: LayoutService.contentConstraints(context),
             child: Padding(
               padding: EdgeInsets.all(AppSizes.s12),
               child: Consumer<RequestTermsViewModel>(

@@ -26,7 +26,7 @@ class EmptyPlaceholderWidget extends StatelessWidget {
             ElevatedButton(
               onPressed: () => context.goNamed(AppRoutes.home.name,
                   pathParameters: {'lang': context.locale.languageCode}),
-              child: const Text('Go Home'),
+              child: Text('go_home'.tr()),
             )
           ],
         ),

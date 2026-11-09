@@ -61,7 +61,7 @@ abstract class DeviceMacAddressService {
           final macRegex = RegExp(r'^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$');
           if (macRegex.hasMatch(bssid)) {
             debugPrint('📶 WiFi BSSID (Router MAC - used as fallback): $bssid');
-            return bssid.toUpperCase();
+            return bssid;
           }
         }
       } catch (e) {
@@ -104,7 +104,7 @@ abstract class DeviceMacAddressService {
           final androidId = androidInfo.id;
           if (androidId.isNotEmpty) {
             debugPrint('📱 Using Android ID as Bluetooth identifier (fallback): $androidId');
-            return androidId.toUpperCase();
+            return androidId;
           }
         } catch (e) {
           debugPrint('⚠️ Android ID method failed: $e');

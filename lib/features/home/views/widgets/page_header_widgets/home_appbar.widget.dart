@@ -11,7 +11,9 @@ import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/services/app_theme_service.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/services/localization_service.dart';
+import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/core/widgets/app_content_width.widget.dart';
 import 'package:app_test/core/widgets/profile_avatar_menu_widget.dart';
 import 'package:app_test/core/widgets/vocation_list.widget.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -29,11 +31,14 @@ class HomeAppbarWidget extends StatelessWidget {
   final bool? isExpanded;
   final List<RequestModel>? requests;
   final List<NotificationModel>? notifications;
-  const HomeAppbarWidget(
-      {super.key,
-        this.requests,
-        this.notifications,
-        this.isExpanded = true,});
+
+  const HomeAppbarWidget({
+    super.key,
+    this.requests,
+    this.notifications,
+    this.isExpanded = true,
+  });
+
   String formatName(String fullName) {
     List<String> names = fullName.split(" ");
     if (names.length < 2) return fullName;
@@ -83,23 +88,25 @@ class HomeAppbarWidget extends StatelessWidget {
       // الاتنين متحققين ✅
       return "";
     }
+
     var jsonString;
     var us1Cache;
     jsonString = CacheHelper.getString("US1");
     if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
-      us1Cache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
+      us1Cache = json.decode(jsonString)
+          as Map<String, dynamic>; // Convert String back to JSON
       UserSettingConst.userSettings = UserSettingsModel.fromJson(us1Cache);
     }
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: isExpanded == true 
+        color: isExpanded == true
             ? Color(AppColors.secondaryButton)
             : Color(AppColors.secondaryButton).withValues(alpha: 0.95),
         borderRadius: isExpanded == true
             ? BorderRadius.only(
-            bottomLeft: Radius.circular(AppRadius.xl),
-            bottomRight: Radius.circular(AppRadius.xl))
+                bottomLeft: Radius.circular(AppRadius.xl),
+                bottomRight: Radius.circular(AppRadius.xl))
             : null,
       ),
       child: Stack(
@@ -109,15 +116,15 @@ class HomeAppbarWidget extends StatelessWidget {
               // Background image
               if (isExpanded == true)
                 ClipRRect(
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(AppRadius.xl),
-                    bottomRight: Radius.circular(AppRadius.xl)),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(AppRadius.xl),
-                        bottomRight: Radius.circular(AppRadius.xl)),
-                  ),
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(AppRadius.xl),
+                      bottomRight: Radius.circular(AppRadius.xl)),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(AppRadius.xl),
+                          bottomRight: Radius.circular(AppRadius.xl)),
+                    ),
                     child: Opacity(
                       opacity: 0.5,
                       child: Image.asset(
@@ -125,11 +132,10 @@ class HomeAppbarWidget extends StatelessWidget {
                         fit: BoxFit.cover,
                         width: double.infinity,
                         height: 300.0,
-
                       ),
                     ),
+                  ),
                 ),
-              ),
 
               // Your content goes here, if any
             ],
@@ -138,173 +144,224 @@ class HomeAppbarWidget extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(height: MediaQuery.of(context).padding.top),
-                if ( us1Cache != null &&  ( (us1Cache['phone'] != null && us1Cache['phone_verified_at'] == null) ||(us1Cache['email'] != null && us1Cache['email_verified_at'] == null)  ) )  GestureDetector(
-                  onTap: ()async{
-                    await context.pushNamed(
-                        AppRoutes.personalProfile.name,
-                        pathParameters: {'lang': context.locale.languageCode});
-                  },
-                  child: Container(
-                    color: Colors.yellow,
-                    padding: AppSpacing.pagePadding,
-                    child: Row(
-                      children: [
-                        Icon(Icons.warning, color: Colors.red, size: 24),
-                        SizedBox(width: 8),
-                        SizedBox(
-                          width: MediaQuery.sizeOf(context).width * 0.6,
-                          child: Text(
-                            getVerificationStatus(us1Cache),   style: AppStyles.redContent(context).copyWith(fontSize: 14),
-                          ),
-                        ),
-                        const Spacer(),
-                        Text(AppStrings.activeNow.tr(), style: AppStyles.greenContent(context).copyWith(fontSize: 12)),
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  // The carousel below pads itself, so it can scroll to the screen edge.
-                  padding: const EdgeInsets.only(top: AppSpacing.xs),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: AppSpacing.pagePadding,
+                if (us1Cache != null &&
+                    ((us1Cache['phone'] != null &&
+                            us1Cache['phone_verified_at'] == null) ||
+                        (us1Cache['email'] != null &&
+                            us1Cache['email_verified_at'] == null)))
+                  GestureDetector(
+                    onTap: () async {
+                      await context.pushNamed(AppRoutes.personalProfile.name,
+                          pathParameters: {
+                            'lang': context.locale.languageCode
+                          });
+                    },
+                    child: Container(
+                      color: Colors.yellow,
+                      padding: AppSpacing.pagePadding,
+                      child: AppContentWidth(
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            if(us1Cache != null )ProfileAvatarMenuWidget(
-                              employeeProfileId: us1Cache['employee_profile_id'],
-                              child: (us1Cache != null && us1Cache['photo'] == null ||
-                                  (us1Cache['photo'].isEmpty == true))
-                                  ? Container(
-                                width: AppSizes.s40,
-                                height: AppSizes.s40,
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.transparent,
-                                    border:
-                                    Border.all(color: Colors.white, width: 2)),
-                                child: Icon(
-                                  Icons.person,
-                                  color: Colors.white,
-                                  size: AppSizes.s28,
-                                ),
-                              )
-                                  : CircleAvatar(
-                                radius: AppSizes.s22,
-                                child: ClipOval(
-                                  child: kIsWeb
-                                      ? Image.network(
-                                          us1Cache['photo'] ?? "",
-                                          width: double.infinity,
-                                          height: double.infinity,
-                                          fit: BoxFit.cover,
-                                          errorBuilder: (context, error, stackTrace) => Icon(
-                                            Icons.image_not_supported_outlined,
-                                            size: AppSizes.s32,
-                                            color: Colors.white,
-                                          ),
-                                        )
-                                      : CachedNetworkImage(
-                                          width: double.infinity,
-                                          height: double.infinity,
-                                          fit: BoxFit.cover,
-                                          imageUrl: us1Cache['photo'] ?? "",
-                                          placeholder: (context, url) =>
-                                              const ShimmerAnimatedLoading(),
-                                          errorWidget: (context, url, error) => Icon(
-                                            Icons.image_not_supported_outlined,
-                                            size: AppSizes.s32,
-                                            color: Colors.white,
-                                          ),
-                                        ),
-                                ),
+                            Icon(Icons.warning, color: Colors.red, size: 24),
+                            SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                getVerificationStatus(us1Cache),
+                                style: AppStyles.redContent(context)
+                                    .copyWith(fontSize: 14),
                               ),
                             ),
-                            SizedBox(width: 12),
-                            us1Cache == null
-                                ? ShimmerAnimatedLoading(
-                              height: AppSizes.s32,
-                              width: AppSizes.s50,
-                            )
-                                : Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  AutoSizeText(formatName(us1Cache['name']?.toString() ?? ''),
-                                      minFontSize: 20,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: AppStyles.whiteHeading(context).copyWith(fontSize: 24)),
-                                   Text(AppStrings.niceToMeetYou.tr().toUpperCase(),
-                                       style: AppStyles.whiteContent(context).copyWith(
-                                           fontWeight: FontWeight.w400,
-                                           letterSpacing: 0.5,
-                                           fontSize: 13
-                                       )),
-                                ],
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            if (us1Cache != null)
-                              Stack(
-                                children: [
-                                  IconButton(
-                                    icon: Icon(Icons.notifications_none_outlined,
-                                        color: Colors.white, size: 28),
-                                    padding: EdgeInsets.zero,
-                                    constraints: BoxConstraints(
-                                        minWidth: 40, minHeight: 40),
-                                    onPressed: () => context.pushNamed(
-                                        AppRoutes.notification.name,
-                                        pathParameters: {
-                                          'lang': context.locale.languageCode
-                                        }),
-                                  ),
-                                  if (notifications?.any((n) => n.seen == false || n.seen == 0) ?? false)
-                                    Positioned(
-                                      top: 10,
-                                      right: LocalizationService.isArabic(context: context) ? 12 : null,
-                                      left: LocalizationService.isArabic(context: context) ? null : 12,
-                                      child: Container(
-                                        width: 7,
-                                        height: 7,
-                                        decoration: const BoxDecoration(
-                                          color: Colors.white,
-                                          shape: BoxShape.circle,
-                                        ),
-                                      ),
-                                    ),
-                                ],
-                              ),
-                            if(us1Cache != null && ((us1Cache['email_verified_at'] == null) || ( us1Cache['phone_verified_at'] == null)))
-                              GestureDetector(
-                                  onTap: ()async{
-                                    await context.pushNamed(
-                                        AppRoutes.personalProfile.name,
-                                        pathParameters: {'lang': context.locale.languageCode});
-                                  },
-                                  child: Icon(Icons.error, color: Colors.yellow, size: 24))
+                            SizedBox(width: 8),
+                            Text(AppStrings.activeNow.tr(),
+                                style: AppStyles.greenContent(context)
+                                    .copyWith(fontSize: 12)),
                           ],
                         ),
                       ),
-                      SizedBox(height: 32),
-                      if (isExpanded == true)
-                        if (PackageHelper.hasPackage('emp-requests'))
-                          Center(
-                            child: ConstrainedBox(
-                              constraints: const BoxConstraints(
-                                  maxWidth: double.infinity
-                              ),
-                              child: VacationListWidget(
-                                requests: requests,
-                                tap: true,
-                                animateEntrance: true,
+                    ),
+                  ),
+                AppContentWidth(
+                  child: Padding(
+                    // The carousel below pads itself, so it can scroll to the screen edge.
+                    padding: const EdgeInsets.only(top: AppSpacing.xs),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: AppSpacing.pagePadding,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              if (us1Cache != null)
+                                ProfileAvatarMenuWidget(
+                                  employeeProfileId:
+                                      us1Cache['employee_profile_id'],
+                                  child: (us1Cache != null &&
+                                              us1Cache['photo'] == null ||
+                                          (us1Cache['photo'].isEmpty == true))
+                                      ? Container(
+                                          width: AppSizes.s40,
+                                          height: AppSizes.s40,
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Colors.transparent,
+                                              border: Border.all(
+                                                  color: Colors.white,
+                                                  width: 2)),
+                                          child: Icon(
+                                            Icons.person,
+                                            color: Colors.white,
+                                            size: AppSizes.s28,
+                                          ),
+                                        )
+                                      : CircleAvatar(
+                                          radius: AppSizes.s22,
+                                          child: ClipOval(
+                                            child: kIsWeb
+                                                ? Image.network(
+                                                    us1Cache['photo'] ?? "",
+                                                    width: double.infinity,
+                                                    height: double.infinity,
+                                                    fit: BoxFit.cover,
+                                                    errorBuilder: (context,
+                                                            error,
+                                                            stackTrace) =>
+                                                        Icon(
+                                                      Icons
+                                                          .image_not_supported_outlined,
+                                                      size: AppSizes.s32,
+                                                      color: Colors.white,
+                                                    ),
+                                                  )
+                                                : CachedNetworkImage(
+                                                    width: double.infinity,
+                                                    height: double.infinity,
+                                                    fit: BoxFit.cover,
+                                                    imageUrl:
+                                                        us1Cache['photo'] ?? "",
+                                                    placeholder: (context,
+                                                            url) =>
+                                                        const ShimmerAnimatedLoading(),
+                                                    errorWidget:
+                                                        (context, url, error) =>
+                                                            Icon(
+                                                      Icons
+                                                          .image_not_supported_outlined,
+                                                      size: AppSizes.s32,
+                                                      color: Colors.white,
+                                                    ),
+                                                  ),
+                                          ),
+                                        ),
+                                ),
+                              SizedBox(width: 12),
+                              us1Cache == null
+                                  ? ShimmerAnimatedLoading(
+                                      height: AppSizes.s32,
+                                      width: AppSizes.s50,
+                                    )
+                                  : Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          AutoSizeText(
+                                              formatName(us1Cache['name']
+                                                      ?.toString() ??
+                                                  ''),
+                                              minFontSize: 20,
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: AppStyles.whiteHeading(
+                                                      context)
+                                                  .copyWith(fontSize: 24)),
+                                          Text(
+                                              AppStrings.niceToMeetYou
+                                                  .tr()
+                                                  ,
+                                              style: AppStyles.whiteContent(
+                                                      context)
+                                                  .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      letterSpacing: 0.5,
+                                                      fontSize: 13)),
+                                        ],
+                                      ),
+                                    ),
+                              SizedBox(width: 10),
+                              if (us1Cache != null)
+                                Stack(
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(
+                                          Icons.notifications_none_outlined,
+                                          color: Colors.white,
+                                          size: 28),
+                                      padding: EdgeInsets.zero,
+                                      constraints: BoxConstraints(
+                                          minWidth: 40, minHeight: 40),
+                                      onPressed: () => context.pushNamed(
+                                          AppRoutes.notification.name,
+                                          pathParameters: {
+                                            'lang': context.locale.languageCode
+                                          }),
+                                    ),
+                                    if (notifications?.any((n) =>
+                                            n.seen == false || n.seen == 0) ??
+                                        false)
+                                      Positioned(
+                                        top: 10,
+                                        right: LocalizationService.isArabic(
+                                                context: context)
+                                            ? 12
+                                            : null,
+                                        left: LocalizationService.isArabic(
+                                                context: context)
+                                            ? null
+                                            : 12,
+                                        child: Container(
+                                          width: 7,
+                                          height: 7,
+                                          decoration: const BoxDecoration(
+                                            color: Colors.white,
+                                            shape: BoxShape.circle,
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              if (us1Cache != null &&
+                                  ((us1Cache['email_verified_at'] == null) ||
+                                      (us1Cache['phone_verified_at'] == null)))
+                                GestureDetector(
+                                    onTap: () async {
+                                      await context.pushNamed(
+                                          AppRoutes.personalProfile.name,
+                                          pathParameters: {
+                                            'lang': context.locale.languageCode
+                                          });
+                                    },
+                                    child: Icon(Icons.error,
+                                        color: Colors.yellow, size: 24))
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 32),
+                        if (isExpanded == true)
+                          if (PackageHelper.hasPackage('emp-requests'))
+                            Center(
+                              child: ConstrainedBox(
+                                constraints:
+                                    LayoutService.contentConstraints(context),
+                                child: VacationListWidget(
+                                  requests: requests,
+                                  tap: true,
+                                  animateEntrance: true,
+                                ),
                               ),
                             ),
-                          ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],

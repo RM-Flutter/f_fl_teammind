@@ -419,8 +419,8 @@ class CreateCVJobInfoTab extends StatelessWidget {
             await _pickVideos(context);
           },
           icon: const Icon(Icons.video_library),
-          label: const Text(
-            'Add video',
+          label: Text(
+            'add_video'.tr(),
             style: TextStyle(fontSize: 16),
           ),
           style: OutlinedButton.styleFrom(

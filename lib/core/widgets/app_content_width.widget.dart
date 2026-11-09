@@ -16,10 +16,16 @@ class AppContentWidth extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth <= maxWidth) return child;
-        return Center(
-          child: SizedBox(
-            width: maxWidth,
-            height: constraints.hasBoundedHeight ? constraints.maxHeight : null,
+        return Align(
+          alignment: Alignment.topCenter,
+          heightFactor: constraints.hasTightHeight ? null : 1.0,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minWidth: maxWidth,
+              maxWidth: maxWidth,
+              minHeight: constraints.minHeight,
+              maxHeight: constraints.maxHeight,
+            ),
             child: child,
           ),
         );

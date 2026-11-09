@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/widgets/details_loading/details_loading.widget.dart';
 import 'package:app_test/features/requests/details/views/widgets/request_details_header_widget.dart';
 import '../cubit/approvable_details_cubit.dart';
@@ -185,7 +186,7 @@ class _ApprovableDetailsScreenState extends State<ApprovableDetailsScreen> {
                 RequestDetailsHeaderWidget(
                   uId: userSettings?.empId,
                   rId: details.employeeId,
-                  height: kIsWeb ? 320 : 340,
+                  height: 340,
                   request: details,
                 ),
                 if (PendingCancelBanner.shouldShow(details))
@@ -199,15 +200,12 @@ class _ApprovableDetailsScreenState extends State<ApprovableDetailsScreen> {
                 Expanded(
                   child: Center(
                     child: ConstrainedBox(
-                      constraints: const BoxConstraints(
-                        maxWidth: double.infinity,
-                      ),
+                      constraints: LayoutService.contentConstraints(context),
                       child:
                           CustomTabbarViewApprovableDetails(details: details),
                     ),
                   ),
                 ),
-                if (kIsWeb) const SizedBox(height: 20),
                 ApprovableBottomActionBar(
                   details: details,
                   type: widget.type,

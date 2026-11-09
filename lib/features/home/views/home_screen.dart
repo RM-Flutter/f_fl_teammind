@@ -435,7 +435,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             child: Center(
               child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: double.infinity),
+              constraints: LayoutService.contentConstraints(context),
               child: ReorderableListView(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),

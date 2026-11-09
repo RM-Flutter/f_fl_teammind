@@ -16,6 +16,7 @@ import 'package:app_test/core/widgets/text_form_widget.dart';
 
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/check_values.dart';
+import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/constants/app_design.dart';
 
 class AddNotificationScreen extends StatefulWidget {
@@ -51,9 +52,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
           child: SingleChildScrollView(
               child: Center(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxWidth: double.infinity,
-                  ),
+                  constraints: LayoutService.contentConstraints(context),
                   child: Padding(
                     padding: EdgeInsets.symmetric(
                       vertical: AppSizes.s16,
@@ -239,7 +238,6 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                 }
                               },
                               child: Container(
-                                height: 65,
                                 alignment: Alignment.center,
                                 padding: EdgeInsets.symmetric(horizontal: 16),
                                 decoration: ShapeDecoration(
@@ -358,7 +356,6 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                 }
                               },
                               child: Container(
-                                height: 65,
                                 alignment: Alignment.center,
                                 padding: EdgeInsets.symmetric(horizontal: 16),
                                 decoration: ShapeDecoration(
@@ -436,7 +433,6 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                   list: viewModel.listAttachmentPersonalImage);
                             },
                             child: Container(
-                              height: 65,
                               alignment: Alignment.center,
                               padding: EdgeInsets.symmetric(horizontal: 16),
                               decoration: ShapeDecoration(
@@ -476,8 +472,8 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                 physics: const ClampingScrollPhysics(),
                                 shrinkWrap: true,
                                 itemCount: viewModel.listAttachmentPersonalImage.length,
-                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: kIsWeb ? 7 : 4,
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 4,
                                   crossAxisSpacing: 10,
                                   mainAxisSpacing: 10,
                                 ),
@@ -498,7 +494,6 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                             ),
                           SizedBox(height: 14),
                           Container(
-                            height: 65,
                             alignment: Alignment.center,
                             padding: EdgeInsets.symmetric(horizontal: 16),
                             decoration: ShapeDecoration(
@@ -574,7 +569,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                     }
                                   },
                                   child: Text(
-                                    AppStrings.send.tr().toUpperCase(),
+                                    AppStrings.send.tr(),
                                     style: AppStyles.whiteContent(context).copyWith(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,

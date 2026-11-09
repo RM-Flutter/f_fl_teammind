@@ -50,7 +50,8 @@ class RewardAndPenaltyCardWidget extends StatelessWidget {
     final subtitleText =
         (isTeam && employeeName != null && employeeName.isNotEmpty)
             ? dateText
-            : typeValue;
+            // The type comes from the server in English: show it translated.
+            : (typeValue.isEmpty ? '' : (isReward ? 'reward'.tr() : 'penalty'.tr()));
 
     return Padding(
       padding: const EdgeInsets.only(bottom: AppSpacing.cardGap),

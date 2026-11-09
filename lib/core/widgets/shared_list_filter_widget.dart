@@ -174,7 +174,7 @@ class _SharedListFilterWidgetState extends State<SharedListFilterWidget> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    AppStrings.filter.tr().toUpperCase(),
+                                    AppStrings.filter.tr(),
                                     style: AppStyles.heading(context).copyWith(
                                         fontWeight: FontWeight.w500,
                                         fontSize: 18),
@@ -190,7 +190,6 @@ class _SharedListFilterWidgetState extends State<SharedListFilterWidget> {
                                   nameKey: 'title',
                                   hintText: AppStrings.department.tr(),
                                   hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
-                                  height: 65,
                                   borderRadius: BorderRadius.circular(AppRadius.sm),
                                   borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
                                   contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -220,7 +219,6 @@ class _SharedListFilterWidgetState extends State<SharedListFilterWidget> {
                                   nameKey: 'name',
                                   hintText: AppStrings.employeeName.tr(),
                                   hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
-                                  height: 65,
                                   borderRadius: BorderRadius.circular(AppRadius.sm),
                                   borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
                                   contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -250,7 +248,6 @@ class _SharedListFilterWidgetState extends State<SharedListFilterWidget> {
                                   nameKey: 'name',
                                   hintText: AppStrings.status.tr(),
                                   hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
-                                  height: 65,
                                   borderRadius: BorderRadius.circular(AppRadius.sm),
                                   borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
                                   contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -329,7 +326,7 @@ class _SharedListFilterWidgetState extends State<SharedListFilterWidget> {
                                       ),
                                       padding: EdgeInsets.symmetric(horizontal: 40),
                                       child: Text(
-                                        AppStrings.applyFilter.tr().toUpperCase(),
+                                        AppStrings.applyFilter.tr(),
                                         style: AppStyles.whiteContent(context).copyWith(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w600,
@@ -357,7 +354,7 @@ class _SharedListFilterWidgetState extends State<SharedListFilterWidget> {
                                       ),
                                       padding: EdgeInsets.symmetric(horizontal: 20),
                                       child: Text(
-                                        AppStrings.clear.tr().toUpperCase(),
+                                        AppStrings.clear.tr(),
                                         style: AppStyles.darkContent(context).copyWith(
                                           fontSize: 12,
                                           fontWeight: FontWeight.w600,

@@ -10,6 +10,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/routing/app_router.dart';
 import '../../../../core/widgets/app_bar_with_bookmark.widget.dart';
+import '../../../../core/widgets/app_content_width.widget.dart';
 import 'package:app_test/core/constants/app_design.dart';
 
 class SelectTemplateScreen extends StatefulWidget {
@@ -121,68 +122,70 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
               );
             }
 
-            return Column(
-              children: [
-                const SizedBox(height: 16),
-                Expanded(
-                  child: PageView.builder(
-                    itemCount: templates.length,
-                    onPageChanged: (index) => setState(() => selectedTemplateIndex = index),
-                    itemBuilder: (context, index) {
-                      return _buildTemplateCard(vm, templates[index], index);
-                    },
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(templates.length, (index) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      width: 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: selectedTemplateIndex == index
-                            ? Color(AppColors.buttons)
-                            : Colors.grey[400],
-                      ),
-                    );
-                  }),
-                ),
-                const SizedBox(height: 24),
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  child: ElevatedButton(
-                    onPressed: vm.isLoadingTemplate
-                        ? null
-                        : () => vm.onGenerateCv(context, templates[selectedTemplateIndex]),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(AppColors.secondaryButton),
-                      foregroundColor: Colors.white,
-                      minimumSize: const Size(double.infinity, 50),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppRadius.xl),
-                      ),
+            return AppContentWidth(
+              child: Column(
+                children: [
+                  const SizedBox(height: 16),
+                  Expanded(
+                    child: PageView.builder(
+                      itemCount: templates.length,
+                      onPageChanged: (index) => setState(() => selectedTemplateIndex = index),
+                      itemBuilder: (context, index) {
+                        return _buildTemplateCard(vm, templates[index], index);
+                      },
                     ),
-                    child: vm.isLoadingTemplate
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                            ),
-                          )
-                        : Text(
-                            AppStrings.generateCvWithTemplate.tr(),
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
                   ),
-                ),
-              ],
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(templates.length, (index) {
+                      return Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                        width: 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: selectedTemplateIndex == index
+                              ? Color(AppColors.buttons)
+                              : Colors.grey[400],
+                        ),
+                      );
+                    }),
+                  ),
+                  const SizedBox(height: 24),
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    child: ElevatedButton(
+                      onPressed: vm.isLoadingTemplate
+                          ? null
+                          : () => vm.onGenerateCv(context, templates[selectedTemplateIndex]),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color(AppColors.secondaryButton),
+                        foregroundColor: Colors.white,
+                        minimumSize: const Size(double.infinity, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(AppRadius.xl),
+                        ),
+                      ),
+                      child: vm.isLoadingTemplate
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            )
+                          : Text(
+                              AppStrings.generateCvWithTemplate.tr(),
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                    ),
+                  ),
+                ],
+              ),
             );
           },
         ),

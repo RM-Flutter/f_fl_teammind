@@ -249,7 +249,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
               height: MediaQuery.sizeOf(context).height * 0.15,
               child: Center(
                 child: Text(
-                  AppStrings.noCommentsFound.tr().toUpperCase(),
+                  AppStrings.noCommentsFound.tr(),
                   style: const TextStyle(fontSize: 18, color: Colors.black),
                 ),
               ),
@@ -282,7 +282,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          AppStrings.more.tr().toUpperCase(),
+                          AppStrings.more.tr(),
                           style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,

@@ -243,7 +243,7 @@ class TasksController extends ChangeNotifier {
       AlertsService.warning(
           context: context,
           message: selectedEmployeeIds.isEmpty? AppStrings.theAssignToFieldIsRequired.tr(): AppStrings.theSelectedStatusIsInvalid.tr(),
-          title: AppStrings.warning.tr().toUpperCase());
+          title: AppStrings.warning.tr());
       return;
     }
     listIds = listIds.isNotEmpty ? [listIds.first] : [];

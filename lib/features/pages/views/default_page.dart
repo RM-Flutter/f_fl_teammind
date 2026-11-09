@@ -24,6 +24,7 @@ import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_p
 import '../../../core/services/general_listener.dart';
 import '../../more/blog/views/blog_list_view_item.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/widgets/app_content_width.widget.dart';
 import 'package:app_test/core/widgets/hide_on_scroll_fab.widget.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/app_shimmer_list.dart';
 
@@ -165,50 +166,52 @@ class _DefaultPageState extends State<DefaultPage> {
                       });
                       await provider.getBlog(context, widget.type, page: 1);
                     },
-                    child: ListView(
-                      controller: _scrollController,
-                      children: [
-                        gapH12,
-                        Padding(
-                          padding: AppSpacing.pagePadding,
-                          child: ListView.builder(
-                            padding: EdgeInsets.zero,
-                            shrinkWrap: true,
-                            reverse: false,
-                            physics: const ClampingScrollPhysics(),
-                            itemCount: provider.isGetBlogLoading &&
-                                    provider.blogs.isEmpty
-                                ? 12 // Show 5 loading items initially
-                                : provider.blogs.length,
-                            itemBuilder: (context, index) {
-                              if (provider.isGetBlogLoading &&
-                                  provider.currentPage == 1) {
-                                return const Padding(
-                                    padding: EdgeInsets.only(
-                                        bottom: AppSpacing.cardGap),
-                                    child: AppShimmerCard());
-                              } else {
-                                return BlogListViewItem(
-                                  blog: provider.blogs,
-                                  index: index,
-                                  type: widget.type,
-                                );
-                              }
-                            },
-                          ),
-                        ),
-                        if (!provider.isGetBlogLoading &&
-                            provider.blogs.isEmpty)
+                    child: AppContentWidth(
+                      child: ListView(
+                        controller: _scrollController,
+                        children: [
+                          gapH12,
                           Padding(
                             padding: AppSpacing.pagePadding,
-                            child: NoExistingPlaceholderScreen(
-                                height: 0.6.sh,
-                                title: AppStrings.thereIsNoNotifications.tr()),
+                            child: ListView.builder(
+                              padding: EdgeInsets.zero,
+                              shrinkWrap: true,
+                              reverse: false,
+                              physics: const ClampingScrollPhysics(),
+                              itemCount: provider.isGetBlogLoading &&
+                                      provider.blogs.isEmpty
+                                  ? 12 // Show 5 loading items initially
+                                  : provider.blogs.length,
+                              itemBuilder: (context, index) {
+                                if (provider.isGetBlogLoading &&
+                                    provider.currentPage == 1) {
+                                  return const Padding(
+                                      padding: EdgeInsets.only(
+                                          bottom: AppSpacing.cardGap),
+                                      child: AppShimmerCard());
+                                } else {
+                                  return BlogListViewItem(
+                                    blog: provider.blogs,
+                                    index: index,
+                                    type: widget.type,
+                                  );
+                                }
+                              },
+                            ),
                           ),
-                        if (provider.isGetBlogLoading &&
-                            provider.currentPage != 1)
-                          const Center(child: CircularProgressIndicator()),
-                      ],
+                          if (!provider.isGetBlogLoading &&
+                              provider.blogs.isEmpty)
+                            Padding(
+                              padding: AppSpacing.pagePadding,
+                              child: NoExistingPlaceholderScreen(
+                                  height: 0.6.sh,
+                                  title: AppStrings.thereIsNoNotifications.tr()),
+                            ),
+                          if (provider.isGetBlogLoading &&
+                              provider.currentPage != 1)
+                            const Center(child: CircularProgressIndicator()),
+                        ],
+                      ),
                     ),
                   ),
                 ));

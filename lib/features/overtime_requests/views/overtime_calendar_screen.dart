@@ -12,6 +12,7 @@ import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/routing/app_router.dart';
 import '../../../../core/services/app_theme_service.dart';
+import '../../../../core/services/layout_service.dart';
 import '../../../../core/utils/app_styles.dart';
 import '../../../../core/widgets/template_page.widget.dart';
 import '../models/overtime_request_model.dart';
@@ -122,7 +123,7 @@ class OvertimeCalendarScreen extends StatelessWidget {
             body: SingleChildScrollView(
               child: Center(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: double.infinity),
+                  constraints: LayoutService.contentConstraints(context),
                   child: Padding(
                     padding: AppSpacing.pageAll,
                     child: Column(

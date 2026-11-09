@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_design.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -11,33 +12,38 @@ class LoginLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final logoUrl = AppImages.logo;
+    return _logo();
+  }
+
+  Widget _logo() {
+    // The coloured logo (navy + blue) on a white disc: the white logo was lost on the photos.
+    final logoUrl = AppImages.logo.startsWith('http') ? AppImages.logo : AppImages.loginLogoColored;
     final isNetworkImage = logoUrl.startsWith('http://') || logoUrl.startsWith('https://');
 
     if (isNetworkImage) {
       return CachedNetworkImage(
         imageUrl: logoUrl,
-        height: (kIsWeb || PlatformIs.web) ? AppSizes.s100 : AppSizes.s100.h,
-        width: (kIsWeb || PlatformIs.web) ? AppSizes.s100 : AppSizes.s100.w,
+        height: (kIsWeb || PlatformIs.web) ? AppSizes.loginLogoSize : AppSizes.loginLogoSize.h,
+        width: (kIsWeb || PlatformIs.web) ? AppSizes.loginLogoSize : AppSizes.loginLogoSize.w,
         fit: BoxFit.contain,
         placeholder: (context, url) => Image.asset(
           AppImages.defaultLogo,
-          height: (kIsWeb || PlatformIs.web) ? AppSizes.s100 : AppSizes.s100.h,
-          width: (kIsWeb || PlatformIs.web) ? AppSizes.s100 : AppSizes.s100.w,
+          height: (kIsWeb || PlatformIs.web) ? AppSizes.loginLogoSize : AppSizes.loginLogoSize.h,
+          width: (kIsWeb || PlatformIs.web) ? AppSizes.loginLogoSize : AppSizes.loginLogoSize.w,
           fit: BoxFit.contain,
         ),
         errorWidget: (context, url, error) => Image.asset(
           AppImages.defaultLogo,
-          height: (kIsWeb || PlatformIs.web) ? AppSizes.s100 : AppSizes.s100.h,
-          width: (kIsWeb || PlatformIs.web) ? AppSizes.s100 : AppSizes.s100.w,
+          height: (kIsWeb || PlatformIs.web) ? AppSizes.loginLogoSize : AppSizes.loginLogoSize.h,
+          width: (kIsWeb || PlatformIs.web) ? AppSizes.loginLogoSize : AppSizes.loginLogoSize.w,
           fit: BoxFit.contain,
         ),
       );
     } else {
       return Image.asset(
         logoUrl,
-        height: (kIsWeb || PlatformIs.web) ? AppSizes.s100 : AppSizes.s100.h,
-        width: (kIsWeb || PlatformIs.web) ? AppSizes.s100 : AppSizes.s100.w,
+        height: (kIsWeb || PlatformIs.web) ? AppSizes.loginLogoSize : AppSizes.loginLogoSize.h,
+        width: (kIsWeb || PlatformIs.web) ? AppSizes.loginLogoSize : AppSizes.loginLogoSize.w,
         fit: BoxFit.contain,
       );
     }

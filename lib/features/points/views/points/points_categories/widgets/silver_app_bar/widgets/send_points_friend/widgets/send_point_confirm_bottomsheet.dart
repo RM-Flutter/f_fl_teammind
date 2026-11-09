@@ -31,8 +31,8 @@ class SendPointConfirmBottomsheet extends StatelessWidget {
                       fieldFocusNode: fieldFocusNode,
                       context: context,
                       home: false,
-                      title: "${AppStrings.pointsTransferredSuccessfully.tr().toUpperCase()}!",
-                      buttonText: AppStrings.goToHome.tr().toUpperCase(),
+                      title: "${AppStrings.pointsTransferredSuccessfully.tr()}!",
+                      buttonText: AppStrings.goToHome.tr(),
                       subTitle: "",
                       viewCheckIcon: true,
                       onTapButton: () {
@@ -115,7 +115,7 @@ class SendPointConfirmBottomsheet extends StatelessWidget {
                               Text(
                                 AppStrings.confirmSending
                                     .tr()
-                                    .toUpperCase(),
+                                    ,
                                 style: const TextStyle(
                                   fontFamily: "Poppins",
                                   fontWeight: FontWeight.w600,
@@ -126,7 +126,7 @@ class SendPointConfirmBottomsheet extends StatelessWidget {
                               const SizedBox(height: 15),
                               Text(
                                 "${AppStrings.areYouSureThatPointsWillBeSentTo.tr()} $name"
-                                    .toUpperCase(),
+                                    ,
                                 style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w500,
@@ -156,7 +156,7 @@ class SendPointConfirmBottomsheet extends StatelessWidget {
                                         child: Text(
                                           AppStrings.sendPoints
                                               .tr()
-                                              .toUpperCase(),
+                                              ,
                                           style: const TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w500,
@@ -186,7 +186,7 @@ class SendPointConfirmBottomsheet extends StatelessWidget {
                                         child: Text(
                                           AppStrings.cancel
                                               .tr()
-                                              .toUpperCase(),
+                                              ,
                                           style: const TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w500,

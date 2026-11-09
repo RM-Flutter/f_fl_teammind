@@ -65,7 +65,7 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                     child: Align(
                       alignment: Alignment.center,
                       child: Text(
-                        AppStrings.reason.tr().toUpperCase(),
+                        AppStrings.reason.tr(),
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
@@ -76,7 +76,7 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                     child: Align(
                       alignment: Alignment.center,
                       child: Text(
-                        AppStrings.managerResponse.tr().toUpperCase(),
+                        AppStrings.managerResponse.tr(),
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
@@ -87,7 +87,7 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                     child: Align(
                       alignment: Alignment.center,
                       child: Text(
-                        AppStrings.information.tr().toUpperCase(),
+                        AppStrings.information.tr(),
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,

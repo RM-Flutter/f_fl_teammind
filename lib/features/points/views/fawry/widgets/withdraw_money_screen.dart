@@ -68,7 +68,7 @@ class _WithdrawMoneyScreenState extends State<WithdrawMoneyScreen> {
             appBar: AppBarWithBookmark(
               backgroundColor: Colors.white,
               leading: const AppBackButton(),
-              title: AppStrings.withdrawMoney.tr().toUpperCase(),
+              title: AppStrings.withdrawMoney.tr(),
               showBookmark: false,
             ),
             body: SafeArea(
@@ -86,14 +86,14 @@ class _WithdrawMoneyScreenState extends State<WithdrawMoneyScreen> {
                           readOnly: true,
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
-                            hintText: AppStrings.phoneNumber.tr().toUpperCase(),
+                            hintText: AppStrings.phoneNumber.tr(),
                           ),
                         ),
                         if(us1Cache['phone'] == null) TextFormField(
                           controller: value.phoneController,
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
-                            hintText: AppStrings.phoneNumber.tr().toUpperCase(),
+                            hintText: AppStrings.phoneNumber.tr(),
                           ),
                         ),
                           const SizedBox(height: 15,),
@@ -101,7 +101,7 @@ class _WithdrawMoneyScreenState extends State<WithdrawMoneyScreen> {
                           controller: value.nationalIdController,
                           keyboardType: TextInputType.number,
                           decoration: InputDecoration(
-                            hintText: AppStrings.nationalId.tr().toUpperCase(),
+                            hintText: AppStrings.nationalId.tr(),
                           ),
                         ),
                           const SizedBox(height: 20,),
@@ -136,7 +136,7 @@ class _WithdrawMoneyScreenState extends State<WithdrawMoneyScreen> {
                                         decoration: InputDecoration(
                                           hintText: AppStrings.rechargeAmount
                                               .tr()
-                                              .toUpperCase(),
+                                              ,
                                         ),
                                         validator: (value) => ValidationService
                                             .validateRequiredAmount(value),
@@ -179,7 +179,7 @@ class _WithdrawMoneyScreenState extends State<WithdrawMoneyScreen> {
                                         decoration: InputDecoration(
                                           hintText: AppStrings.numberOfPoints
                                               .tr()
-                                              .toUpperCase(),
+                                              ,
                                         ),
                                         onChanged: (String? values){
                                           if(values!.isEmpty){
@@ -250,7 +250,7 @@ class _WithdrawMoneyScreenState extends State<WithdrawMoneyScreen> {
               padding: const EdgeInsets.all(16.0),
               child: (value.isPostPayLoading == false)?ButtonWidget(
                 title:
-                "${AppStrings.pay.tr().toUpperCase()} ${value.numberOfPointsController.text.isNotEmpty? value.numberOfPointsController.text : "0"  } ${AppStrings.point.tr().toUpperCase()}",
+                "${AppStrings.pay.tr()} ${value.numberOfPointsController.text.isNotEmpty? value.numberOfPointsController.text : "0"  } ${AppStrings.point.tr()}",
                 svgIcon: "assets/images/svg/wallet.svg",
                 onPressed: () {
                   value.postPay(context,

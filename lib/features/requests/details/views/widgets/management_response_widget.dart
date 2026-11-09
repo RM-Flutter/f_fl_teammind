@@ -71,7 +71,7 @@ class _ManagementResponseModalState extends State<ManagementResponseModal> {
                     isExpanded: true,
                     icon: Icon(Icons.arrow_drop_down, color:  Color(AppColors.buttons), size: 24),
                     hint: Text(
-                      (viewModel.selectedRequestStatus ?? AppStrings.requestType.tr()).toUpperCase(),
+                      (viewModel.selectedRequestStatus ?? AppStrings.requestType.tr()),
                       style: AppStyles.darkContent(context).copyWith(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,
@@ -81,7 +81,7 @@ class _ManagementResponseModalState extends State<ManagementResponseModal> {
                     items: viewModel.availableActions.map((e) => DropdownMenuItem(
                       value: e.toString(),
                       child: Text(
-                        e.toString().toUpperCase(),
+                        e.toString(),
                         style: AppStyles.darkContent(context).copyWith(
                             fontSize: 14,
                             fontWeight: FontWeight.bold,
@@ -106,7 +106,7 @@ class _ManagementResponseModalState extends State<ManagementResponseModal> {
                   color: Color(AppColors.secondaryButton),
                 ),
                 decoration: InputDecoration(
-                  hintText: AppStrings.reason.tr().toUpperCase(),
+                  hintText: AppStrings.reason.tr(),
                   hintStyle: AppStyles.darkContent(context).copyWith(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
@@ -135,7 +135,7 @@ class _ManagementResponseModalState extends State<ManagementResponseModal> {
                   buttonStyle: ElevatedButton.styleFrom(
                     backgroundColor: Color(AppColors.secondaryButton),
                   ),
-                  title: AppStrings.sendRequest.tr().toUpperCase(),
+                  title: AppStrings.sendRequest.tr(),
                   titleWidget: Text(
                     "SEND RESPONSE".tr(),
                     textAlign: TextAlign.center,

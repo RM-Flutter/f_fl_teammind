@@ -10,6 +10,7 @@ import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/services/app_theme_service.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/widgets/comments/comments_widget.dart';
 import 'package:app_test/core/widgets/comments/logic/controller.dart';
@@ -123,9 +124,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                         ),
                         Center(
                           child: ConstrainedBox(
-                            constraints: const BoxConstraints(
-                                maxWidth: double.infinity
-                            ),
+                            constraints: LayoutService.contentConstraints(context),
                             child: Padding(padding: AppSpacing.pagePadding,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -153,7 +152,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                   ),
                                   SizedBox(height: 20,),
                                   Text(
-                                    AppStrings.description.tr().toUpperCase(),
+                                    AppStrings.description.tr(),
                                     style: AppStyles.primaryContent(context).copyWith(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14),
@@ -247,7 +246,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                                       mainAxisAlignment: MainAxisAlignment.center,
                                                       children: [
                                                         Text(
-                                                          subTask.name?.toUpperCase() ?? "",
+                                                          subTask.name ?? "",
                                                           maxLines: _expandedSubTasks.contains(index) ? null : 3,
                                                           overflow: _expandedSubTasks.contains(index)
                                                               ? TextOverflow.visible
@@ -384,7 +383,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                           ),
                                         ),
                                       ),
-                                      Text(AppStrings.comments.tr().toUpperCase(), style: AppStyles.primaryContent(context).copyWith(fontSize: 14,
+                                      Text(AppStrings.comments.tr(), style: AppStyles.primaryContent(context).copyWith(fontSize: 14,
                                           fontWeight: FontWeight.bold)),
                                       Expanded(
                                         child: Padding(

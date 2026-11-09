@@ -12,6 +12,7 @@ import 'package:app_test/core/widgets/comments/logic/controller.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/widgets/full_image_screen.dart';
 import 'package:app_test/features/complaints/views/complains_details/widgets/request_details_appbar_widget.dart';
 import 'package:app_test/features/complaints/views/complains_details/widgets/request_details_loading_screen.dart';
@@ -87,9 +88,7 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
             Padding(padding: AppSpacing.pagePadding,
              child: Center(
               child: ConstrainedBox(
-               constraints: const BoxConstraints(
-                maxWidth: double.infinity,
-               ),
+               constraints: LayoutService.contentConstraints(context),
                child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -259,7 +258,7 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
                      ),
                     ),
                    ),
-                   Text(AppStrings.lastedComments.tr().toUpperCase(), style: AppStyles.darkContent(context).copyWith(fontSize: 14,
+                   Text(AppStrings.lastedComments.tr(), style: AppStyles.darkContent(context).copyWith(fontSize: 14,
                      fontWeight: FontWeight.w500)),
                    Expanded(
                     child: Padding(

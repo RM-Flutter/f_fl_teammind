@@ -11,6 +11,7 @@ import 'package:app_test/features/home/controllers/home_controller.dart';
 import 'package:app_test/features/personal_profile/controllers/personal_profile_controller.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/widgets/app_content_width.widget.dart';
 
 class UpdatePasswordScreen extends StatefulWidget {
   const UpdatePasswordScreen({super.key});
@@ -59,75 +60,80 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                       ),
                     ),
                     title: Text(
-                      AppStrings.updatePassword.tr().toUpperCase(),
+                      AppStrings.updatePassword.tr(),
                       style: AppStyles.heading(context).copyWith(
                           fontSize: AppSizes.s16,
                           fontWeight: FontWeight.w700),
                     ),
                   ),
-                  body: Form(
-                    key: formKey,
-                    child: SingleChildScrollView(
-                      child: SizedBox(
-                        height: 1.sh,
-                        child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page, vertical: AppSpacing.xxl),
-                            child: Column(
-                              children: [
-                                TextFormField(
-                                  controller: passwordController,
-                                  decoration: InputDecoration(
-                                    hintText: AppStrings.newPassword.tr(),
-                                    suffixIcon: IconButton(
-                                      icon: Icon(
-                                        hidePassword ? Icons.visibility : Icons.visibility_off,
-                                      ),
-                                      onPressed: () {
-                                        setState(() {
-                                          hidePassword = !hidePassword;
-                                        });
-                                      },
-                                    ),
-                                  ),
-                                  validator: (value) =>
-                                      ValidationService.validatePassword(value, login: true),
-                                  obscureText: hidePassword,
-                                ),
-                                SizedBox(height: 30),
-                                if(value.isLoading) const Center(child: CircularProgressIndicator(),),
-                                if(!value.isLoading) GestureDetector(
-                                  onTap: (){
-                                    if(formKey.currentState!.validate()){
-                                      value.updatePassword(context: context, password: passwordController.text);
-                                    }
-                                  },
-                                  child: Container(
-                                    width: 0.6.sw,
-                                    height: 50,
-                                    alignment: Alignment.center,
-                                    decoration: BoxDecoration(
-                                      color: Color(AppColors.buttons),
-                                      borderRadius: BorderRadius.circular(AppRadius.pill),
-                                    ),
-                                    padding: EdgeInsets.symmetric(horizontal: 40),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: [
-                                        SvgPicture.asset("assets/images/svg/apply_filter.svg"),
-                                        SizedBox(width: 15,),
-                                        Text(
-                                          AppStrings.saveChanges.tr().toUpperCase(),
-                                          style: AppStyles.whiteContent(context).copyWith(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w500),
+                  body: AppContentWidth(
+                    child: Form(
+                      key: formKey,
+                      child: SingleChildScrollView(
+                        child: SizedBox(
+                          height: 1.sh,
+                          child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page, vertical: AppSpacing.xxl),
+                              child: Column(
+                                children: [
+                                  TextFormField(
+                                    controller: passwordController,
+                                    decoration: InputDecoration(
+                                      hintText: AppStrings.newPassword.tr(),
+                                      suffixIcon: IconButton(
+                                        icon: Icon(
+                                          hidePassword ? Icons.visibility : Icons.visibility_off,
                                         ),
-                                      ],
+                                        onPressed: () {
+                                          setState(() {
+                                            hidePassword = !hidePassword;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    validator: (value) =>
+                                        ValidationService.validatePassword(value, login: true),
+                                    obscureText: hidePassword,
+                                  ),
+                                  SizedBox(height: 30),
+                                  if(value.isLoading) const Center(child: CircularProgressIndicator(),),
+                                  if(!value.isLoading) GestureDetector(
+                                    onTap: (){
+                                      if(formKey.currentState!.validate()){
+                                        value.updatePassword(context: context, password: passwordController.text);
+                                      }
+                                    },
+                                    child: ConstrainedBox(
+                                      constraints: const BoxConstraints(maxWidth: 280),
+                                      child: Container(
+                                        width: double.infinity,
+                                        height: 50,
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          color: Color(AppColors.buttons),
+                                          borderRadius: BorderRadius.circular(AppRadius.pill),
+                                        ),
+                                        padding: EdgeInsets.symmetric(horizontal: 40),
+                                        child: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+                                          children: [
+                                            SvgPicture.asset("assets/images/svg/apply_filter.svg"),
+                                            SizedBox(width: 15,),
+                                            Text(
+                                              AppStrings.saveChanges.tr(),
+                                              style: AppStyles.whiteContent(context).copyWith(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            )
+                                ],
+                              )
+                          ),
                         ),
                       ),
                     ),

@@ -1,3 +1,4 @@
+import 'package:app_test/core/utils/string_extensions.dart';
 import 'dart:convert';
 
 import 'package:app_test/core/constants/app_colors.dart';
@@ -54,13 +55,17 @@ class _FingerprintScreenState extends State<EvaluationScreen> {
       create: (_) => viewModel,
       child: TemplatePage(
           pageContext: context,
-          title: AppStrings.evaluation.tr(),
+          // Opened for another employee: his name is the title.
+          title: (gCache != null &&
+                  widget.empName != null &&
+                  widget.empName!.isNotEmpty &&
+                  gCache['employee_profile_id'].toString() != widget.empId.toString())
+              ? widget.empName!.titleCase
+              : AppStrings.evaluation.tr(),
           onRefresh: () async => await viewModel.getEvaluation(context, widget.empId),
           body: Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                  maxWidth: double.infinity
-              ),
+              constraints: LayoutService.contentConstraints(context),
               child: SingleChildScrollView(
                 clipBehavior: Clip.none,
                 padding: const EdgeInsets.symmetric(
@@ -78,12 +83,6 @@ class _FingerprintScreenState extends State<EvaluationScreen> {
                         : Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                         if(gCache['employee_profile_id'].toString() != widget.empId.toString() && widget.empName != null && widget.empName!.isNotEmpty) Text(widget.empName!, style:
-                          AppStyles.heading(context).copyWith(
-                              fontWeight: FontWeight.w600,fontSize: 18,
-                          )
-                            ,),
-                          if(gCache['employee_profile_id'].toString() != widget.empId.toString() && widget.empName != null && widget.empName!.isNotEmpty) const SizedBox(height: 16),
                           ListView.separated(
                               reverse: false,
                               shrinkWrap: true,

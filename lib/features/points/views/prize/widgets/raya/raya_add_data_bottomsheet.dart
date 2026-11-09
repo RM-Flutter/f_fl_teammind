@@ -90,7 +90,7 @@ class RayaAddDataBottomsheet extends StatelessWidget {
                                 },
                                 context: context,
                                 keyboardType: TextInputType.text,
-                                hintText: AppStrings.yourName.tr().toUpperCase(),
+                                hintText: AppStrings.yourName.tr(),
                                 controller: value.dataNameController),
                             if(values.contains("phone") || values.contains("mobile")) PhoneNumberField(
                               controller: value.phoneController,
@@ -105,7 +105,7 @@ class RayaAddDataBottomsheet extends StatelessWidget {
                                 },
                                 context: context,
                                 keyboardType: TextInputType.number,
-                                hintText: AppStrings.nationalId.tr().toUpperCase(),
+                                hintText: AppStrings.nationalId.tr(),
                                 controller: value.dataIdController),
                             const SizedBox(height: 30),
                             if(value.isRedeemLoading) const Center(child: CircularProgressIndicator(),),
@@ -121,7 +121,7 @@ class RayaAddDataBottomsheet extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(AppRadius.pill),
                                     color: const Color(0xff0D3B6F)),
                                 child: Text(
-                                  AppStrings.send.tr().toUpperCase(),
+                                  AppStrings.send.tr(),
                                   style: const TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w500,

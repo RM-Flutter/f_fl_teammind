@@ -12,6 +12,7 @@ import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/features/more/notifications/data/models/get_one_notification_model.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/widgets/app_content_width.widget.dart';
 
 class NotificationDetailsAppbarWidget extends StatelessWidget {
   NotificationSingleModel? notificationSingleModel;
@@ -54,101 +55,103 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
           // Content
           Positioned.fill(
             child: SafeArea(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              child: Container(
-                                padding: EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.15),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  Icons.arrow_back,
-                                  color: Colors.white,
-                                  size: 20,
+              child: AppContentWidth(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Container(
+                                  padding: EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.15),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    Icons.arrow_back,
+                                    color: Colors.white,
+                                    size: 20,
+                                  ),
                                 ),
                               ),
-                            ),
-                            BookmarkButton(
-                              routeName: AppRoutes.notificationDetails.name,
-                              defaultTitle: "Notification Info",
-                              iconColor: Colors.white,
-                            ),
-                          ],
-                        ),
-                        Text(
-                          AppStrings.notificationInfo.tr(),
-                          style: AppStyles.whiteHeading(context).copyWith(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
+                              BookmarkButton(
+                                routeName: AppRoutes.notificationDetails.name,
+                                defaultTitle: "Notification Info",
+                                iconColor: Colors.white,
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
-                    const Spacer(),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
-                        (notificationSingleModel?.title?.toString() ?? "").toUpperCase(),
-                        style: AppStyles.whiteHeading(context).copyWith(
-                          fontSize: 26,
-                          fontWeight: FontWeight.w800,
-                          height: 1.1,
-                        ),
-                        textAlign: TextAlign.center,
+                          Text(
+                            AppStrings.notificationInfo.tr(),
+                            style: AppStyles.whiteHeading(context).copyWith(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    SizedBox(height: 25),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _buildMetadataItem(
-                          context,
-                          icon: Icons.calendar_today_outlined,
-                          text: notificationSingleModel?.createdAt != null
-                              ? DateFormat("dd/MM/yyyy", LocalizationService.isArabic(context: context) ? "ar" : "en")
-                                  .format(DateTime.parse(notificationSingleModel!.createdAt.toString()))
-                              : "",
-                        ),
-                        SizedBox(width: 15),
-                        _buildMetadataItem(
-                          context,
-                          icon: Icons.folder_open_outlined,
-                          text: (notificationSingleModel?.ptype?.key ?? "").toUpperCase(),
-                        ),
-                        SizedBox(width: 15),
-                        GestureDetector(
-                          onTap: () {
-                             if (notificationSingleModel != null) {
-                              Share.share(
-                                "${notificationSingleModel!.title}\n\n"
-                                "${notificationSingleModel!.content?.replaceAll(RegExp(r'<[^>]*>'), '') ?? ''}",
-                              );
-                            }
-                          },
-                          child: _buildMetadataItem(
-                            context,
-                            icon: Icons.share_outlined,
-                            text: "SHARE",
+                      const Spacer(),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: Text(
+                          (notificationSingleModel?.title?.toString() ?? ""),
+                          style: AppStyles.whiteHeading(context).copyWith(
+                            fontSize: 26,
+                            fontWeight: FontWeight.w800,
+                            height: 1.1,
                           ),
+                          textAlign: TextAlign.center,
                         ),
-                      ],
-                    ),
-                    const Spacer(),
-                  ],
+                      ),
+                      SizedBox(height: 25),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _buildMetadataItem(
+                            context,
+                            icon: Icons.calendar_today_outlined,
+                            text: notificationSingleModel?.createdAt != null
+                                ? DateFormat("dd/MM/yyyy", LocalizationService.isArabic(context: context) ? "ar" : "en")
+                                    .format(DateTime.parse(notificationSingleModel!.createdAt.toString()))
+                                : "",
+                          ),
+                          SizedBox(width: 15),
+                          _buildMetadataItem(
+                            context,
+                            icon: Icons.folder_open_outlined,
+                            text: (notificationSingleModel?.ptype?.key ?? ""),
+                          ),
+                          SizedBox(width: 15),
+                          GestureDetector(
+                            onTap: () {
+                               if (notificationSingleModel != null) {
+                                Share.share(
+                                  "${notificationSingleModel!.title}\n\n"
+                                  "${notificationSingleModel!.content?.replaceAll(RegExp(r'<[^>]*>'), '') ?? ''}",
+                                );
+                              }
+                            },
+                            child: _buildMetadataItem(
+                              context,
+                              icon: Icons.share_outlined,
+                              text: "SHARE",
+                            ),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                    ],
+                  ),
                 ),
               ),
             ),

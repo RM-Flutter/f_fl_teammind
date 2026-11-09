@@ -94,7 +94,7 @@ class _FingerPrintViewScreenState extends State<FingerPrintViewScreen> {
                                   //     child: CustomElevatedButton(
                                   //         backgroundColor: Color(AppColors.buttons),
                                   //         titleSize: AppSizes.s12,
-                                  //         title: AppStrings.showOfflineFingerprints.tr().toUpperCase(),
+                                  //         title: AppStrings.showOfflineFingerprints.tr(),
                                   //         onPressed: () async{
                                   //           await context.pushNamed(
                                   //               AppRoutes.fingerPrintOffline.name,

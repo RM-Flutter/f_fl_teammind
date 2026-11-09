@@ -12,6 +12,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/widgets/app_content_width.widget.dart';
 
 class GeneralDataScreen extends StatelessWidget {
   GeneralDataScreen({super.key});
@@ -23,8 +24,9 @@ class GeneralDataScreen extends StatelessWidget {
           return Scaffold(
             resizeToAvoidBottomInset: false,
             backgroundColor: Color(AppColors.background),
-            body: (!value.isLoading)?Container(
-                width: 1.sw,
+            body: AppContentWidth(
+              child: (!value.isLoading)?Container(
+                width: double.infinity,
                 height: 1.sh,
                 padding: AppSpacing.pagePadding,
                 child: SingleChildScrollView(
@@ -47,7 +49,7 @@ class GeneralDataScreen extends StatelessWidget {
                               },
                             ),
                             Text(
-                              value.dataTitle.toUpperCase(),
+                              value.dataTitle,
                               style: AppStyles.heading(context).copyWith(fontWeight: FontWeight.bold, fontSize: 16),
                             ),
                             IconButton(
@@ -61,7 +63,7 @@ class GeneralDataScreen extends StatelessWidget {
                       if(value.dataimage != null) ClipRRect(
                         borderRadius: BorderRadius.circular(AppRadius.xl),
                         child: CachedNetworkImage(
-                          width: 1.sw,
+                          width: double.infinity,
                           height: 0.225.sh,
                           fit: BoxFit.fill,
                           imageUrl: value.dataimage,
@@ -100,6 +102,7 @@ class GeneralDataScreen extends StatelessWidget {
                   ),
                 ],
               ),
+            ),
             ),
           );
         },

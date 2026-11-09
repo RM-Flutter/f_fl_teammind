@@ -42,7 +42,7 @@ class SliderHomeMenu extends StatelessWidget {
                 ),
                 const SizedBox(height: 4,),
                 Text(
-                  description.toUpperCase(),
+                  description,
                   style:  const TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.w400,
@@ -117,7 +117,7 @@ class SliderHomeMenu2 extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 AutoSizeText(
-                  description.toUpperCase(),
+                  description,
                   maxLines: 2,
                   minFontSize: 8,
                   textAlign: TextAlign.center,

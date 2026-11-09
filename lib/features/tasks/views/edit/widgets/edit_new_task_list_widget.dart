@@ -186,7 +186,7 @@ class _EditNewTaskListWidgetState extends State<EditNewTaskListWidget> {
               },
               icon: Icon(Icons.add, color: Colors.white, size: 16,),
               label: Text(
-                AppStrings.addOne.tr().toUpperCase(),
+                AppStrings.addOne.tr(),
                 style: AppStyles.whiteContent(context).copyWith(fontSize: 10, fontWeight: FontWeight.w500),
               ),
             ),

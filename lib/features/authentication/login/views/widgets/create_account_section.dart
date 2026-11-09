@@ -54,13 +54,13 @@ class CreateAccountSection extends StatelessWidget {
         ),
       ),
       titleWidget: AutoSizeText(
-        AppStrings.createNewAccount.tr().toUpperCase(),
+        AppStrings.createNewAccount.tr(),
         maxLines: 1,
         minFontSize: 8,
         style: AppStyles.titleTextContent(context).copyWith(
           color: const Color(0xffffffff),
           fontWeight: FontWeight.w400,
-          fontSize: isWeb ? 14 : 12.sp,
+          fontSize: 12.sp,
         ),
       ),
     );

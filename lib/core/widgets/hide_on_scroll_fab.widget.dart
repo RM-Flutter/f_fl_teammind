@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import '../constants/app_design.dart';
+import '../services/layout_service.dart';
 
 /// Shows / hides floating buttons smoothly while the page scrolls (layout rule 6):
 /// scrolling down (reading further) or reaching the end hides them, scrolling up or reaching
@@ -118,9 +119,16 @@ class HideOnScrollFab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final sideInset = LayoutService.sideInsetForContent(context);
+    final paddedChild = sideInset > 0
+        ? Padding(
+            padding: EdgeInsets.symmetric(horizontal: sideInset),
+            child: child,
+          )
+        : child;
     return ValueListenableBuilder<bool>(
       valueListenable: visible,
-      child: child,
+      child: paddedChild,
       builder: (context, isVisible, child) => IgnorePointer(
         ignoring: !isVisible,
         child: AnimatedSlide(

@@ -19,36 +19,28 @@ class SuccessfullAddRequestSheet extends StatelessWidget {
   SuccessfullAddRequestSheet({this.title, this.onTap});
   @override
   Widget build(BuildContext context) {
-    const isWeb = kIsWeb;
     return Consumer<HomeController>(builder: (context, value, child) {
       return Container(
-        height: isWeb ? 0.4.sh : 0.5.sh,
-        width: isWeb ? null : 0.99.sw,
-        constraints: isWeb
-            ? BoxConstraints(
-          maxHeight: 0.6.sh,
-          maxWidth: 500,
-        )
-            : null,
-        decoration: BoxDecoration(
+        height: 0.5.sh,
+        width: 0.99.sw,
+        constraints: const BoxConstraints(maxWidth: 600),
+        decoration: const BoxDecoration(
           color: Colors.white,
-          borderRadius: isWeb
-              ? BorderRadius.circular(AppRadius.xl)
-              : BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
+          borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
         ),
         child: Column(
           children: [
             SizedBox(height: 30),
             SvgPicture.asset("assets/images/svg/success_reqs.svg", width: 100, height: 100),
             SizedBox(height: 15,),
-            Text(AppStrings.success.tr().toUpperCase(), style: AppStyles.heading(context).copyWith(
+            Text(AppStrings.success.tr(), style: AppStyles.heading(context).copyWith(
                 fontSize: 24,
                 fontWeight: FontWeight.w700,
             )),
             Padding(
               padding: EdgeInsets.all(15),
               child: Text(
-                AppStrings.yourRequestHasBeenSubmittedSuccessfully.tr().toUpperCase(),
+                AppStrings.yourRequestHasBeenSubmittedSuccessfully.tr(),
                 textAlign: TextAlign.center,
                 style: AppStyles.blackWithObacityContent(context).copyWith(
                     fontWeight: FontWeight.w400,
@@ -73,9 +65,9 @@ class SuccessfullAddRequestSheet extends StatelessWidget {
                                 pathParameters: {'lang': context.locale.languageCode,});
                           },
                           backgroundColor: Color(AppColors.secondaryButton),
-                          title: AppStrings.goToHome.tr().toUpperCase(),
+                          title: AppStrings.goToHome.tr(),
                           titleWidget: Text(
-                            AppStrings.goToHome.tr().toUpperCase(),
+                            AppStrings.goToHome.tr(),
                             style: AppStyles.whiteContent(context).copyWith(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
@@ -103,9 +95,9 @@ class SuccessfullAddRequestSheet extends StatelessWidget {
                           },
                           width: !kIsWeb? 0.45.sw : null,
                           backgroundColor: Color(AppColors.secondaryButton),
-                          title: title ?? AppStrings.goToRequest.tr().toUpperCase(),
+                          title: title ?? AppStrings.goToRequest.tr(),
                           titleWidget: Text(
-                            (title ?? AppStrings.goToRequest.tr()).toUpperCase(),
+                            (title ?? AppStrings.goToRequest.tr()),
                             style: AppStyles.whiteContent(context).copyWith(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,

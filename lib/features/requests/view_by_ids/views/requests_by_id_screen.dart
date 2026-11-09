@@ -84,9 +84,7 @@ class _RequestsByTypeIdScreenState extends State<RequestsByTypeIdScreen> {
                   employeeId: widget.employeeId),
           body: Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                  maxWidth: double.infinity
-              ),
+              constraints: LayoutService.contentConstraints(context),
               child: Padding(
                   padding: AppSpacing.pageAll,
                   child: Consumer<RequestsWithTypeIdViewModel>(

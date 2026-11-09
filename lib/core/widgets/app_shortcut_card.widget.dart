@@ -26,7 +26,6 @@ class AppShortcutCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final accent = Color(AppColors.buttons);
-    final isRtl = Directionality.of(context) == TextDirection.rtl;
     return AppCard(
       onTap: onTap,
       child: Row(
@@ -69,7 +68,8 @@ class AppShortcutCard extends StatelessWidget {
           ),
           const SizedBox(width: AppSpacing.sm),
           Icon(
-            isRtl ? Icons.chevron_left_rounded : Icons.chevron_right_rounded,
+            // Flutter mirrors this icon by itself in RTL; flipping it by hand flips it twice.
+            Icons.chevron_right_rounded,
             color: accent,
             size: 22,
           ),

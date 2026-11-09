@@ -28,7 +28,7 @@ class ReferralSection extends StatelessWidget {
         children: [
           Text(AppStrings.referralDescripe.tr(), style: const TextStyle(height: 24/12, fontSize: 12, fontWeight: FontWeight.w400, color: Color(AppColors.gray1),),textAlign: TextAlign.center,)
           ,const SizedBox(height: 25,),
-          Text(AppStrings.referralCodeInviteFriend.tr().toUpperCase(), style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Color(AppColors.oc1),),textAlign: TextAlign.center,)
+          Text(AppStrings.referralCodeInviteFriend.tr(), style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: Color(AppColors.oc1),),textAlign: TextAlign.center,)
           ,const SizedBox(height: 10,),
           Container(
             height: 50,

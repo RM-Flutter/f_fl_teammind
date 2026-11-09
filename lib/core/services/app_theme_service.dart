@@ -87,9 +87,7 @@ abstract class AppThemeService {
           // --> used
             fontWeight: FontWeight.w700,
             fontSize: AppSizes.s24,
-            color: Colors.white,
-            // تحسين الخطوط في الويب
-            letterSpacing: kIsWeb && !LocalizationService.isArabic(context: context) ? 0.3 : null),
+            color: Colors.white),
         headlineMedium: TextStyle(
           // --> used
             color: Colors.white,
@@ -104,9 +102,7 @@ abstract class AppThemeService {
           // --> used for the title of modal sheet
             fontWeight: FontWeight.bold,
             fontSize: AppSizes.s20,
-            color: Color(AppColors.secondaryButton),
-            // تحسين الخطوط في الويب
-            letterSpacing: kIsWeb && !LocalizationService.isArabic(context: context) ? 0.5 : null),
+            color: Color(AppColors.secondaryButton)),
         bodySmall: TextStyle(
           // --> used
           fontWeight: FontWeight.w400,
@@ -164,10 +160,11 @@ abstract class AppThemeService {
             : AppConstants.fontFamilyPoppins,
         // application input decoration theme
         inputDecorationTheme: InputDecorationTheme(
-          hintStyle: TextStyle(
-              color: colorPalette.inputHintColor.color,
-              fontWeight: FontWeight.w500,
-              fontSize: AppSizes.s12),
+          // Hint, end icon and size are the same for every field (rule 15, AppField).
+          hintStyle: AppField.hintStyle,
+          suffixIconColor: AppField.iconColor,
+          prefixIconColor: AppField.iconColor,
+          suffixIconConstraints: const BoxConstraints(minWidth: 54, minHeight: AppField.height),
           enabledBorder: OutlineInputBorder(
             borderRadius: AppRadius.input,
             borderSide: BorderSide(
@@ -233,6 +230,7 @@ abstract class AppThemeService {
         bottomSheetTheme: BottomSheetThemeData(
           backgroundColor: Color(AppColors.modalBackground),
           surfaceTintColor: Colors.transparent,
+          constraints: const BoxConstraints(maxWidth: 600),
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
           ),

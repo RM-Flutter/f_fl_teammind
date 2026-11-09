@@ -75,7 +75,7 @@ class _LoginFormState extends State<LoginForm> {
                 : TextFormField(
                     controller: viewModel.emailController,
                     decoration: InputDecoration(
-                      hintText: AppStrings.yourEmail.tr().toUpperCase(),
+                      hintText: AppStrings.yourEmail.tr(),
                       hintStyle: AppStyles.hintTitleContent(context).copyWith(fontSize: 12),
                     ),
                     validator: (value) => ValidationService.validateEmail(value),
@@ -91,7 +91,7 @@ class _LoginFormState extends State<LoginForm> {
               decoration: InputDecoration(
                 suffixIconConstraints:
                     const BoxConstraints(minWidth: 40, minHeight: 36),
-                hintText: AppStrings.password.tr().toUpperCase(),
+                hintText: AppStrings.password.tr(),
                 hintStyle: AppStyles.hintTitleContent(context).copyWith(fontSize: 12),
                 suffixIcon: IconButton(
                   padding: EdgeInsets.zero,

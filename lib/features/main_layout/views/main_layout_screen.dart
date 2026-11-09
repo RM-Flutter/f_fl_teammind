@@ -1,8 +1,6 @@
 import 'package:app_test/core/constants/app_colors.dart';
-import 'package:app_test/core/constants/app_sizes.dart';
-import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/utils/app_styles.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:app_test/core/widgets/app_content_width.widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -69,8 +67,6 @@ class MainLayoutScreen extends StatelessWidget {
     viewModel.currentPage = currentNavPage;
     final items = getBottomNavigationBarItems();
     final currentIndex = items.indexWhere((item) => item.page == viewModel.currentPage);
-    // Wide windows (tablet landscape, desktop, web): side rail instead of the bottom bar.
-    final useRail = LayoutService.isExpanded(context);
     final pageBody = AssistantWakeHost(
       child: Builder(
         builder: (context) {
@@ -81,103 +77,63 @@ class MainLayoutScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Color(AppColors.scaffoldBackGround),
       // floatingActionButton: const MainAppFabWidget(),
-      bottomNavigationBar: useRail ? null : BottomNavigationBar(
-        backgroundColor: Color(AppColors.navBar),
-        showUnselectedLabels: true,
-        showSelectedLabels: true,
-        selectedLabelStyle: AppStyles.titleTextContent(context).copyWith(
-          fontSize: 11,
-          fontWeight: FontWeight.w600,
-        ),
-        unselectedLabelStyle: AppStyles.titleTextContent(context).copyWith(
-          fontSize: 10,
-        ),
-        selectedItemColor: Color(AppColors.secondaryButton),
-        elevation: 0,
-        type: BottomNavigationBarType.fixed,
-        items: getBottomNavigationBarItems().map((element) {
-          return BottomNavigationBarItem(
-            icon: Padding(
-              padding: EdgeInsets.only(top: 8, bottom: 12),
-              child: SvgPicture.asset(
-                element.icon,
-                height: 24,
-                width: 24,
-                colorFilter: ColorFilter.mode(
-                  Color(AppColors.tabInactive),
-                  BlendMode.srcIn,
-                ),
-              ),
+      bottomNavigationBar: ColoredBox(
+        color: Color(AppColors.navBar),
+        child: AppContentWidth(
+          child: BottomNavigationBar(
+            backgroundColor: Color(AppColors.navBar),
+            showUnselectedLabels: true,
+            showSelectedLabels: true,
+            selectedLabelStyle: AppStyles.titleTextContent(context).copyWith(
+              fontSize: 11,
+              fontWeight: FontWeight.w600,
             ),
-            activeIcon: Padding(
-              padding: EdgeInsets.only(top: 8, bottom: 12),
-              child: ColorFiltered(
-                colorFilter: ColorFilter.mode(
-                  Color(AppColors.secondaryButton),
-                  BlendMode.srcIn,
-                ),
-                child: SvgPicture.asset(
-                  element.icon,
-                  height: 24,
-                  width: 24,
-                ),
-              ),
+            unselectedLabelStyle: AppStyles.titleTextContent(context).copyWith(
+              fontSize: 10,
             ),
-            label: element.title.tr(),
-          );
-        }).toList(),
-        currentIndex: getBottomNavigationBarItems().indexWhere((item) => item.page == viewModel.currentPage) == -1 
-            ? 0 
-            : getBottomNavigationBarItems().indexWhere((item) => item.page == viewModel.currentPage),
-        onTap: (index) {
-          viewModel.onItemTapped(
-              context: context, page: getBottomNavigationBarItems()[index].page);
-        },
-      ),
-      body: useRail
-          ? Row(
-              children: [
-                NavigationRail(
-                  backgroundColor: Color(AppColors.navBar),
-                  minWidth: AppSizes.navRailWidth,
-                  labelType: NavigationRailLabelType.all,
-                  selectedIndex: currentIndex == -1 ? 0 : currentIndex,
-                  selectedIconTheme:
-                      IconThemeData(color: Color(AppColors.secondaryButton)),
-                  selectedLabelTextStyle: AppStyles.titleTextContent(context).copyWith(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    color: Color(AppColors.secondaryButton),
+            selectedItemColor: Color(AppColors.secondaryButton),
+            elevation: 0,
+            type: BottomNavigationBarType.fixed,
+            items: items.map((element) {
+              return BottomNavigationBarItem(
+                icon: Padding(
+                  padding: const EdgeInsets.only(top: 8, bottom: 12),
+                  child: SvgPicture.asset(
+                    element.icon,
+                    height: 24,
+                    width: 24,
+                    colorFilter: ColorFilter.mode(
+                      Color(AppColors.tabInactive),
+                      BlendMode.srcIn,
+                    ),
                   ),
-                  unselectedLabelTextStyle:
-                      AppStyles.titleTextContent(context).copyWith(fontSize: 10),
-                  onDestinationSelected: (index) => viewModel.onItemTapped(
-                      context: context, page: items[index].page),
-                  destinations: items.map((element) {
-                    return NavigationRailDestination(
-                      icon: SvgPicture.asset(
-                        element.icon,
-                        height: 24,
-                        width: 24,
-                        colorFilter: ColorFilter.mode(
-                            Color(AppColors.tabInactive), BlendMode.srcIn),
-                      ),
-                      selectedIcon: SvgPicture.asset(
-                        element.icon,
-                        height: 24,
-                        width: 24,
-                        colorFilter: ColorFilter.mode(
-                            Color(AppColors.secondaryButton), BlendMode.srcIn),
-                      ),
-                      label: Text(element.title.tr()),
-                    );
-                  }).toList(),
                 ),
-                const VerticalDivider(width: 1, thickness: 1),
-                Expanded(child: pageBody),
-              ],
-            )
-          : pageBody,
+                activeIcon: Padding(
+                  padding: const EdgeInsets.only(top: 8, bottom: 12),
+                  child: ColorFiltered(
+                    colorFilter: ColorFilter.mode(
+                      Color(AppColors.secondaryButton),
+                      BlendMode.srcIn,
+                    ),
+                    child: SvgPicture.asset(
+                      element.icon,
+                      height: 24,
+                      width: 24,
+                    ),
+                  ),
+                ),
+                label: element.title.tr(),
+              );
+            }).toList(),
+            currentIndex: currentIndex == -1 ? 0 : currentIndex,
+            onTap: (index) {
+              viewModel.onItemTapped(
+                  context: context, page: items[index].page);
+            },
+          ),
+        ),
+      ),
+      body: pageBody,
     );
   }
 }

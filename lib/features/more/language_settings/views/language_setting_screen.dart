@@ -1,3 +1,4 @@
+import 'package:app_test/core/widgets/app_card.widget.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:convert';
@@ -21,6 +22,7 @@ import 'package:app_test/features/more/language_settings/controllers/language_co
 
 import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/widgets/app_content_width.widget.dart';
 
 class LangSettingScreens extends StatefulWidget {
   @override
@@ -37,7 +39,7 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
         settingsType: SettingsType.generalSettings) as GeneralSettingsModel)
         .availableLang;
     lang = (lang == null || lang.isEmpty)
-        ? ["English language",
+        ? ["English Language",
       "اللغه العربية"]
         : lang;
     print("is--->${context.locale.languageCode}");
@@ -56,119 +58,131 @@ class _LangSettingScreensState extends State<LangSettingScreens> {
           appBar: AppBarWithBookmark(
             backgroundColor: Colors.white,
             leading: const AppBackButton(),
-            title: AppStrings.languageSettings.tr().toUpperCase(),
+            title: AppStrings.languageSettings.tr(),
             titleStyle: AppStyles.heading(context).copyWith(
                 fontSize: AppSizes.s16,
                 fontWeight: FontWeight.w700),
             routeName: AppRoutes.langSettingScreen.name,
           ),
-          body: SingleChildScrollView(
-            physics: const ClampingScrollPhysics(),
-            child: Container(
-              width: double.infinity,
-              alignment: Alignment.center,
-              child: SizedBox(
-                  height: 1.sh,
-                  width: double.infinity,
-                  child: Padding(
-                      padding: EdgeInsets.symmetric(vertical: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          ListView.separated(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemBuilder: (context, index) => GestureDetector(
-                                onTap: ()async{
-                                  setState(() {
-                                    selectIndex = index;
-                                    selectValue = lang![index].toString();
-                                  });
-                                  print("selectValue --> ${selectValue}");
-                                  print("selectValue is ----> $selectValue");
-                                  CacheHelper.setString(key: "lang", value: (selectValue == "ar"|| selectValue == "اللغه العربية")? "ar" : "en");
-                                  LocalizationService.setLocaleAndUpdateUrl(
-                                      context: context, newLangCode: (selectValue == "ar"|| selectValue == "اللغه العربية")? "ar" : "en");
-                                  await value.setDeviceSysLang(
-                                    state: (selectValue == "ar" || selectValue == "اللغه العربية")? "ar" : "en",
-                                    context: context,
-                                    notiToken: FcmTokenService.getCachedToken(),
-                                  );
-                                },
-                                child: Container(
-                                  width: double.infinity,
-                                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                                  decoration: BoxDecoration(
-                                      color: Color(AppColors.background),
-                                      boxShadow: AppShadows.none
-                                  ),
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        width: 24,
-                                        height: 24,
-                                        padding: EdgeInsets.all(2),
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            border: Border.all(color: Color(AppColors.buttons)),
-                                            color:(selectIndex == index)? Color(AppColors.buttons) : Color(AppColors.background)
-                                        ),
-                                        child: Icon(Icons.check, color: Colors.white, size: 18,),
-                                      ),
-                                      SizedBox(width: 15,),
-                                      Text((lang![index].contains("English language")||lang![index].contains("en"))?"English language".toUpperCase() : "اللغه العربية", style: AppStyles.darkContent(context).copyWith(fontWeight: FontWeight.w500, fontSize: 14),)
-                                      ,const Spacer(),
-                                      Text((lang![index].contains("en"))?"change".toUpperCase() : "تغيير", style: AppStyles.primaryContent(context).copyWith(fontSize: 12 ,fontWeight: FontWeight.w500),)
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              separatorBuilder: (context, index) => SizedBox(height: 19,),
-                              padding: EdgeInsets.zero,
-                              itemCount: lang!.length
-                          ),
-                          SizedBox(height: 40,),
-                          // SizedBox(
-                          //   width: MediaQuery.sizeOf(context).width * 0.6,
-                          //   child: GestureDetector(
-                          //     onTap: (){
-                          //       //  Navigator.pop(context);
-                          //     },
-                          //     child: Container(
-                          //       height: 50,
-                          //       alignment: Alignment.center,
-                          //       decoration: BoxDecoration(
-                          //         color: Color(AppColors.secondaryButton),
-                          //         borderRadius: BorderRadius.circular(AppRadius.pill),
-                          //       ),
-                          //       padding: const EdgeInsets.symmetric(horizontal: 40),
-                          //       child: Row(
-                          //         mainAxisAlignment: MainAxisAlignment.center,
-                          //         children: [
-                          //           SvgPicture.asset("assets/images/svg/add-lang.svg"),
-                          //           const SizedBox(width: 12,),
-                          //           Text(
-                          //             AppStrings.addLanguage.tr().toUpperCase(),
-                          //             style:TextStyle(
-                          //                 fontSize: 12,
-                          //                 fontWeight: FontWeight.w500,
-                          //                 color: Color(AppColors.background)
-                          //             ),
-                          //           ),
-                          //         ],
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
-                        ],
-                      )
-                  )
-              ),
+          body: AppContentWidth(
+            child: ListView(
+              padding: AppSpacing.pagePadding.copyWith(top: AppSpacing.section * 2),
+              children: [
+                // Big symbol, then a hint, then the two choices side by side.
+                Center(
+                  child: Container(
+                    width: 72,
+                    height: 72,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(AppColors.buttons).withValues(alpha: 0.10),
+                    ),
+                    child: Icon(Icons.translate_rounded,
+                        size: 34, color: Color(AppColors.buttons)),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                Text(
+                  'choose_language'.tr(),
+                  textAlign: TextAlign.center,
+                  style: AppStyles.heading(context)
+                      .copyWith(fontSize: 18, fontWeight: FontWeight.w700),
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  'choose_language_hint'.tr(),
+                  textAlign: TextAlign.center,
+                  style: AppStyles.greyContent(context).copyWith(fontSize: 13),
+                ),
+                const SizedBox(height: AppSpacing.section * 2),
+                Row(
+                  children: [
+                    for (var index = 0; index < lang!.length; index++) ...[
+                      if (index > 0) const SizedBox(width: AppSpacing.cardGap),
+                      Expanded(
+                        child: _LanguageTile(
+                          isArabic: !(lang![index].contains("English language") ||
+                              lang![index].contains("en")),
+                          selected: selectIndex == index,
+                          onTap: () async {
+                            final isArabic = !(lang![index].contains("English language") ||
+                                lang![index].contains("en"));
+                            setState(() {
+                              selectIndex = index;
+                              selectValue = lang![index].toString();
+                            });
+                            final code = isArabic ? "ar" : "en";
+                            CacheHelper.setString(key: "lang", value: code);
+                            LocalizationService.setLocaleAndUpdateUrl(
+                                context: context, newLangCode: code);
+                            await value.setDeviceSysLang(
+                              state: code,
+                              context: context,
+                              notiToken: FcmTokenService.getCachedToken(),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ],
             ),
           ),
         );
       },),
+    );
+  }
+}
+
+/// One language as a tall tile: its own symbol, its own name, and a check when it is the one in use.
+class _LanguageTile extends StatelessWidget {
+  final bool isArabic;
+  final bool selected;
+  final VoidCallback onTap;
+  const _LanguageTile({required this.isArabic, required this.selected, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final accent = Color(AppColors.buttons);
+    return AppCard(
+      onTap: onTap,
+      color: selected ? accent.withValues(alpha: 0.06) : null,
+      border: Border.all(
+          color: selected ? accent : Colors.grey.withValues(alpha: 0.18),
+          width: selected ? 1.5 : 1),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.section * 1.5, horizontal: AppSpacing.md),
+      child: Column(
+        children: [
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              AppCardLeadingAvatar(
+                size: 64,
+                fallbackText: isArabic ? 'ع' : 'EN',
+                nameForInitials: isArabic ? 'ع' : 'EN',
+                borderColor: selected ? accent : Colors.grey.shade400,
+              ),
+              if (selected)
+                PositionedDirectional(
+                  end: -4,
+                  bottom: -4,
+                  child: Container(
+                    padding: const EdgeInsets.all(2),
+                    decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                    child: Icon(Icons.check_circle_rounded, size: 22, color: accent),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Text(
+            isArabic ? 'العربية' : 'English',
+            style: AppStyles.darkContent(context)
+                .copyWith(fontWeight: FontWeight.w700, fontSize: 16),
+          ),
+        ],
+      ),
     );
   }
 }

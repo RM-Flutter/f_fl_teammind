@@ -1,3 +1,4 @@
+import 'package:app_test/core/widgets/app_empty_scroll_view.widget.dart';
 import 'package:app_test/core/widgets/app_shortcut_card.widget.dart';
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
@@ -107,7 +108,7 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
             .replaceAllMapped(RegExp(r'[A-Z]'), (match) => ' ${match.group(0)}')
             .trim()
             .replaceFirstMapped(
-                RegExp(r'^[a-z]'), (match) => match.group(0)!.toUpperCase());
+                RegExp(r'^[a-z]'), (match) => match.group(0)!);
     }
   }
 
@@ -241,6 +242,8 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
                 onClearDate: () => provider.clearFilterDate(context),
                 onClearStatus: () {},
               ),
+              // No requests -> nothing to show on a calendar, so no calendar entry.
+              if (list.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.fromLTRB(
                     AppSpacing.page, AppSpacing.md, AppSpacing.page, 0),
@@ -265,13 +268,7 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
                 child: RefreshIndicator.adaptive(
                   onRefresh: () => provider.fetchRequests(context),
                   child: list.isEmpty
-                      ? SingleChildScrollView(
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          child: NoExistingPlaceholderScreen(
-                            height: 300,
-                            title: AppStrings.noDataFounded.tr(),
-                          ),
-                        )
+                      ? AppEmptyScrollView(title: AppStrings.noDataFounded.tr())
                       : ListView.builder(
                           controller: _scrollController,
                           clipBehavior: Clip.none,

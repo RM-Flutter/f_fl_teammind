@@ -1,3 +1,4 @@
+import 'package:app_test/core/widgets/app_field_shell.widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -160,63 +161,27 @@ class _SearchableDropdownSheetState extends State<SearchableDropdownSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final border = OutlineInputBorder(
-      borderRadius: widget.borderRadius ?? BorderRadius.circular(AppRadius.sm),
-      borderSide: widget.borderSide ??
-          BorderSide(color: Color(AppColors.border), width: 1.0),
-    );
     final display = _displayText();
-    final h = widget.height ?? 65.0;
-    final isRtl = LocalizationService.isArabic(context: context);
-    final verticalPadding = (h - 20) / 2;
-    final contentPadding = widget.contentPadding ?? EdgeInsets.only(
-      left: isRtl ? 12 : 16,
-      right: isRtl ? 16 : 12,
-      top: widget.height != null ? verticalPadding : 12,
-      bottom: widget.height != null ? verticalPadding : 12,
-    );
-    final child = InkWell(
+    // Same box, hint and arrow as every other field (rule 15).
+    return AppFieldShell(
       onTap: _openSheet,
-      child: InputDecorator(
-        isEmpty: display.isEmpty,
-        decoration: InputDecoration(
-          errorBorder: InputBorder.none,
-          focusedErrorBorder: InputBorder.none,
-          disabledBorder: InputBorder.none,
-          isDense: true,
-          contentPadding: contentPadding,
-          hintText: widget.hintText,
-          hintStyle: widget.hintStyle,
-          border: border,
-          enabledBorder: border,
-          focusedBorder: border,
-          suffixIcon: display.isNotEmpty && widget.fieldSuffixIcon != null
-              ? widget.fieldSuffixIcon
-              : Icon(
-                  Icons.keyboard_arrow_down_rounded,
-                  color: (widget.items == null || widget.items!.isEmpty)
-                      ? Colors.grey
-                      : Colors.black,
-                  size: 24,
-                ),
-        ),
-        child: display.isEmpty
-            ? const SizedBox.shrink()
-            : Text(
-                display,
-                style: widget.hintStyle?.copyWith(
-                      color: Color(AppColors.overlay),
-                    ) ??
-                    TextStyle(
-                      color: Color(AppColors.overlay),
-                      fontSize: 14,
-                    ),
-              ),
+      height: widget.height,
+      trailingIcon: display.isNotEmpty && widget.fieldSuffixIcon != null
+          ? null
+          : Icons.keyboard_arrow_down_rounded,
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              display.isEmpty ? (widget.hintText ?? '') : display,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: display.isEmpty ? AppField.hintStyle : AppField.valueStyle,
+            ),
+          ),
+          if (display.isNotEmpty && widget.fieldSuffixIcon != null) widget.fieldSuffixIcon!,
+        ],
       ),
-    );
-    return SizedBox(
-      height: h,
-      child: child,
     );
   }
 }

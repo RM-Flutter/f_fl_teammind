@@ -158,7 +158,7 @@ class PersonalProfileController extends ChangeNotifier {
       AlertsService.error(
           context: context,
           message: errorMessage!,
-          title: AppStrings.failed.tr().toUpperCase());
+          title: AppStrings.failed.tr());
     });
   }
   Future<void> initializePersonalProfileScreen(
@@ -457,7 +457,7 @@ class PersonalProfileController extends ChangeNotifier {
                   controller: faController,
                   decoration: InputDecoration(
                     hintText:
-                    AppStrings.fa_code.tr().toUpperCase(),
+                    AppStrings.fa_code.tr(),
                   ),
                 )
               ],
@@ -898,7 +898,7 @@ class PersonalProfileController extends ChangeNotifier {
         return Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(
-              maxWidth: double.infinity,
+              maxWidth: 420,
             ),
             child: AlertDialog(
               shape: RoundedRectangleBorder(
@@ -1048,7 +1048,7 @@ class PersonalProfileController extends ChangeNotifier {
         return Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(
-              maxWidth: double.infinity,
+              maxWidth: 420,
             ),
             child: AlertDialog(
               shape: RoundedRectangleBorder(

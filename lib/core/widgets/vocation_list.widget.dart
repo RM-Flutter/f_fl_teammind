@@ -40,29 +40,19 @@ class VacationListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double getResponsiveItemWidth(BuildContext context, {double? paddingBetweenVocations}) {
-      final screenWidth = LayoutService.getWidth(context);
-      int crossAxisCount;
+    final screenWidth = LayoutService.getWidth(context);
+    final gap = paddingBetweenVocations ?? AppSizes.s12;
+    const horizontalPad = AppSpacing.page * 2;
+    final mobileBaseWidth = screenWidth.clamp(320.0, 430.0);
+    final minItemWidth = (mobileBaseWidth - (horizontalPad + gap * 2)) / 3;
 
-      if (kIsWeb) {
-        if (screenWidth > 1400) {
-          crossAxisCount = 6; // شاشات كبيرة جدًا
-        } else if (screenWidth > 1000) {
-          crossAxisCount = 5; // لابتوب
-        } else {
-          crossAxisCount = 4; // تابلت أو شاشة صغيرة
-        }
-      } else {
-        if (screenWidth > 600) {
-          crossAxisCount = 4; // تابلت
-        } else {
-          crossAxisCount = 3; // موبايل
-        }
-      }
-
-      final totalPadding = AppSizes.s32 + ((paddingBetweenVocations ?? AppSizes.s0) * 2);
-      return (screenWidth - totalPadding) / crossAxisCount;
+    double getResponsiveItemWidth(int itemCount) {
+      final count = itemCount > 0 ? itemCount : 3;
+      final distributedWidth =
+          (screenWidth - horizontalPad - gap * (count - 1)) / count;
+      return distributedWidth > minItemWidth ? distributedWidth : minItemWidth;
     }
+
     var jsonString;
     var gCache;
     List<MapEntry<String, Balance>>? vacationBalance;
@@ -88,24 +78,35 @@ class VacationListWidget extends StatelessWidget {
         }
         return true;
       }).toList() ?? [];
+    }
 
-      vacationWidgets = vacationBalance
-          .map((entry) => Padding(
-        padding: EdgeInsetsDirectional.only(end: paddingBetweenVocations!),
-        child: VacationCard(
-          vocation: entry,
-          tap: tap,
-          sectionPadding: sectionPadding,
-          paddingBetweenVocations: paddingBetweenVocations,
-        ),
-      ))
-          .toList();
+    final totalCount = 1 + (vacationBalance?.length ?? 0);
+    final itemWidth = getResponsiveItemWidth(totalCount);
+
+    if (vacationBalance != null) {
+      vacationWidgets = [
+        for (int i = 0; i < vacationBalance.length; i++)
+          Padding(
+            padding: EdgeInsetsDirectional.only(
+              end: i < vacationBalance.length - 1 ? gap : 0,
+            ),
+            child: VacationCard(
+              vocation: vacationBalance[i],
+              tap: tap,
+              sectionPadding: sectionPadding,
+              paddingBetweenVocations: paddingBetweenVocations,
+              cardWidth: itemWidth,
+            ),
+          ),
+      ];
     }
     vacationWidgets ??= [];
     vacationWidgets.insert(
       0,
       Padding(
-          padding: EdgeInsetsDirectional.only(end: paddingBetweenVocations!),
+          padding: EdgeInsetsDirectional.only(
+            end: vacationWidgets.isNotEmpty ? gap : 0,
+          ),
           child: InkWell(
             onTap: () async => await context.pushNamed(
                 AppRoutes.requestsCalendar.name,
@@ -115,7 +116,7 @@ class VacationListWidget extends StatelessWidget {
                 },
                 extra: requests),
             child: Container(
-              width: getResponsiveItemWidth(context, paddingBetweenVocations: paddingBetweenVocations),
+              width: itemWidth,
               height: 128,
               padding: const EdgeInsets.symmetric(vertical: AppSizes.s10, horizontal: AppSizes.s6),
               decoration: BoxDecoration(
@@ -160,39 +161,40 @@ class VacationListWidget extends StatelessWidget {
         ),
     );
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppSizes.s32),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        // Page padding lives on the scroll view: the first card lines up with the page edge
-        // and the list still scrolls to the screen edge (layout rule 1).
-        padding: AppSpacing.pagePadding,
-        child: Row(
-          children: gCache == null
-              ? List.generate(
-              3,
-                  (index) => Padding(
-                  padding: EdgeInsetsDirectional.only(end: paddingBetweenVocations!),
-                  child: ShimmerAnimatedLoading(
-                    width: (LayoutService.getWidth(context) -
-                        (AppSizes.s32 +
-                            ((paddingBetweenVocations ?? AppSizes.s0) *
-                                3))) /
-                        3,
-                    height: 110,
-                    circularRaduis: AppRadius.md,
-                  )))
-              : (animateEntrance
-                  ? [
-                      for (int i = 0; i < vacationWidgets.length; i++)
-                        FadeSlideIn(
-                          delay: Duration(milliseconds: 150 * i),
-                          offsetX: LocalizationService.isArabic(context: context) ? -0.5 : 0.5,
-                          offsetY: 0,
-                          child: vacationWidgets[i],
-                        ),
-                    ]
-                  : vacationWidgets),
+    final shimmerItemWidth = getResponsiveItemWidth(3);
+
+    return SizedBox(
+      width: double.infinity,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: AppSizes.s32),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          // Page padding lives on the scroll view: the first card lines up with the page edge
+          // and the list still scrolls to the screen edge (layout rule 1).
+          padding: AppSpacing.pagePadding,
+          child: Row(
+            children: gCache == null
+                ? List.generate(
+                3,
+                    (index) => Padding(
+                    padding: EdgeInsetsDirectional.only(end: index < 2 ? gap : 0),
+                    child: ShimmerAnimatedLoading(
+                      width: shimmerItemWidth,
+                      height: 110,
+                      circularRaduis: AppRadius.md,
+                    )))
+                : (animateEntrance
+                    ? [
+                        for (int i = 0; i < vacationWidgets.length; i++)
+                          FadeSlideIn(
+                            delay: Duration(milliseconds: 150 * i),
+                            offsetX: LocalizationService.isArabic(context: context) ? -0.5 : 0.5,
+                            offsetY: 0,
+                            child: vacationWidgets[i],
+                          ),
+                      ]
+                    : vacationWidgets),
+          ),
         ),
       ),
     );
@@ -204,6 +206,7 @@ class VacationCard extends StatelessWidget {
   final double? sectionPadding;
   final MapEntry<String, Balance> vocation;
   final double? paddingBetweenVocations;
+  final double? cardWidth;
   final Widget? customBody;
   final String? userId;
   bool tap = true;
@@ -216,6 +219,7 @@ class VacationCard extends StatelessWidget {
         this.type,
         required this.vocation,
         this.paddingBetweenVocations,
+        this.cardWidth,
         this.userId,
         this.customBody});
 
@@ -224,27 +228,9 @@ class VacationCard extends StatelessWidget {
 
     bool isTaken = vocation.value.max == -1 && vocation.value.available == -1;
     double getResponsiveItemWidth(BuildContext context, {double? paddingBetweenVocations}) {
-      final screenWidth = LayoutService.getWidth(context);
-      int crossAxisCount;
-
-      if (kIsWeb) {
-        if (screenWidth > 1400) {
-          crossAxisCount = 6; // شاشات كبيرة جدًا
-        } else if (screenWidth > 1000) {
-          crossAxisCount = 5; // لابتوب
-        } else {
-          crossAxisCount = 4; // تابلت أو شاشة صغيرة
-        }
-      } else {
-        if (screenWidth > 600) {
-          crossAxisCount = 4; // تابلت
-        } else {
-          crossAxisCount = 3; // موبايل
-        }
-      }
-
+      final effectiveWidth = LayoutService.getWidth(context).clamp(320.0, 430.0);
       final totalPadding = AppSizes.s32 + ((paddingBetweenVocations ?? AppSizes.s0) * 2);
-      return (screenWidth - totalPadding) / crossAxisCount;
+      return (effectiveWidth - totalPadding) / 3;
     }
     return InkWell(
       onTap: tap == false ?()async {} : () async => isInRequestsPage == false
@@ -268,7 +254,7 @@ class VacationCard extends StatelessWidget {
             'userId': userId
           }),
       child: Container(
-        width: getResponsiveItemWidth(context, paddingBetweenVocations: paddingBetweenVocations),
+        width: cardWidth ?? getResponsiveItemWidth(context, paddingBetweenVocations: paddingBetweenVocations),
         height: 128,
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
         decoration: BoxDecoration(

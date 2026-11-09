@@ -48,9 +48,7 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
             preferredSize: Size.fromHeight(AppSizes.s70),
             child: Center(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                    maxWidth: double.infinity
-                ),
+                constraints: LayoutService.contentConstraints(context),
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: AppSizes.s12, vertical: AppSizes.s12),
                   child: Row(
@@ -111,9 +109,7 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
             children: [
               Center(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                      maxWidth: double.infinity
-                  ),
+                  constraints: LayoutService.contentConstraints(context),
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: AppSizes.s12),
                     child: Consumer<EmployeesListViewModel>(

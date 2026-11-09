@@ -213,7 +213,7 @@ class _ManagerTakeActionModalState extends State<ManagerTakeActionModal> {
                     title: 'submit_action'.tr(),
                     titleWidget: Text(
                       ('submit_action'.tr())
-                          .toUpperCase(),
+                          ,
                       style: AppStyles.whiteContent(context).copyWith(
                         fontSize: 13,
                         fontWeight: FontWeight.bold,

@@ -435,7 +435,7 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
                                 enabledBorder: InputBorder.none,
                                 focusedErrorBorder: InputBorder.none,
                                 focusedBorder: InputBorder.none,
-                                hintText: AppStrings.typeYourMessage.tr().toUpperCase(),
+                                hintText: AppStrings.typeYourMessage.tr(),
                                 hintStyle: const TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 13,

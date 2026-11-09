@@ -61,7 +61,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           TextFormField(
                             controller: viewModel.emailController,
                             decoration: InputDecoration(
-                              hintText: AppStrings.yourEmail.tr().toUpperCase(),
+                              hintText: AppStrings.yourEmail.tr(),
                               hintStyle: AppStyles.hintTitleContent(context).copyWith(fontSize: 12),
                               errorText: viewModel.emailError,
                             ),
@@ -71,7 +71,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           TextFormField(
                             controller: viewModel.passwordController,
                             decoration: InputDecoration(
-                              hintText: AppStrings.password.tr().toUpperCase(),
+                              hintText: AppStrings.password.tr(),
                               hintStyle: AppStyles.hintTitleContent(context).copyWith(fontSize: 12),
                               errorText: viewModel.passwordError,
                               suffixIcon: IconButton(
@@ -93,7 +93,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           TextFormField(
                             controller: viewModel.nameController,
                             decoration: InputDecoration(
-                              hintText: AppStrings.yourName.tr().toUpperCase(),
+                              hintText: AppStrings.yourName.tr(),
                               hintStyle: AppStyles.hintTitleContent(context).copyWith(fontSize: 12),
                               errorText: viewModel.nameError,
                             ),

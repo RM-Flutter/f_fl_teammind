@@ -15,15 +15,21 @@ Widget defaultTapBarItem({
   /// a fixed width, so long titles are never cut off. Use with [enableScroll].
   bool fitToText = false,
 }) {
-  return StatefulBuilder(
-    builder: (BuildContext context, StateSetter setState) {
-      bool isWeb = MediaQuery.of(context).size.width > 600;
-      bool useVertical = isVertical ?? isWeb; // 👈 لو محددتش، يعتمد على الويب
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          bool useVertical = isVertical ?? false;
 
-      double totalWidth = useVertical
-          ? 200
-          : (tapBarItemsWidth ?? MediaQuery.sizeOf(context).width * 0.95);
-      double itemWidth = useVertical ? double.infinity : (totalWidth / 3.8);
+          final availWidth = constraints.maxWidth.isFinite
+              ? constraints.maxWidth
+              : MediaQuery.sizeOf(context).width * 0.95;
+          double totalWidth = useVertical
+              ? 200
+              : (tapBarItemsWidth != null && tapBarItemsWidth < availWidth
+                  ? tapBarItemsWidth
+                  : availWidth);
+          double itemWidth = useVertical ? double.infinity : (totalWidth / 3.8);
       const tabTextStyle = TextStyle(
         fontSize: 11,
         color: Colors.white,
@@ -35,7 +41,7 @@ Widget defaultTapBarItem({
         // and the user's text scale); a bare TextStyle would use the default font and come out too narrow
         final painter = TextPainter(
           text: TextSpan(
-            text: title.toUpperCase(),
+            text: title,
             style: DefaultTextStyle.of(context).style.merge(tabTextStyle),
           ),
           textDirection: Directionality.of(context),
@@ -44,6 +50,24 @@ Widget defaultTapBarItem({
         )..layout();
         return painter.width + 28;
       }
+
+      final count = items?.length ?? 0;
+      final innerAvailable = totalWidth - 8 - (count * 8);
+      final baseWidths = (fitToText && !useVertical && items != null)
+          ? items.map(fittedWidth).toList()
+          : <double>[];
+      final sumFitted =
+          baseWidths.fold<double>(0.0, (prev, element) => prev + element);
+      final extraPerTab =
+          (fitToText && !useVertical && count > 0 && innerAvailable > sumFitted)
+              ? (innerAvailable - sumFitted) / count
+              : 0.0;
+      final distributedEqualWidth =
+          (!useVertical && count > 0) ? (innerAvailable / count) : itemWidth;
+      final effectiveEqualWidth =
+          (!useVertical && distributedEqualWidth > itemWidth)
+              ? distributedEqualWidth
+              : itemWidth;
 
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
@@ -84,8 +108,8 @@ Widget defaultTapBarItem({
                 padding: EdgeInsets.symmetric(horizontal: (fitToText && !useVertical) ? 14 : 8),
                 height: useVertical ? 40 : 42,
                 width: (fitToText && !useVertical)
-                    ? fittedWidth(items[index])
-                    : itemWidth,
+                    ? (baseWidths[index] + extraPerTab)
+                    : effectiveEqualWidth,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(AppRadius.pill),
@@ -94,7 +118,7 @@ Widget defaultTapBarItem({
                       : Colors.transparent,
                 ),
                 child: Text(
-                  items[index].toUpperCase(),
+                  items[index],
                   textAlign: TextAlign.center,
                   maxLines: 1,
                   softWrap: false,
@@ -105,6 +129,8 @@ Widget defaultTapBarItem({
             ),
           ),
         ),
+      );
+        },
       );
     },
   );

@@ -103,9 +103,7 @@ class _FingerprintScreenState extends State<FingerprintScreen> {
           onRefresh: () async => await viewModel.initializeFingerprintScreen(context: context, empId: widget.empId),
           body: Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                  maxWidth: double.infinity
-              ),
+              constraints: LayoutService.contentConstraints(context),
               child: SingleChildScrollView(
                 clipBehavior: Clip.none,
                 padding: const EdgeInsets.symmetric(
@@ -126,7 +124,7 @@ class _FingerprintScreenState extends State<FingerprintScreen> {
                               child: CustomElevatedButton(
                                   backgroundColor: Color(AppColors.buttons),
                                   titleSize: AppSizes.s12,
-                                  title: locale.tr(AppStrings.showOfflineFingerprints).toUpperCase(),
+                                  title: locale.tr(AppStrings.showOfflineFingerprints),
                                   onPressed: () async{
                                     await context.pushNamed(
                                         AppRoutes.fingerPrintOffline.name,

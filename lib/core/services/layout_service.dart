@@ -29,29 +29,29 @@ class LayoutService {
   static bool isExpanded(BuildContext context) =>
       sizeClassOf(context) == SizeClass.expanded;
 
-  /// Widest the page content may get; wider windows centre it (see AppSizes.contentMaxWidth*).
+  /// Content spans the full available width on all screens (no narrow side margins on web).
   static double contentMaxWidth(BuildContext context) {
-    switch (sizeClassOf(context)) {
-      case SizeClass.compact:
-        return double.infinity;
-      case SizeClass.medium:
-        return AppSizes.contentMaxWidthMedium;
-      case SizeClass.expanded:
-        return AppSizes.contentMaxWidthExpanded;
-    }
+    return double.infinity;
   }
 
-  /// How many columns a list of simple cards gets.
-  static int listColumns(BuildContext context) {
-    switch (sizeClassOf(context)) {
-      case SizeClass.compact:
-        return 1;
-      case SizeClass.medium:
-        return 2;
-      case SizeClass.expanded:
-        return 3;
-    }
+  /// Constraints capping content width to [contentMaxWidth] on tablet/desktop while
+  /// leaving phones unconstrained.
+  static BoxConstraints contentConstraints(BuildContext context) =>
+      BoxConstraints(maxWidth: contentMaxWidth(context));
+
+  /// Horizontal inset on each side when centering [contentMaxWidth] inside [availableWidth]
+  /// (defaults to the full window width).
+  static double sideInsetForContent(BuildContext context, [double? availableWidth]) {
+    final maxW = contentMaxWidth(context);
+    if (!maxW.isFinite) return 0.0;
+    final availW = (availableWidth != null && availableWidth.isFinite)
+        ? availableWidth
+        : MediaQuery.sizeOf(context).width;
+    return availW > maxW ? (availW - maxW) / 2 : 0.0;
   }
+
+  /// Lists keep the same single-column layout as mobile; [AppContentWidth] handles wide screens.
+  static int listColumns(BuildContext context) => 1;
 
   /// check if the device is mobile
   static bool isMobile(BuildContext context) {
@@ -59,10 +59,9 @@ class LayoutService {
         MediaQuery.of(context).orientation == Orientation.portrait;
   }
 
-  /// A phone-sized, non-web layout. Pages use it to switch to the Figma sizes
-  /// (scaled with `.w` / `.h`); web and tablets keep fixed sizes.
+  /// True on phone-sized windows (< 600px).
   static bool isPhoneLayout(BuildContext context) {
-    return !PlatformIs.web && MediaQuery.sizeOf(context).width < 600;
+    return isCompact(context);
   }
 
   /// check if the device is tabled

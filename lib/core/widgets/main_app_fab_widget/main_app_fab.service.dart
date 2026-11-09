@@ -2442,7 +2442,7 @@ abstract class MainFabServices {
             final label = describeDevice(r);
             if (label.isEmpty) continue; // unnamed and unidentified (phones, watches, earbuds broadcasting BLE)
             addDevice(_BtDevice(
-              id: r.device.remoteId.toString().toUpperCase(),
+              id: r.device.remoteId.toString(),
               name: label,
               isGeneric: getDeviceName(r).isEmpty, // "Device by Apple", "iBeacon"
               rssi: r.rssi,
@@ -2468,7 +2468,7 @@ abstract class MainFabServices {
               return;
             }
             final name = (event['name'] ?? '').toString().trim();
-            final address = (event['address'] ?? '').toString().toUpperCase();
+            final address = (event['address'] ?? '').toString();
             if (name.isEmpty || address.isEmpty) return;
             addDevice(_BtDevice(
               id: address,
@@ -2786,7 +2786,7 @@ abstract class MainFabServices {
                 if (network['connected'] == '1') 'wifi_connected'.tr(),
                 if (network['band'] != null) network['band']!,
                 if (level != null) '${'wifi_signal'.tr()}: ${level >= -60 ? 'wifi_signal_strong'.tr() : (level >= -75 ? 'wifi_signal_medium'.tr() : 'wifi_signal_weak'.tr())}',
-                if (sameName) network['bssid']!.toUpperCase(),
+                if (sameName) network['bssid']!,
               ];
               return ListTile(
                 leading: Icon(

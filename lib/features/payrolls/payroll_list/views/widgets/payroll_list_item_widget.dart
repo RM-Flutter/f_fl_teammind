@@ -74,7 +74,7 @@ class PayrollListItemWidget extends StatelessWidget {
           AppStatusBadge(
             label: 'view'.tr(),
             color: Color(AppColors.buttons),
-            icon: Icons.arrow_forward_rounded,
+            trailingIcon: Icons.arrow_forward_rounded,
           ),
         ],
       ),

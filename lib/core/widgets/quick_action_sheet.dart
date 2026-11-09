@@ -477,7 +477,7 @@ class _QuickActionSheetState extends State<_QuickActionSheet> {
                             title: 'submit_action'.tr(),
                             titleWidget: Text(
                               ('submit_action'.tr())
-                                  .toUpperCase(),
+                                  ,
                               style: AppStyles.whiteContent(context).copyWith(
                                 fontSize: 13,
                                 fontWeight: FontWeight.bold,

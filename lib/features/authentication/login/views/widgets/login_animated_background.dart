@@ -33,25 +33,32 @@ class _LoginAnimatedBackgroundState extends State<LoginAnimatedBackground> with 
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    final screenWidth = size.width > 0 ? size.width : 375.0;
+    final screenHeight = size.height > 0 ? size.height : 812.0;
+    final widthFactor = ((screenHeight * 2.0) / screenWidth).clamp(1.25, AppSizes.s4);
+
     return AnimatedBuilder(
       animation: animation,
       builder: (context, child) {
-        final bgUrl = !kIsWeb ? AppImages.loginBackground : AppImages.loginBackgroundWeb;
+        final bgUrl = AppImages.loginBackground.isNotEmpty
+            ? AppImages.loginBackground
+            : AppImages.loginBackgroundWeb;
         final isNetworkImage = bgUrl.startsWith('http://') || bgUrl.startsWith('https://');
 
         return FractionallySizedBox(
-          widthFactor: AppSizes.s4,
+          widthFactor: widthFactor,
           alignment: Alignment((animation.value * 2) - 1, 0),
           child: isNetworkImage
               ? CachedNetworkImage(
                   imageUrl: bgUrl,
                   fit: BoxFit.cover,
                   placeholder: (context, url) => Image.asset(
-                    !kIsWeb ? AppImages.defaultLoginBackground : AppImages.defaultLoginBackgroundWeb,
+                    AppImages.defaultLoginBackground,
                     fit: BoxFit.cover,
                   ),
                   errorWidget: (context, url, error) => Image.asset(
-                    !kIsWeb ? AppImages.defaultLoginBackground : AppImages.defaultLoginBackgroundWeb,
+                    AppImages.defaultLoginBackground,
                     fit: BoxFit.cover,
                   ),
                 )

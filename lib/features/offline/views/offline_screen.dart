@@ -199,7 +199,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                             return CustomElevatedButton(
                                 backgroundColor: Color(AppColors.secondaryButton),
                                 titleSize: AppSizes.s12,
-                                title: AppStrings.retry.tr().toUpperCase(),
+                                title: AppStrings.retry.tr(),
                                 onPressed: () async {
                                   // Perform real connectivity check
                                   await connectionService.checkConnection();
@@ -240,7 +240,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                         const SizedBox(height: 32),
                         if (viewModel.usersFingerprints.isNotEmpty)
                           Text(
-                            AppStrings.fingerprint.tr().toUpperCase(),
+                            AppStrings.fingerprint.tr(),
                             style: AppStyles.heading(context).copyWith(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,

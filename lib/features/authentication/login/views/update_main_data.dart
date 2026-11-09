@@ -111,7 +111,7 @@ class _WebViewStackMainDataState extends State<WebViewStackMainData> {
     if (url == null || url.isEmpty) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('No URL to open')),
+          SnackBar(content: Text('no_url_to_open'.tr())),
         );
         Navigator.of(context).pop();
       }

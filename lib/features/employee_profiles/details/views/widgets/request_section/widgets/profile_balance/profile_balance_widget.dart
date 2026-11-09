@@ -35,7 +35,20 @@ class ProfileBalanceWidget extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    List<Widget> balanceWidgets = balance!
+    final screenWidth = LayoutService.getWidth(context);
+    final gap = (paddingBetweenVocations ?? AppSizes.s12).w;
+    const horizontalPad = AppSizes.s32;
+    final mobileBaseWidth = screenWidth.clamp(320.0, 430.0);
+    final minItemWidth = (mobileBaseWidth - (horizontalPad + gap * 2)) / 3;
+
+    double getResponsiveItemWidth(int itemCount) {
+      final count = itemCount > 0 ? itemCount : 3;
+      final distributedWidth =
+          (screenWidth - horizontalPad - gap * (count - 1)) / count;
+      return distributedWidth > minItemWidth ? distributedWidth : minItemWidth;
+    }
+
+    final filteredBalances = balance!
         .where((bal) {
           final bool isTaken = bal.max == -1 && bal.available == -1;
           if (!isTaken) {
@@ -46,7 +59,11 @@ class ProfileBalanceWidget extends StatelessWidget {
           }
           return true;
         })
-        .toList()
+        .toList();
+
+    final itemWidth = getResponsiveItemWidth(filteredBalances.length);
+
+    List<Widget> balanceWidgets = filteredBalances
         .asMap()
         .entries
         .map((entry) {
@@ -54,41 +71,45 @@ class ProfileBalanceWidget extends StatelessWidget {
       final bal = entry.value;
 
       return Padding(
-        padding: EdgeInsets.only(right: paddingBetweenVocations!.w),
+        padding: EdgeInsets.only(
+          right: entry.key < filteredBalances.length - 1 ? gap : 0,
+        ),
         child: BalanceCard(
           balance: bal,
           empDepartmentId: empDepartmentId,
           sectionPadding: sectionPadding,
           paddingBetweenVocations: paddingBetweenVocations,
+          cardWidth: itemWidth,
           employeeId: employeeId,
           requestTypeId: index.toString(), // 👈 Pass index as the key
         ),
       );
     }).toList();
 
-    return Padding(
-      padding: EdgeInsets.only(bottom: AppSizes.s32),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        // cards share the height of the tallest one, so a long title never overflows or makes them uneven
-        child: IntrinsicHeight(
-         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: balance == null
-              ? List.generate(
-                  3,
-                  (index) => Padding(
-                      padding: EdgeInsets.only(right: paddingBetweenVocations!.w),
-                      child: ShimmerAnimatedLoading(
-                        width: (LayoutService.getWidth(context) -
-                                (AppSizes.s32 +
-                                    ((paddingBetweenVocations ?? AppSizes.s0).w *
-                                        3))) /
-                            3,
-                        height: AppSizes.s120,
-                      )))
-              : balanceWidgets,
-         ),
+    final shimmerItemWidth = getResponsiveItemWidth(3);
+
+    return SizedBox(
+      width: double.infinity,
+      child: Padding(
+        padding: EdgeInsets.only(bottom: AppSizes.s32),
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          // cards share the height of the tallest one, so a long title never overflows or makes them uneven
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: balance == null
+                  ? List.generate(
+                      3,
+                      (index) => Padding(
+                          padding: EdgeInsets.only(right: index < 2 ? gap : 0),
+                          child: ShimmerAnimatedLoading(
+                            width: shimmerItemWidth,
+                            height: AppSizes.s120,
+                          )))
+                  : balanceWidgets,
+            ),
+          ),
         ),
       ),
     );
@@ -100,6 +121,7 @@ class BalanceCard extends StatelessWidget {
   final double? sectionPadding;
   final Balance balance;
   final double? paddingBetweenVocations;
+  final double? cardWidth;
   final Widget? customBody;
   final String? employeeId;
   final String? empDepartmentId;
@@ -111,6 +133,7 @@ class BalanceCard extends StatelessWidget {
       this.sectionPadding,
       required this.balance,
       this.paddingBetweenVocations,
+      this.cardWidth,
       this.employeeId,
       this.empDepartmentId,
       this.requestTypeId,
@@ -119,27 +142,9 @@ class BalanceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double getResponsiveItemWidth(BuildContext context, {double? paddingBetweenVocations}) {
-      final screenWidth = LayoutService.getWidth(context);
-      int crossAxisCount;
-
-      if (kIsWeb) {
-        if (screenWidth > 1400) {
-          crossAxisCount = 6; // شاشات كبيرة جدًا
-        } else if (screenWidth > 1000) {
-          crossAxisCount = 5; // لابتوب
-        } else {
-          crossAxisCount = 4; // تابلت أو شاشة صغيرة
-        }
-      } else {
-        if (screenWidth > 600) {
-          crossAxisCount = 4; // تابلت
-        } else {
-          crossAxisCount = 3; // موبايل
-        }
-      }
-
+      final effectiveWidth = LayoutService.getWidth(context).clamp(320.0, 430.0);
       final totalPadding = AppSizes.s32 + ((paddingBetweenVocations ?? AppSizes.s0).w * 2);
-      return (screenWidth - totalPadding) / crossAxisCount;
+      return (effectiveWidth - totalPadding) / 3;
     }
 
     bool isTaken = balance.max == -1 && balance.available == -1;
@@ -160,7 +165,7 @@ class BalanceCard extends StatelessWidget {
               height: LayoutService.getHeight(context) * 0.7)
           : null,
       child: Container(
-        width: getResponsiveItemWidth(context, paddingBetweenVocations: paddingBetweenVocations),
+        width: cardWidth ?? getResponsiveItemWidth(context, paddingBetweenVocations: paddingBetweenVocations),
         constraints: const BoxConstraints(minHeight: 140),
         padding: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
         decoration: BoxDecoration(
@@ -176,7 +181,7 @@ class BalanceCard extends StatelessWidget {
               (LocalizationService.isArabic(context: context)
                       ? balance.title!.ar!
                       : balance.title!.en!)
-                  .toUpperCase()
+                  
                   .replaceAll(' ', '\n'),
               textAlign: TextAlign.center,
               style: AppStyles.whiteContent(context).copyWith(
@@ -193,7 +198,7 @@ class BalanceCard extends StatelessWidget {
               children: [
                 Text(
                   (isTaken ? AppStrings.taken.tr() : AppStrings.remaining.tr())
-                      .toUpperCase(),
+                      ,
                   textAlign: TextAlign.center,
                   style: AppStyles.whiteContent(context).copyWith(
                     fontSize: 11,
@@ -207,7 +212,7 @@ class BalanceCard extends StatelessWidget {
                   fit: BoxFit.scaleDown,
                   child: Text(
                     '${isTaken ? (balance.take?.toString() ?? '0') : (balance.available?.toString() ?? '0')} ${balance.type.toString().tr()}'
-                        .toUpperCase(),
+                        ,
                     textAlign: TextAlign.center,
                     maxLines: 1,
                     style: AppStyles.whiteContent(context).copyWith(
@@ -221,7 +226,7 @@ class BalanceCard extends StatelessWidget {
                 Text(
                   (balance.max != -1 && balance.available != -1)
                       ? '${AppStrings.from.tr()} ${(balance.max?.toString() ?? '0')}'
-                          .toUpperCase()
+                          
                       : '',
                   textAlign: TextAlign.center,
                   style: AppStyles.whiteContent(context).copyWith(

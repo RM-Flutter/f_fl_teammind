@@ -12,8 +12,9 @@ class RequestsAppbarLoading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const gap = AppSizes.s12;
+    final effectiveWidth = LayoutService.getWidth(context);
     final itemWidth =
-        (LayoutService.getWidth(context) - (AppSpacing.page * 2 + gap * 2)) / 3;
+        (effectiveWidth - (AppSpacing.page * 2 + gap * 2)) / 3;
     return Padding(
       padding: const EdgeInsets.fromLTRB(
           AppSpacing.page, 0, AppSpacing.page, AppSizes.s32),

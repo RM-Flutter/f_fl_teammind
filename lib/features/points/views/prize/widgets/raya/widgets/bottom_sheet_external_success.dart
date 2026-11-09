@@ -53,7 +53,7 @@ class PointsSuccessSheet{
                           ),
                           padding:const EdgeInsets.symmetric(horizontal: 40),
                           child: Text(
-                            AppStrings.no.tr().toUpperCase(),
+                            AppStrings.no.tr(),
                             style:const TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
@@ -73,7 +73,7 @@ class PointsSuccessSheet{
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 40),
                           child: Text(
-                            AppStrings.yes.tr().toUpperCase(),
+                            AppStrings.yes.tr(),
                             style:const TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w500,
@@ -111,10 +111,10 @@ class PointsSuccessSheet{
         home: false,
         view2Button: false,
         view: false,
-        title: "${AppStrings.successful.tr().toUpperCase()} !",
+        title: "${AppStrings.successful.tr()} !",
         subTitle: redeemCode!= null && redeemCode != ""?
-        AppStrings.yourRequestHasBeenSuccessfullyExecutedCopyTheFollowingCode.tr().toUpperCase():
-        AppStrings.yourRequestHasBeenSuccessfully.tr().toUpperCase(),
+        AppStrings.yourRequestHasBeenSuccessfullyExecutedCopyTheFollowingCode.tr():
+        AppStrings.yourRequestHasBeenSuccessfully.tr(),
         viewCheckIcon: true,
         widgets: redeemCode!= null && redeemCode != ""? Container(
           height: 50,
@@ -164,8 +164,8 @@ class PointsSuccessSheet{
         view2Button: false,
         widgets: Container(height: 1,color: Colors.transparent,),
         view: false,
-        title: "${AppStrings.successful.tr().toUpperCase()} !",
-        subTitle: AppStrings.yourRequestHasBeenSubmittedSuccessfullyYouWillBeRepliedToSoon.tr().toUpperCase(),
+        title: "${AppStrings.successful.tr()} !",
+        subTitle: AppStrings.yourRequestHasBeenSubmittedSuccessfullyYouWillBeRepliedToSoon.tr(),
         viewCheckIcon: true,
         headerIcon: Image.asset("assets/images/png/prize-success.png", height: 42, width: 40,)
     );

@@ -1090,7 +1090,7 @@ class AuthenticationController extends ChangeNotifier {
                   borderRadius: BorderRadius.circular(AppRadius.md),
                 ),
                 title: Text(
-                  locale.tr(AppStrings.updatePassword).toUpperCase(),
+                  locale.tr(AppStrings.updatePassword),
                   style: AppStyles.heading(context).copyWith(
                       fontSize: AppSizes.s16, fontWeight: FontWeight.w700),
                   textAlign: TextAlign.center,
@@ -1165,7 +1165,7 @@ class AuthenticationController extends ChangeNotifier {
                               }
                             }
                           },
-                          title: locale.tr(AppStrings.saveChanges).toUpperCase(),
+                          title: locale.tr(AppStrings.saveChanges),
                         ),
                     ],
                   ),

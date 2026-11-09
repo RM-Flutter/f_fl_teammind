@@ -1,3 +1,4 @@
+import 'package:app_test/core/widgets/app_field_shell.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -135,50 +136,31 @@ class TextFormWidget extends StatelessWidget {
 }
 Widget defaultDropdownField(
     {String? value,
-      String? title,
-      bool? isExpanded,
-      Color? borderColor,
-      IconData? icon,
-      bool? hasShadows = false,
-      required items,
-      TextStyle? textStyle,
-      required void Function(String?)? onChanged}) {
-  return Container(
-    height: 65,
-    alignment: Alignment.center,
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-    decoration: ShapeDecoration(
-      color: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppRadius.sm),
-        side: BorderSide(
-          color: borderColor ?? Color(AppColors.border),
-          width: 1.0,
-        ),
-      ),
-      shadows: (hasShadows == true)
-          ? AppShadows.none
-          : null,
-    ),
-    child: DropdownButton<String>(
+    String? title,
+    bool? isExpanded,
+    Color? borderColor,
+    IconData? icon,
+    bool? hasShadows = false,
+    required items,
+    TextStyle? textStyle,
+    context,
+    required void Function(String?)? onChanged}) {
+  // Same box, hint and arrow as every other field (rule 15). The arrow is the DropdownButton's
+  // own icon so the whole field, up to the edge, opens the menu.
+  return AppFieldShell(
+    child: DropdownButtonHideUnderline(
+      child: DropdownButton<String>(
         dropdownColor: Colors.white,
-        icon: Icon(
-          icon ?? Icons.keyboard_arrow_down,
-          // color: const Color(AppColors.grey),
-          color:  Colors.grey,
-        ),
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        icon: AppFieldShell.icon(icon ?? Icons.keyboard_arrow_down_rounded),
         isExpanded: isExpanded ?? true,
         value: value,
-        hint: Text(
-          title!,
-          style:textStyle??  TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              color: Color(AppColors.overlay)),
-        ),
+        style: AppField.valueStyle,
+        hint: Text(title ?? '', style: AppField.hintStyle),
         items: items,
-        underline: const SizedBox.shrink(),
-        onChanged: onChanged),
+        onChanged: onChanged,
+      ),
+    ),
   );
 }
 Widget defaultTextFormField({
@@ -200,7 +182,7 @@ Widget defaultTextFormField({
   void Function(String)? onChanged,
 }) {
   return Container(
-    height: containerHeight ?? 50,
+    height: containerHeight ?? AppSizes.fieldHeight,
     alignment: Alignment.center,
     margin: const EdgeInsets.symmetric(vertical: AppSizes.s10),
     padding: EdgeInsets.symmetric(
@@ -208,7 +190,7 @@ Widget defaultTextFormField({
     decoration: ShapeDecoration(
       color: AppThemeService.colorPalette.tertiaryColorBackground.color,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppRadius.sm),
+        borderRadius: AppField.borderRadius,
         side: BorderSide(
           color: borderColor ?? Color(AppColors.border),
           width: 1.0,
@@ -236,7 +218,7 @@ Widget defaultTextFormField({
             fontSize: 12,
             fontWeight: FontWeight.w400,
             color: Color(AppColors.grey46)),
-        suffixIcon: suffixIcon,
+        suffixIcon: suffixIcon is Icon ? AppFieldShell.icon((suffixIcon as Icon).icon!) : suffixIcon,
         prefixIcon: prefixIcon,
         border: InputBorder.none,
         disabledBorder: InputBorder.none,

@@ -1,3 +1,4 @@
+import 'package:app_test/core/widgets/app_content_width.widget.dart';
 import 'package:app_test/core/widgets/profile_avatar_menu_widget.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'dart:convert';
@@ -136,7 +137,7 @@ class _MoreScreenState extends State<MoreScreen> {
                   Padding(
                     padding: AppSpacing.pagePadding,
                     child: Text(
-                      (gCache['name'] ?? '').toString().toUpperCase(),
+                      (gCache['name'] ?? '').toString(),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.center,
@@ -503,23 +504,13 @@ class _MoreScreenState extends State<MoreScreen> {
                             title: AppStrings.articlesNew.tr(),
                             src: "assets/images/svg/man.svg",
                             onTap: () {
-                              if (kIsWeb) {
-                                context.pushNamed(
-                                  AppRoutes.defaultListPage.name,
-                                  pathParameters: {
-                                    "lang": context.locale.languageCode,
-                                    "type": "blogs"
-                                  },
-                                );
-                              } else {
-                                context.pushNamed(
-                                  AppRoutes.defaultPage.name,
-                                  pathParameters: {
-                                    "lang": context.locale.languageCode,
-                                    "type": "blogs"
-                                  },
-                                );
-                              }
+                              context.pushNamed(
+                                AppRoutes.defaultPage.name,
+                                pathParameters: {
+                                  "lang": context.locale.languageCode,
+                                  "type": "blogs"
+                                },
+                              );
                             },
                           ),
                           DefaultListTile(
@@ -776,21 +767,23 @@ class _MoreSectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(
-        AppSpacing.page,
-        AppSpacing.section,
-        AppSpacing.page,
-        AppSpacing.sectionHeaderGap,
-      ),
-      child: Align(
-        alignment: AlignmentDirectional.centerStart,
-        child: Text(
-          title.toUpperCase(),
-          style: AppStyles.primaryContent(context).copyWith(
-            fontSize: 12,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 0.6,
+    return AppContentWidth(
+      child: Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(
+          AppSpacing.page,
+          AppSpacing.section,
+          AppSpacing.page,
+          AppSpacing.sectionHeaderGap,
+        ),
+        child: Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: Text(
+            title,
+            style: AppStyles.primaryContent(context).copyWith(
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              letterSpacing: 0.6,
+            ),
           ),
         ),
       ),
@@ -815,53 +808,55 @@ class DefaultListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final accent = Color(AppColors.buttons);
-    return Column(
-      children: [
-        ListTile(
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: AppSpacing.page),
-          minVerticalPadding: 0,
-          visualDensity: VisualDensity.compact,
-          horizontalTitleGap: AppSpacing.md,
-          // Icon in a soft square, same look as the icons on the home cards.
-          leading: Container(
-            width: AppSizes.moreIconBox,
-            height: AppSizes.moreIconBox,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: accent.withValues(alpha: 0.10),
-              borderRadius: BorderRadius.circular(AppRadius.sm),
+    return AppContentWidth(
+      child: Column(
+        children: [
+          ListTile(
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: AppSpacing.page),
+            minVerticalPadding: 0,
+            visualDensity: VisualDensity.compact,
+            horizontalTitleGap: AppSpacing.md,
+            // Icon in a soft square, same look as the icons on the home cards.
+            leading: Container(
+              width: AppSizes.moreIconBox,
+              height: AppSizes.moreIconBox,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: accent.withValues(alpha: 0.10),
+                borderRadius: BorderRadius.circular(AppRadius.sm),
+              ),
+              child: icon != null
+                  ? Icon(icon, color: accent, size: 18)
+                  : SvgPicture.asset(
+                      src ?? "",
+                      colorFilter: ColorFilter.mode(accent, BlendMode.srcIn),
+                      fit: BoxFit.scaleDown,
+                      width: 18,
+                      height: 18,
+                    ),
             ),
-            child: icon != null
-                ? Icon(icon, color: accent, size: 18)
-                : SvgPicture.asset(
-                    src ?? "",
-                    colorFilter: ColorFilter.mode(accent, BlendMode.srcIn),
-                    fit: BoxFit.scaleDown,
-                    width: 18,
-                    height: 18,
-                  ),
-          ),
-          title: Text(
-            title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: AppStyles.darkContent(context).copyWith(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
+            title: Text(
+              title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppStyles.darkContent(context).copyWith(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
             ),
+            onTap: onTap ?? () {},
           ),
-          onTap: onTap ?? () {},
-        ),
-        Divider(
-          height: 1,
-          thickness: 1,
-          color: Color(AppColors.divider),
-          // Starts under the text, not under the icon box.
-          indent: AppSpacing.page + AppSizes.moreIconBox + AppSpacing.md,
-          endIndent: 0,
-        ),
-      ],
+          Divider(
+            height: 1,
+            thickness: 1,
+            color: Color(AppColors.divider),
+            // Starts under the text, not under the icon box.
+            indent: AppSpacing.page + AppSizes.moreIconBox + AppSpacing.md,
+            endIndent: 0,
+          ),
+        ],
+      ),
     );
   }
 }

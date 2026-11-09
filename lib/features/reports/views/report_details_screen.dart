@@ -1,4 +1,5 @@
 import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/widgets/template_page.widget.dart';
 import 'package:app_test/features/reports/controllers/reports_view_model.dart';
@@ -134,9 +135,7 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
             // Flutter report view — constrained width + padding
             return Center(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: double.infinity,
-                ),
+                constraints: LayoutService.contentConstraints(context),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: _buildBody(context, viewModel),

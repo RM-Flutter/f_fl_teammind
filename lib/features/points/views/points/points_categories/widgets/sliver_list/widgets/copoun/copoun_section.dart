@@ -76,7 +76,7 @@ class CopounSection extends StatelessWidget {
                                   width: 40,
                                 ),
                                 const SizedBox(width: 10,),
-                                Text(AppStrings.couponCode.tr().toUpperCase(),
+                                Text(AppStrings.couponCode.tr(),
                                 style: const TextStyle(fontSize: 17,
                                 color: Color(0xffE6007E),
                                   fontWeight: FontWeight.w600,
@@ -131,7 +131,7 @@ class CopounSection extends StatelessWidget {
                                 floatingLabelBehavior: FloatingLabelBehavior.never, // Keeps hint visible
                                 disabledBorder: InputBorder.none,
                                 contentPadding: const EdgeInsets.only(top: 12),
-                                hintText: AppStrings.enterTheCode.tr().toUpperCase(),
+                                hintText: AppStrings.enterTheCode.tr(),
                                 suffixIcon:  GestureDetector(
                                   onTap: (){
                                     copounCodeController.clear();

@@ -119,7 +119,7 @@ class SliverAppBarPoints extends StatelessWidget {
                               ),
                             ])),
                             Text(
-                              "${AppStrings.from.tr().toUpperCase()} ${us2Cache['points']['total'].toString()} ${AppStrings.myPoints.tr()}",
+                              "${AppStrings.from.tr()} ${us2Cache['points']['total'].toString()} ${AppStrings.myPoints.tr()}",
                               style: const TextStyle(
                                 fontSize: 12,
                                 color: Colors.white,

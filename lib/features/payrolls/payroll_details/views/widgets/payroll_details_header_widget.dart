@@ -67,9 +67,7 @@ class PayrollDetailsHeaderWidget extends StatelessWidget {
           gapH12,
           Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxWidth: double.infinity,
-              ),
+              constraints: LayoutService.contentConstraints(context),
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: AppSizes.s12),
                 child: Column(
@@ -122,8 +120,9 @@ class PayrollHeaderTileWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final effectiveWidth = LayoutService.getWidth(context);
     return Container(
-      width: !kIsWeb ? 0.6.sw : 0.4.sw,
+      width: effectiveWidth * 0.6,
       decoration: BoxDecoration(
           color: const Color(AppColors.navyBlue),
           borderRadius: BorderRadius.circular(AppRadius.sm)),

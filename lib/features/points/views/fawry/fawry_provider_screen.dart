@@ -30,7 +30,7 @@ class _FawryProviderScreenState extends State<FawryProviderScreen> {
             appBar: AppBarWithBookmark(
               backgroundColor: Colors.white,
               leading: const AppBackButton(),
-              title: AppStrings.chooseFromFawryServices.tr().toUpperCase(),
+              title: AppStrings.chooseFromFawryServices.tr(),
               showBookmark: false,
             ),
             body: Container(

@@ -307,7 +307,7 @@ abstract class AlertsService {
                             backgroundColor:
                             Color(AppColors.buttons),
                             titleSize: AppSizes.s18,
-                            title: AppStrings.yes.tr().toUpperCase(),
+                            title: AppStrings.yes.tr(),
                             onPressed: onTap ??
                                     () async {
                                   if (viewPassword == true) {

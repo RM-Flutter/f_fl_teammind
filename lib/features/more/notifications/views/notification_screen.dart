@@ -144,9 +144,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
             },
             child: Center(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                    maxWidth: double.infinity
-                ),
+                constraints: LayoutService.contentConstraints(context),
                 child: ListView(
                   controller: _scrollController,
                   children: [
@@ -218,7 +216,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               ),
                             ),
                             child: Text(
-                              AppStrings.loadMore.tr().toUpperCase(),
+                              AppStrings.loadMore.tr(),
                               style: AppStyles.whiteContent(context).copyWith(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14

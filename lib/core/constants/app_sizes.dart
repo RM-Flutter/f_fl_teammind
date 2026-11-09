@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 /// Constant sizes to be used in the app (paddings, gaps, rounded corners etc.)
 abstract class AppSizes {
   // Employee profile header
-  static const double profileHeaderAvatar = 72;
+  static const double profileHeaderAvatar = 88;
+  static const double profileHeaderHeight = 330;
 
   // More screen
   /// Height of the navy header under the status bar, up to where the white card starts.
@@ -83,7 +84,10 @@ abstract class AppSizes {
   // Text fields (theme): Figma input height 43 = 13 + ~17 text line + 13.
   // ---------------------------------------------------------------------------
   static const inputHorizontalPadding = 16.0;
-  static const inputVerticalPadding = 13.0;
+  static const inputVerticalPadding = 16.0;
+
+  /// Height of every single-line field and every dropdown (rule 15).
+  static const double fieldHeight = 52;
 
   // ---------------------------------------------------------------------------
   // Figma frame 375 x 812. On phones use these with `.w` / `.h` so the layout
@@ -100,9 +104,15 @@ abstract class AppSizes {
 
   /// Login page vertical rhythm.
   static const loginContentWidth = 275.0;
-  static const loginTopSpacer = 119.0;
-  static const loginLogoTitleGap = 34.0;
-  static const loginTitleFormGap = 32.0;
+  /// Side padding of the login form on phones, widest it gets on tablets / web, and the room
+  /// kept under the Saved accounts / language buttons on top.
+  static const loginLogoSize = 132.0;
+  static const loginSidePadding = 24.0;
+  static const loginMaxWidth = 420.0;
+  static const loginTopBarClearance = 40.0;
+  static const loginTopSpacer = 12.0;
+  static const loginLogoTitleGap = 20.0;
+  static const loginTitleFormGap = 24.0;
   static const loginSwitchFieldGap = 11.0;
   static const loginFieldGap = 12.0;
   static const loginAfterForgotGap = 26.0;

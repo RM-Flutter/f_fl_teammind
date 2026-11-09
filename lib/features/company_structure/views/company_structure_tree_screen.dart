@@ -38,7 +38,7 @@ class _CompanyStructureTreeScreenState
     child: Scaffold(
       appBar: AppBarWithBookmark(
        surfaceTintColor: Colors.transparent,
-       title: AppStrings.companyStructure.tr().toUpperCase(),
+       title: AppStrings.companyStructure.tr(),
        titleStyle: AppStyles.darkContent(context).copyWith(fontSize: 16.sp,
           
          fontWeight: FontWeight.w700),

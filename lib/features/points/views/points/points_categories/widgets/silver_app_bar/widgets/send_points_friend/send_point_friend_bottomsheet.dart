@@ -71,7 +71,7 @@ class SendPointFriendBottomSheet extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            AppStrings.sendToFriends.tr().toUpperCase(),
+                            AppStrings.sendToFriends.tr(),
                             style: const TextStyle(
                               fontFamily: "Poppins",
                               fontWeight: FontWeight.w600,
@@ -91,7 +91,7 @@ class SendPointFriendBottomSheet extends StatelessWidget {
                                     },
                               context: context,
                               keyboardType: TextInputType.number,
-                              hintText: AppStrings.enterTheNumberOfPoints.tr().toUpperCase(),
+                              hintText: AppStrings.enterTheNumberOfPoints.tr(),
                               controller: value.pointsController),
                           const SizedBox(height: 30),
                           if(value.isRedeemLoading) const Center(child: CircularProgressIndicator(),),
@@ -107,7 +107,7 @@ class SendPointFriendBottomSheet extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(AppRadius.pill),
                                   color: const Color(0xff0D3B6F)),
                               child: Text(
-                                AppStrings.sendPoints.tr().toUpperCase(),
+                                AppStrings.sendPoints.tr(),
                                 style: const TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w500,

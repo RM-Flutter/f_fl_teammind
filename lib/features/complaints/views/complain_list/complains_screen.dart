@@ -74,7 +74,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
     return HideOnScrollFabHost(builder: (context, wrapFab) => Scaffold(
      backgroundColor: Colors.white,
      appBar: AppBarWithBookmark(
-      title: AppStrings.ticketSystem.tr().toUpperCase(),
+      title: AppStrings.ticketSystem.tr(),
       centerTitle: true,
       backgroundColor: Colors.white,
       elevation: 0,
@@ -90,22 +90,24 @@ class _ComplainScreenState extends State<ComplainScreen> {
       backgroundColor: Color(AppColors.buttons),
       child: const Icon(Icons.add, color: Colors.white))),
      body: (value.isGetRequestLoading == true && value.currentPage == 1)
-       ? ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page, vertical: AppSpacing.md),
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      reverse: false,
-      itemCount: 7,
-      itemBuilder:(context, index) => const Padding(padding: EdgeInsets.only(bottom: AppSpacing.cardGap), child: AppShimmerCard())):
+       ? Center(
+      child: ConstrainedBox(
+       constraints: LayoutService.contentConstraints(context),
+       child: ListView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page, vertical: AppSpacing.md),
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        reverse: false,
+        itemCount: 7,
+        itemBuilder:(context, index) => const Padding(padding: EdgeInsets.only(bottom: AppSpacing.cardGap), child: AppShimmerCard())),
+      )):
      SafeArea(
       child: (value.requests.isNotEmpty || value.requestsTeam.isNotEmpty)? Container(
        height: MediaQuery.sizeOf(context).height * 1,
        alignment: Alignment.topCenter,
        child: Center(
         child: ConstrainedBox(
-         constraints: const BoxConstraints(
-           maxWidth: double.infinity
-         ),
+         constraints: LayoutService.contentConstraints(context),
          child: RefreshIndicator.adaptive(
            onRefresh: ()async{
             await value.getRequest(context, page: 1);
@@ -153,7 +155,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
                if(value.requestsTeam.isNotEmpty && (gCache['is_hr'] == true || gCache['top_management'] == true)) Padding(
                 padding: const EdgeInsets.only(bottom: 8, top: 8),
                 child: Text(
-                 AppStrings.otherRequests.tr().toUpperCase(),
+                 AppStrings.otherRequests.tr(),
                  style: AppStyles.blackContent(context).copyWith(fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: Color(AppColors.secondaryButton))),

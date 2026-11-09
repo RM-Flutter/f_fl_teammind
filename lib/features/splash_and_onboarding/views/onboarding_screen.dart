@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:app_test/core/constants/app_images.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/utils/app_styles.dart';
+import 'package:app_test/core/widgets/app_content_width.widget.dart';
 import 'package:app_test/core/widgets/language_dropdown_button.widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -61,9 +62,11 @@ class OnBoardingScreen extends StatelessWidget {
     );
   }
 
-  /// First image of the slide (web or mobile), or a bundled fallback.
+  /// First image of the slide (prefers mobile image for unified design), or a bundled fallback.
   static String _imageFor(Map<String, dynamic> data, int index) {
-    final imagesList = data[kIsWeb ? 'web_image' : 'image'];
+    final imagesList = (data['image'] is List && (data['image'] as List).isNotEmpty)
+        ? data['image']
+        : data['web_image'];
     if (imagesList is List && imagesList.isNotEmpty) {
       final first = imagesList[0];
       if (first is Map && first['file'] != null) {
@@ -170,27 +173,23 @@ class _OnboardingFooter extends StatelessWidget {
     final title = _localized(context, data?['title']);
     final info = _localized(context, data?['info']);
 
-    // Full width: text pinned to the start edge, controls to the end edge.
     return Align(
       alignment: Alignment.bottomCenter,
       child: SafeArea(
-        child: Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(
-            kIsWeb ? 48 : 24.w,
-            0,
-            kIsWeb ? 48 : 24.w,
-            kIsWeb ? 32 : 20.h,
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Expanded(
-                child: Align(
-                  alignment: AlignmentDirectional.bottomStart,
-                  // Keep lines readable on wide web screens.
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                        maxWidth: kIsWeb ? 560 : double.infinity),
+        child: AppContentWidth(
+          child: Padding(
+            padding: EdgeInsetsDirectional.fromSTEB(
+              24.w,
+              0,
+              24.w,
+              20.h,
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: Align(
+                    alignment: AlignmentDirectional.bottomStart,
                     child: AnimatedSwitcher(
                       duration: const Duration(milliseconds: 250),
                       layoutBuilder: (current, previous) => Stack(
@@ -204,18 +203,18 @@ class _OnboardingFooter extends StatelessWidget {
                         children: [
                           if (title.isNotEmpty)
                             Text(
-                              title.toUpperCase(),
+                              title,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               style: AppStyles.heading(context).copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600,
-                                fontSize: kIsWeb ? 30 : 28.sp,
+                                fontSize: 28.sp,
                                 height: 1.15,
                               ),
                             ),
                           if (title.isNotEmpty && info.isNotEmpty)
-                            SizedBox(height: kIsWeb ? 10 : 8.h),
+                            SizedBox(height: 8.h),
                           if (info.isNotEmpty)
                             Text(
                               info,
@@ -223,7 +222,7 @@ class _OnboardingFooter extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               style: AppStyles.greyContent(context).copyWith(
                                 color: Colors.white.withOpacity(0.9),
-                                fontSize: kIsWeb ? 15 : 13.sp,
+                                fontSize: 13.sp,
                                 height: 1.4,
                               ),
                             ),
@@ -232,39 +231,39 @@ class _OnboardingFooter extends StatelessWidget {
                     ),
                   ),
                 ),
-              ),
-              SizedBox(width: kIsWeb ? 16 : 16.w),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  _NextButton(
-                    progress: items.isEmpty ? 0 : (index + 1) / items.length,
-                    onTap: () => viewModel.goNext(context),
-                  ),
-                  SizedBox(height: kIsWeb ? 14 : 14.h),
-                  _PageDots(count: items.length, current: index),
-                  SizedBox(height: kIsWeb ? 6 : 6.h),
-                  TextButton(
-                    onPressed: () => viewModel.skip(context),
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      minimumSize: const Size(48, 32),
-                      padding: EdgeInsets.symmetric(horizontal: 8.w),
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                SizedBox(width: 16.w),
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _NextButton(
+                      progress: items.isEmpty ? 0 : (index + 1) / items.length,
+                      onTap: () => viewModel.goNext(context),
                     ),
-                    child: Text(
-                      AppStrings.skip.tr().toUpperCase(),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: kIsWeb ? 12 : 11.sp,
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: 0.5,
+                    SizedBox(height: 14.h),
+                    _PageDots(count: items.length, current: index),
+                    SizedBox(height: 6.h),
+                    TextButton(
+                      onPressed: () => viewModel.skip(context),
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        minimumSize: const Size(48, 32),
+                        padding: EdgeInsets.symmetric(horizontal: 8.w),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      child: Text(
+                        AppStrings.skip.tr(),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 11.sp,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: 0.5,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -322,7 +321,7 @@ class _NextButton extends StatelessWidget {
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  isRtl ? Icons.chevron_left : Icons.chevron_right,
+                  Icons.chevron_right,
                   color: _kOnboardingNavy,
                   size: kIsWeb ? 28 : 28.r,
                 ),

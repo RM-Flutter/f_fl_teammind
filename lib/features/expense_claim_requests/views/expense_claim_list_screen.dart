@@ -1,3 +1,4 @@
+import 'package:app_test/core/widgets/app_empty_scroll_view.widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,6 +9,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/routing/app_router.dart';
+import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/widgets/approvable_card_widget.dart';
 import 'package:app_test/core/widgets/template_page.widget.dart';
@@ -176,13 +178,7 @@ class _ExpenseClaimListScreenState extends State<ExpenseClaimListScreen> {
         controller.personalRequests!.isEmpty) {
       return RefreshIndicator.adaptive(
         onRefresh: () => controller.initializeScreen(context),
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: NoExistingPlaceholderScreen(
-            height: 0.6.sh,
-            title: 'no_requests'.tr(),
-          ),
-        ),
+        child: AppEmptyScrollView(title: 'no_requests'.tr()),
       );
     }
     return _buildListView(controller, controller.personalRequests!,
@@ -197,13 +193,7 @@ class _ExpenseClaimListScreenState extends State<ExpenseClaimListScreen> {
         controller.incomingRequests!.isEmpty) {
       return RefreshIndicator.adaptive(
         onRefresh: () => controller.initializeScreen(context),
-        child: SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: NoExistingPlaceholderScreen(
-            height: 0.6.sh,
-            title: 'no_incoming_requests'.tr(),
-          ),
-        ),
+        child: AppEmptyScrollView(title: 'no_incoming_requests'.tr()),
       );
     }
     return _buildListView(controller, controller.incomingRequests!,
@@ -217,9 +207,7 @@ class _ExpenseClaimListScreenState extends State<ExpenseClaimListScreen> {
   }) {
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(
-          maxWidth: double.infinity,
-        ),
+        constraints: LayoutService.contentConstraints(context),
         child: RefreshIndicator.adaptive(
           onRefresh: () => controller.initializeScreen(context),
           child: ListView.builder(

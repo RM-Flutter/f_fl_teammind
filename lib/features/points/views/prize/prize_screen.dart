@@ -110,7 +110,7 @@ class _PrizeScreenState extends State<PrizeScreen> {
               resizeToAvoidBottomInset: false,
               backgroundColor: Color(AppColors.background),
               appBar: AppBarWithBookmark(
-                title: AppStrings.chooseThePrize.tr().toUpperCase(),
+                title: AppStrings.chooseThePrize.tr(),
                 centerTitle: true,
                 leading: widget.viewArrow ? null : const SizedBox.shrink(),
               ),

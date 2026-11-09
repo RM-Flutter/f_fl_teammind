@@ -1,8 +1,10 @@
+import 'package:app_test/core/widgets/app_field_shell.widget.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/widgets/template_page.widget.dart';
 import 'package:app_test/features/tasks/controllers/tasks_controller.dart';
@@ -62,9 +64,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
             body: SingleChildScrollView(
               child: Center(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxWidth: double.infinity,
-                  ),
+                  constraints: LayoutService.contentConstraints(context),
                   child: Padding(
                     padding: EdgeInsets.symmetric(
                         vertical: AppSizes.s16, horizontal: AppSizes.s12),
@@ -163,34 +163,13 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                                 },
                               );
                             },
-                            child: Container(
-                              height: 65,
-                              alignment: Alignment.center,
-                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-                              decoration: ShapeDecoration(
-                                color: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(AppRadius.sm),
-                                  side: BorderSide(
-                                    color :Color(AppColors.border),
-                                    width: 1.0,
-                                  ),
-                                ),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(
+                            child: AppFieldShell(
+  trailingIcon: Icons.keyboard_arrow_down_rounded,
+  child: Text(
                                     viewModel.selectedEmployeeIds.isNotEmpty? "${viewModel.selectedEmployeeIds.length} ${AppStrings.selected.tr()}": AppStrings.employeeName.tr(),
-                                    style: AppStyles.greyContent(context).copyWith(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w400,
-                                        color: Color(AppColors.overlay)),
+                                    style: AppField.hintStyle,
                                   ),
-                                ],
-                              ),
-                            ),
+),
                           ),
                           gapH14,
                           defaultDropdownField(

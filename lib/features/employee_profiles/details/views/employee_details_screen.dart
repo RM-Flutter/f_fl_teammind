@@ -5,6 +5,7 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:app_test/core/utils/tab_bar_widget.dart';
@@ -164,9 +165,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                     Expanded(
                       child: Center(
                         child: ConstrainedBox(
-                          constraints: const BoxConstraints(
-                              maxWidth: double.infinity
-                          ),
+                          constraints: LayoutService.contentConstraints(context),
                           child: Padding(
                             // Same 16 page edge as every other screen; tabs and content line up.
                             padding: const EdgeInsets.fromLTRB(
@@ -291,9 +290,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                     )
                   else Center(
                     child: ConstrainedBox(
-                      constraints: const BoxConstraints(
-                          maxWidth: double.infinity
-                      ),
+                      constraints: LayoutService.contentConstraints(context),
                       child: ContactsSectionWidget(
                           employee:
                           viewModel.employee),

@@ -143,7 +143,7 @@ class _PointsCategoriesScreenState extends State<PointsCategoriesScreen> {
                                   : null,
                             ),
                             Text(
-                              AppStrings.chooseTheCategory.tr().toUpperCase(),
+                              AppStrings.chooseTheCategory.tr(),
                               style: const TextStyle(
                                   color: Color(0xff224982),
                                   fontWeight: FontWeight.bold,
@@ -300,7 +300,7 @@ class _PointsCategoriesScreenState extends State<PointsCategoriesScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(title1 ?? "".toUpperCase(),
+                    Text(title1 ?? "",
                         maxLines: 1,
                         style: TextStyle(
                             fontWeight: FontWeight.w500,

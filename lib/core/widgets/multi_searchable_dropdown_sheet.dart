@@ -1,3 +1,4 @@
+import 'package:app_test/core/widgets/app_field_shell.widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -82,44 +83,25 @@ class _MultiSearchableDropdownSheetState extends State<MultiSearchableDropdownSh
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final isSelected = !_isEmpty(widget.selectedValues);
     final displayTxt = _displayText();
-
-    return InkWell(
+    // Same box, hint and arrow as every other field (rule 15).
+    return AppFieldShell(
       onTap: () => _showSelectionSheet(context),
-      borderRadius: widget.borderRadius ?? BorderRadius.circular(AppRadius.sm),
-      child: Container(
-        padding: widget.contentPadding ??
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          color: theme.inputDecorationTheme.fillColor ?? Colors.transparent,
-          borderRadius: widget.borderRadius ?? BorderRadius.circular(AppRadius.sm),
-          border: Border.all(
-            color: widget.borderSide?.color ?? Colors.grey.shade400,
-            width: widget.borderSide?.width ?? 1.0,
-          ),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                isSelected ? displayTxt : (widget.hintText ?? ''),
-                style: isSelected
-                    ? (theme.textTheme.bodyMedium?.copyWith(
-                        fontSize: 14, fontWeight: FontWeight.w500))
-                    : (widget.hintStyle ??
-                        theme.textTheme.bodyMedium?.copyWith(
-                            color: Colors.grey.shade500, fontSize: 14)),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
+      height: widget.height,
+      trailingIcon: widget.fieldSuffixIcon == null ? Icons.keyboard_arrow_down_rounded : null,
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              isSelected ? displayTxt : (widget.hintText ?? ''),
+              style: isSelected ? AppField.valueStyle : AppField.hintStyle,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-            const SizedBox(width: 8),
-            widget.fieldSuffixIcon ??
-                const Icon(Icons.arrow_drop_down, color: Colors.grey),
-          ],
-        ),
+          ),
+          if (widget.fieldSuffixIcon != null) widget.fieldSuffixIcon!,
+        ],
       ),
     );
   }

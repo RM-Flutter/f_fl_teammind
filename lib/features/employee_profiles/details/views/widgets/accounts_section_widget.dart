@@ -40,32 +40,32 @@ class AccountsSectionWidget extends StatelessWidget {
               ProfileTile(
                 isTitleOnly: false,
                 isList: false,
-                title: AppStrings.basicSalary.tr().toUpperCase(),
-                trailingTitle: "${employee?.basicSalary.toString()} ${employee?.currency ?? AppStrings.egp.tr()}".toUpperCase(),
+                title: AppStrings.basicSalary.tr(),
+                trailingTitle: "${employee?.basicSalary.toString()} ${employee?.currency ?? AppStrings.egp.tr()}",
                 icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color:  Color(AppColors.buttons)),
               ),
             //WORK HOURS TYPE
             if (employee?.additions != null)
               ProfileTile(
                 isTitleOnly: false,isList: false,
-                title: AppStrings.additions.tr().toUpperCase(),
-                trailingTitle: "${employee?.additions.toString()} ${employee?.currency ?? AppStrings.egp.tr()}".toUpperCase(),
+                title: AppStrings.additions.tr(),
+                trailingTitle: "${employee?.additions.toString()} ${employee?.currency ?? AppStrings.egp.tr()}",
                 icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color:  Color(AppColors.buttons)),
               ),
             // WORK HOURS
             if (employee?.totalDeductions != null)
               ProfileTile(
                 isTitleOnly: false,isList: false,
-                title: AppStrings.totalDeductions.tr().toUpperCase(),
-                trailingTitle: "${employee?.totalDeductions.toString()} ${employee?.currency ?? AppStrings.egp.tr()}".toUpperCase(),
+                title: AppStrings.totalDeductions.tr(),
+                trailingTitle: "${employee?.totalDeductions.toString()} ${employee?.currency ?? AppStrings.egp.tr()}",
                 icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color:  Color(AppColors.buttons)),
               ),
             //WEEKENDS
             if (employee?.netSalary != null)
               ProfileTile(
                 isTitleOnly: false,isList: false,
-                title: AppStrings.netSalaryPayable.tr().toUpperCase(),
-                trailingTitle: "${employee?.netSalary.toString()} ${employee?.currency ?? AppStrings.egp.tr()}".toUpperCase(),
+                title: AppStrings.netSalaryPayable.tr(),
+                trailingTitle: "${employee?.netSalary.toString()} ${employee?.currency ?? AppStrings.egp.tr()}",
                 icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color:  Color(AppColors.buttons)),
               ),
           ],
@@ -91,7 +91,7 @@ class AccountsSectionWidget extends StatelessWidget {
               child: CustomElevatedButton(
                   backgroundColor: Color(AppColors.secondaryButton),
                   titleSize: AppSizes.s12,
-                  title: AppStrings.viewPayrolls.tr().toUpperCase(),
+                  title: AppStrings.viewPayrolls.tr(),
                   onPressed: () async => await context
                           .pushNamed(AppRoutes.payrollsList.name, extra: {
                         'employeeName': employee?.name,

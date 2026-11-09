@@ -87,7 +87,7 @@ class GeneralSectionWidget extends StatelessWidget {
             Padding(
               padding: AppSpacing.pagePadding,
               child: Text(
-                AppStrings.jopDescription.tr().toUpperCase(),
+                AppStrings.jopDescription.tr(),
                 style: textStyle,
               ),
             ),
@@ -128,7 +128,7 @@ class GeneralSectionWidget extends StatelessWidget {
             Padding(
               padding: AppSpacing.pagePadding,
               child: Text(
-                AppStrings.generalInfo.tr().toUpperCase(),
+                AppStrings.generalInfo.tr(),
                 style: textStyle,
               ),
             ),
@@ -138,8 +138,8 @@ class GeneralSectionWidget extends StatelessWidget {
               ProfileTile(
                 isTitleOnly: false,
                 isList: false,
-                title: AppStrings.mainStatus.tr().toUpperCase(),
-                trailingTitle: employee?.mainStatus.toString().tr().toUpperCase() ?? '',
+                title: AppStrings.mainStatus.tr(),
+                trailingTitle: employee?.mainStatus.toString().tr() ?? '',
                 icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: Color(AppColors.buttons)),
               ),
             // EMPLOYEE STATUS
@@ -147,8 +147,8 @@ class GeneralSectionWidget extends StatelessWidget {
               ProfileTile(
                 isTitleOnly: false,
                 isList: false,
-                title: AppStrings.employeeStatus.tr().toUpperCase(),
-                trailingTitle: employee?.employeeStatus.toString().tr().toUpperCase() ?? '',
+                title: AppStrings.employeeStatus.tr(),
+                trailingTitle: employee?.employeeStatus.toString().tr() ?? '',
                 icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: Color(AppColors.buttons)),
               ),
             // JOB LEVEL
@@ -156,8 +156,8 @@ class GeneralSectionWidget extends StatelessWidget {
               ProfileTile(
                 isTitleOnly: false,
                 isList: false,
-                title: AppStrings.jobLevel.tr().toUpperCase(),
-                trailingTitle: employee?.jobLevel.toString().tr().toUpperCase() ?? '',
+                title: AppStrings.jobLevel.tr(),
+                trailingTitle: employee?.jobLevel.toString().tr() ?? '',
                 icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: Color(AppColors.buttons)),
               ),
             // EMPLOYMENT TYPE (backend label; .tr() translates the raw key if the backend only sent that)
@@ -165,8 +165,8 @@ class GeneralSectionWidget extends StatelessWidget {
               ProfileTile(
                 isTitleOnly: false,
                 isList: false,
-                title: AppStrings.employmentType.tr().toUpperCase(),
-                trailingTitle: employee?.employmentType?.tr().toUpperCase() ?? '',
+                title: AppStrings.employmentType.tr(),
+                trailingTitle: employee?.employmentType?.tr() ?? '',
                 icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: Color(AppColors.buttons)),
               ),
             //HIRE DATE
@@ -175,7 +175,7 @@ class GeneralSectionWidget extends StatelessWidget {
               ProfileTile(
                 isTitleOnly: false,
                 isList: false,
-                title: AppStrings.hireDate.tr().toUpperCase(),
+                title: AppStrings.hireDate.tr(),
                 trailingTitle: employee!.hireDate,
                 icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color:  Color(AppColors.buttons)),
               ),
@@ -185,8 +185,8 @@ class GeneralSectionWidget extends StatelessWidget {
               ProfileTile(
                 isTitleOnly: false,
                 isList: false,
-                title: AppStrings.workHoursType.tr().toUpperCase(),
-                trailingTitle: effectiveWorkingHoursType.toString().tr().toUpperCase(),
+                title: AppStrings.workHoursType.tr(),
+                trailingTitle: effectiveWorkingHoursType.toString().tr(),
                 icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color:  Color(AppColors.buttons)),
               ),
             if (!isShifts &&
@@ -197,7 +197,7 @@ class GeneralSectionWidget extends StatelessWidget {
               ProfileTile(
                 isTitleOnly: false,
                 isList: false,
-                title: AppStrings.hoursDailyCount.tr().toUpperCase(),
+                title: AppStrings.hoursDailyCount.tr(),
                 trailingTitle: employee?.workingHours?.dailyWorkingHours ?? '',
                 icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color:  Color(AppColors.buttons)),
               ),
@@ -208,9 +208,9 @@ class GeneralSectionWidget extends StatelessWidget {
                     employee!.workingHours!.dailyWorkingHoursEnd != null))
               ProfileTile(
                 isTitleOnly: false,isList: false,
-                title: AppStrings.workHours.tr().toUpperCase(),
+                title: AppStrings.workHours.tr(),
                 trailingTitle: "${(employee!.workingHours!.dailyWorkingHoursStart)!=null ? convertTime(employee!.workingHours!.dailyWorkingHoursStart.toString())
-                    : ""} : ${(employee!.workingHours!.dailyWorkingHoursEnd != null)? convertTime(employee!.workingHours!.dailyWorkingHoursEnd.toString()) : ""}".toUpperCase(),
+                    : ""} : ${(employee!.workingHours!.dailyWorkingHoursEnd != null)? convertTime(employee!.workingHours!.dailyWorkingHoursEnd.toString()) : ""}",
                 icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color:  Color(AppColors.buttons)),
               ),
             if (!isShifts &&
@@ -219,9 +219,9 @@ class GeneralSectionWidget extends StatelessWidget {
                     employee!.workingHours!.dailyWorkingHoursTo != null))
               ProfileTile(
                 isTitleOnly: false,isList: false,
-                title: AppStrings.workHours.tr().toUpperCase(),
+                title: AppStrings.workHours.tr(),
                 trailingTitle: "${(employee!.workingHours!.dailyWorkingHoursFrom)!=null ? convertTime(employee!.workingHours!.dailyWorkingHoursFrom.toString())
-                    : ""} : ${(employee!.workingHours!.dailyWorkingHoursTo != null)? convertTime(employee!.workingHours!.dailyWorkingHoursTo.toString()) : ""}".toUpperCase(),
+                    : ""} : ${(employee!.workingHours!.dailyWorkingHoursTo != null)? convertTime(employee!.workingHours!.dailyWorkingHoursTo.toString()) : ""}",
                 icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color:  Color(AppColors.buttons)),
               ),
             if (effectiveWorkingHoursType.toString().tr() == "ساعات ثابتة" ||
@@ -231,8 +231,8 @@ class GeneralSectionWidget extends StatelessWidget {
                 ProfileTile(
                   isTitleOnly: false,
                   isList: false,
-                  title: AppStrings.allowedDelayMinutes.tr().toUpperCase(),
-                  trailingTitle: "${employee?.workingHours?.allowedDelayMinutes ?? '0'} ${AppStrings.minutes.tr()}".toUpperCase(),
+                  title: AppStrings.allowedDelayMinutes.tr(),
+                  trailingTitle: "${employee?.workingHours?.allowedDelayMinutes ?? '0'} ${AppStrings.minutes.tr()}",
                   icon: Image.asset("assets/images/new-cale.png", width: 20, height: 20, color:  Color(AppColors.buttons)),
                 ),
             // THIS WEEK SHIFTS (shown instead of fixed working hours when type is shifts)
@@ -327,7 +327,7 @@ class WeekendDisplayWidget extends StatelessWidget {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                AppStrings.weekends.tr().toUpperCase(),
+                AppStrings.weekends.tr(),
                 style: AppStyles.primaryContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 13),
               ),
             ),
@@ -357,7 +357,7 @@ class WeekendDisplayWidget extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  AppStrings.weekends.tr().toUpperCase(),
+                  AppStrings.weekends.tr(),
                   style: AppStyles.primaryContent(context).copyWith(fontWeight: FontWeight.w700, fontSize: 13),
                 ),
               ),
@@ -385,7 +385,7 @@ class WeekendDisplayWidget extends StatelessWidget {
                     borderRadius: BorderRadius.circular(AppRadius.sm),
                     border: Border.all(color: Color(AppColors.buttons).withOpacity(0.3)),
                   ),
-                  child: Text(day.tr().toUpperCase(), style: AppStyles.blackContent(context).copyWith(fontSize: 11)),
+                  child: Text(day.tr(), style: AppStyles.blackContent(context).copyWith(fontSize: 11)),
                 )).toList(),
               ),
             ),
@@ -528,7 +528,7 @@ class ThisWeekShiftsDisplayWidget extends StatelessWidget {
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
-                  AppStrings.thisWeekShifts.tr().toUpperCase(),
+                  AppStrings.thisWeekShifts.tr(),
                   style: AppStyles.blackContent(context).copyWith(
                     fontWeight: FontWeight.w700,
                     fontSize: 14,
@@ -616,7 +616,7 @@ class ThisWeekShiftsDisplayWidget extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(AppRadius.sm),
                                 ),
                                 child: Text(
-                                  shift.status!.tr().toUpperCase(),
+                                  shift.status!.tr(),
                                   style: AppStyles.blackContent(context).copyWith(
                                     fontSize: 10,
                                     fontWeight: FontWeight.w600,

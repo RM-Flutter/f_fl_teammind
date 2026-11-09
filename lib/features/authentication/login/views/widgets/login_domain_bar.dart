@@ -14,10 +14,7 @@ class LoginDomainBar extends StatelessWidget {
     final isWeb = kIsWeb || PlatformIs.web;
     final domain = DomainSelectionService.currentCleanDomain;
 
-    return SafeArea(
-      child: Padding(
-        padding: EdgeInsets.only(bottom: isWeb ? 16 : 12.h),
-        child: Container(
+    return Container(
           padding: EdgeInsets.symmetric(
             horizontal: isWeb ? 16 : 16.w,
             vertical: isWeb ? 8 : 8.h,
@@ -50,8 +47,6 @@ class LoginDomainBar extends StatelessWidget {
               ),
             ],
           ),
-        ),
-      ),
     );
   }
 }

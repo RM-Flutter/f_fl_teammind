@@ -77,56 +77,62 @@ Widget defaultTap2BarItem({
 }) {
   return Consumer<PointsController>(
     builder: (context, provider, child) {
-      bool isWeb = kIsWeb;
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          final maxW = constraints.maxWidth.isFinite
+              ? constraints.maxWidth
+              : MediaQuery.sizeOf(context).width;
+          double containerWidth = tapBarItemsWidth ?? (maxW * 0.9);
+          if (containerWidth > maxW) containerWidth = maxW;
+          double itemWidth = containerWidth / (items?.length ?? 1);
 
-      double containerWidth = isWeb ? 550 : (tapBarItemsWidth ?? MediaQuery.sizeOf(context).width * 0.9);
-      double itemWidth = containerWidth / (items?.length ?? 1);
-
-      return Center(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7.5),
-          height: 45.0,
-          width: containerWidth,
-          decoration: BoxDecoration(
-            color: Color(AppColors.secondaryButton),
-            borderRadius: BorderRadius.circular(AppRadius.xl),
-          ),
-          child: ListView.builder(
-            shrinkWrap: true,
-            reverse: false,
-            scrollDirection: Axis.horizontal,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: items!.length,
-            itemBuilder: (context, index) => GestureDetector(
-              onTap: () {
-                provider.changeIndex(index);
-                if (onTapItem != null) {
-                  onTapItem(index);
-                }
-              },
-              child: Container(
-                height: 32,
-                width: itemWidth - 8,
-                margin: EdgeInsets.zero,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(AppRadius.pill),
-                  color: (provider.selectedIndex == index)
-                      ? Color(AppColors.buttons)
-                      : Colors.transparent,
-                ),
-                child: Text(
-                  items[index].toUpperCase(),
-                  style:  const TextStyle(
-                    fontSize: 12,
-                    color: Color(0xffFFFFFF),
-                    fontWeight: FontWeight.w500,
+          return Center(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7.5),
+              height: 45.0,
+              width: containerWidth,
+              decoration: BoxDecoration(
+                color: Color(AppColors.secondaryButton),
+                borderRadius: BorderRadius.circular(AppRadius.xl),
+              ),
+              child: ListView.builder(
+                shrinkWrap: true,
+                reverse: false,
+                scrollDirection: Axis.horizontal,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: items!.length,
+                itemBuilder: (context, index) => GestureDetector(
+                  onTap: () {
+                    provider.changeIndex(index);
+                    if (onTapItem != null) {
+                      onTapItem(index);
+                    }
+                  },
+                  child: Container(
+                    height: 32,
+                    width: itemWidth - 8,
+                    margin: EdgeInsets.zero,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(AppRadius.pill),
+                      color: (provider.selectedIndex == index)
+                          ? Color(AppColors.buttons)
+                          : Colors.transparent,
+                    ),
+                    child: Text(
+                      items[index],
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Color(0xffFFFFFF),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       );
     },
   );

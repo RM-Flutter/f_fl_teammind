@@ -41,7 +41,7 @@ class _CustomizeNotificationScreenState extends State<CustomizeNotificationScree
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(AppStrings.customizeNotifications.tr().toUpperCase(), style: AppStyles.heading(context).copyWith(
+                  Text(AppStrings.customizeNotifications.tr(), style: AppStyles.heading(context).copyWith(
                       fontSize: 24,
                       fontWeight: FontWeight.w600,
                       color: const Color(0xff0D3B6F)
@@ -86,7 +86,7 @@ class _CustomizeNotificationScreenState extends State<CustomizeNotificationScree
                             SvgPicture.asset("assets/images/svg/apply_filter.svg"),
                             SizedBox(width: 15,),
                             Text(
-                              AppStrings.saveChanges.tr().toUpperCase(),
+                              AppStrings.saveChanges.tr(),
                               style: AppStyles.whiteContent(context).copyWith(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w500,
@@ -130,7 +130,7 @@ class SwitchRow extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(AppStrings.deactivate.tr().toUpperCase(),
+          Text(AppStrings.deactivate.tr(),
               style: AppStyles.primaryContent(context).copyWith(
                   fontSize: 11, color: const Color(0xff224982), fontWeight: FontWeight.w500)),
           gapW8,
@@ -141,7 +141,7 @@ class SwitchRow extends StatelessWidget {
             inactiveThumbColor: Colors.black,
           ),
           gapW8,
-          Text(AppStrings.activation.tr().toUpperCase(),
+          Text(AppStrings.activation.tr(),
               style: AppStyles.primaryContent(context).copyWith(
                   fontSize: 11, color: const Color(0xff224982), fontWeight: FontWeight.w500)),
 

@@ -21,6 +21,7 @@ import '../../../../core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/widgets/app_card.widget.dart';
+import 'package:app_test/core/widgets/app_content_width.widget.dart';
 import 'package:app_test/core/widgets/app_status_badge.widget.dart';
 
 class FilesCenterScreen extends StatefulWidget {
@@ -96,7 +97,7 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
               ),
               ...viewModel.availableStatuses.map((status) => DropdownMenuItem(
                 value: status,
-                child: Text(status.tr().toUpperCase(), style: const TextStyle(color: Colors.black, fontSize: 14)),
+                child: Text(status.tr(), style: const TextStyle(color: Colors.black, fontSize: 14)),
               ))
             ];
 
@@ -458,126 +459,128 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
           centerTitle: true,
           routeName: 'filesCenter',
         ),
-        body: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _searchController,
-                      onChanged: viewModel.setSearchQuery,
-                      decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.search),
-                          hintText: AppStrings.searchByName.tr(),
-                          fillColor: Color(AppColors.buttons).withValues(alpha: 0.05),
-                          suffixIcon: IconButton(
-                              icon: const Icon(Icons.close),
-                              onPressed: () {
-                                _searchController.clear();
-                                viewModel.setSearchQuery('');
-                              }
-                          ),
-                          isDense: true,
-                          contentPadding: const EdgeInsets.all(AppSizes.s8)),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  InkWell(
-                    borderRadius: BorderRadius.circular(AppRadius.sm),
-                    onTap: _showFilterBottomSheet,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-                      child: Image.asset(
-                        AppImages.profileFilter,
-                        width: AppSizes.s22,
-                        height: AppSizes.s22,
-                        fit: BoxFit.cover,
+        body: AppContentWidth(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _searchController,
+                        onChanged: viewModel.setSearchQuery,
+                        decoration: InputDecoration(
+                            prefixIcon: const Icon(Icons.search),
+                            hintText: AppStrings.searchByName.tr(),
+                            fillColor: Color(AppColors.buttons).withValues(alpha: 0.05),
+                            suffixIcon: IconButton(
+                                icon: const Icon(Icons.close),
+                                onPressed: () {
+                                  _searchController.clear();
+                                  viewModel.setSearchQuery('');
+                                }
+                            ),
+                            isDense: true,
+                            contentPadding: const EdgeInsets.all(AppSizes.s8)),
                       ),
                     ),
-                  ),
-                  InkWell(
-                    borderRadius: BorderRadius.circular(AppRadius.sm),
-                    onTap: () {
-                      _searchController.clear();
-                      viewModel.clearFilters();
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-                      child: Text(
-                        AppStrings.clear.tr(),
-                        style: TextStyle(
-                          color: Colors.red[400],
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
+                    const SizedBox(width: 8),
+                    InkWell(
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
+                      onTap: _showFilterBottomSheet,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                        child: Image.asset(
+                          AppImages.profileFilter,
+                          width: AppSizes.s22,
+                          height: AppSizes.s22,
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            
-            Expanded(
-              child: Consumer<FilesCenterViewModel>(
-                builder: (context, vm, child) {
-                  if (vm.isLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-
-                  if (vm.errorMessage != null) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.error_outline, size: 48, color: Colors.grey[400]),
-                          const SizedBox(height: 16),
-                          Text(
-                            vm.errorMessage!,
-                            style: TextStyle(color: Colors.grey[600], fontSize: 14),
-                            textAlign: TextAlign.center,
-                          ),
-                          const SizedBox(height: 16),
-                          ElevatedButton(
-                            onPressed: () => vm.refresh(context),
-                            child: const Text('Try Again'),
-                          ),
-                        ],
-                      ),
-                    );
-                  }
-
-                  if (vm.displayedFiles.isEmpty) {
-                    return Center(
-                      child: Text(
-                        AppStrings.noDataFounded.tr(),
-                        style: TextStyle(color: Colors.grey[600], fontSize: 16),
-                      ),
-                    );
-                  }
-
-                  return RefreshIndicator(
-                    onRefresh: () => vm.refresh(context),
-                    child: ListView.builder(
-                      controller: _scrollController,
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemCount: vm.displayedFiles.length + (vm.isLoadingMore ? 1 : 0),
-                      itemBuilder: (context, index) {
-                        if (index == vm.displayedFiles.length) {
-                          return const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 16),
-                            child: Center(child: CircularProgressIndicator()),
-                          );
-                        }
-                        return _buildFileCard(vm.displayedFiles[index]);
+                    InkWell(
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
+                      onTap: () {
+                        _searchController.clear();
+                        viewModel.clearFilters();
                       },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                        child: Text(
+                          AppStrings.clear.tr(),
+                          style: TextStyle(
+                            color: Colors.red[400],
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
                     ),
-                  );
-                },
+                  ],
+                ),
               ),
-            ),
-          ],
+              
+              Expanded(
+                child: Consumer<FilesCenterViewModel>(
+                  builder: (context, vm, child) {
+                    if (vm.isLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    if (vm.errorMessage != null) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.error_outline, size: 48, color: Colors.grey[400]),
+                            const SizedBox(height: 16),
+                            Text(
+                              vm.errorMessage!,
+                              style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 16),
+                            ElevatedButton(
+                              onPressed: () => vm.refresh(context),
+                              child: Text('try_again'.tr()),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+
+                    if (vm.displayedFiles.isEmpty) {
+                      return Center(
+                        child: Text(
+                          AppStrings.noDataFounded.tr(),
+                          style: TextStyle(color: Colors.grey[600], fontSize: 16),
+                        ),
+                      );
+                    }
+
+                    return RefreshIndicator(
+                      onRefresh: () => vm.refresh(context),
+                      child: ListView.builder(
+                        controller: _scrollController,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        itemCount: vm.displayedFiles.length + (vm.isLoadingMore ? 1 : 0),
+                        itemBuilder: (context, index) {
+                          if (index == vm.displayedFiles.length) {
+                            return const Padding(
+                              padding: EdgeInsets.symmetric(vertical: 16),
+                              child: Center(child: CircularProgressIndicator()),
+                            );
+                          }
+                          return _buildFileCard(vm.displayedFiles[index]);
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

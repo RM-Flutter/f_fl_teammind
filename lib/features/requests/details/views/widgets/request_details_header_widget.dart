@@ -270,9 +270,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
     return Stack(
       children: [
         Container(
-          // On web the info chips fit in fewer rows, so a fixed height leaves a large
-          // empty area that steals space from the tabs below. Size to content there.
-          height: kIsWeb ? null : (widget.height! + 30),
+          height: widget.height != null ? (widget.height! + 30) : null,
           width: 1.sw,
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
@@ -289,9 +287,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
           ),
           child: Center(
             child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                  maxWidth: double.infinity
-              ),
+              constraints: LayoutService.contentConstraints(context),
               child: Column(
                 children: [
                   Builder(builder: (context) {
@@ -565,7 +561,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                                     InfoTileWidget(
                                       imgPath: Icons.attach_money_outlined,
                                       title:
-                                          '${AppStrings.amount.tr()}: ${request.moneyValue} ${AppStrings.egp.tr().toUpperCase()}',
+                                          '${AppStrings.amount.tr()}: ${request.moneyValue} ${AppStrings.egp.tr()}',
                                     ),
                                   );
                                 }
@@ -605,12 +601,12 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                                       imgPath: Icons.clear,
                                       background: const Color(AppColors.darkRed),
                                       imgColor: Color(AppColors.background),
-                                      title: AppStrings.requestedToIgnore.tr().toUpperCase(),
+                                      title: AppStrings.requestedToIgnore.tr(),
                                     ),
                                   );
                                 }
 
-                                final int maxCols = availableWidth > 800 ? 3 : 2;
+                                const int maxCols = 2;
                                 final List<List<Widget>> rows = [];
                                 if (maxCols == 2) {
                                   for (int i = 0; i < items.length; i += 2) {

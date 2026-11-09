@@ -14,6 +14,7 @@ import 'widgets/payroll_details_body_widget.dart';
 import 'widgets/payroll_details_header_widget.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
+import 'package:app_test/core/services/layout_service.dart';
 
 class PayrollDetailsScreen extends StatefulWidget {
   final PayrollModel? payroll;
@@ -48,9 +49,7 @@ class _PayrollDetailsScreenState extends State<PayrollDetailsScreen> {
               Expanded(
                 child: Center(
                   child: ConstrainedBox(
-                    constraints: const BoxConstraints(
-                      maxWidth: double.infinity,
-                    ),
+                    constraints: LayoutService.contentConstraints(context),
                     child: PayrollDetailsBodyWidget(payroll: widget.payroll),
                   ),
                 ),
@@ -62,7 +61,7 @@ class _PayrollDetailsScreenState extends State<PayrollDetailsScreen> {
                   child: CustomElevatedButton(
                     backgroundColor: Color(AppColors.secondaryButton),
                     titleSize: AppSizes.s12,
-                    title: AppStrings.downloadFile.tr().toUpperCase(),
+                    title: AppStrings.downloadFile.tr(),
                     onPressed: () async {
                       await viewModel.downloadPdf(
                         context,

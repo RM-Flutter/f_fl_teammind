@@ -16,6 +16,7 @@ import '../../../../core/widgets/comments/comments_widget.dart';
 import '../../../../core/widgets/comments/logic/controller.dart';
 import '../models/daily_report_model.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/widgets/app_content_width.widget.dart';
 
 class DailyReportDetailsScreen extends StatefulWidget {
   final DailyReportModel report;
@@ -158,93 +159,95 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
               backgroundColor: Colors.white.withOpacity(0.06),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(
-                top: MediaQuery.of(context).padding.top + 10, bottom: 40),
-            child: Column(
-              children: [
-                // AppBar
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // Circular back button
-                      InkWell(
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.all(10),
+          AppContentWidth(
+            child: Padding(
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).padding.top + 10, bottom: 40),
+              child: Column(
+                children: [
+                  // AppBar
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Circular back button
+                        InkWell(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.15),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.arrow_back_sharp,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          AppStrings.reportDetails.tr(),
+                          style: AppStyles.whiteHeading(context).copyWith(fontSize: 20, fontWeight: FontWeight.w800),
+                        ),
+                        const SizedBox(width: 38), // placeholder to center title
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 25),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(AppRadius.xl),
+                      border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.calendar_month_rounded, color: Colors.white, size: 16),
+                        const SizedBox(width: 8),
+                        Text(
+                          dateFormatted,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (employeeName != null) ...[
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.15),
+                            color: Colors.white.withOpacity(0.1),
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(
-                            Icons.arrow_back_sharp,
+                          child: const Icon(Icons.person_rounded, color: Colors.white70, size: 16),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          employeeName,
+                          style: const TextStyle(
                             color: Colors.white,
-                            size: 18,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
-                      ),
-                      Text(
-                        AppStrings.reportDetails.tr(),
-                        style: AppStyles.whiteHeading(context).copyWith(fontSize: 20, fontWeight: FontWeight.w800),
-                      ),
-                      const SizedBox(width: 38), // placeholder to center title
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 25),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(AppRadius.xl),
-                    border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.calendar_month_rounded, color: Colors.white, size: 16),
-                      const SizedBox(width: 8),
-                      Text(
-                        dateFormatted,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 13,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                if (employeeName != null) ...[
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.1),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(Icons.person_rounded, color: Colors.white70, size: 16),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        employeeName,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+                  ],
                 ],
-              ],
+              ),
             ),
           ),
         ],
@@ -276,78 +279,80 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildHeroHeader(context),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildSection(
-                        title: AppStrings.accomplishments.tr(),
-                        icon: Icons.check_circle_rounded,
-                        iconColor: const Color(0xFF10B981),
-                        bgColor: const Color(0xFFD1FAE5),
-                        content: widget.report.done ?? AppStrings.noAccomplishmentsRecorded.tr(),
-                      ),
-                      const SizedBox(height: 16),
-                      
-                      _buildSection(
-                        title: AppStrings.inProgressTasks.tr(),
-                        icon: Icons.sync_rounded,
-                        iconColor: const Color(0xFF3B82F6),
-                        bgColor: const Color(0xFFDBEAFE),
-                        content: widget.report.inProgress ?? AppStrings.noOngoingTasksRecorded.tr(),
-                      ),
-                      const SizedBox(height: 16),
+                AppContentWidth(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildSection(
+                          title: AppStrings.accomplishments.tr(),
+                          icon: Icons.check_circle_rounded,
+                          iconColor: const Color(0xFF10B981),
+                          bgColor: const Color(0xFFD1FAE5),
+                          content: widget.report.done ?? AppStrings.noAccomplishmentsRecorded.tr(),
+                        ),
+                        const SizedBox(height: 16),
+                        
+                        _buildSection(
+                          title: AppStrings.inProgressTasks.tr(),
+                          icon: Icons.sync_rounded,
+                          iconColor: const Color(0xFF3B82F6),
+                          bgColor: const Color(0xFFDBEAFE),
+                          content: widget.report.inProgress ?? AppStrings.noOngoingTasksRecorded.tr(),
+                        ),
+                        const SizedBox(height: 16),
 
-                      _buildSection(
-                        title: AppStrings.blockersAndProblems.tr(),
-                        icon: Icons.warning_rounded,
-                        iconColor: const Color(0xFFF59E0B),
-                        bgColor: const Color(0xFFFEF3C7),
-                        content: widget.report.problems ?? AppStrings.noProblemsRecorded.tr(),
-                      ),
-                      const SizedBox(height: 16),
+                        _buildSection(
+                          title: AppStrings.blockersAndProblems.tr(),
+                          icon: Icons.warning_rounded,
+                          iconColor: const Color(0xFFF59E0B),
+                          bgColor: const Color(0xFFFEF3C7),
+                          content: widget.report.problems ?? AppStrings.noProblemsRecorded.tr(),
+                        ),
+                        const SizedBox(height: 16),
 
-                      if (widget.report.attachments != null && widget.report.attachments!.isNotEmpty) ...[
-                        _buildAttachmentsSection(widget.report.attachments!),
-                        const SizedBox(height: 24),
-                      ],
+                        if (widget.report.attachments != null && widget.report.attachments!.isNotEmpty) ...[
+                          _buildAttachmentsSection(widget.report.attachments!),
+                          const SizedBox(height: 24),
+                        ],
 
-                      // Comments Section
-                      Row(
-                        children: [
-                          Expanded(child: Divider(color: Colors.grey.shade300, thickness: 1)),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: Text(
-                              AppStrings.comments.tr().toUpperCase(),
-                              style: TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w800,
-                                color: Colors.grey.shade500,
-                                letterSpacing: 1.2,
+                        // Comments Section
+                        Row(
+                          children: [
+                            Expanded(child: Divider(color: Colors.grey.shade300, thickness: 1)),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              child: Text(
+                                AppStrings.comments.tr(),
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w800,
+                                  color: Colors.grey.shade500,
+                                  letterSpacing: 1.2,
+                                ),
                               ),
                             ),
-                          ),
-                          Expanded(child: Divider(color: Colors.grey.shade300, thickness: 1)),
-                        ],
-                      ),
-                      const SizedBox(height: 24),
-                      Consumer<CommentProvider>(
-                        builder: (context, commentProvider, child) {
-                          return CommentsWidget(
-                            "employee-daily-reports",
-                            enable: "enable",
-                            comments: commentProvider.comments,
-                            pageNumber: commentProvider.pageNumber,
-                            loading: commentProvider.isGetCommentLoading,
-                            scrollController: _scrollController,
-                            id: widget.report.id.toString(),
-                          );
-                        }
-                      ),
-                      const SizedBox(height: 50),
-                    ],
+                            Expanded(child: Divider(color: Colors.grey.shade300, thickness: 1)),
+                          ],
+                        ),
+                        const SizedBox(height: 24),
+                        Consumer<CommentProvider>(
+                          builder: (context, commentProvider, child) {
+                            return CommentsWidget(
+                              "employee-daily-reports",
+                              enable: "enable",
+                              comments: commentProvider.comments,
+                              pageNumber: commentProvider.pageNumber,
+                              loading: commentProvider.isGetCommentLoading,
+                              scrollController: _scrollController,
+                              id: widget.report.id.toString(),
+                            );
+                          }
+                        ),
+                        const SizedBox(height: 50),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -504,7 +509,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                           context: context,
                           barrierColor: Colors.black.withOpacity(0.95),
                           barrierDismissible: true,
-                          barrierLabel: 'Close',
+                          barrierLabel: 'close'.tr(),
                           transitionDuration: const Duration(milliseconds: 300),
                           pageBuilder: (context, animation, secondaryAnimation) {
                             return Scaffold(
@@ -527,7 +532,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                                           children: [
                                             const Icon(Icons.broken_image_rounded, color: Colors.white54, size: 64),
                                             const SizedBox(height: 16),
-                                            Text("Failed to load image", style: const TextStyle(color: Colors.white54, fontSize: 14)),
+                                            Text("failed_to_load_image".tr(), style: const TextStyle(color: Colors.white54, fontSize: 14)),
                                           ],
                                         ),
                                       ),
@@ -597,7 +602,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                                         children: [
                                           Icon(Icons.broken_image_rounded, color: Colors.grey.shade400, size: 32),
                                           const SizedBox(height: 4),
-                                          Text("Error", style: TextStyle(fontSize: 10, color: Colors.grey.shade500)),
+                                          Text("error".tr(), style: TextStyle(fontSize: 10, color: Colors.grey.shade500)),
                                         ],
                                       ),
                                     ),

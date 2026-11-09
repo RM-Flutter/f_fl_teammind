@@ -156,8 +156,7 @@ class _NoExistingPlaceholderScreenState
     return SizedBox(
       height: widget.height,
       width: double.infinity,
-      // A little above the middle reads as more natural than dead centre.
-      child: Align(alignment: const Alignment(0, -0.2), child: content),
+      child: Center(child: content),
     );
   }
 }

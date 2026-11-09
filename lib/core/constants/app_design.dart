@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:app_test/core/constants/app_sizes.dart';
 
 /// The design scale of the app. Screens use these instead of raw numbers, so every card,
 /// button and gap looks the same everywhere. The theme (AppThemeService) uses the same
@@ -43,6 +44,10 @@ import 'package:flutter/material.dart';
 ///    that take a number). No `BoxShadow(` and no raw `elevation: n` outside this file and the
 ///    theme. Cards are always radius `AppRadius.md` + `AppBorders.card` + `AppShadows.card`
 ///    (use `AppCard`). Run `tool/check_design_tokens.sh` before committing.
+/// 14. Text: Title Case ("Add Company", "Forgot Password?"), written in the translation value itself.
+///    Never `.toUpperCase()` on text shown to the user (only for initials / comparisons). Text that
+///    comes from the server (names, departments, job titles) uses `.titleCase`
+///    (core/utils/string_extensions.dart). Every visible string is a translation key.
 /// 12. Status colours (orange, green, red, blue...) are never drawn raw as text or thin
 ///    borders: use `AppColors.statusTones(color)` (`text`, `ring`, `border`, `tint`) or just
 ///    `AppStatusBadge` / `AppCardLeadingAvatar`, which already do. Never `Colors.orange`.
@@ -218,4 +223,28 @@ abstract class AppDecorations {
         border: border ?? AppBorders.card,
         boxShadow: boxShadow ?? AppShadows.card,
       );
+}
+
+/// One look for every field and dropdown in the app (rule 15): same height, corners, border,
+/// start padding, hint / value text and trailing icon (same size, colour and distance from the
+/// edge). Dropdowns, date pickers and text fields all take these values.
+abstract class AppField {
+  static const double height = AppSizes.fieldHeight; // 52
+  static const double radius = AppRadius.md; // 12
+  static const double horizontalPadding = 16;
+  static const double iconSize = 22;
+
+  /// Hint and the arrow / calendar / upload icon at the end of the field.
+  static const Color hintColor = Color(0xFF8A8FA3);
+  static const Color iconColor = Color(0xFF6B7080);
+  static const Color valueColor = Color(0xFF1B1D3A);
+  static const Color borderColor = Color(0xFFE3E5EE);
+
+  static const TextStyle hintStyle =
+      TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: hintColor);
+  static const TextStyle valueStyle =
+      TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: valueColor);
+
+  static const BorderRadius borderRadius = BorderRadius.all(Radius.circular(radius));
+  static Border get border => Border.all(color: borderColor, width: 1);
 }

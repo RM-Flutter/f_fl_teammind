@@ -105,7 +105,7 @@ class _PhoneNumberFieldState extends State<PhoneNumberField> {
         languageCode: context.locale.languageCode,
         decoration: InputDecoration(
           errorText: widget.phoneError,
-          hintText: AppStrings.yourPhone.tr().toUpperCase(),
+          hintText: AppStrings.yourPhone.tr(),
           hintStyle: AppStyles.hintTitleContent(context).copyWith(fontSize: 12),
           counter: const SizedBox.shrink(),
         ),

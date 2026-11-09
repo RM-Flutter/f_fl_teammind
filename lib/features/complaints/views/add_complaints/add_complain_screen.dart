@@ -6,6 +6,7 @@ import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/widgets/all_text_field.dart';
 import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
+import 'package:app_test/core/widgets/app_content_width.widget.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/features/requests/add/controller/add_new_request_controller.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -45,7 +46,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
         builder: (context, value, child) {
           return Scaffold(
             appBar: AppBarWithBookmark(
-              title: AppStrings.newRequest.tr().toUpperCase(),
+              title: AppStrings.newRequest.tr(),
               titleStyle: AppStyles.heading(context).copyWith(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -57,13 +58,9 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
               routeName: AppRoutes.newComplainScreen.name,
             ),
             backgroundColor: Color(AppColors.background),
-            body: Container(
-              width: double.infinity,
-              alignment: Alignment.center,
+            body: AppContentWidth(
               child: SizedBox(
-                width: MediaQuery.of(context).size.width < 600
-                    ? double.infinity
-                    : 800,
+                width: double.infinity,
                 child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -153,7 +150,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
                                   );
                                 }
                               },
-                              title: AppStrings.sendRequest.tr().toUpperCase(),
+                              title: AppStrings.sendRequest.tr(),
                               isPrimaryBackground: true,
                               isFuture: false,
                             ),
@@ -407,7 +404,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
           list: value.listAttachmentPersonalImage,
         );
         AppToast.showToast(
-          msg: AppStrings.addImageSuccessful.tr().toUpperCase(),
+          msg: AppStrings.addImageSuccessful.tr(),
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Colors.green,
@@ -452,7 +449,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
                       list: value.listAttachmentPersonalImage,
                     );
                     AppToast.showToast(
-                      msg: AppStrings.addImageSuccessful.tr().toUpperCase(),
+                      msg: AppStrings.addImageSuccessful.tr(),
                       toastLength: Toast.LENGTH_LONG,
                       gravity: ToastGravity.BOTTOM,
                       backgroundColor: Colors.green,
@@ -460,7 +457,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
                       fontSize: 16.0,
                     );
                   },
-                  title: AppStrings.image.tr().toUpperCase(),
+                  title: AppStrings.image.tr(),
                   width: 100,
                   isPrimaryBackground: true,
                   isFuture: false,

@@ -89,7 +89,7 @@ class _ListCommentsScreenState extends State<ListCommentsScreen> {
           appBar: AppBar(
             surfaceTintColor: Colors.transparent,
             title: Text(
-              AppStrings.comments.tr().toUpperCase(),
+              AppStrings.comments.tr(),
               style: TextStyle(
                   fontSize: 16,
                   color: Color(AppColors.secondaryButton),
@@ -135,7 +135,7 @@ class _ListCommentsScreenState extends State<ListCommentsScreen> {
             },
             child: Center(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: double.infinity),
+                constraints: LayoutService.contentConstraints(context),
                 child: ListView(
                   controller: _scrollController,
                   children: [

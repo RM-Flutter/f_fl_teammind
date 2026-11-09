@@ -17,6 +17,7 @@ import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/services/app_config_service.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:app_test/features/more/customized_notification/views/customize_notification_screen.dart';
@@ -108,13 +109,11 @@ class _FreeServiceMoreScreenState extends State<FreeServiceMoreScreen> {
                               children: [
                                 Center(
                                   child: ConstrainedBox(
-                                    constraints: const BoxConstraints(
-                                      maxWidth: double.infinity,
-                                    ),
+                                    constraints: LayoutService.contentConstraints(context),
                                     child: Container(
                                       padding: const EdgeInsetsDirectional.only(start: 16),
                                       alignment: LocalizationService.isArabic(context: context)? Alignment.centerRight:Alignment.centerLeft,
-                                      child: Text(AppStrings.functionality.tr().toUpperCase(),
+                                      child: Text(AppStrings.functionality.tr(),
                                           style: TextStyle(
                                               fontSize: 13,
                                               fontWeight: FontWeight.w600,
@@ -138,23 +137,13 @@ class _FreeServiceMoreScreenState extends State<FreeServiceMoreScreen> {
                                   title: AppStrings.articlesNew.tr(),
                                   src: "assets/images/svg/man.svg",
                                   onTap: () {
-                                    if (kIsWeb) {
-                                      context.pushNamed(
-                                        AppRoutes.defaultListPage.name,
-                                        pathParameters: {
-                                          "lang": context.locale.languageCode,
-                                          "type": "blogs"
-                                        },
-                                      );
-                                    } else {
-                                      context.pushNamed(
-                                        AppRoutes.defaultPage.name,
-                                        pathParameters: {
-                                          "lang": context.locale.languageCode,
-                                          "type": "blogs"
-                                        },
-                                      );
-                                    }
+                                    context.pushNamed(
+                                      AppRoutes.defaultPage.name,
+                                      pathParameters: {
+                                        "lang": context.locale.languageCode,
+                                        "type": "blogs"
+                                      },
+                                    );
                                   },
                                 ),
                                 DefaultListTile(
@@ -172,13 +161,11 @@ class _FreeServiceMoreScreenState extends State<FreeServiceMoreScreen> {
                               const SizedBox(height : 35),
                                 Center(
                                   child: ConstrainedBox(
-                                    constraints: const BoxConstraints(
-                                      maxWidth: double.infinity,
-                                    ),
+                                    constraints: LayoutService.contentConstraints(context),
                                     child: Container(
                                       padding: const EdgeInsetsDirectional.only(start: 16),
                                       alignment: LocalizationService.isArabic(context: context)? Alignment.centerRight:Alignment.centerLeft,
-                                      child: Text(AppStrings.myAccount.tr().toUpperCase(),
+                                      child: Text(AppStrings.myAccount.tr(),
                                           style: TextStyle(
                                               fontSize: 13,
                                               fontWeight: FontWeight.w600,
@@ -287,7 +274,7 @@ class _FreeServiceMoreScreenState extends State<FreeServiceMoreScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 50),
                         width: MediaQuery.sizeOf(context).width * 1,
                         child: Text(
-                          (gCache['name'] ?? '').toUpperCase(),
+                          (gCache['name'] ?? ''),
                           maxLines: 1,
                           textAlign: TextAlign.center,
                           style: Theme.of(context)
@@ -351,9 +338,7 @@ class DefaultListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(
-          maxWidth: double.infinity,
-        ),
+        constraints: LayoutService.contentConstraints(context),
         child: Column(
           children: [
             Container(
@@ -367,7 +352,7 @@ class DefaultListTile extends StatelessWidget {
                   width: 20, height: 20,
                 ),
                 title: Text(
-                  title.toUpperCase(),
+                  title,
                   style: Theme.of(context).textTheme.labelSmall,
                 ),
                 onTap: onTap ?? () {},

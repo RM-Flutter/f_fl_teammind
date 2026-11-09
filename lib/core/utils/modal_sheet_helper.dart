@@ -75,7 +75,7 @@ abstract class ModalSheetHelper {
                                 context.locale.languageCode
                               });
                         },
-                        title: AppStrings.viewProfile.tr().toUpperCase(),
+                        title: AppStrings.viewProfile.tr(),
                         titleSize: 12,
                         isFuture: false,
                       ),

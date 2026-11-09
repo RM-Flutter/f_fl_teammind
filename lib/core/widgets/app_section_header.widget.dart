@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 
 import '../constants/app_colors.dart';
 import '../constants/app_design.dart';
@@ -66,6 +67,7 @@ class AppSectionHeader extends StatelessWidget {
             SizedBox(
               height: height,
               child: OverflowBox(
+                fit: OverflowBoxFit.deferToChild,
                 maxHeight: AppSpacing.tapTarget,
                 child: InkWell(
                   onTap: onViewAll,

@@ -1,3 +1,4 @@
+import 'package:app_test/core/widgets/app_empty_scroll_view.widget.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -201,13 +202,7 @@ class _ShiftChangeRequestsScreenState extends State<ShiftChangeRequestsScreen> {
                 child: RefreshIndicator.adaptive(
                   onRefresh: () => provider.fetchRequests(context),
                   child: list.isEmpty
-                      ? SingleChildScrollView(
-                          physics: const AlwaysScrollableScrollPhysics(),
-                          child: NoExistingPlaceholderScreen(
-                            height: 300,
-                            title: AppStrings.noDataFounded.tr(),
-                          ),
-                        )
+                      ? AppEmptyScrollView(title: AppStrings.noDataFounded.tr())
                       : ListView.builder(
                           controller: _scrollController,
                           clipBehavior: Clip.none,

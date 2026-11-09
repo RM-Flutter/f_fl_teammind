@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import '../../data/models/approvable_details_model.dart';
 
@@ -54,9 +55,7 @@ class PendingCancelBanner extends StatelessWidget {
     const Color accent = Color(0xFFE65100);
     final Color iconColor = canApprove ? const Color(0xFFC62828) : accent;
 
-    // Web: compact one-line banner, aligned with the tab bar below it, so it takes
-    // less height from the tabs on short screens. Mobile keeps the two-line layout.
-    const bool compact = kIsWeb;
+    const bool compact = false;
 
     final Widget icon = Container(
       padding: EdgeInsets.all(compact ? 5 : 8),
@@ -106,7 +105,7 @@ class PendingCancelBanner extends StatelessWidget {
 
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: double.infinity),
+        constraints: LayoutService.contentConstraints(context),
         child: Container(
           // Web: same side inset as the tab bar (8) so the edges line up
           margin: compact

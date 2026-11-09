@@ -180,136 +180,183 @@ footer { color: var(--muted); font-size: 13px; }
 .login .overlap { outline: 2px dashed #F08597; outline-offset: 2px; }
 .loginok { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 8px; padding-bottom: 12px; }
 .loginok .btn, .loginok .cna, .loginok .pill { position: static; transform: none; }
+
+.cmp { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+@media (max-width: 600px) { .cmp { grid-template-columns: 1fr; } }
+.cbox { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 8px; align-items: center; font-family: var(--f-app); min-width: 0; }
+.cbox .t { font-family: var(--f-body); font-size: 12.5px; color: var(--muted); align-self: stretch; }
+.pbtn { background: #3A8DED; color: #fff; border-radius: 999px; font-size: 12px; font-weight: 600; padding: 8px 0; width: 160px; text-align: center; }
+.lg { position: relative; background: linear-gradient(180deg,#8a95c4,#12136E); border-radius: 14px; height: 250px; overflow: hidden; font-family: var(--f-app); color: #fff; }
+.lg .logo2 { position: absolute; left: 50%; transform: translateX(-50%); width: 34px; height: 34px; border-radius: 50%; border: 6px solid #fff; border-bottom-color: transparent; }
+.lg .ttl { position: absolute; left: 0; right: 0; text-align: center; font-size: 12px; }
+.lg .fld { position: absolute; background: #fff; border-radius: 8px; height: 22px; }
+.rule { font-family: var(--f-mono); font-size: 11.5px; direction: ltr; text-align: start; color: var(--muted); }
+
+.cmp { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+@media (max-width: 600px) { .cmp { grid-template-columns: 1fr; } }
+.cbox { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 8px; align-items: center; font-family: var(--f-app); min-width: 0; }
+.cbox .t { font-family: var(--f-body); font-size: 12.5px; color: var(--muted); align-self: stretch; }
+.pbtn { background: #3A8DED; color: #fff; border-radius: 999px; font-size: 12px; font-weight: 600; padding: 8px 0; width: 160px; text-align: center; }
+.lg { position: relative; background: linear-gradient(180deg,#8a95c4,#12136E); border-radius: 14px; height: 250px; overflow: hidden; font-family: var(--f-app); color: #fff; }
+.lg .logo2 { position: absolute; left: 50%; transform: translateX(-50%); width: 34px; height: 34px; border-radius: 50%; border: 6px solid #fff; border-bottom-color: transparent; }
+.lg .ttl { position: absolute; left: 0; right: 0; text-align: center; font-size: 12px; }
+.lg .fld { position: absolute; background: #fff; border-radius: 8px; height: 22px; }
+.rule { font-family: var(--f-mono); font-size: 11.5px; direction: ltr; text-align: start; color: var(--muted); }
+
+.ddrow { display: flex; flex-direction: column; gap: 10px; font-family: var(--f-app); direction: rtl; }
+.dd { background: #fff; border: 1px solid #E3E5EE; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; font-size: 12px; color: #6B6F93; }
+.dd .ch { font-size: 11px; color: #1B1D3A; }
+.lang { display: flex; flex-direction: column; gap: 8px; font-family: var(--f-app); direction: rtl; }
+.lrow { background: #fff; border: 1px solid #E3E5EE; border-radius: 12px; padding: 10px 12px; display: flex; align-items: center; gap: 10px; font-size: 12px; }
+.lrow.on { border-color: #3A8DED; background: #F3F8FE; }
+.lrow .flag { width: 26px; height: 26px; border-radius: 50%; background: #E7F0FD; display: grid; place-items: center; font-size: 10px; font-weight: 700; color: #12136E; }
+.lrow .rd { margin-inline-start: auto; width: 16px; height: 16px; border-radius: 50%; border: 2px solid #C9CDE0; }
+.lrow.on .rd { border: 5px solid #3A8DED; }
 </style>
 
 <div class="wrap" dir="rtl" lang="ar">
   <header>
-    <span class="eyebrow">TEAM MIND · خطة تعديل · الجولة الخامسة</span>
+    <span class="eyebrow">TEAM MIND · خطة تعديل · الجولة السابعة</span>
     <h1>توحيد شكل الشاشات في Team Mind</h1>
-    <p class="lead">4 حاجات: "View all" اللي اتقطع، والهيدر الكبير في Employee Info، والـ shadows بحيث تبقى واحدة في كل الأبلكيشن، وتداخل الكلام في آخر شاشة الـ Login على الموبايل والويب.</p>
+    <p class="lead">8 حاجات من الصور. كل واحدة فيها السبب اللي لقيته في الكود، والحل على مستوى الأبلكيشن كله، وإزاي هتأكد إنها اتصلحت.</p>
     <nav class="toc" aria-label="المحتوى">
-      <a href="#viewall">١ · View all</a>
-      <a href="#header">٢ · هيدر Employee Info</a>
-      <a href="#shadows">٣ · توحيد الـ shadows</a>
-      <a href="#login">٤ · آخر شاشة الـ Login</a>
-      <a href="#order">ترتيب التنفيذ</a>
+      <a href="#arrow">١ · اتجاه السهم في العربي</a>
+      <a href="#dd">٢ · الـ dropdowns</a>
+      <a href="#fields">٣ · ارتفاع الحقول</a>
+      <a href="#tasks">٤ · "الكل" في المهام</a>
+      <a href="#penalty">٥ · ترجمة Penalty</a>
+      <a href="#contact">٦ · تواصل معنا</a>
+      <a href="#lang">٧ · إعدادات اللغة</a>
+      <a href="#login">٨ · الـ Login</a>
+      <a href="#verify">التجربة</a>
     </nav>
   </header>
 
-  <!-- 1 -->
-  <section class="plan" id="viewall">
-    <h2>فين "View all"؟ <span class="tag">غلط من الجولة اللي فاتت</span></h2>
+  <section class="plan" id="arrow">
+    <h2>اتجاه السهم في العربي <span class="tag">3 أماكن + مراجعة 34</span></h2>
     <div class="why"><span class="label">السبب</span>
-      <p>في الجولة اللي فاتت خليت ارتفاع صف العنوان 24 علشان المسافات تبقى متساوية. لكن زرار "View all" جوه <code>AppSectionHeader</code> عليه padding ‏8 من فوق و8 من تحت، يعني محتاج حوالي 34. فالصف بيقص الزرار، وبيبان منه سطر نازل من فوق ("VIEW ALL" مقصوصة).</p></div>
+      <p>أيقونات Flutter زي <code>chevron_right</code> و<code>arrow_forward</code> بتتقلب لوحدها في العربي (<code>matchTextDirection</code>). وأنا في كذا مكان كنت بقلبها بإيدي كمان: لو عربي أحط <code>chevron_left</code>. فالسهم بيتقلب مرتين ويرجع يشاور في الاتجاه الغلط، زي اللي في كارت "عرض طلبات الفريق على التقويم".</p>
+      <p>الأماكن: <code>app_shortcut_card.widget.dart</code> (كارت الكاليندر في كل الشاشات)، و<code>team_fingerprint_screen.dart</code> (كروت Team Fingerprint)، و<code>onboarding_screen.dart</code>.</p></div>
     <ol class="steps">
-      <li><div><b>الـ padding بتاع الزرار يتحسب من ارتفاع الصف.</b><p>الـ padding الرأسي يبقى <code>max(0, (height − 20) / 2)</code>، يعني 8 مع الارتفاع العادي 36 و2 مع 24. والنص في نص الصف بالظبط (<code>Center</code>)، فمش هيتقص مع أي ارتفاع.</p></div></li>
-      <li><div><b>مساحة الضغط تفضل كبيرة.</b><p>ساحة الضغط حوالين "View all" تبقى 44 على الأقل (<code>InkWell</code> برا الصف بـ <code>Transform</code>/<code>OverflowBox</code>)، علشان الزرار يفضل سهل الضغط مع إن الصف 24 بس.</p></div></li>
-      <li><div><b>أدوّر على كل مكان بيستخدم <code>height</code>.</b><p>دلوقتي مكان واحد بس (Rewards &amp; penalties). وهتأكد إن الـ 3 حاجات (العنوان والـ chips والكارت) فوق بعض بمسافة 12 من غير ما حاجة تتقص.</p></div></li>
+      <li><div><b>الـ 3 أماكن.</b><p>يبقوا <code>Icons.chevron_right_rounded</code> بس، من غير أي شرط على اللغة. Flutter هو اللي بيقلبه.</p></div></li>
+      <li><div><b>مراجعة الـ 34 سهم الباقيين.</b><p>هعدّي على كل مكان فيه <code>arrow_*</code> أو <code>chevron_*</code> أو <code>keyboard_arrow_*</code>، وأتأكد إن السهم مش متقلب بإيدي. ولو أيقونة مش بتتقلب لوحدها (زي <code>trending_flat</code>)، هحطها جوه <code>Directionality</code> صح.</p></div></li>
+      <li><div><b>قاعدة.</b><p>"الأسهم ما تتقلبش بإيدك". هتتضاف للفحص: أي سطر فيه <code>isRtl</code> أو <code>isArabic</code> جنب <code>chevron_left</code> أو <code>arrow_back</code> هيطلع.</p></div></li>
     </ol>
+    <div class="ask"><b>حاجة تانية في نفس الصورة</b><p>عناوين الطلبات ظاهرة "????". ده نص عربي اتكتب غلط في قاعدة البيانات أو في الـ API (encoding)، مش من الأبلكيشن. الأبلكيشن بيعرض اللي جاله. هتأكد من رد الـ API وأقولك بالظبط فين المشكلة.</p></div>
   </section>
 
-  <!-- 2 -->
-  <section class="plan" id="header">
-    <h2>هيدر Employee Info واخد مساحة كبيرة <span class="tag">profile_details_header</span></h2>
-    <div class="why"><span class="label">الوضع دلوقتي</span>
-      <p>الهيدر ارتفاعه ثابت <code>370</code>، وجواه صورة 100، والاسم 22، وتحته المسمى الوظيفي والقسم كل واحد في سطر لوحده، وكله في نص الشاشة. على iPhone ده تقريباً <b>40%</b> من الشاشة قبل ما تشوف أي تاب، والمحتوى المفيد بيبدأ من تحت النص. وكمان الـ 370 رقم ثابت، فعلى موبايل قصير أو في landscape بياكل الشاشة كلها تقريباً.</p></div>
+  <section class="plan" id="dd">
+    <h2>الـ dropdowns كلها شبه بعض <span class="tag">6 أنواع مختلفة</span></h2>
+    <div class="why"><span class="label">السبب</span>
+      <p>الأبلكيشن فيه 6 طرق مختلفة لعمل dropdown، وكل واحدة بارتفاع وpadding مختلف:</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>الـ widget</th><th>الاستخدام</th></tr></thead>
+        <tbody>
+          <tr><td><code>SearchableDropdownSheet</code> (ارتفاعه 65 بيتحط من برا)</td><td>7 ملفات، 16 مكان. وده "نوع الطلب" في الفلتر.</td></tr>
+          <tr><td><code>defaultDropdownField</code>، وفيه منه <b>نسختين</b>: في <code>text_form_widget.dart</code> وفي <code>all_text_field.dart</code></td><td>11 ملف، 17 مكان. وده "الحالة" اللي ارتفاعها حوالي 64.</td></tr>
+          <tr><td><code>DropdownButtonFormField</code> مباشرة</td><td>6 ملفات، 11 مكان</td></tr>
+          <tr><td><code>DropdownButton</code> مباشرة</td><td>8 ملفات، 11 مكان</td></tr>
+          <tr><td><code>MultiSearchableDropdownSheet</code></td><td>3 ملفات، 6 أماكن</td></tr>
+          <tr><td><code>CustomDropdown</code> (animated)</td><td>مكان واحد</td></tr>
+        </tbody>
+      </table></div></div>
     <div class="mocks">
-      <figure><div class="phone"><div class="hd-old"><span class="pic" style="width:52px;height:52px"></span><b>mohamed ryad</b><small>MANAGER</small><small>Department: HR MANAGEMENT</small></div><div class="ph-body"><div class="mcard"></div></div></div><figcaption><span class="dot before"></span>دلوقتي: 370 ثابت، وكله في عمود في النص</figcaption></figure>
-      <figure><div class="phone"><div class="hd-new"><span class="pic" style="width:46px;height:46px;flex:none"></span><span class="t"><b>Mohamed Ryad</b><small>Manager · HR Management</small></span></div><div class="ph-body"><div class="mcard"></div><div class="mcard"></div></div></div><figcaption><span class="dot after"></span>المقترح: صف واحد، والارتفاع حسب المحتوى</figcaption></figure>
+      <figure><div class="phone"><div class="ph-body"><div class="ddrow"><div class="dd" style="height:34px">نوع الطلب <span class="ch">⌄</span></div><div style="height:14px"></div><div class="dd" style="height:56px">الحالة <span class="ch">⌄</span></div><div class="dd" style="height:34px">وقت الطلب <span class="ch">▦</span></div></div></div></div><figcaption><span class="dot before"></span>دلوقتي: ارتفاعات ومسافات مختلفة</figcaption></figure>
+      <figure><div class="phone"><div class="ph-body"><div class="ddrow"><div class="dd" style="height:40px">نوع الطلب <span class="ch">⌄</span></div><div class="dd" style="height:40px">الحالة <span class="ch">⌄</span></div><div class="dd" style="height:40px">وقت الطلب <span class="ch">▦</span></div></div></div></div><figcaption><span class="dot after"></span>بعد: نفس الارتفاع، ونفس السهم، ومسافة 12 بينهم</figcaption></figure>
     </div>
-    <p class="ruler">370 → safeTop + 56 (app bar) + 88 + 16 ≈ 220 on iPhone · saves ~150</p>
     <ol class="steps">
-      <li><div><b>الارتفاع يتحدد من المحتوى.</b><p>بدل الـ 370 الثابت: الـ status bar، وبعده الـ app bar ‏(56)، وبعده صف بيانات الموظف، وبعده 16. والخلفية الكحلي والصورة بتاعتها بتغطي ده بس، وتنتهي بنفس الحواف المدوّرة <code>AppRadius.xl</code>.</p></div></li>
-      <li><div><b>صف أفقي بدل العمود.</b><p>الصورة 72 على البداية، وجنبها الاسم 18 <code>w700</code> بالحروف العادية (مش Capital)، وتحت الاسم سطر واحد فيه المسمى الوظيفي والقسم مفصولين بـ <code>·</code>، بحجم 13 وأبيض 80%. كده "Department:" مش محتاجة تتكتب. وفي RTL الصف بيتقلب لوحده.</p></div></li>
-      <li><div><b>Tokens.</b><p>مقاس الصورة (72) والمسافة اللي تحت الصف (16) يتحطوا في <code>AppSizes</code> (<code>profileHeaderAvatar</code>). مفيش أرقام في الـ widget نفسه، وأشيل <code>LayoutService.getWidth</code> لأن الهيدر بياخد العرض كله لوحده.</p></div></li>
-      <li><div><b>الشاشات اللي بتستخدم نفس الهيدر.</b><p>أدوّر على الأماكن اللي بتستخدم <code>EmployeeDetailsHeader</code> أو هيدر شبهه (Personal profile)، وأخليهم بنفس الشكل علشان الأبلكيشن يبقى متسق.</p></div></li>
+      <li><div><b>widget واحد للشكل.</b><p>هعمل <code>AppDropdownField</code> في <code>core/widgets</code>، ارتفاعه <code>AppSizes.fieldHeight</code> = <b>52</b>. نفس الـ border والـ radius والـ padding (16) والخط اللي في حقول الكتابة، ونفس أيقونة السهم <code>keyboard_arrow_down_rounded</code> بلون رمادي غامق. وبيفتح sheet أو قايمة حسب الـ parameter، يعني بحث أو من غير بحث، واختيار واحد أو أكتر.</p></div></li>
+      <li><div><b>الأنواع القديمة تستخدمه من جوه.</b><p><code>SearchableDropdownSheet</code> و<code>MultiSearchableDropdownSheet</code> و<code>defaultDropdownField</code> يرسموا الحقل نفسه بـ <code>AppDropdownField</code>، وأشيل الـ <code>height: 65</code> اللي بيتحط من برا. والنسختين بتوع <code>defaultDropdownField</code> يبقوا نسخة واحدة. كده الـ 39 مكان يتغيروا مرة واحدة.</p></div></li>
+      <li><div><b>الـ <code>DropdownButtonFormField</code> و<code>DropdownButton</code>.</b><p>الـ 22 مكان دول هيتحولوا لـ <code>AppDropdownField</code> ملف ملف. والمكان الوحيد اللي فيه <code>CustomDropdown</code> برضه.</p></div></li>
+      <li><div><b>شيت الفلتر.</b><p>الفلتر في Requests وExpense وSalary وOvertime: كل الحقول ورا بعض بمسافة 12. وأشيل المسافات العشوائية (15 و20 و30) والـ <code>SizedBox</code> الفاضي اللي بين "نوع الطلب" و"الحالة".</p></div></li>
     </ol>
-    <div class="ask"><b>اختياري</b><p>ممكن الهيدر كمان يصغر وهو بيعمل scroll: يبقى app bar بس، وفيه الاسم صغير جنب زرار الرجوع. ده محتاج نحوّل الشاشة لـ <code>CustomScrollView</code> بـ <code>SliverAppBar</code>. أنا شايف إن الصف الأفقي لوحده كفاية، ولو عايز الـ collapse قولي.</p></div>
   </section>
 
-  <!-- 3 -->
-  <section class="plan" id="shadows">
-    <h2>shadow واحدة لكل نوع، في كل الأبلكيشن <span class="tag">87 مكان في 55 ملف</span></h2>
-    <div class="why"><span class="label">الوضع دلوقتي</span>
-      <ul class="plain">
-        <li>فيه <b>87</b> <code>BoxShadow(</code> مكتوبة بإيد في <b>55</b> ملف، وكل واحدة بلون وشفافية وblur وoffset مختلفين. وأكتر حاجة في points (10) وcore (11) وreports (8) والـ free services (7).</li>
-        <li><code>AppShadows.card</code> موجودة ومستخدمة في 30 مكان بس.</li>
-        <li>فيه <b>13</b> <code>elevation</code> بأرقام 2 و4 و5 و6 و8 و10 و12، وده بيرسم shadow الـ Material الرمادية التقيلة، ومعاهم 11 <code>Card(</code>.</li>
-        <li>الـ border بتاع الكارت (<code>AppBorders.card</code>) والـ radius (<code>AppRadius.md</code>) مش متطبقين في كل حتة. فيه كروت radius بتاعها 6 أو 8 أو 16 أو 20.</li>
-      </ul></div>
-
-    <div class="block">
-      <h3>4 مستويات بس</h3>
-      <div class="shadow-row">
-        <div class="sh"><span class="box" style="box-shadow:none;border:1px solid #E6E8F0"></span><span class="n">AppShadows.none</span><span class="u">الحقول، والكروت جوه كارت، والـ chips</span></div>
-        <div class="sh"><span class="box" style="box-shadow:0 1px 2px rgba(16,24,40,.04),0 2px 6px rgba(16,24,40,.04);border:1px solid #EEF0F5"></span><span class="n">AppShadows.card</span><span class="u">كل الكروت، والـ shimmer، والكروت اللي بتتداس</span></div>
-        <div class="sh"><span class="box" style="box-shadow:0 8px 24px rgba(16,24,40,.10)"></span><span class="n">AppShadows.raised</span><span class="u">الـ FAB، والأشرطة الثابتة تحت، والـ banners اللي فوق الخريطة</span></div>
-        <div class="sh"><span class="box" style="box-shadow:0 16px 40px rgba(16,24,40,.16)"></span><span class="n">AppShadows.overlay</span><span class="u">الـ bottom sheets، والـ dialogs، والـ dropdown overlay</span></div>
-      </div>
-      <p>لون الـ shadow كحلي غامق جداً (<code>#101828</code>) مش أسود، علشان يبان دافي ومتناسق مع الكحلي بتاع الأبلكيشن. والكارت دايماً: <code>AppRadius.md</code> (12) و<code>AppBorders.card</code> و<code>AppShadows.card</code>. وده نفسه اللي بيعمله <code>AppCard</code> و<code>AppDecorations.card()</code>.</p>
-    </div>
-
-    <div class="block">
-      <h3>الخطوات</h3>
-      <ol class="steps">
-        <li><div><b>الـ tokens.</b><p>في <code>AppShadows</code> (‏<code>app_design.dart</code>): <code>none</code> و<code>card</code> (طبقتين خفاف) و<code>raised</code> و<code>overlay</code>. و<code>card</code> الحالية (أسود 3%) تتعدّل للقيمة الجديدة، فالـ 30 مكان اللي بيستخدموها يتغيروا لوحدهم.</p></div></li>
-        <li><div><b>الثيم.</b><p>في <code>AppThemeService</code>: الـ <code>cardTheme</code> بـ <code>elevation: 0</code> وshape بالـ radius والـ border، والـ <code>bottomSheetTheme</code> والـ <code>dialogTheme</code> بـ <code>elevation: 0</code> ولون shadow شفاف (والـ shadow الـ overlay بتتحط من الـ widget نفسه)، والـ <code>floatingActionButtonTheme</code> بـ elevation واحدة ثابتة. كده أي <code>Card</code> أو sheet أو dialog من غير ما نلمسه يبقى متسق.</p></div></li>
-        <li><div><b>الـ 87 مكان.</b><p>كل واحد يتحوّل لواحد من الـ 4 مستويات حسب دوره. التقسيمة المبدئية من أسماء الملفات (وهتأكد منها ملف ملف):</p>
-          <div class="table-wrap"><table>
-            <thead><tr><th>المستوى</th><th>الأماكن</th></tr></thead>
-            <tbody>
-              <tr><td><code>card</code></td><td>كروت التقارير الـ 8 وshimmer بتاعها، وبطاقات points/fawry، والـ free services (templates وsmart card وad banner)، و<code>bookmark_list_widget</code>، و<code>daily_reports</code>، و<code>cached_network_image_widget</code>، و<code>fingerprint_loading_screen</code></td></tr>
-              <tr><td><code>raised</code></td><td><code>assistant_floating_widget</code>، و<code>charge_phone_bottom_bar</code>، و<code>tracking_home_preview_banner</code>، و<code>live_group_map_screen</code>، وأزرار الحفظ اللي ثابتة تحت في شاشات الإضافة (overtime وexpense وsalary advance وcomplaints وshift change)، و<code>send_comment_widget</code></td></tr>
-              <tr><td><code>overlay</code></td><td><code>all_bottom_sheet</code>، و<code>overlapping_vacations_sheet</code>، و<code>bottom_sheet_external_success</code>، و<code>files_carousel_dialog</code>، و<code>tracking_map_view_dialog</code>، و<code>dropdown_overlay</code>، و<code>search_filter_widget</code>، و<code>history_drop_down_widget</code></td></tr>
-              <tr><td><code>none</code></td><td><code>all_text_field</code>، و<code>text_form_widget</code> (الحقل بيبان بالـ border بس)، و<code>notification_reactions_widget</code>، و<code>language_setting_screen</code>، والكروت اللي جوه كارت تاني</td></tr>
-            </tbody>
-          </table></div></div></li>
-        <li><div><b>الـ 13 <code>elevation</code>.</b><p>تبقى 0، والـ shadow تتحط من الـ tokens. القايمة: home ‏(8)، وrequests calendar ‏(4)، وrequest details header ‏(6)، وcv hub ‏(4)، وrewards modal ‏(2×2)، وverification tile ‏(5)، وexpandable fab ‏(4×2)، وtimeout message ‏(10)، وalerts service ‏(12)، وconfirmation dialog ‏(12)، والثيم ‏(1).</p></div></li>
-        <li><div><b>الكروت المعمولة باليد.</b><p>أي <code>Container</code> فيه <code>BoxDecoration</code> بلون أبيض وradius يتحول لـ <code>AppCard</code>، أو لـ <code>AppDecorations.card()</code> لو مش ينفع يبقى <code>AppCard</code>. وأي radius 6 أو 8 أو 16 أو 20 على كارت يتحول لـ <code>AppRadius.md</code>.</p></div></li>
-        <li><div><b>القاعدة وفحص قبل أي commit.</b><p>قاعدة 13 في <code>app_design.dart</code>: "ممنوع <code>BoxShadow(</code> أو <code>elevation</code> رقمي برا <code>app_design.dart</code>". وsكريبت صغير <code>tool/check_design_tokens.sh</code> بيعمل grep ويطبع أي مخالفة، علشان المشكلة ما ترجعش تاني.</p></div></li>
-      </ol>
-    </div>
-    <div class="done"><h3>هنعتبره خلص لما</h3><ul>
-      <li><code>grep -rn "BoxShadow(" lib</code> ما يطلعش غير <code>app_design.dart</code>.</li>
-      <li>مفيش <code>elevation</code> برقم أكبر من 0 برا الثيم.</li>
-      <li>كارت في الهوم، وكارت في Reports، وكارت في Points، وكارت في Free services: نفس الـ shadow والـ border والـ radius بالظبط.</li>
-    </ul></div>
+  <section class="plan" id="fields">
+    <h2>ارتفاع الحقول في كل شاشات الإضافة</h2>
+    <div class="why"><span class="label">السبب</span><p>في "طلب جديد" مثلاً، حقل "موضوع" معمول بـ <code>TextFormField</code> جوه كارت بـ padding، فبيطلع أطول من "اختر الإدارة". وفيه حقول تانية <code>height</code> بتاعها مكتوب بإيد (60 و70 و80) في <code>add_complain_screen</code> و<code>add_task_screen</code>.</p></div>
+    <ol class="steps">
+      <li><div><b>كل الحقول اللي سطر واحد بنفس الارتفاع.</b><p>الحقل اللي سطر واحد (اسم، موضوع، مبلغ، تاريخ، وقت) بيبقى <code>AppSizes.fieldHeight</code> = 52، زي الـ dropdown بالظبط. والقيمة دي هتتحط في <code>inputDecorationTheme</code> (‏<code>contentPadding</code> رأسي 15)، علشان أي <code>TextFormField</code> عادي ياخدها من غير ما حد يلمسه.</p></div></li>
+      <li><div><b>الاستثناءات.</b><p>حقل متعدد السطور زي الوصف أو التفاصيل (<code>maxLines &gt; 1</code>) بيبدأ من 3 أسطر وبيكبر مع الكلام. وكارت رفع الصورة أو الملف بيفضل بالشكل بتاعه.</p></div></li>
+      <li><div><b>الشاشات.</b><p>كل شاشات add وcreate وedit: Requests وComplaints وTasks وExpense claims وSalary advance وOvertime وShift change وDaily reports وAdd notification. وهشيل أي <code>height:</code> أو <code>Container</code> بـ padding حوالين الحقول.</p></div></li>
+    </ol>
   </section>
 
-  <!-- 4 -->
+  <section class="plan" id="tasks">
+    <h2>"الكل" لازق في جنب الشاشة في المهام</h2>
+    <div class="why"><span class="label">السبب</span><p>في <code>task_calender_widget.dart</code> زرار "الكل" برا الليست اللي بتعمل scroll، ومفيش padding حواليه، فبيلزق في حافة الشاشة. والأيام اللي جنبه ليها padding ‏16.</p></div>
+    <ol class="steps">
+      <li><div><b>"الكل" يدخل في نفس الليست.</b><p>يبقى أول عنصر فيها، فياخد نفس الـ padding (‏<code>AppSpacing.page</code>) ونفس المسافة 10 اللي بين الأيام، ويعمل scroll معاهم.</p></div></li>
+      <li><div><b>نفس الشكل.</b><p>بنفس ارتفاع خانة اليوم ونفس الـ radius. لما يكون مختار بيبقى أزرق، ولما يكون مش مختار بيبقى أبيض بـ border.</p></div></li>
+      <li><div><b>زرار "عرض المزيد".</b><p>اللي في نفس الصورة بيمشي على خطة Load More (يظهر بس لو فيه صفحة كمان).</p></div></li>
+    </ol>
+  </section>
+
+  <section class="plan" id="penalty">
+    <h2>"Penalty" مش مترجمة</h2>
+    <div class="why"><span class="label">السبب</span><p>في <code>reward_and_penalty_card.widget.dart</code> نوع البند جاي من السيرفر <code>penalty</code> أو <code>reward</code>، وبيتعرض زي ما هو من غير <code>.tr()</code>. وسكريبت الترجمة ما مسكهوش، لأنه بيدوّر على النصوص المكتوبة في الكود بس، مش على القيم اللي جاية من السيرفر.</p></div>
+    <ol class="steps">
+      <li><div><b>الترجمة.</b><p>القيمة تتعرض بـ <code>'penalty'.tr()</code> و<code>'reward'.tr()</code>. هضيف الـ keys دي لو مش موجودة: "عقوبة" و"مكافأة".</p></div></li>
+      <li><div><b>كل الحالات والأنواع اللي جاية من السيرفر.</b><p>هدوّر في الكود على أي مكان بيعرض <code>type</code> أو <code>status</code> أو <code>kind</code> جاي من الـ API من غير <code>.tr()</code>، وأترجمه.</p></div></li>
+      <li><div><b>السكريبت.</b><p><code>check_translations.py</code> هيطلع أي <code>Text(x.type)</code> أو <code>label: x.status</code> من غير <code>.tr()</code>.</p></div></li>
+    </ol>
+  </section>
+
+  <section class="plan" id="contact">
+    <h2>تحسين شاشة تواصل معنا</h2>
+    <div class="why"><span class="label">الوضع دلوقتي</span><p>الكلام مكتوب على صورة مباني غامقة كخلفية، ومفيش أي كارت تحته. العناوين كبيرة والقيم صغيرة، وزرار "الخريطة" صغير جداً. الأيقونات في صف واحد طويل، وزرار "إرسال بريد" بعيد تحت.</p></div>
+    <ol class="steps">
+      <li><div><b>الشكل الجديد.</b><p>الشاشة تبقى زي باقي الأبلكيشن: <code>TemplatePage</code> بالهيدر الكحلي (<code>brandedHeader</code>) وفيه الصورة. وتحت الهيدر 3 كروت <code>AppCard</code>: الهاتف، والعنوان، والبريد. كل كارت فيه أيقونة في مربع فاتح، والعنوان 14، والقيمة 13.</p></div></li>
+      <li><div><b>الأزرار جوه الكروت.</b><p>كارت الهاتف فيه زرار "اتصال"، وكارت العنوان فيه "الخريطة"، وكارت البريد فيه "إرسال بريد". كل زرار pill صغير على آخر السطر (<code>AppStatusBadge</code> بسهم بعد الكلمة).</p></div></li>
+      <li><div><b>"تابعنا".</b><p>كارت لوحده، والأيقونات جواه في grid من 5 في الصف بدل 9 في صف واحد، ونفس الحجم.</p></div></li>
+      <li><div><b>نسخ الأرقام والإيميل.</b><p>بالضغط المطول على الرقم أو الإيميل يتنسخ، ويظهر toast "تم النسخ".</p></div></li>
+    </ol>
+  </section>
+
+  <section class="plan" id="lang">
+    <h2>تحسين شاشة إعدادات اللغة</h2>
+    <div class="mocks">
+      <figure><div class="phone"><div class="bar"><span class="back"></span>Language<span class="bm"></span></div><div class="ph-body" style="background:#fff"><div style="display:flex;justify-content:space-between;font-size:11px;font-family:var(--f-app)"><span>English Language ○</span><span style="color:#3A8DED">Change</span></div><div style="display:flex;justify-content:space-between;font-size:11px"><span>اللغه العربية ●</span><span style="color:#3A8DED">تغيير</span></div></div></div><figcaption><span class="dot before"></span>دلوقتي: صفين في مساحة فاضية، وزرار "تغيير" لكل لغة</figcaption></figure>
+      <figure><div class="phone"><div class="bar"><span class="back"></span>اللغة<span class="bm"></span></div><div class="ph-body"><div class="lang"><div class="lrow"><span class="flag">EN</span>English<span class="rd"></span></div><div class="lrow on"><span class="flag">ع</span>العربية<span class="rd"></span></div></div></div></div><figcaption><span class="dot after"></span>بعد: كارت لكل لغة، والضغط على الكارت نفسه بيغيّر</figcaption></figure>
+    </div>
+    <ol class="steps">
+      <li><div><b>كارت لكل لغة.</b><p>جواه دايرة فيها "EN" أو "ع"، واسم اللغة بلغتها هي ("English" و"العربية")، وradio على الآخر. واللغة المختارة ليها border أزرق وخلفية زرقا فاتحة.</p></div></li>
+      <li><div><b>زراير "تغيير" تتشال.</b><p>الضغط على الكارت نفسه بيغيّر اللغة. وتصليح الإملاء: "اللغه" تبقى "العربية".</p></div></li>
+      <li><div><b>الصفحة نفسها.</b><p>بـ <code>TemplatePage</code> وخلفية الأبلكيشن، والكروت في الـ list padding العادي، بمسافة 10 بينهم.</p></div></li>
+    </ol>
+  </section>
+
   <section class="plan" id="login">
-    <h2>آخر شاشة الـ Login <span class="tag">login_screen.dart</span></h2>
-    <div class="why"><span class="label">السبب</span>
-      <p>"CREATE NEW ACCOUNT" وشريط الدومين (<code>approvals.r-m.dev</code>) متحطوطين بـ <code>Positioned</code> على مسافة ثابتة من تحت الشاشة: الأول على 62 والتاني على 0. لكن شريط الدومين جوه <code>SafeArea</code>، فبيتزق لفوق بارتفاع الـ home indicator (حوالي 34) وبعده 12 padding. فبيوصل لحوالي 86 من تحت، يعني فوق الـ 62 بتاعة "CREATE NEW ACCOUNT"، فبيتركبوا على بعض زي ما في صورتك.</p>
-      <p>وعلى الويب: الاتنين ثابتين فوق المحتوى، والمحتوى بيعمل scroll تحتهم، فالحقول والزراير بتعدّي من تحت "CREATE NEW ACCOUNT" وشريط الدومين ويبانوا داخلين في بعض. والـ <code>SizedBox(150)</code> اللي في آخر المحتوى كان حل مؤقت للمشكلة دي.</p></div>
-    <div class="mocks">
-      <figure><div class="login"><span class="btn" style="bottom:120px">LOGIN</span><span class="cna overlap" style="bottom:62px">CREATE NEW ACCOUNT</span><span class="pill overlap" style="bottom:52px">🌐 approvals.r-m.dev</span></div><figcaption><span class="dot before"></span>دلوقتي: الاتنين متركبين على بعض</figcaption></figure>
-      <figure><div class="login loginok"><span class="btn">LOGIN</span><span style="height:30px"></span><span class="cna">CREATE NEW ACCOUNT</span><span class="pill">🌐 approvals.r-m.dev</span></div><figcaption><span class="dot after"></span>بعد: footer تحت المحتوى، والاتنين فوق بعض بمسافة ثابتة</figcaption></figure>
-    </div>
+    <h2>الـ Login: الكلام الأبيض على الصور، واللوجو</h2>
+    <div class="why"><span class="label">السبب</span><p>الخلفية صور ناس فاتحة، والـ gradient الكحلي بيبدأ من نص الشاشة لتحت بس. فالعنوان "تسجيل الدخول إلى رايت مايند" و"بالهاتف / بالبريد الإلكتروني" و"نسيت كلمة المرور؟" مكتوبين أبيض على وشوش فاتحة، ومش مقروئين. واللوجو الأبيض بيضيع على نفس الخلفية.</p></div>
     <ol class="steps">
-      <li><div><b>أشيل الـ <code>Positioned</code> الاتنين.</b><p>"CREATE NEW ACCOUNT" وشريط الدومين يبقوا <b>footer</b> في آخر نفس الـ scroll بتاع الفورم، مش فوقه. والـ <code>SizedBox(150)</code> يتشال.</p></div></li>
-      <li><div><b>الـ footer يفضل تحت لما الشاشة فاضية.</b><p>بـ <code>LayoutBuilder</code> و<code>ConstrainedBox(minHeight: viewport)</code> و<code>Column</code> فيه <code>Spacer</code>: لو المحتوى قصير الـ footer بيفضل تحت الشاشة، ولو طويل (موبايل صغير أو الكيبورد مفتوح) بيعمل scroll مع الصفحة. كده مستحيل حاجة تعدي فوق حاجة.</p></div></li>
-      <li><div><b>الترتيب.</b><p>من فوق لتحت: "CREATE NEW ACCOUNT"، وبعده 8، وبعده شريط الدومين، وبعده <code>SafeArea</code> من تحت بس. الشريط نفسه يبطل يلف نفسه بـ <code>SafeArea</code>، لأن الـ footer هو اللي بيحسب الـ inset.</p></div></li>
-      <li><div><b>الويب والتابلت.</b><p>الفورم والـ footer في عمود أقصى عرض له 420، وفي نص الشاشة (<code>AppSizes.loginMaxWidth</code>). والخلفية المتحركة تفضل على الشاشة كلها. والزراير اللي فوق (Saved accounts واللغة) تفضل في الـ header ثابتة، والمحتوى يعمل scroll تحتها بمسافة كافية تحت الـ status bar، فمش هيعدّي تحتها.</p></div></li>
-      <li><div><b>تنضيف بسيط وأنا هناك.</b><p>"Login to Right Mind" مكتوب أبيض على صورة فاتحة ومش مقروء (في صورتك). هحط ظل خفيف ورا الكلام، أو أغمّق الـ gradient اللي فوق الصورة في الجزء ده. و"BY EMAIL / BY PHONE" نفس الكلام.</p></div></li>
+      <li><div><b>طبقة غامقة على الصورة كلها.</b><p>الصورة تفضل، بس فوقها طبقة كحلي من فوق لتحت: 55% فوق، و75% في النص، و92% تحت. كده كل الكلام الأبيض يبقى مقروء (contrast أكتر من 4.5:1)، والصور تفضل باينة كإحساس من غير ما تتعارك مع الكلام. التعديل في <code>OverlayGradientWidget</code>.</p></div></li>
+      <li><div><b>كارت للفورم على الويب والتابلت.</b><p>على الشاشات الكبيرة، الحقول والأزرار يبقوا جوه كارت أبيض شفاف 8% بـ blur. كده الفورم يبان كوحدة واحدة فوق الصور.</p></div></li>
+      <li><div><b>اللوجو.</b><p>هستخدم اللوجو الملون (<code>assets/images/app_logos.png</code>، كحلي وأزرق) جوه دايرة بيضا 96 عليها ظل <code>AppShadows.raised</code>، بدل اللوجو الأبيض. لو اللوجو جاي من السيرفر، هيتحط هو جوه نفس الدايرة.</p></div></li>
+      <li><div><b>الكلام.</b><p>"نسيت كلمة المرور؟" و"إنشاء حساب جديد" يفضلوا أبيض، بس بوزن 600 علشان يتقروا، ومن غير ظل.</p></div></li>
     </ol>
-    <div class="done"><h3>هنعتبره خلص لما</h3><ul>
-      <li>على iPhone (بالـ home indicator)، وAndroid صغير 360×640، وiPad، والويب 1440: "CREATE NEW ACCOUNT" وشريط الدومين ما يتلمسوش.</li>
-      <li>على الويب، لما تعمل scroll لآخر الصفحة مفيش أي حاجة بتعدي تحت حاجة.</li>
-      <li>لما الكيبورد يتفتح، الحقل اللي بتكتب فيه يفضل باين، والـ footer يتزق مع المحتوى.</li>
-    </ul></div>
+    <div class="ask"><b>محتاج منك تأكيد</b><p>اللوجو الغامق اللي تقصده هو <code>app_logos.png</code> (الكحلي والأزرق، اللي بيظهر في الشاشة الفاضية)؟ ولا عندك ملف تاني؟</p></div>
+  </section>
+
+  <section class="plan" id="verify">
+    <h2>التجربة قبل التسليم</h2>
+    <div class="why"><span class="label">اللي حصل المرة اللي فاتت</span><p>شغلت الويب وفضل عالق على شاشة الـ splash في الـ browser بتاعي، غالباً لأنه محتاج يختار شركة أو يكلم السيرفر الأول. فما قدرتش أشوف أي شاشة.</p></div>
+    <ol class="steps">
+      <li><div><b>الموبايل.</b><p>هشغّل الأبلكيشن على الـ iOS simulator (‏iPhone 17 Pro، متاح عندي)، وأدخل بحساب تجريبي من ملفات المشروع لو موجود، وأعدّي على كل شاشة اتغيرت، وأبعتلك screenshot في العربي والإنجليزي.</p></div></li>
+      <li><div><b>الويب.</b><p>هحاول تاني بعد ما أفهم ليه الـ splash عالق. ولو محتاج حاجة منك (حساب تجريبي أو domain) هقولك قبل ما أبدأ.</p></div></li>
+      <li><div><b>الفحوصات.</b><p><code>flutter analyze</code> و<code>tool/check_design_tokens.sh</code> (ومعاه سكريبت الترجمة) لازم يبقوا نضاف.</p></div></li>
+    </ol>
   </section>
 
   <section class="plan" id="order">
     <h2>ترتيب التنفيذ</h2>
     <ol class="steps">
-      <li><div><b>View all</b><p>غلطة صغيرة من الجولة اللي فاتت، تتصلح الأول.</p></div></li>
-      <li><div><b>الـ Login</b><p>ملف واحد وwidgetين، وبيتشاف على طول.</p></div></li>
-      <li><div><b>هيدر Employee Info</b><p>widget واحد، وبعده Personal profile لو بيستخدم نفس الشكل.</p></div></li>
-      <li><div><b>الـ shadows</b><p>الـ tokens والثيم الأول، فنص الأبلكيشن يتظبط لوحده. وبعدهم الـ 87 مكان على 4 دفعات (core، وreports، وpoints وservices، والباقي). وفي الآخر الـ elevations والسكريبت.</p></div></li>
+      <li><div><b>السهم وPenalty وزرار "الكل"</b><p>صغيرين وواضحين.</p></div></li>
+      <li><div><b><code>AppDropdownField</code> وارتفاع الحقول</b><p>الأساس الأول، وبعده الشاشات ملف ملف.</p></div></li>
+      <li><div><b>الـ Login</b><p>بعد ما تأكدلي اللوجو.</p></div></li>
+      <li><div><b>تواصل معنا وإعدادات اللغة</b></div></li>
     </ol>
-    <p>كل جزء commit لوحده، وكل نص جديد يبقى له key في <code>en.json</code> و<code>ar.json</code>.</p>
   </section>
 
-  <footer>اتعملت من الكود على branch ‏<span class="mono">new-version2</span>. الجولة الرابعة محفوظة في <span class="mono">docs/plans/ui_consistency_plan_round4.html</span>. الأشكال هنا توضيح تقريبي.</footer>
+  <footer>اتعملت من الكود على branch ‏<span class="mono">new-version2</span>. الجولة السادسة محفوظة في <span class="mono">docs/plans/ui_consistency_plan_round6.html</span>.</footer>
 </div>

@@ -56,7 +56,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         controller: viewModel.emailController,
                         decoration: InputDecoration(
                             hintStyle: AppStyles.hintTitleContent(context).copyWith(fontSize: 12),
-                            hintText: AppStrings.yourEmail.tr().toUpperCase()),
+                            hintText: AppStrings.yourEmail.tr()),
                         validator: (value) =>
                             ValidationService.validateEmail(value),
                       ),),
@@ -99,7 +99,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               decoration:
                               InputDecoration(
                                   hintStyle: AppStyles.hintTitleContent(context).copyWith(fontSize: 12),
-                                  hintText: AppStrings.enterVerificationCode.tr().toUpperCase()),
+                                  hintText: AppStrings.enterVerificationCode.tr()),
                               validator: (value) =>
                                   ValidationService.validateRequired(value, AppStrings.code.tr()),
                             ),
@@ -108,7 +108,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               controller: viewModel.newPasswordController,
                               decoration: InputDecoration(
                                 hintStyle: AppStyles.hintTitleContent(context).copyWith(fontSize: 12),
-                                hintText: AppStrings.newPassword.tr().toUpperCase(),
+                                hintText: AppStrings.newPassword.tr(),
                                 suffixIcon: IconButton(
                                   icon: Icon(
                                     _obscureText ? Icons.visibility : Icons.visibility_off,

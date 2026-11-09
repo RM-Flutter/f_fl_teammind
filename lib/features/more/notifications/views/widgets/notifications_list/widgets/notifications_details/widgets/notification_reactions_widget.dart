@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/features/more/notifications/controllers/notification_controller.dart';
 import 'package:app_test/features/more/notifications/data/models/notification_emotion_model.dart';
@@ -149,8 +150,8 @@ class _NotificationReactionsWidgetState
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg)),
               title: Column(
                 children: [
-                  const Text(
-                    'Reactions',
+                  Text(
+                    'reactions'.tr(),
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.black87),
                   ),
                   const SizedBox(height: 8),
@@ -190,7 +191,7 @@ class _NotificationReactionsWidgetState
                   style: TextButton.styleFrom(
                     foregroundColor:  Color(AppColors.secondaryButton),
                   ),
-                  child: const Text('Close', style: TextStyle(fontWeight: FontWeight.bold)),
+                  child: Text('close'.tr(), style: const TextStyle(fontWeight: FontWeight.bold)),
                 ),
               ],
             );

@@ -12,17 +12,21 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../../core/constants/app_colors.dart';
 import '../../../../../core/routing/app_router.dart';
+import '../../../../../core/widgets/app_content_width.widget.dart';
 import '../../../../../core/widgets/bookmark_widgets/bookmark_button.widget.dart';
 import 'package:app_test/core/constants/app_design.dart';
 
 class RequestDetailsAppbarWidget extends StatelessWidget {
   GetOneComplainsRequestModel? getOneRequestModel;
   List? types;
+
   RequestDetailsAppbarWidget({super.key, this.getOneRequestModel, this.types});
+
   var type;
 
   @override
   Widget build(BuildContext context) {
+    final effectiveWidth = LayoutService.getWidth(context);
     return Container(
       height: AppSizes.s240,
       clipBehavior: Clip.antiAlias,
@@ -41,151 +45,166 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
         ),
       ),
       child: Center(
-        child: Stack(
-          alignment: Alignment.topCenter,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: SizedBox(
-                height: AppSizes.s220,
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 50),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              if (context.canPop()) {
-                                context.pop(); // هيرجع لورا
-                              } else {
-                                context.goNamed(
-                                  AppRoutes.home.name,
-                                  pathParameters: {
-                                    'lang': context.locale.languageCode,
-                                  },
-                                );
-                              }
-                            },
-                            child: Icon(
-                              Icons.arrow_back,
-                              color: Color(AppColors.background),
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-                          const Spacer(),
-                          Text(
-                            AppStrings.myRequests.tr().toUpperCase(),
-                            style: AppStyles.whiteHeading(context).copyWith(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                          const Spacer(),
-                          BookmarkButton(
-                            routeName: AppRoutes.complainDetails.name,
-                            defaultTitle: AppStrings.myRequests.tr(),
-                            iconColor: Colors.white,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 14),
-                      Center(
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(
-                            maxWidth: double.infinity,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              if (getOneRequestModel?.complain?.type != null &&
-                                  getOneRequestModel!.complain!.type!.isNotEmpty) ...[
-                                _buildTypeBadge(
-                                  getOneRequestModel!.complain!.type,
-                                  context,
-                                ),
-                                const SizedBox(height: 8),
-                              ],
-                              Text(
-                                (getOneRequestModel?.complain?.subject ?? "").toUpperCase(),
-                                style: AppStyles.whiteContent(context).copyWith(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                textAlign: TextAlign.center,
+        child: AppContentWidth(
+          child: Stack(
+            alignment: Alignment.topCenter,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: SizedBox(
+                  height: AppSizes.s220,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 50),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                if (context.canPop()) {
+                                  context.pop(); // هيرجع لورا
+                                } else {
+                                  context.goNamed(
+                                    AppRoutes.home.name,
+                                    pathParameters: {
+                                      'lang': context.locale.languageCode,
+                                    },
+                                  );
+                                }
+                              },
+                              child: Icon(
+                                Icons.arrow_back,
+                                color: Color(AppColors.background),
                               ),
-                              const SizedBox(height: 16),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  if (getOneRequestModel?.complain?.createdAt != null)
-                                    SizedBox(
-                                      width: kIsWeb
-                                          ? MediaQuery.sizeOf(context).width * 0.1
-                                          : MediaQuery.sizeOf(context).width * 0.25,
-                                      child: Text(
-                                        DateFormat(
-                                          "dd/MM/yyyy",
-                                          LocalizationService.isArabic(context: context)
-                                              ? "ar"
-                                              : "en",
-                                        ).format(
-                                          DateTime.parse(
-                                            getOneRequestModel!.complain!.createdAt.toString(),
-                                          ),
-                                        ),
-                                        textAlign: TextAlign.center,
-                                        style: AppStyles.whiteContent(context).copyWith(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                    ),
-                                  _buildTargetInfo(context),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        width: 8,
-                                        height: 8,
-                                        decoration: const BoxDecoration(
-                                          color: Colors.white,
-                                          shape: BoxShape.circle,
-                                        ),
-                                      ),
-                                      const SizedBox(width: 5),
+                            ),
+                            const SizedBox(width: 20),
+                            const Spacer(),
+                            Text(
+                              AppStrings.myRequests.tr(),
+                              style: AppStyles.whiteHeading(context).copyWith(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            const Spacer(),
+                            BookmarkButton(
+                              routeName: AppRoutes.complainDetails.name,
+                              defaultTitle: AppStrings.myRequests.tr(),
+                              iconColor: Colors.white,
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 14),
+                        Center(
+                          child: ConstrainedBox(
+                            constraints:
+                                LayoutService.contentConstraints(context),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                if (getOneRequestModel?.complain?.type !=
+                                        null &&
+                                    getOneRequestModel!
+                                        .complain!.type!.isNotEmpty) ...[
+                                  _buildTypeBadge(
+                                    getOneRequestModel!.complain!.type,
+                                    context,
+                                  ),
+                                  const SizedBox(height: 8),
+                                ],
+                                Text(
+                                  (getOneRequestModel?.complain?.subject ?? "")
+                                      ,
+                                  style:
+                                      AppStyles.whiteContent(context).copyWith(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 16),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    if (getOneRequestModel
+                                            ?.complain?.createdAt !=
+                                        null)
                                       SizedBox(
-                                        width: kIsWeb
-                                            ? MediaQuery.sizeOf(context).width * 0.1
-                                            : MediaQuery.sizeOf(context).width * 0.2,
+                                        width: effectiveWidth * 0.25,
                                         child: Text(
-                                          getOneRequestModel?.complain?.pstatus?.tr().toUpperCase() ?? "",
+                                          DateFormat(
+                                            "dd/MM/yyyy",
+                                            LocalizationService.isArabic(
+                                                    context: context)
+                                                ? "ar"
+                                                : "en",
+                                          ).format(
+                                            DateTime.parse(
+                                              getOneRequestModel!
+                                                  .complain!.createdAt
+                                                  .toString(),
+                                            ),
+                                          ),
                                           textAlign: TextAlign.center,
-                                          style: AppStyles.whiteContent(context).copyWith(
+                                          style: AppStyles.whiteContent(context)
+                                              .copyWith(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w500,
                                           ),
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 16),
-                            ],
+                                    _buildTargetInfo(context),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          width: 8,
+                                          height: 8,
+                                          decoration: const BoxDecoration(
+                                            color: Colors.white,
+                                            shape: BoxShape.circle,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 5),
+                                        SizedBox(
+                                          width: effectiveWidth * 0.2,
+                                          child: Text(
+                                            getOneRequestModel
+                                                    ?.complain?.pstatus
+                                                    ?.tr()
+                                                     ??
+                                                "",
+                                            textAlign: TextAlign.center,
+                                            style:
+                                                AppStyles.whiteContent(context)
+                                                    .copyWith(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 16),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -203,7 +222,8 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
         complain.relatedProfile!.name!.isNotEmpty) {
       targetName = complain.relatedProfile!.name;
       iconData = Icons.person_outline;
-    } else if (complain.departmentName != null && complain.departmentName!.isNotEmpty) {
+    } else if (complain.departmentName != null &&
+        complain.departmentName!.isNotEmpty) {
       targetName = complain.departmentName;
       iconData = Icons.business_outlined;
     }
@@ -212,17 +232,16 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
+    final effectiveWidth = LayoutService.getWidth(context);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(iconData, color: Colors.white, size: 15),
         const SizedBox(width: 4),
         SizedBox(
-          width: kIsWeb
-              ? MediaQuery.sizeOf(context).width * 0.15
-              : MediaQuery.sizeOf(context).width * 0.28,
+          width: effectiveWidth * 0.28,
           child: Text(
-            targetName.toUpperCase(),
+            targetName,
             textAlign: TextAlign.center,
             maxLines: 2,
             style: AppStyles.whiteContent(context).copyWith(

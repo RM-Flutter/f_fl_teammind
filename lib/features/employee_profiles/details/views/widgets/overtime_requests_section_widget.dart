@@ -35,7 +35,7 @@ class OvertimeRequestsSectionWidget extends StatelessWidget {
       case 'rejected': return AppStrings.rejectedStatus.tr();
       case 'refused': return AppStrings.rejectedStatus.tr();
       default:
-        return status.replaceAllMapped(RegExp(r'[A-Z]'), (match) => ' ${match.group(0)}').trim().replaceFirstMapped(RegExp(r'^[a-z]'), (match) => match.group(0)!.toUpperCase());
+        return status.replaceAllMapped(RegExp(r'[A-Z]'), (match) => ' ${match.group(0)}').trim().replaceFirstMapped(RegExp(r'^[a-z]'), (match) => match.group(0)!);
     }
   }
 
@@ -101,7 +101,7 @@ class OvertimeRequestsSectionWidget extends StatelessWidget {
               child: CustomElevatedButton(
                 backgroundColor:  Color(AppColors.secondaryButton),
                 titleSize: AppSizes.s12,
-                title: 'viewAll'.tr().toUpperCase(),
+                title: 'viewAll'.tr(),
                 onPressed: () async {
                   final myIdStr = CacheHelper.getString("US1");
                   final myId = myIdStr != null && myIdStr.isNotEmpty ? json.decode(myIdStr)['employee_profile_id'].toString() : '';

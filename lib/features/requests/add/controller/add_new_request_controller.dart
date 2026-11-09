@@ -164,7 +164,7 @@ class AddNewRequestController extends ChangeNotifier {
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    Text("Select Photo",
+                    Text("select_photo".tr(),
                       style: TextStyle(
                           fontSize: 20, color: Color(AppColors.darkBlue)),
                     ),
@@ -195,7 +195,7 @@ class AddNewRequestController extends ChangeNotifier {
                                 ),
                               ),
                             ),
-                            Text("Gallery",
+                            Text("gallery".tr(),
                               style: TextStyle(
                                   fontSize: 18, color: Color(AppColors.darkBlue)),
                             ),
@@ -224,7 +224,7 @@ class AddNewRequestController extends ChangeNotifier {
                               ),
                             ),
                             Text(
-                              "Camera",
+                              "camera".tr(),
                               style: TextStyle(fontSize: 18, color: Color(AppColors.darkBlue)),
                             ),
                           ],
@@ -436,7 +436,7 @@ class AddNewRequestController extends ChangeNotifier {
 
         if (startDateTime.isAfter(endDateTime)) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Start time must be before end time.')),
+            SnackBar(content: Text('start_time_before_end'.tr())),
           );
           return;
         }
@@ -1203,7 +1203,7 @@ class AddNewRequestController extends ChangeNotifier {
           backgroundColor: Colors.white,
           builder: (context) {
             return SuccessfullAddRequestSheet(
-              title: AppStrings.goToComplain.tr().toUpperCase(),
+              title: AppStrings.goToComplain.tr(),
               onTap: () async {
                 Navigator.pop(context); // close bottom sheet
                 GoRouter.of(context).goNamed(

@@ -1,21 +1,23 @@
-import 'package:app_test/core/utils/app_styles.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:convert';
+
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/constants/app_images.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:app_test/core/widgets/app_card.widget.dart';
+import 'package:app_test/core/widgets/app_shortcut_card.widget.dart';
+import 'package:app_test/core/widgets/template_page.widget.dart';
+import 'package:app_test/features/more/contact_us/controllers/contact_us_controller.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_custom_tabs/flutter_custom_tabs_lite.dart';
-import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:app_test/core/constants/app_sizes.dart';
-import '../../../../core/constants/app_colors.dart';
-import '../../../../core/services/backend_services/api_service/dio_api_service/shared.dart';
-import '../../../../core/widgets/custom_elevated_button.widget.dart';
-import '../../contact_us/controllers/contact_us_controller.dart';
-import 'package:app_test/core/constants/app_design.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+/// About the app: the logo, the description in readable paragraphs, the social links and the
+/// e-mail shortcut, as cards under the normal app bar.
 class AboutUsScreen extends StatefulWidget {
   const AboutUsScreen({super.key});
 
@@ -24,170 +26,126 @@ class AboutUsScreen extends StatefulWidget {
 }
 
 class _AboutUsScreenState extends State<AboutUsScreen> {
-  var gCache;
+  static const _socialKeys = ['whatsapp', 'linkedin', 'youtube', 'instagram', 'facebook', 'twitter'];
+  Map<String, dynamic> _contacts = {};
+
+  @override
+  void initState() {
+    super.initState();
+    final jsonString = CacheHelper.getString("USG");
+    if (jsonString != null && jsonString.isNotEmpty) {
+      final g = json.decode(jsonString) as Map<String, dynamic>;
+      final c = g['company_contacts'];
+      if (c is Map) _contacts = Map<String, dynamic>.from(c);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final accent = Color(AppColors.buttons);
+    final paragraphs = AppStrings.aboutAppDescription
+        .tr()
+        .split(RegExp(r'\n\s*\n'))
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toList();
+    final socials = [
+      for (final k in _socialKeys)
+        if (_contacts[k] != null && _contacts[k].toString().isNotEmpty) MapEntry(k, _contacts[k].toString()),
+    ];
+    final email = _contacts['email']?.toString() ?? '';
+
     return ChangeNotifierProvider(
-      create: (context) => ContactUsController(),
+      create: (_) => ContactUsController(),
       child: Consumer<ContactUsController>(
-        builder: (context, values, child) {
-          final jsonString = CacheHelper.getString("USG");
-          if (jsonString != null) {
-            gCache = json.decode(jsonString) as Map<String, dynamic>;
-          }
-
-          return Scaffold(
-            backgroundColor: Colors.white,
-            body: SingleChildScrollView(
-              child: Column(
-                children: [
-                  // Custom Header
-                  Stack(
+        builder: (context, controller, _) => TemplatePage(
+          pageContext: context,
+          title: AppStrings.aboutApplication.tr(),
+          showBookmark: false,
+          backgroundColor: Color(AppColors.background),
+          body: Padding(
+            padding: AppSpacing.listPadding,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Logo card
+                AppCard(
+                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.section * 1.5),
+                  child: Center(
+                    child: Image.asset(AppImages.loginLogoColored, height: 96, fit: BoxFit.contain),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.cardGap),
+                // Description: one paragraph per block, comfortable line height
+                AppCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(AppRadius.xl),
-                          bottomRight: Radius.circular(AppRadius.xl),
+                      for (var i = 0; i < paragraphs.length; i++) ...[
+                        if (i > 0) const SizedBox(height: AppSpacing.lg),
+                        Text(
+                          paragraphs[i],
+                          style: AppStyles.aboutUsContent(context)
+                              .copyWith(fontSize: 14, height: 1.7, fontWeight: FontWeight.w400),
                         ),
-                        child: Container(
-                          color: Color(AppColors.secondaryButton),
-                          child: Image.asset(
-                            "assets/images/png/home-app-bar.png",
-                            width: double.infinity,
-                            height: 280,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: MediaQuery.of(context).padding.top + 10,
-                        left: 15,
-                        child: GestureDetector(
-                          onTap: () => Navigator.pop(context),
-                          child: Container(
-                            padding: EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(context.locale.languageCode == "en" ? Icons.arrow_back : Icons.arrow_forward, color: Colors.white, size: 20),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: MediaQuery.of(context).padding.top + 15,
-                        left: 0,
-                        right: 0,
-                        child: Center(
-                          child: Text(
-                            AppStrings.aboutApplication.tr(),
-                            style: AppStyles.whiteHeading(context).copyWith(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                      ),
-
+                      ],
                     ],
                   ),
-
-                  // Description Content
-                  Padding(
-                    padding: EdgeInsets.all(25.0),
-                    child: Text(
-                      AppStrings.aboutAppDescription.tr(),
-                      textAlign: TextAlign.start,
-                      style: AppStyles.aboutUsContent(context).copyWith(
-                        fontSize: 11,
-                        height: 1.4,
-                        fontWeight: FontWeight.w400,
-                      ),
+                ),
+                if (socials.isNotEmpty) ...[
+                  const SizedBox(height: AppSpacing.cardGap),
+                  AppCard(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(AppStrings.followUs.tr(),
+                            style: AppStyles.heading(context)
+                                .copyWith(fontSize: 14, fontWeight: FontWeight.w600)),
+                        const SizedBox(height: AppSpacing.md),
+                        Wrap(
+                          spacing: AppSpacing.md,
+                          runSpacing: AppSpacing.md,
+                          children: [
+                            for (final s in socials)
+                              InkWell(
+                                customBorder: const CircleBorder(),
+                                onTap: () async {
+                                  final uri = Uri.tryParse(s.value);
+                                  if (uri != null) {
+                                    await launchUrl(uri, mode: LaunchMode.externalApplication);
+                                  }
+                                },
+                                child: Container(
+                                  width: 40,
+                                  height: 40,
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(shape: BoxShape.circle, color: accent),
+                                  child: SvgPicture.asset(
+                                    "assets/images/svg/${s.key}.svg",
+                                    colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-
-                  SizedBox(height: 10),
-
-                  // FOLLOW US section
-                  Text(
-                    AppStrings.followUs.tr().toUpperCase(),
-                    style: AppStyles.heading(context).copyWith(
-                      color: Color(AppColors.secondaryButton),
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16,
-                    ),
-                  ),
-
-                  SizedBox(height: 20),
-
-                  // Social Icons Row
-                  if (gCache != null && gCache['company_contacts'] != null)
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: Wrap(
-                        alignment: WrapAlignment.center,
-                        spacing: 12,
-                        runSpacing: 12,
-                        children: [
-                          if (gCache['company_contacts']['whatsapp'] != null && gCache['company_contacts']['whatsapp'] != "")
-                            _buildSocialIcon("assets/images/svg/whatsapp.svg", () => launchUrl(Uri.parse(gCache['company_contacts']['whatsapp']))),
-                          if (gCache['company_contacts']['linkedin'] != null && gCache['company_contacts']['linkedin'] != "")
-                            _buildSocialIcon("assets/images/svg/linkedin.svg", () => launchUrl(Uri.parse(gCache['company_contacts']['linkedin']))),
-                          if (gCache['company_contacts']['youtube'] != null && gCache['company_contacts']['youtube'] != "")
-                            _buildSocialIcon("assets/images/svg/youtube.svg", () => launchUrl(Uri.parse(gCache['company_contacts']['youtube']))),
-                          if (gCache['company_contacts']['instagram'] != null && gCache['company_contacts']['instagram'] != "")
-                            _buildSocialIcon("assets/images/svg/instagram.svg", () => launchUrl(Uri.parse(gCache['company_contacts']['instagram']))),
-                          if (gCache['company_contacts']['facebook'] != null && gCache['company_contacts']['facebook'] != "")
-                            _buildSocialIcon("assets/images/svg/facebook.svg", () => launchUrl(Uri.parse(gCache['company_contacts']['facebook']))),
-                          if (gCache['company_contacts']['twitter'] != null && gCache['company_contacts']['twitter'] != "")
-                            _buildSocialIcon("assets/images/svg/twitter.svg", () => launchUrl(Uri.parse(gCache['company_contacts']['twitter']))),
-                        ],
-                      ),
-                    ),
-                   SizedBox(height: 40),
-
-                  // SEND BY EMAIL button
-                  if (gCache != null && gCache['company_contacts'] != null && gCache['company_contacts']['email'] != null)
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 50),
-                      child: CustomElevatedButton(
-                        backgroundColor:  Color(AppColors.secondaryButton),
-                        title: AppStrings.sendByEmail.tr().toUpperCase(),
-                        onPressed: () async {
-                          values.sendMailToCompany(
-                            context: context,
-                            email: gCache['company_contacts']['email'],
-                            subject: null,
-                            body: null,
-                          );
-                        },
-                        // isPrimaryBackground: true, // Uses secondary color
-                      ),
-                    ),
-
-                  SizedBox(height: 50),
                 ],
-              ),
+                if (email.isNotEmpty) ...[
+                  const SizedBox(height: AppSpacing.cardGap),
+                  AppShortcutCard(
+                    icon: Icons.mail_outline_rounded,
+                    title: AppStrings.sendByEmail.tr(),
+                    subtitle: email,
+                    onTap: () => controller.sendMailToCompany(
+                        context: context, email: email, subject: null, body: null),
+                  ),
+                ],
+              ],
             ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildSocialIcon(String ico, VoidCallback tap) {
-    return GestureDetector(
-      onTap: tap,
-      child: Container(
-        padding: EdgeInsets.all(5),
-        height: 30,
-        width: 30,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color:  Color(AppColors.secondaryButton),
+          ),
         ),
-        child: SvgPicture.asset(ico, color: Colors.white, width: 15, height: 15),
       ),
     );
   }

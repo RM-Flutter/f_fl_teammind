@@ -2,6 +2,7 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/utils/app_styles.dart';
+import 'package:app_test/core/widgets/app_content_width.widget.dart';
 import 'package:app_test/features/more/ai_connect/controllers/ai_connect_controller.dart';
 import 'package:app_test/features/more/ai_connect/views/ai_connect_header.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -70,16 +71,18 @@ class _ConnectedAppsViewState extends State<_ConnectedAppsView> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Column(
-          children: [
-            AiConnectHeader(title: AppStrings.aiConnectedApps.tr()),
-            Expanded(
-              child: RefreshIndicator(
-                onRefresh: () => c.loadConnections(context),
-                child: _body(c),
+        child: AppContentWidth(
+          child: Column(
+            children: [
+              AiConnectHeader(title: AppStrings.aiConnectedApps.tr()),
+              Expanded(
+                child: RefreshIndicator(
+                  onRefresh: () => c.loadConnections(context),
+                  child: _body(c),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

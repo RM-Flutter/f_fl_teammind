@@ -66,7 +66,7 @@ class ExpenseClaimsSectionWidget extends StatelessWidget {
               child: CustomElevatedButton(
                 backgroundColor:  Color(AppColors.secondaryButton),
                 titleSize: AppSizes.s12,
-                title: 'viewAll'.tr().toUpperCase(),
+                title: 'viewAll'.tr(),
                 onPressed: () async {
                   final myIdStr = CacheHelper.getString("US1");
                   final myId = myIdStr != null && myIdStr.isNotEmpty ? json.decode(myIdStr)['employee_profile_id'].toString() : '';

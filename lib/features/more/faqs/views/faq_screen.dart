@@ -11,6 +11,7 @@ import 'package:app_test/features/more/faqs/data/models/get_faq_model.dart';
 import 'package:app_test/features/more/faqs/views/widgets/faq_loading_widget.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
+import 'package:app_test/core/widgets/app_content_width.widget.dart';
 
 class FaqScreen extends StatefulWidget {
   const FaqScreen({super.key});
@@ -30,27 +31,29 @@ class _FaqScreenState extends State<FaqScreen> {
           backgroundColor: Colors.white,
           appBar: AppBarWithBookmark(
             surfaceTintColor: Colors.transparent,
-            title: AppStrings.faqs.tr().toUpperCase(),
+            title: AppStrings.faqs.tr(),
             centerTitle: true,
             backgroundColor: Colors.white,
             elevation: 0,
           ),
-          body: (value.faqModel != null)?ListView.builder(
-            padding: const EdgeInsets.all(16.0),
-            clipBehavior: Clip.none,
-            itemCount: value.faqModel!.page!.questions!.length,
-            itemBuilder: (context, index) {
-              return FaqTile(
-                item: value.faqModel!.page!.questions![index],
-              );
-            },
-          ):ListView.builder(
-            padding: const EdgeInsets.all(16.0),
-            clipBehavior: Clip.none,
-            itemCount: 3,
-            itemBuilder: (context, index) {
-              return const FaqLoadingWidget();
-            },
+          body: AppContentWidth(
+            child: (value.faqModel != null)?ListView.builder(
+              padding: const EdgeInsets.all(16.0),
+              clipBehavior: Clip.none,
+              itemCount: value.faqModel!.page!.questions!.length,
+              itemBuilder: (context, index) {
+                return FaqTile(
+                  item: value.faqModel!.page!.questions![index],
+                );
+              },
+            ):ListView.builder(
+              padding: const EdgeInsets.all(16.0),
+              clipBehavior: Clip.none,
+              itemCount: 3,
+              itemBuilder: (context, index) {
+                return const FaqLoadingWidget();
+              },
+            ),
           ),
         );
       },

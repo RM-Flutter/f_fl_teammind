@@ -235,9 +235,8 @@ class OnboardingController extends ChangeNotifier {
     final webImageList = item['web_image'];
     final hasTitle = title is Map && (_hasValue(title['ar']) || _hasValue(title['en']));
     final hasInfo = info is Map && (_hasValue(info['ar']) || _hasValue(info['en']));
-    final hasImage = kIsWeb
-        ? (webImageList is List && webImageList.isNotEmpty)
-        : (imageList is List && imageList.isNotEmpty);
+    final hasImage = (imageList is List && imageList.isNotEmpty) ||
+        (webImageList is List && webImageList.isNotEmpty);
     final valid = hasTitle || hasInfo || hasImage;
     return valid;
   }

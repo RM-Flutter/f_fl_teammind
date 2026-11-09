@@ -125,9 +125,7 @@ class _RewardsAndPenaltiesScreenState extends State<RewardsAndPenaltiesScreen> {
           body: Align(
             alignment: Alignment.topCenter,
             child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxWidth: double.infinity,
-              ),
+              constraints: LayoutService.contentConstraints(context),
               child: Padding(
                 padding: EdgeInsets.zero,
                 child: RefreshIndicator.adaptive(

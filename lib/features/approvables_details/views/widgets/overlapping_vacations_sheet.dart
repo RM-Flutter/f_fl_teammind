@@ -263,7 +263,7 @@ class _VacationCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(AppRadius.lg),
                           ),
                           child: Text(
-                            (item.status ?? '').tr().toUpperCase(),
+                            (item.status ?? '').tr(),
                             style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.w700,

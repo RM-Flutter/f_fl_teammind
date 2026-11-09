@@ -184,7 +184,7 @@ Future<void> defaultActionBottomSheet2({
                               if (viewHeaderIcon == true) const SizedBox(
                                   height: 15),
                               Text(
-                                title.toUpperCase(),
+                                title,
                                 style:  const TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 24,
@@ -310,7 +310,7 @@ Future<void> defaultActionBottomSheet2({
                                   child: (buttonWidget != null)
                                       ? buttonWidget
                                       : Text(
-                                    buttonText?.toUpperCase() ?? "",
+                                    buttonText ?? "",
                                     style:  const TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w500,
@@ -335,7 +335,7 @@ Future<void> defaultActionBottomSheet2({
                                         child: (buttonWidget != null)
                                             ? buttonWidget
                                             : Text(
-                                          buttonText?.toUpperCase() ?? "",
+                                          buttonText ?? "",
                                           style:  const TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w500,
@@ -360,7 +360,7 @@ Future<void> defaultActionBottomSheet2({
                                         child: (buttonWidget != null)
                                             ? buttonWidget
                                             : Text(
-                                          buttonText2?.toUpperCase() ?? "",
+                                          buttonText2 ?? "",
                                           style:  const TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w500,
@@ -488,7 +488,7 @@ defaultActionBottomSheet(
                       ),
                     const SizedBox(height: 20),
                     Text(
-                      title!.toUpperCase(),
+                      title!,
                       style:   TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 20,
@@ -575,7 +575,7 @@ defaultActionBottomSheet(
                           child: (buttonWidget != null)
                               ? buttonWidget
                               : Text(
-                                  buttonText!.toUpperCase(),
+                                  buttonText!,
                                   style:  const TextStyle(
                                       fontSize: 12,
                                       fontWeight: FontWeight.w500,
@@ -751,7 +751,7 @@ Future<void> defaultActionBottomSheetPoints({
                               if (viewHeaderIcon == true) const SizedBox(
                                   height: 15),
                               Text(
-                                title.toUpperCase(),
+                                title,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w600,
                                   fontSize: 24,
@@ -877,7 +877,7 @@ Future<void> defaultActionBottomSheetPoints({
                                   child: (buttonWidget != null)
                                       ? buttonWidget
                                       : Text(
-                                    buttonText?.toUpperCase() ?? "",
+                                    buttonText ?? "",
                                     style: const TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w500,
@@ -902,7 +902,7 @@ Future<void> defaultActionBottomSheetPoints({
                                         child: (buttonWidget != null)
                                             ? buttonWidget
                                             : Text(
-                                          buttonText?.toUpperCase() ?? "",
+                                          buttonText ?? "",
                                           style: const TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w500,
@@ -927,7 +927,7 @@ Future<void> defaultActionBottomSheetPoints({
                                         child: (buttonWidget != null)
                                             ? buttonWidget
                                             : Text(
-                                          buttonText2?.toUpperCase() ?? "",
+                                          buttonText2 ?? "",
                                           style: const TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w500,
