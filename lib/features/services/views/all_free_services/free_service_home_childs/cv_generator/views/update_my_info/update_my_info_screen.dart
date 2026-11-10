@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/custom_shimmer_loading/app_screen_shimmers.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/app_shimmer_list.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/my_cv/controllers/my_cv_view_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -70,38 +72,23 @@ class _UpdateMyInfoScreenState extends State<UpdateMyInfoScreen> with SingleTick
     return ChangeNotifierProvider<CreateCVViewModel>.value(
       value: viewModel,
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(AppColors.background),
         appBar: AppBarWithBookmark(
-          backgroundColor: Colors.white,
+          backgroundColor: Color(AppColors.background),
           elevation: 0,
-          leading: IconButton(
-            icon: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Color(AppColors.secondaryButton),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
-            ),
-            onPressed: _goBack,
-          ),
+          leading: AppBackButton(onPressed: _goBack),
           title: AppStrings.updateMyInfo.tr(),
-          titleStyle: TextStyle(
-            color: Color(AppColors.secondaryButton),
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-          ),
           centerTitle: true,
           routeName: AppRoutes.updateMyInfoScreen.name,
         ),
         body: Consumer<CreateCVViewModel>(
           builder: (context, viewModel, child) {
             if (viewModel.isLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return const AppFormShimmer(photo: true, fields: 5, button: true);
             }
 
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page),
               child: Column(
                 children: [
                   // Tab Bar
@@ -125,7 +112,7 @@ class _UpdateMyInfoScreenState extends State<UpdateMyInfoScreen> with SingleTick
 
                   // Update Button
                   Container(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.symmetric(vertical: AppSpacing.page),
                     child: ElevatedButton(
                       onPressed: viewModel.isSubmitting ? null : () async {
                         // Update CV data
@@ -146,12 +133,11 @@ class _UpdateMyInfoScreenState extends State<UpdateMyInfoScreen> with SingleTick
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(AppColors.secondaryButton),
+                        backgroundColor: Color(AppColors.buttons),
                         foregroundColor: Colors.white,
-                        minimumSize: const Size(200, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppRadius.xl),
-                        ),
+                        elevation: 0,
+                        minimumSize: const Size(double.infinity, AppButtonSize.height),
+                        shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
                       ),
                       child: viewModel.isSubmitting
                           ? const SizedBox(

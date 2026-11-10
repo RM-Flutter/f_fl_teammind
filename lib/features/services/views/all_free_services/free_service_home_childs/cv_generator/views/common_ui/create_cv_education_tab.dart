@@ -1,3 +1,6 @@
+import 'package:app_test/core/widgets/app_field_shell.widget.dart';
+import 'package:app_test/core/widgets/app_responsive_grid.widget.dart';
+import 'package:app_test/core/widgets/app_columns_flow.widget.dart';
 import 'package:app_test/features/services/data/models/cv_data_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +18,9 @@ class CreateCVEducationTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.page),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -39,11 +42,14 @@ class CreateCVEducationTab extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          ...viewModel.educations.asMap().entries.map((entry) {
-            final index = entry.key;
-            final education = entry.value;
-            return _buildEducationItem(context, index, education);
-          }),
+          // The title stays on top; the entries sit under it in 1 / 2 columns, never split.
+          AppResponsiveGrid(
+            medium: 1,
+            expanded: 2,
+            children: viewModel.educations.asMap().entries.map((entry) {
+              return _buildEducationItem(context, entry.key, entry.value);
+            }).toList(),
+          ),
         ],
       ),
     );
@@ -73,7 +79,7 @@ class CreateCVEducationTab extends StatelessWidget {
         : null;
 
     return Card(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: EdgeInsets.zero,
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
@@ -101,8 +107,8 @@ class CreateCVEducationTab extends StatelessWidget {
                 labelText: AppStrings.institutionName.tr(),
                 hintText: AppStrings.enterInstitutionName.tr(),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(AppRadius.sm),
-                  borderSide: const BorderSide(color: Colors.black),
+                  borderRadius: AppField.borderRadius,
+                  borderSide: const BorderSide(color: AppField.borderColor),
                 ),
               ),
               onChanged: (value) {
@@ -124,8 +130,8 @@ class CreateCVEducationTab extends StatelessWidget {
                 labelText: AppStrings.certificateName.tr(),
                 hintText: AppStrings.enterCertificateName.tr(),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(AppRadius.sm),
-                  borderSide: const BorderSide(color: Colors.black),
+                  borderRadius: AppField.borderRadius,
+                  borderSide: const BorderSide(color: AppField.borderColor),
                 ),
               ),
               onChanged: (value) {
@@ -146,8 +152,8 @@ class CreateCVEducationTab extends StatelessWidget {
               selectedValue: selectedCountry,
               nameKey: 'title',
               hintText: AppStrings.selectCountry.tr(),
-              borderRadius: BorderRadius.circular(AppRadius.sm),
-              borderSide: const BorderSide(color: Colors.black),
+              borderRadius: AppField.borderRadius,
+              borderSide: const BorderSide(color: AppField.borderColor),
               onChanged: (value) {
                 if (value.isNotEmpty && value['id'] != null) {
                   final updatedEdu = CVEducation(
@@ -170,8 +176,8 @@ class CreateCVEducationTab extends StatelessWidget {
                 selectedValue: selectedState,
                 nameKey: 'title',
                 hintText: AppStrings.selectStateProvince.tr(),
-                borderRadius: BorderRadius.circular(AppRadius.sm),
-                borderSide: const BorderSide(color: Colors.black),
+                borderRadius: AppField.borderRadius,
+                borderSide: const BorderSide(color: AppField.borderColor),
                 onChanged: (value) {
                   if (value.isNotEmpty && value['id'] != null) {
                     final updatedEdu = CVEducation(
@@ -214,8 +220,8 @@ class CreateCVEducationTab extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black),
-                        borderRadius: BorderRadius.circular(AppRadius.sm),
+                        border: Border.all(color: AppField.borderColor),
+                        borderRadius: AppField.borderRadius,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -259,8 +265,8 @@ class CreateCVEducationTab extends StatelessWidget {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black),
-                        borderRadius: BorderRadius.circular(AppRadius.sm),
+                        border: Border.all(color: AppField.borderColor),
+                        borderRadius: AppField.borderRadius,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

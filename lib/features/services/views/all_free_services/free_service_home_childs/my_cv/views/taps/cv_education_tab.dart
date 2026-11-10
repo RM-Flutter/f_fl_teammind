@@ -1,3 +1,5 @@
+import 'package:app_test/core/widgets/app_responsive_grid.widget.dart';
+import 'package:app_test/core/widgets/app_columns_flow.widget.dart';
 import 'package:app_test/features/services/data/models/cv_data_model.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/my_cv/controllers/my_cv_view_model.dart';
 
@@ -20,16 +22,18 @@ class CVEducationTab extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Education Section
           _buildSectionTitle('EDUCATION'),
-
-          if (educationList != null && educationList.isNotEmpty)
-            ...educationList.map((edu) => _buildEducationItem(edu))
-          else
-            _buildEmptyEducationForm(),
+          // Entries sit under the title in 1 / 2 / 3 columns; one entry is never split.
+          AppResponsiveGrid(
+            medium: 2,
+            expanded: 3,
+            children: (educationList != null && educationList.isNotEmpty)
+                ? educationList.map((edu) => _buildEducationItem(edu)).toList()
+                : [_buildEmptyEducationForm()],
+          ),
         ],
       ),
     );

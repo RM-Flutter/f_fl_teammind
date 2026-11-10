@@ -88,10 +88,21 @@ class _SalaryAdvanceListScreenState extends State<SalaryAdvanceListScreen> {
       value: viewModel,
       child: Consumer<SalaryAdvanceListController>(
         builder: (context, controller, child) {
+          // No list -> nothing to filter: hide the filter (unless a filter is active, so it can be cleared).
+          final currentList = controller.isIncomingView
+              ? controller.incomingRequests
+              : controller.personalRequests;
+          final isLoadingList = controller.isIncomingView
+              ? controller.isLoadingIncoming
+              : controller.isLoadingPersonal;
+          final hideFilter = !isLoadingList &&
+              (currentList == null || currentList.isEmpty) &&
+              !controller.currentFiltersMap.values
+                  .any((v) => v != null && v.isNotEmpty);
           return TemplatePage(
             pageContext: context,
             title: 'salary_advance_requests'.tr(),
-            actions: [
+            actions: hideFilter ? null : [
               IconButton(
                 icon: Icon(Icons.filter_list_rounded, color: Color(AppColors.secondaryButton)),
                 onPressed: () async {

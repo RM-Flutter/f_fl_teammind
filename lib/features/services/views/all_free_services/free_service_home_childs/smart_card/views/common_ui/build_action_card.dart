@@ -1,42 +1,54 @@
 import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:app_test/core/widgets/app_card.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:app_test/core/constants/app_design.dart';
 
+/// Action tile of the Smart Card screens: white [AppCard] with the icon on a soft square of the
+/// accent colour (red for destructive actions) and the label under it.
 Widget buildActionCard({
-  required  icon,
+  required icon,
   required String label,
   required VoidCallback onTap,
   bool isDestructive = false,
 }) {
-  final bg = isDestructive ? Colors.red : Color(AppColors.secondaryButton);
-  return InkWell(
-    onTap: onTap,
-    borderRadius: BorderRadius.circular(AppRadius.md),
-    child: Container(
-      alignment: Alignment.center,
-      height: 120,
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
-      decoration: BoxDecoration(
-        color: bg,
-        borderRadius: BorderRadius.circular(AppRadius.md),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SvgPicture.asset(icon),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              height: 1.3,
+  final accent = isDestructive ? Colors.red : Color(AppColors.buttons);
+  return Builder(
+    builder: (context) => SizedBox(
+      height: 112,
+      child: AppCard(
+        animateIn: true,
+        onTap: onTap,
+        padding: const EdgeInsets.symmetric(
+            vertical: AppSpacing.md, horizontal: AppSpacing.sm),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 40,
+              height: 40,
+              padding: const EdgeInsets.all(9),
+              decoration: BoxDecoration(
+                color: accent.withValues(alpha: 0.10),
+                borderRadius: BorderRadius.circular(AppRadius.md),
+              ),
+              child: SvgPicture.asset(
+                icon,
+                colorFilter: ColorFilter.mode(accent, BlendMode.srcIn),
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: AppSpacing.sm),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: AppStyles.heading(context)
+                  .copyWith(fontSize: 12.5, fontWeight: FontWeight.w600, height: 1.25),
+            ),
+          ],
+        ),
       ),
     ),
   );

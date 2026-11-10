@@ -1,3 +1,10 @@
+import 'package:app_test/core/services/layout_service.dart';
+import 'package:app_test/core/widgets/app_responsive_grid.widget.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/core/utils/string_extensions.dart';
+import 'package:app_test/core/widgets/app_page_dots.widget.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/app_screen_shimmers.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/app_shimmer_list.dart';
 import 'package:app_test/features/services/data/models/cv_template_model.dart';
 import 'package:app_test/features/services/controllers/select_template_view_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -52,34 +59,19 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
     return ChangeNotifierProvider<SelectTemplateViewModel>.value(
       value: viewModel,
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(AppColors.background),
         appBar: AppBarWithBookmark(
-          backgroundColor: Colors.white,
+          backgroundColor: Color(AppColors.background),
           elevation: 0,
-          leading: IconButton(
-            icon: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Color(AppColors.secondaryButton),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
-            ),
-            onPressed: _goBack,
-          ),
+          leading: AppBackButton(onPressed: _goBack),
           title: AppStrings.selectTemplate.tr(),
-          titleStyle: TextStyle(
-            color: Color(AppColors.secondaryButton),
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-          ),
           centerTitle: true,
           routeName: AppRoutes.selectTemplateScreen.name,
         ),
         body: Consumer<SelectTemplateViewModel>(
           builder: (context, vm, child) {
             if (vm.isLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return const AppPagerShimmer();
             }
 
             if (vm.errorMessage != null) {
@@ -127,30 +119,31 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                 children: [
                   const SizedBox(height: 16),
                   Expanded(
-                    child: PageView.builder(
-                      itemCount: templates.length,
-                      onPageChanged: (index) => setState(() => selectedTemplateIndex = index),
-                      itemBuilder: (context, index) {
-                        return _buildTemplateCard(vm, templates[index], index);
-                      },
-                    ),
+                    child: LayoutService.isExpanded(context)
+                        // Wide windows: all the templates at once, tap one to select it.
+                        ? SingleChildScrollView(
+                            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page),
+                            child: AppResponsiveGrid(
+                              expanded: 4,
+                              children: [
+                                for (var i = 0; i < templates.length; i++)
+                                  GestureDetector(
+                                    onTap: () => setState(() => selectedTemplateIndex = i),
+                                    child: _buildTemplateCard(vm, templates[i], i),
+                                  ),
+                              ],
+                            ),
+                          )
+                        : PageView.builder(
+                            itemCount: templates.length,
+                            onPageChanged: (index) => setState(() => selectedTemplateIndex = index),
+                            itemBuilder: (context, index) {
+                              return _buildTemplateCard(vm, templates[index], index);
+                            },
+                          ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(templates.length, (index) {
-                      return Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 4),
-                        width: 8,
-                        height: 8,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: selectedTemplateIndex == index
-                              ? Color(AppColors.buttons)
-                              : Colors.grey[400],
-                        ),
-                      );
-                    }),
-                  ),
+                  if (!LayoutService.isExpanded(context))
+                    AppPageDots(count: templates.length, index: selectedTemplateIndex),
                   const SizedBox(height: 24),
                   Container(
                     padding: const EdgeInsets.all(16),
@@ -159,12 +152,11 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                           ? null
                           : () => vm.onGenerateCv(context, templates[selectedTemplateIndex]),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(AppColors.secondaryButton),
-                        foregroundColor: Colors.white,
-                        minimumSize: const Size(double.infinity, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppRadius.xl),
-                        ),
+                        backgroundColor: Color(AppColors.buttons),
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      minimumSize: const Size(double.infinity, AppButtonSize.height),
+                      shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
                       ),
                       child: vm.isLoadingTemplate
                           ? const SizedBox(
@@ -178,7 +170,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                           : Text(
                               AppStrings.generateCvWithTemplate.tr(),
                               style: const TextStyle(
-                                fontSize: 16,
+                                fontSize: AppButtonSize.fontSize,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -210,10 +202,10 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        border: isSelected
-            ? Border.all(color: Color(AppColors.buttons), width: 3)
-            : Border.all(color: Colors.grey[300]!, width: 1),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        border: Border.all(
+            color: isSelected ? Color(AppColors.buttons) : Color(AppColors.border),
+            width: isSelected ? 1.5 : 1),
         boxShadow: AppShadows.card,
       ),
       child: Stack(
@@ -222,7 +214,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
             children: [
               Expanded(
                 child: ClipRRect(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.md)),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.lg - 1)),
                   child: imageUrl != null && imageUrl.isNotEmpty
                       ? (kIsWeb
                           ? Image.network(
@@ -231,15 +223,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                               width: double.infinity,
                               loadingBuilder: (context, child, loadingProgress) {
                                 if (loadingProgress == null) return child;
-                                return Container(
-                                  color: Color(AppColors.buttons),
-                                  child: const Center(
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                );
+                                return const ShimmerAnimatedLoading(circularRaduis: 0);
                               },
                               errorBuilder: (context, error, stackTrace) => Container(
                                 color: Colors.grey[300],
@@ -254,15 +238,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                               imageUrl: imageUrl,
                               fit: BoxFit.cover,
                               width: double.infinity,
-                              placeholder: (context, url) => Container(
-                                color: Color(AppColors.buttons),
-                                child: const Center(
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
+                              placeholder: (context, url) => const ShimmerAnimatedLoading(circularRaduis: 0),
                               errorWidget: (context, url, error) => Container(
                                 color: Colors.grey[300],
                                 child: const Icon(
@@ -288,7 +264,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      template.slug!,
+                      template.slug!.replaceAll('_', ' ').titleCase,
                       style: TextStyle(
                         color: Color(AppColors.secondaryButton),
                         fontSize: 14,

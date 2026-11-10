@@ -79,6 +79,17 @@ class _ExpenseClaimListScreenState extends State<ExpenseClaimListScreen> {
       value: viewModel,
       child: Consumer<ExpenseClaimListController>(
         builder: (context, controller, child) {
+          // No list -> nothing to filter: hide the filter (unless a filter is active, so it can be cleared).
+          final currentList = controller.isIncomingView
+              ? controller.incomingRequests
+              : controller.personalRequests;
+          final isLoadingList = controller.isIncomingView
+              ? controller.isLoadingIncoming
+              : controller.isLoadingPersonal;
+          final hideFilter = !isLoadingList &&
+              (currentList == null || currentList.isEmpty) &&
+              !controller.currentFiltersMap.values
+                  .any((v) => v != null && v.isNotEmpty);
           return TemplatePage(
             pageContext: context,
             title: 'expense_claim_requests'.tr(),
@@ -97,7 +108,7 @@ class _ExpenseClaimListScreenState extends State<ExpenseClaimListScreen> {
               },
               child: const Icon(Icons.add, color: Colors.white),
             ),
-            actions: [
+            actions: hideFilter ? null : [
               // Filter button
               IconButton(
                 icon: const Icon(Icons.filter_list_rounded),

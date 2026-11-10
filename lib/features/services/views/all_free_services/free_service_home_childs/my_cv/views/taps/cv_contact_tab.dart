@@ -1,3 +1,4 @@
+import 'package:app_test/core/widgets/app_columns_flow.widget.dart';
 import 'package:app_test/features/services/data/models/cv_data_model.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/my_cv/controllers/my_cv_view_model.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,7 @@ class CVContactTab extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16),
-      child: Column(
+      child: AppColumnsFlow(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [

@@ -13,6 +13,7 @@ import 'package:app_test/features/evaluation/shared/widgets/payrolls_and_penalti
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:app_test/core/widgets/searchable_dropdown_sheet.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:app_test/core/constants/app_design.dart';
@@ -56,10 +57,16 @@ class _CommissionListScreenState extends State<CommissionListScreen> {
       value: _controller,
       child: Consumer<CommissionListController>(
         builder: (context, controller, _) {
+          // No list -> nothing to filter: hide the filter (unless a filter is active, so it can be cleared).
+          final hideFilter = !controller.isLoading &&
+              (controller.commissions == null || controller.commissions!.isEmpty) &&
+              controller.filterStatus == null &&
+              controller.filterFromDate == null &&
+              controller.filterToDate == null;
           return TemplatePage(
             pageContext: context,
             title: AppStrings.commissions.tr(),
-            actions: [
+            actions: hideFilter ? null : [
               // ── Filter button ────────────────────────────────────────
               IconButton(
                 icon: Icon(
@@ -366,29 +373,13 @@ class _CommissionFilterSheetState extends State<_CommissionFilterSheet> {
     _toDate = widget.initialToDate;
   }
 
-  InputDecoration _fieldDecoration({Widget? suffixIcon}) {
-    return InputDecoration(
-      filled: true,
-      fillColor: Color(AppColors.inputFill),
-      suffixIcon: suffixIcon,
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        borderSide: BorderSide(color: Color(AppColors.inputBorder)),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        borderSide: BorderSide(color: Color(AppColors.inputBorder)),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        borderSide: BorderSide(color: Color(AppColors.inputFocusedBorder)),
-      ),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
+    // Same fields as the shared list filter (SharedListFilterWidget): searchable dropdown +
+    // plain read-only date fields, no labels above them.
+    final selectedStatus = _status == null
+        ? null
+        : {'id': _status, 'name': 'commission_status_$_status'.tr()};
     return AppFilterSheetFrame(
       title: 'filter'.tr(),
       onApply: () => Navigator.pop(context, {
@@ -402,66 +393,35 @@ class _CommissionFilterSheetState extends State<_CommissionFilterSheet> {
         'to_date': null,
       }),
       children: [
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(
-            'status'.tr(),
-            style: AppStyles.primaryContent(context).copyWith(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-            ),
+        SearchableDropdownSheet(
+          items: _statusOptions
+              .map((s) => {'id': s, 'name': 'commission_status_$s'.tr()})
+              .toList(),
+          selectedValue: selectedStatus,
+          nameKey: 'name',
+          hintText: 'status'.tr(),
+          hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
+          borderRadius: BorderRadius.circular(AppRadius.sm),
+          borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          fieldSuffixIcon: InkWell(
+            onTap: () => setState(() => _status = null),
+            child: const Icon(Icons.close, color: Colors.red, size: 20),
           ),
-          const SizedBox(height: 8),
-          DropdownButtonFormField<String?>(
-            value: _status,
-            isExpanded: true,
-            decoration: _fieldDecoration(),
-            dropdownColor: Colors.white,
-            borderRadius: BorderRadius.circular(AppRadius.md),
-            items: [
-              DropdownMenuItem<String?>(
-                value: null,
-                child: Text('all'.tr(), style: AppStyles.content(context)),
-              ),
-              ..._statusOptions.map(
-                (s) => DropdownMenuItem<String?>(
-                  value: s,
-                  child: Text(
-                    'commission_status_$s'.tr(),
-                    style: AppStyles.content(context),
-                  ),
-                ),
-              ),
-            ],
-            onChanged: (val) => setState(() => _status = val),
-          )
-        ]),
-        _DatePickerField(
-          label: 'date_from'.tr(),
-          value: _fromDate,
-          decoration: _fieldDecoration(
-            suffixIcon: _fromDate != null
-                ? IconButton(
-                    icon: const Icon(Icons.close, size: 18, color: Colors.red),
-                    onPressed: () => setState(() => _fromDate = null),
-                  )
-                : Icon(Icons.calendar_today_outlined,
-                    size: 18, color: Color(AppColors.buttons)),
-          ),
-          onPicked: (d) => setState(() => _fromDate = d),
+          onChanged: (value) =>
+              setState(() => _status = value['id']?.toString()),
         ),
         _DatePickerField(
-          label: 'date_to'.tr(),
+          hint: 'date_from'.tr(),
+          value: _fromDate,
+          onPicked: (d) => setState(() => _fromDate = d),
+          onClear: () => setState(() => _fromDate = null),
+        ),
+        _DatePickerField(
+          hint: 'date_to'.tr(),
           value: _toDate,
-          decoration: _fieldDecoration(
-            suffixIcon: _toDate != null
-                ? IconButton(
-                    icon: const Icon(Icons.close, size: 18, color: Colors.red),
-                    onPressed: () => setState(() => _toDate = null),
-                  )
-                : Icon(Icons.calendar_today_outlined,
-                    size: 18, color: Color(AppColors.buttons)),
-          ),
           onPicked: (d) => setState(() => _toDate = d),
+          onClear: () => setState(() => _toDate = null),
         ),
       ],
     );
@@ -469,59 +429,61 @@ class _CommissionFilterSheetState extends State<_CommissionFilterSheet> {
 }
 
 class _DatePickerField extends StatelessWidget {
-  final String label;
+  final String hint;
   final String? value;
-  final InputDecoration decoration;
   final ValueChanged<String> onPicked;
+  final VoidCallback onClear;
 
   const _DatePickerField({
-    required this.label,
+    required this.hint,
     required this.value,
-    required this.decoration,
     required this.onPicked,
+    required this.onClear,
   });
+
+  Future<void> _pick(BuildContext context) async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate:
+          value != null ? DateTime.tryParse(value!) ?? DateTime.now() : DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2030),
+    );
+    if (picked != null) {
+      onPicked(
+        '${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}',
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: AppStyles.primaryContent(context).copyWith(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        const SizedBox(height: 8),
-        InkWell(
-          borderRadius: BorderRadius.circular(AppRadius.md),
-          onTap: () async {
-            final picked = await showDatePicker(
-              context: context,
-              initialDate: value != null
-                  ? DateTime.tryParse(value!) ?? DateTime.now()
-                  : DateTime.now(),
-              firstDate: DateTime(2020),
-              lastDate: DateTime(2030),
-            );
-            if (picked != null) {
-              onPicked(
-                '${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}',
-              );
-            }
-          },
-          child: InputDecorator(
-            decoration: decoration,
-            child: Text(
-              value ?? 'select_date'.tr(),
-              style: value != null
-                  ? AppStyles.content(context)
-                  : AppStyles.hintContent(context),
-            ),
-          ),
-        ),
-      ],
+    final border = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(AppRadius.sm),
+      borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
+    );
+    return TextField(
+      key: ValueKey(value),
+      controller: TextEditingController(text: value ?? ''),
+      readOnly: true,
+      onTap: () => _pick(context),
+      style: AppStyles.darkContent(context).copyWith(fontSize: 14),
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
+        suffixIcon: value != null
+            ? IconButton(
+                icon: const Icon(Icons.close, color: Colors.red, size: 20),
+                onPressed: onClear,
+              )
+            : IconButton(
+                icon: const Icon(Icons.calendar_today, size: 20),
+                onPressed: () => _pick(context),
+              ),
+        border: border,
+        enabledBorder: border,
+        focusedBorder: border,
+      ),
     );
   }
 }

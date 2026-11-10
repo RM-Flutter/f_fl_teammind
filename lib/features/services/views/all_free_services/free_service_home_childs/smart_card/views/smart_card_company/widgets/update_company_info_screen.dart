@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/custom_shimmer_loading/app_screen_shimmers.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/app_shimmer_list.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:app_test/core/constants/app_colors.dart';
@@ -569,8 +571,8 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
             style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
             decoration: InputDecoration(
               hintText: hint,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.sm), borderSide: const BorderSide(color: Colors.black)),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              border: OutlineInputBorder(borderRadius: AppField.borderRadius, borderSide: const BorderSide(color: AppField.borderColor)),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             ),
           ),
         ],
@@ -597,10 +599,10 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
             selectedValue: selected,
             nameKey: 'title',
             hintText: AppStrings.selectCountry.tr(),
-            hintStyle: TextStyle(color: Colors.grey.shade600),
-            borderRadius: BorderRadius.circular(AppRadius.sm),
-            borderSide: const BorderSide(color: Colors.black),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            hintStyle: AppField.hintStyle,
+            borderRadius: AppField.borderRadius,
+            borderSide: const BorderSide(color: AppField.borderColor),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             onChanged: (value) {
               if (value.isNotEmpty && value['id'] != null) {
                 final id = value['id'] is int ? value['id'] as int : int.tryParse(value['id'].toString());
@@ -643,10 +645,10 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
             selectedValue: selected,
             nameKey: 'title',
             hintText: AppStrings.selectStateProvince.tr(),
-            hintStyle: TextStyle(color: Colors.grey.shade600),
-            borderRadius: BorderRadius.circular(AppRadius.sm),
-            borderSide: const BorderSide(color: Colors.black),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            hintStyle: AppField.hintStyle,
+            borderRadius: AppField.borderRadius,
+            borderSide: const BorderSide(color: AppField.borderColor),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             onChanged: (value) {
               if (value.isNotEmpty && value['id'] != null && value['id'] != -1) {
                 final id = value['id'] is int ? value['id'] as int : int.tryParse(value['id'].toString());
@@ -706,10 +708,10 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
             selectedValue: selected,
             nameKey: 'title',
             hintText: AppStrings.selectCity.tr(),
-            hintStyle: TextStyle(color: Colors.grey.shade600),
-            borderRadius: BorderRadius.circular(AppRadius.sm),
-            borderSide: const BorderSide(color: Colors.black),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            hintStyle: AppField.hintStyle,
+            borderRadius: AppField.borderRadius,
+            borderSide: const BorderSide(color: AppField.borderColor),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             onChanged: (value) {
               if (value.isNotEmpty && value['id'] != null && value['id'] != -1) {
                 final id = value['id'] is int ? value['id'] as int : int.tryParse(value['id'].toString());
@@ -746,7 +748,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
               onTap: !_isPremium ? _showPremiumAlert : null,
               decoration: InputDecoration(
                 labelText: AppStrings.projectName.tr(),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.sm), borderSide: const BorderSide(color: Colors.black)),
+                border: OutlineInputBorder(borderRadius: AppField.borderRadius, borderSide: const BorderSide(color: AppField.borderColor)),
               ),
             ),
             const SizedBox(height: 12),
@@ -756,7 +758,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
               onTap: !_isPremium ? _showPremiumAlert : null,
               decoration: InputDecoration(
                 labelText: AppStrings.projectDescription.tr(),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.sm), borderSide: const BorderSide(color: Colors.black)),
+                border: OutlineInputBorder(borderRadius: AppField.borderRadius, borderSide: const BorderSide(color: AppField.borderColor)),
               ),
               maxLines: 2,
             ),
@@ -767,7 +769,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
               onTap: !_isPremium ? _showPremiumAlert : null,
               decoration: InputDecoration(
                 labelText: AppStrings.projectLink.tr(),
-                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.sm), borderSide: const BorderSide(color: Colors.black)),
+                border: OutlineInputBorder(borderRadius: AppField.borderRadius, borderSide: const BorderSide(color: AppField.borderColor)),
               ),
               keyboardType: TextInputType.url,
             ),
@@ -780,27 +782,19 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(AppColors.background),
       appBar: AppBarWithBookmark(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(AppColors.background),
         elevation: 0,
-        leading: IconButton(
-          icon: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(color: Color(AppColors.secondaryButton), shape: BoxShape.circle),
-            child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
-          ),
-          onPressed: () { try { GoRouter.of(context).pop(); } catch (e) { Navigator.of(context).pop(); } },
-        ),
+        leading: AppBackButton(onPressed: () { try { GoRouter.of(context).pop(); } catch (e) { Navigator.of(context).pop(); } }),
         title: AppStrings.updateCompanyInfo.tr(),
-        titleStyle: TextStyle(color: Color(AppColors.secondaryButton), fontSize: 18, fontWeight: FontWeight.w500),
         centerTitle: true,
         routeName: AppRoutes.updateCompanyInfoScreen.name,
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const AppFormShimmer(photo: true, fields: 5, button: true)
           : SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page, vertical: AppSpacing.xl),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -872,7 +866,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                               keyboardType: TextInputType.phone,
                               decoration: InputDecoration(
                                 labelText: '${AppStrings.phone.tr()} ${i + 2}',
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.sm), borderSide: const BorderSide(color: Colors.black)),
+                                border: OutlineInputBorder(borderRadius: AppField.borderRadius, borderSide: const BorderSide(color: AppField.borderColor)),
                               ),
                             ),
                           ),
@@ -885,7 +879,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                       onPressed: _addMorePhone,
                       icon: const Icon(Icons.add),
                       label: Text('${AppStrings.phone.tr()} (${AppStrings.addOne.tr()})', style: const TextStyle(fontSize: 16)),
-                      style: OutlinedButton.styleFrom(side: const BorderSide(color: Colors.black)),
+                      style: OutlinedButton.styleFrom(side: const BorderSide(color: AppField.borderColor)),
                     ),
                     const SizedBox(height: 8),
                     _buildField(controller: _emailController, label: AppStrings.email.tr(), hint: AppStrings.email.tr(), keyboardType: TextInputType.emailAddress),
@@ -905,7 +899,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                               keyboardType: TextInputType.url,
                               decoration: InputDecoration(
                                 labelText: '${AppStrings.website.tr()} / URL ${i + 1}',
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadius.sm), borderSide: const BorderSide(color: Colors.black)),
+                                border: OutlineInputBorder(borderRadius: AppField.borderRadius, borderSide: const BorderSide(color: AppField.borderColor)),
                               ),
                             ),
                           ),
@@ -919,7 +913,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                       onPressed: _isPremium ? _addOtherLink : _showPremiumAlert,
                       icon: const Icon(Icons.add),
                       label: Text('${AppStrings.website.tr()} / URL (${AppStrings.addOne.tr()})', style: const TextStyle(fontSize: 16)),
-                      style: OutlinedButton.styleFrom(side: const BorderSide(color: Colors.black)),
+                      style: OutlinedButton.styleFrom(side: const BorderSide(color: AppField.borderColor)),
                     ),
                   ],
                   if (_selectedTabIndex == 2) ...[
@@ -934,7 +928,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                       onPressed: _isPremium ? _addPortfolio : _showPremiumAlert,
                       icon: const Icon(Icons.add),
                       label: Text(AppStrings.addPortfolio.tr(), style: const TextStyle(fontSize: 16)),
-                      style: OutlinedButton.styleFrom(side: const BorderSide(color: Colors.black)),
+                      style: OutlinedButton.styleFrom(side: const BorderSide(color: AppField.borderColor)),
                     ),
 
                     _sectionTitle(AppStrings.gallery.tr()),
@@ -962,8 +956,8 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                                 width: 80,
                                 height: 80,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(AppRadius.sm),
-                                  border: Border.all(color: Colors.black12),
+                                  borderRadius: AppField.borderRadius,
+                                  border: Border.all(color: AppField.borderColor),
                                   color: Colors.grey.shade200,
                                 ),
                                 clipBehavior: Clip.antiAlias,
@@ -989,7 +983,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                       onPressed: _isPremium ? _pickWorksImages : _showPremiumAlert,
                       icon: const Icon(Icons.photo_library),
                       label: Text(AppStrings.gallery.tr(), style: const TextStyle(fontSize: 16)),
-                      style: OutlinedButton.styleFrom(side: const BorderSide(color: Colors.black)),
+                      style: OutlinedButton.styleFrom(side: const BorderSide(color: AppField.borderColor)),
                     ),
                     const SizedBox(height: 16),
                     _sectionTitle(AppStrings.videos.tr()),
@@ -1008,8 +1002,8 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                                 width: 80,
                                 height: 80,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(AppRadius.sm),
-                                  border: Border.all(color: Colors.black12),
+                                  borderRadius: AppField.borderRadius,
+                                  border: Border.all(color: AppField.borderColor),
                                   color: Colors.grey.shade200,
                                 ),
                                 clipBehavior: Clip.antiAlias,
@@ -1035,7 +1029,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                       onPressed: _isPremium ? _pickVideos : _showPremiumAlert,
                       icon: const Icon(Icons.video_library),
                       label:  Text(AppStrings.videos.tr(), style: TextStyle(fontSize: 16)),
-                      style: OutlinedButton.styleFrom(side: const BorderSide(color: Colors.black)),
+                      style: OutlinedButton.styleFrom(side: const BorderSide(color: AppField.borderColor)),
                     ),
                   ],
                   if (_errorMessage != null) ...[

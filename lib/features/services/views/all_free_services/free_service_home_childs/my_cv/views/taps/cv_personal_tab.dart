@@ -1,3 +1,4 @@
+import 'package:app_test/core/widgets/app_columns_flow.widget.dart';
 import 'dart:io';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -25,7 +26,7 @@ class CVPersonalTab extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16),
-      child: Column(
+      child: AppColumnsFlow(fullWidthCount: 2, 
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [

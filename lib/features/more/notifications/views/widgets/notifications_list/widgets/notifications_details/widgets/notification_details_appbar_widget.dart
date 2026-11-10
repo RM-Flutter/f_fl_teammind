@@ -114,8 +114,13 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 25),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Wrap(
+                        alignment: WrapAlignment.center,
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: 15,
+                        runSpacing: 8,
                         children: [
                           _buildMetadataItem(
                             context,
@@ -125,13 +130,11 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
                                     .format(DateTime.parse(notificationSingleModel!.createdAt.toString()))
                                 : "",
                           ),
-                          SizedBox(width: 15),
                           _buildMetadataItem(
                             context,
                             icon: Icons.folder_open_outlined,
                             text: (notificationSingleModel?.ptype?.key ?? ""),
                           ),
-                          SizedBox(width: 15),
                           GestureDetector(
                             onTap: () {
                                if (notificationSingleModel != null) {
@@ -148,6 +151,7 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
                             ),
                           ),
                         ],
+                      ),
                       ),
                       const Spacer(),
                     ],

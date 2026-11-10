@@ -1,3 +1,5 @@
+import 'package:app_test/core/widgets/app_responsive_grid.widget.dart';
+import 'package:app_test/core/constants/app_design.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../../../core/constants/app_colors.dart';
@@ -82,39 +84,14 @@ class ServicesGridWidget extends StatelessWidget {
       ),
     ];
 
-    List<Widget> rows = [];
-    for (int i = 0; i < items.length; i += 2) {
-      rows.add(
-        Row(
-          children: [
-            Expanded(
-              child: SizedBox(
-                height: 110,
-                child: items[i],
-              ),
-            ),
-            const SizedBox(width: 12),
-            if (i + 1 < items.length)
-              Expanded(
-                child: SizedBox(
-                  height: 110,
-                  child: items[i + 1],
-                ),
-              )
-            else
-              Expanded(child: SizedBox(height: 110)),
-          ],
-        ),
-      );
-      if (i + 2 < items.length) {
-        rows.add(const SizedBox(height: 12));
-      }
-    }
-
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: rows,
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page),
+      child: AppResponsiveGrid(
+        compact: 2,
+        medium: 3,
+        expanded: 4,
+        rowHeight: 108,
+        children: items,
       ),
     );
   }

@@ -1,3 +1,11 @@
+import 'package:app_test/core/constants/app_strings.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/routing/app_router.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:app_test/core/services/string_helpers_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -27,11 +35,15 @@ class _YoutubeVideoPlayerScreenState extends State<YoutubeVideoPlayerScreen> {
   WebViewController? controller;
   bool isLoading = true;
   bool _invalidUrl = false;
+  bool _failed = false;
 
   @override
   void initState() {
     super.initState();
-    _initializeWebView();
+    // Start the player after the page transition, so opening the screen stays smooth.
+    Future.delayed(const Duration(milliseconds: 350), () {
+      if (mounted) _initializeWebView();
+    });
   }
 
   void _initializeWebView() {
@@ -80,7 +92,7 @@ class _YoutubeVideoPlayerScreenState extends State<YoutubeVideoPlayerScreen> {
 <body>
     <div class="video-container">
         <iframe 
-            src="\$embedUrl" 
+            src="$embedUrl" 
             frameborder="0" 
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
             allowfullscreen>
@@ -135,6 +147,7 @@ class _YoutubeVideoPlayerScreenState extends State<YoutubeVideoPlayerScreen> {
               if (mounted) {
                 setState(() {
                   isLoading = false;
+                  if (error.isForMainFrame ?? true) _failed = true;
                 });
               }
             },
@@ -149,7 +162,7 @@ class _YoutubeVideoPlayerScreenState extends State<YoutubeVideoPlayerScreen> {
             },
           ),
         )
-        ..loadHtmlString(htmlContent);
+        ..loadHtmlString(htmlContent, baseUrl: 'https://www.youtube.com');
 
       // Disable user gesture requirement for Android
       if (controller?.platform.runtimeType.toString() == 'AndroidWebViewController') {
@@ -167,36 +180,68 @@ class _YoutubeVideoPlayerScreenState extends State<YoutubeVideoPlayerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: widget.showCloseButton
-            ? IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () => Navigator.of(context).pop(),
-              )
-            : null,
-        title: Text(
-          widget.videoTitle.isEmpty ? 'Video' : widget.videoTitle,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
+    final inDialog = widget.showCloseButton;
+    final title = widget.videoTitle.isEmpty ? 'Video' : widget.videoTitle;
+
+    final Widget player;
+    if (_invalidUrl || _failed) {
+      player = Center(
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.page),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.videocam_off_outlined, color: Colors.white70, size: 40),
+              const SizedBox(height: AppSpacing.md),
+              Text(
+                _invalidUrl ? 'invalid_video_url'.tr() : 'video_failed_to_load'.tr(),
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 14, color: Colors.white70),
+              ),
+            ],
+          ),
         ),
-        backgroundColor: const Color(0xFF1E2D74),
-        foregroundColor: Colors.white,
-      ),
-      body: _invalidUrl
-          ? const Center(child: Text('رابط الفيديو غير صالح', style: TextStyle(fontSize: 16)))
-          : Stack(
+      );
+    } else {
+      player = Stack(
+        fit: StackFit.expand,
         children: [
           if (controller != null) WebViewWidget(controller: controller!),
-          if (isLoading)
-            Container(
-              color: Colors.white,
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
-            ),
+          if (isLoading || controller == null)
+            const ShimmerAnimatedLoading(circularRaduis: 0),
+        ],
+      );
+    }
+
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBarWithBookmark(
+        backgroundColor: Color(AppColors.background),
+        elevation: 0,
+        leading: AppBackButton(
+          onPressed: inDialog ? () => Navigator.of(context).pop() : null,
+        ),
+        title: title,
+        centerTitle: true,
+        showBookmark: !inDialog,
+        // Opens the video in YouTube: always there, in case the owner blocked the embedded player.
+        actions: [
+          IconButton(
+            tooltip: AppStrings.openInBrowser.tr(),
+            icon: Icon(Icons.open_in_new_rounded, color: Color(AppColors.secondaryButton)),
+            onPressed: () => launchUrl(Uri.parse(widget.videoUrl),
+                mode: LaunchMode.externalApplication),
+          ),
+        ],
+        routeName: AppRoutes.youtubeVideoScreen.name,
+      ),
+      // The whole page is the video.
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          player,
         ],
       ),
-    );  // closes Stack then body
+    );
   }
 }

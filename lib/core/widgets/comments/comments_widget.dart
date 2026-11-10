@@ -38,6 +38,7 @@ class CommentsWidget extends StatefulWidget {
 }
 
 class _CommentsWidgetState extends State<CommentsWidget> {
+  static const int _previewCount = 5;
   int _previousLength = 0;
 
   @override
@@ -83,15 +84,13 @@ class _CommentsWidgetState extends State<CommentsWidget> {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (comments.isNotEmpty)
-            SizedBox(
-              height: comments.length >= 10
-                  ? MediaQuery.sizeOf(context).height * 0.33
-                  : MediaQuery.sizeOf(context).height * 0.4,
-              child: ListView.separated(
-                controller: widget.scrollController,
+            // Not a scroll area of its own: a nested scroll cut the top card and left a gap under
+            // the "Comments" title. The page scrolls; only the latest [_previewCount] show here and
+            // "More" opens the full list.
+            ListView.separated(
                 shrinkWrap: true,
                 reverse: true,
-                physics: const ClampingScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 padding: EdgeInsets.zero,
                 itemBuilder: (context, index) {
                   DateTime utcDateTime =
@@ -112,7 +111,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                           width: 1,
                         ),
                       ),
-                      shadows: AppShadows.raised,
+                      shadows: AppShadows.card,
                     ),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -240,9 +239,8 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                   );
                 },
                 separatorBuilder: (context, index) => const SizedBox(height: 5),
-                itemCount: comments.length,
+                itemCount: comments.length > _previewCount ? _previewCount : comments.length,
               ),
-            ),
           if (comments.isEmpty)
             Container(
               alignment: Alignment.center,
@@ -254,7 +252,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                 ),
               ),
             ),
-          if (comments.length >= 10)
+          if (comments.length > _previewCount)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: Center(

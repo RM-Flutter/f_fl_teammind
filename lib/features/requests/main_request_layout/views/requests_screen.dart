@@ -120,66 +120,8 @@ class _RequestsScreenState extends State<RequestsScreen> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<RequestsViewModel>.value(value: viewModel),
-        ChangeNotifierProvider(create: (context) => FilterController()..getDepartment(context: context)..getRequestTypes(context: context)..getEmployees(context: context)),
-      ],
-      child: TemplatePage(
-          pageContext: context,
-          routeName: AppRoutes.requests.name,
-          // Same navy header as home, with the balance carousel inside it ("mine" only, wherever it is opened from).
-          brandedHeader: widget.requestsType == GetRequestsTypes.mine,
-          floatingActionButton: Container(
-            padding: EdgeInsets.symmetric(horizontal: LocalizationService.isArabic(context: context) ? 35 : 0),
-            width: double.infinity,
-            alignment: Alignment.bottomRight,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                FloatingActionButton(
-                  heroTag: 'requests_add',
-                  onPressed: () async {
-                    final result = await context.pushNamed(AppRoutes.addRequest.name, pathParameters: {
-                      'type': 'mine',
-                      'lang': context.locale.languageCode
-                    });
-                    
-                    if (result == true) {
-                      final reqId = CacheHelper.getString("reqId");
-                      final empId = CacheHelper.getString("empId");
-                      final from = CacheHelper.getString("from");
-                      final to = CacheHelper.getString("to");
-                      final depId = CacheHelper.getString("depId");
-                      final selectStatus = CacheHelper.getString("selectStatus");
-                      
-                      viewModel.initializeRequestsScreen(
-                          context: context,
-                          requestsType: widget.requestsType ?? GetRequestsTypes.mine,
-                          requestTypeId: reqId.isNotEmpty ? reqId : null,
-                          empIds: empId.isNotEmpty ? empId : null,
-                          from: from.isNotEmpty ? from : null,
-                          to: to.isNotEmpty ? to : null,
-                          depId: depId.isNotEmpty ? depId : null,
-                          status: selectStatus.isNotEmpty ? selectStatus : null);
-                    }
-                  }, // Icon inside FAB
-                  backgroundColor: Color(AppColors.buttons), // Optional: change color
-                  tooltip: 'Add',
-                  child: Center(
-                    child: Image.asset(
-                      AppImages.addFloatingActionButtonIcon,
-                      color: AppThemeService.colorPalette.fabIconColor.color,
-                      width: 16,
-                      height: 16,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10,),
-                FloatingActionButton(
+  Widget _buildFilterFab(BuildContext context) {
+    return FloatingActionButton(
                   heroTag: 'requests_calendar',
                   onPressed: ()async {
                     final filterResult = await showModalBottomSheet<Map<String, String?>>(
@@ -248,6 +190,85 @@ class _RequestsScreenState extends State<RequestsScreen> {
                       height: 16,
                     ),
                   ),
+                );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider<RequestsViewModel>.value(value: viewModel),
+        ChangeNotifierProvider(create: (context) => FilterController()..getDepartment(context: context)..getRequestTypes(context: context)..getEmployees(context: context)),
+      ],
+      child: TemplatePage(
+          pageContext: context,
+          routeName: AppRoutes.requests.name,
+          // Same navy header as home, with the balance carousel inside it ("mine" only, wherever it is opened from).
+          brandedHeader: widget.requestsType == GetRequestsTypes.mine,
+          floatingActionButton: Container(
+            padding: EdgeInsets.symmetric(horizontal: LocalizationService.isArabic(context: context) ? 35 : 0),
+            width: double.infinity,
+            alignment: Alignment.bottomRight,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                FloatingActionButton(
+                  heroTag: 'requests_add',
+                  onPressed: () async {
+                    final result = await context.pushNamed(AppRoutes.addRequest.name, pathParameters: {
+                      'type': 'mine',
+                      'lang': context.locale.languageCode
+                    });
+                    
+                    if (result == true) {
+                      final reqId = CacheHelper.getString("reqId");
+                      final empId = CacheHelper.getString("empId");
+                      final from = CacheHelper.getString("from");
+                      final to = CacheHelper.getString("to");
+                      final depId = CacheHelper.getString("depId");
+                      final selectStatus = CacheHelper.getString("selectStatus");
+                      
+                      viewModel.initializeRequestsScreen(
+                          context: context,
+                          requestsType: widget.requestsType ?? GetRequestsTypes.mine,
+                          requestTypeId: reqId.isNotEmpty ? reqId : null,
+                          empIds: empId.isNotEmpty ? empId : null,
+                          from: from.isNotEmpty ? from : null,
+                          to: to.isNotEmpty ? to : null,
+                          depId: depId.isNotEmpty ? depId : null,
+                          status: selectStatus.isNotEmpty ? selectStatus : null);
+                    }
+                  }, // Icon inside FAB
+                  backgroundColor: Color(AppColors.buttons), // Optional: change color
+                  tooltip: 'Add',
+                  child: Center(
+                    child: Image.asset(
+                      AppImages.addFloatingActionButtonIcon,
+                      color: AppThemeService.colorPalette.fabIconColor.color,
+                      width: 16,
+                      height: 16,
+                    ),
+                  ),
+                ),
+                // Hide the filter when the list is empty and nothing is filtered. With an active
+                // filter it stays, otherwise the user could not clear it.
+                Consumer<RequestsViewModel>(
+                  builder: (context, vm, _) {
+                    final hasRequests = (vm.requests?.isNotEmpty == true) ||
+                        (vm.myTeamRequests?.isNotEmpty == true) ||
+                        (vm.otherDepartmentRequestModel?.isNotEmpty == true) ||
+                        (vm.allCompanyRequests?.isNotEmpty == true);
+                    if (!vm.isLoading &&
+                        !hasRequests &&
+                        !ActiveFiltersWidget.hasActiveFilters()) {
+                      return const SizedBox.shrink();
+                    }
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: _buildFilterFab(context),
+                    );
+                  },
                 ),
               ],
             ),
@@ -263,6 +284,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                       ? const RequestsAppbarLoading()
                       : VacationListWidget(
                     isInRequestsPage: true,
+                    animateEntrance: true,
                     tap: true,
                     requests: viewModel.requests,
                   ),

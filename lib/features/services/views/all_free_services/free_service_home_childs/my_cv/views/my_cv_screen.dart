@@ -1,3 +1,5 @@
+import 'package:app_test/core/widgets/app_intro_banner.widget.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/app_screen_shimmers.dart';
 import 'package:app_test/core/widgets/app_fab.widget.dart';
 import 'dart:convert';
 
@@ -15,9 +17,7 @@ import 'package:app_test/features/services/views/all_free_services/free_service_
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/my_cv/controllers/my_cv_view_model.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/cv_generator/views/update_my_info/update_my_info_screen.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/cv_generator/views/create_cv/create_cv_screen.dart';
-import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/get_team_mind_system/views/widgets/youtube_video_player/youtube_video_player_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -83,27 +83,16 @@ class _MyCVScreenState extends State<MyCVScreen> with SingleTickerProviderStateM
     }
   }
 
+  /// Same page as every other "Learn more" video: the full-screen player route.
   void _openVideo(String videoUrl) {
     final url = videoUrl.trim();
     if (url.isEmpty) return;
-    showDialog(
-      context: context,
-      barrierDismissible: true,
-      barrierColor: Colors.black54,
-      builder: (context) => Dialog(
-        insetPadding: EdgeInsets.zero,
-        backgroundColor: Colors.transparent,
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          decoration: const BoxDecoration(color: Color(0xFF1E2D74)),
-          child: YoutubeVideoPlayerScreen(
-            videoUrl: url,
-            videoTitle: AppStrings.learnMoreAboutOpportunities.tr(),
-            showCloseButton: true,
-          ),
-        ),
-      ),
+    context.pushNamed(
+      AppRoutes.youtubeVideoScreen.name,
+      pathParameters: {
+        'lang': context.locale.languageCode,
+        'url': Uri.encodeComponent(url),
+      },
     );
   }
 
@@ -112,9 +101,9 @@ class _MyCVScreenState extends State<MyCVScreen> with SingleTickerProviderStateM
     return ChangeNotifierProvider<MyCVViewModel>.value(
       value: viewModel,
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(AppColors.background),
         appBar: AppBarWithBookmark(
-          backgroundColor: Colors.white,
+          backgroundColor: Color(AppColors.background),
           elevation: 0,
           leading: AppBackButton(onPressed: _goBack),
           title: AppStrings.myCV2.tr(),
@@ -137,7 +126,7 @@ class _MyCVScreenState extends State<MyCVScreen> with SingleTickerProviderStateM
         body: Consumer<MyCVViewModel>(
           builder: (context, viewModel, child) {
             if (viewModel.isLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return const AppFormShimmer(headerLines: 2, infoRows: 7);
             }
 
             return Padding(
@@ -181,49 +170,11 @@ class _MyCVScreenState extends State<MyCVScreen> with SingleTickerProviderStateM
     if (jsonString != null && jsonString != "") {
       gCache = json.decode(jsonString) as Map<String, dynamic>;
     }
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 12),
-      child: Column(
-        children: [
-         Text(
-            AppStrings.cvDisplayedFreeCompanies.tr(),
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 12,
-              height: 1.4,
-            ),
-          ),
-          
-          gapH12,
-          
-          // Learn More Link
-          GestureDetector(
-            onTap: () {
-              final videoUrl = gCache['cvVideoUrl']?.toString() ?? '';
-              _openVideo(videoUrl);
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  AppStrings.learnMoreAboutOpportunities.tr(),
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(width: 4),
-                Icon(
-                  Icons.arrow_forward,
-                  color: Colors.black,
-                  size: 16,
-                ),
-              ],
-            ),
-          ),
-        ],
+    return Padding(
+      padding: const EdgeInsets.only(top: AppSpacing.md, bottom: AppSpacing.md),
+      child: AppIntroBanner(
+        description: AppStrings.cvDisplayedFreeCompanies.tr(),
+        onLearnMore: () => _openVideo(gCache?['cvVideoUrl']?.toString() ?? ''),
       ),
     );
   }

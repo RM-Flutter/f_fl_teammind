@@ -1,3 +1,4 @@
+import 'package:app_test/core/widgets/app_responsive_grid.widget.dart';
 import 'dart:ui' as ui;
 import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
@@ -228,7 +229,7 @@ class _SmartCardProfileDetailScreenState
                   data: url,
                   version: QrVersions.auto,
                   size: 200,
-                  backgroundColor: Colors.white,
+                  backgroundColor: Color(AppColors.background),
                   dataModuleStyle: const QrDataModuleStyle(color: Colors.black),
                 ),
               ),
@@ -382,33 +383,18 @@ class _SmartCardProfileDetailScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(AppColors.background),
       appBar: AppBarWithBookmark(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(AppColors.background),
         elevation: 0,
-        leading: IconButton(
-          icon: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Color(AppColors.secondaryButton),
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
-          ),
-          onPressed: () {
+        leading: AppBackButton(onPressed: () {
             try {
               GoRouter.of(context).pop();
             } catch (e) {
               Navigator.of(context).pop();
             }
-          },
-        ),
+          }),
         title: AppStrings.smartCard2.tr(),
-        titleStyle: TextStyle(
-          color: Color(AppColors.secondaryButton),
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-        ),
         centerTitle: true,
         routeName: AppRoutes.smartCardProfileDetailScreen.name,
       ),
@@ -416,61 +402,38 @@ class _SmartCardProfileDetailScreenState
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            const SizedBox(height: 16),
-            Row(
+            AppResponsiveGrid(
+              compact: 2,
+              medium: 3,
+              expanded: 4,
               children: [
-                Expanded(
-                  child: buildActionCard(
-                    icon: "assets/images/svg/updateInfo.svg",
-                    label: AppStrings.updateMyInfo.tr(),
-                    onTap: _navigateToUpdateEmployeeInfo,
-                  ),
+                buildActionCard(
+                  icon: "assets/images/svg/updateInfo.svg",
+                  label: AppStrings.updateMyInfo.tr(),
+                  onTap: _navigateToUpdateEmployeeInfo,
                 ),
-                if (widget.isPersonal) ...[
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: buildActionCard(
-                      icon: "assets/images/svg/selectTemp.svg",
-                      label: AppStrings.selectTemplate.tr(),
-                      onTap: _navigateToSelectTemplate,
-                    ),
+                if (widget.isPersonal)
+                  buildActionCard(
+                    icon: "assets/images/svg/selectTemp.svg",
+                    label: AppStrings.selectTemplate.tr(),
+                    onTap: _navigateToSelectTemplate,
                   ),
-                ],
-              ],
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: buildActionCard(
-                    icon: "assets/images/svg/downloadQr.svg",
-                    label: AppStrings.downloadQrCode.tr(),
-                    onTap: _showDownloadQrSheet,
-                  ),
+                buildActionCard(
+                  icon: "assets/images/svg/downloadQr.svg",
+                  label: AppStrings.downloadQrCode.tr(),
+                  onTap: _showDownloadQrSheet,
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: buildActionCard(
-                    icon: "assets/images/svg/copyLink.svg",
-                    label: AppStrings.copyProfileLink.tr(),
-                    onTap: _showCopyProfileLinkSheet,
-                  ),
+                buildActionCard(
+                  icon: "assets/images/svg/copyLink.svg",
+                  label: AppStrings.copyProfileLink.tr(),
+                  onTap: _showCopyProfileLinkSheet,
                 ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: buildActionCard(
-                    icon: "assets/images/svg/deleteProfile.svg",
-                    label: AppStrings.deleteProfileButton.tr(),
-                    onTap: _deleteProfile,
-                    isDestructive: true,
-                  ),
+                buildActionCard(
+                  icon: "assets/images/svg/deleteProfile.svg",
+                  label: AppStrings.deleteProfileButton.tr(),
+                  onTap: _deleteProfile,
+                  isDestructive: true,
                 ),
-                const SizedBox(width: 12),
-                const Expanded(child: SizedBox()),
               ],
             ),
           ],

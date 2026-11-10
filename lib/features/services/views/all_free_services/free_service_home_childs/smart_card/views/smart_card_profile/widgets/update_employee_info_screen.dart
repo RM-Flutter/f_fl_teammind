@@ -1,3 +1,5 @@
+import 'package:app_test/core/utils/custom_shimmer_loading/app_screen_shimmers.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/app_shimmer_list.dart';
 import 'dart:convert';
 import 'package:app_test/core/services/alert_service/alerts_service.dart';
 import 'package:app_test/core/services/alert_service/custom_alert.dart';
@@ -488,46 +490,35 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
     // Show full-screen loading until all data is fetched
     if (_isInitializing) {
       return Scaffold(
-        backgroundColor: Colors.white,
-        body: Center(
-          child: CircularProgressIndicator(
-            color: Color(AppColors.secondaryButton),
-          ),
+        backgroundColor: Color(AppColors.background),
+        appBar: AppBarWithBookmark(
+          backgroundColor: Color(AppColors.background),
+          elevation: 0,
+          leading: AppBackButton(onPressed: _goBack),
+          title: AppStrings.updateMyInfo.tr(),
+          centerTitle: true,
+          routeName: AppRoutes.updateEmployeeInfoScreen.name,
         ),
+        body: const AppFormShimmer(photo: true, fields: 5, button: true),
       );
     }
 
     return ChangeNotifierProvider<CreateCVViewModel>.value(
       value: viewModel,
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(AppColors.background),
         appBar: AppBarWithBookmark(
-          backgroundColor: Colors.white,
+          backgroundColor: Color(AppColors.background),
           elevation: 0,
-          leading: IconButton(
-            icon: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Color(AppColors.secondaryButton),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
-            ),
-            onPressed: _goBack,
-          ),
+          leading: AppBackButton(onPressed: _goBack),
           title: AppStrings.updateMyInfo.tr(),
-          titleStyle: TextStyle(
-            color: Color(AppColors.secondaryButton),
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-          ),
           centerTitle: true,
           routeName: AppRoutes.updateEmployeeInfoScreen.name,
         ),
         body: Consumer<CreateCVViewModel>(
           builder: (context, vm, child) {
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page),
               child: Column(
                 children: [
                   const SizedBox(height: 20),
@@ -628,16 +619,15 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
                       ),
                     ),
                   Container(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.symmetric(vertical: AppSpacing.page),
                     child: ElevatedButton(
                       onPressed: vm.isSubmitting ? null : _saveToSmartCard,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Color(AppColors.secondaryButton),
+                        backgroundColor: Color(AppColors.buttons),
                         foregroundColor: Colors.white,
-                        minimumSize: const Size(200, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(AppRadius.xl),
-                        ),
+                        elevation: 0,
+                        minimumSize: const Size(double.infinity, AppButtonSize.height),
+                        shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
                       ),
                       child: vm.isSubmitting
                           ? const SizedBox(
@@ -697,7 +687,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
   /// Contact tab for Smart Card Employee (phone + more_phones + links)
   Widget _buildEmployeeContactTab(CreateCVViewModel vm) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.page),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -721,8 +711,8 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
                       decoration: InputDecoration(
                         labelText: '${AppStrings.phone.tr()} ${i + 2}',
                         border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(AppRadius.sm),
-                          borderSide: const BorderSide(color: Colors.black),
+                          borderRadius: AppField.borderRadius,
+                          borderSide: const BorderSide(color: AppField.borderColor),
                         ),
                       ),
                     ),
@@ -759,7 +749,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
                 style: const TextStyle(fontSize: 16),
               ),
               style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: Colors.black),
+                side: const BorderSide(color: AppField.borderColor),
               ),
             ),
           ),
@@ -830,8 +820,8 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
                           decoration: InputDecoration(
                             labelText: 'URL ${i + 1}',
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(AppRadius.sm),
-                              borderSide: const BorderSide(color: Colors.black),
+                              borderRadius: AppField.borderRadius,
+                              borderSide: const BorderSide(color: AppField.borderColor),
                             ),
                           ),
                         ),
@@ -877,7 +867,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
                 style: const TextStyle(fontSize: 16),
               ),
               style: OutlinedButton.styleFrom(
-                side: const BorderSide(color: Colors.black),
+                side: const BorderSide(color: AppField.borderColor),
               ),
             ),
           ),
@@ -920,8 +910,8 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
           decoration: InputDecoration(
             hintText: hint,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppRadius.sm),
-              borderSide: const BorderSide(color: Colors.black),
+              borderRadius: AppField.borderRadius,
+              borderSide: const BorderSide(color: AppField.borderColor),
             ),
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

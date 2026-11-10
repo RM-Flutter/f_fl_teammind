@@ -1,5 +1,6 @@
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/utils/app_styles.dart';
+import 'package:app_test/core/widgets/app_filter_actions.widget.dart';
 import 'package:app_test/core/widgets/multi_searchable_dropdown_sheet.dart';
 import 'package:app_test/features/reports/data/models/report_catalog_model.dart';
 import 'package:app_test/features/reports/data/models/report_filter_options_model.dart';
@@ -66,7 +67,10 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
   void initState() {
     super.initState();
     _filters = Map<String, dynamic>.from(widget.initialFilters);
-    
+    _initDefaults();
+  }
+
+  void _initDefaults() {
     _filters['department_ids'] ??= <int>[];
     _filters['employee_ids'] ??= <int>[];
 
@@ -101,39 +105,38 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
     }
   }
 
+  // Same look as the other filters (SharedListFilterWidget): outlined field, radius sm, AppColors.border.
+  // Selected value / item text: same as the searchable dropdowns of the other filters.
+  TextStyle get _valueStyle =>
+      AppStyles.darkContent(context).copyWith(fontSize: 14, fontWeight: FontWeight.w400);
+
   InputDecoration _dropdownDecoration(String label, {bool isLocked = false, Widget? suffixIcon}) {
+    OutlineInputBorder border(Color c) => OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadius.sm),
+          borderSide: BorderSide(color: c, width: 1.0),
+        );
     return InputDecoration(
       labelText: label,
-      labelStyle: isLocked 
-          ? AppStyles.hintContent(context).copyWith(color: Colors.grey.shade600)
-          : AppStyles.hintContent(context),
-      filled: true,
-      fillColor: isLocked ? Colors.grey.shade100 : Color(AppColors.inputFill),
+      labelStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
+      filled: isLocked,
+      fillColor: isLocked ? Colors.grey.shade100 : null,
       suffixIcon: isLocked
           ? const Icon(Icons.lock_outline, size: 20, color: Colors.grey)
           : suffixIcon,
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        borderSide: BorderSide(color: Color(AppColors.inputBorder)),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        borderSide: BorderSide(
-          color: isLocked ? Colors.grey.shade300 : Color(AppColors.inputBorder),
-        ),
-      ),
-      disabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        borderSide: BorderSide(color: Colors.grey.shade300),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        borderSide: BorderSide(color: Color(AppColors.inputFocusedBorder)),
-      ),
+      border: border(Color(AppColors.border)),
+      enabledBorder: border(isLocked ? Colors.grey.shade300 : Color(AppColors.border)),
+      disabledBorder: border(Colors.grey.shade300),
+      focusedBorder: border(Color(AppColors.border)),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
     );
   }
-  
+
+  /// Back to the defaults (as when the sheet first opens), used by "Clear".
+  void _resetFilters() {
+    _filters = <String, dynamic>{};
+    _initDefaults();
+  }
+
   Future<void> _selectDateRange(String fromKey, String toKey) async {
     final DateTime now = DateTime.now();
     final DateTime initialFrom = _filters[fromKey] != null 
@@ -185,8 +188,8 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
             Text(
               text,
               style: isLocked
-                  ? AppStyles.content(context).copyWith(color: Colors.grey.shade600)
-                  : AppStyles.content(context),
+                  ? _valueStyle.copyWith(color: Colors.grey.shade600)
+                  : _valueStyle,
             ),
             Icon(
               isLocked ? Icons.lock_outline : Icons.calendar_today,
@@ -203,34 +206,28 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
   Widget build(BuildContext context) {
     final isLocked = widget.filtersConfig.lockTimePeriod;
     return Padding(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-        left: 24,
-        right: 24,
-        top: 24,
-      ),
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Center(
-              child: Container(
-                width: 50,
-                height: 5,
-                decoration: BoxDecoration(
-                  color: Color(AppColors.border),
-                  borderRadius: BorderRadius.circular(AppRadius.sm),
-                ),
+            const SizedBox(height: 10),
+            Container(
+              width: 63,
+              height: 5,
+              decoration: BoxDecoration(
+                color: Color(AppColors.disableButton),
+                borderRadius: BorderRadius.circular(AppRadius.pill),
               ),
             ),
-            const SizedBox(height: 16),
-            Text(
-              'filter_reports'.tr(),
-              style: AppStyles.heading(context),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 10),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+            AppFilterTitle('filter_reports'.tr()),
+            const SizedBox(height: AppSpacing.md),
 
             if (_hasDepartments) ...[
               MultiSearchableDropdownSheet(
@@ -243,8 +240,9 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                     .map((e) => {'id': e.id, 'title': e.title})
                     .toList(),
                 nameKey: 'title',
-                borderSide: BorderSide(color: Color(AppColors.inputBorder)),
-                borderRadius: BorderRadius.circular(AppRadius.md),
+                hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
+                borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
+                borderRadius: BorderRadius.circular(AppRadius.sm),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 onChanged: (vals) {
                   setState(() {
@@ -253,7 +251,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                   });
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.md),
             ],
 
             if (_hasEmployees) ...[
@@ -267,8 +265,9 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                     .map((e) => {'id': e.id, 'name': e.name})
                     .toList(),
                 nameKey: 'name',
-                borderSide: BorderSide(color: Color(AppColors.inputBorder)),
-                borderRadius: BorderRadius.circular(AppRadius.md),
+                hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
+                borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
+                borderRadius: BorderRadius.circular(AppRadius.sm),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 onChanged: (vals) {
                   setState(() {
@@ -276,30 +275,31 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                   });
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.md),
             ],
 
             if (_hasEmployeeStatus) ...[
               DropdownButtonFormField<String>(
+                style: _valueStyle,
                 decoration: _dropdownDecoration('employee_status'.tr()),
                 value: _filters['employee_status'] as String?,
                 isExpanded: true,
                 items: [
                   DropdownMenuItem<String>(
                     value: null,
-                    child: Text('all'.tr(), style: AppStyles.content(context)),
+                    child: Text('all'.tr(), style: _valueStyle),
                   ),
                   DropdownMenuItem<String>(
                     value: 'active',
-                    child: Text('active'.tr(), style: AppStyles.content(context)),
+                    child: Text('active'.tr(), style: _valueStyle),
                   ),
                   DropdownMenuItem<String>(
                     value: 'inactive',
-                    child: Text('inactive'.tr(), style: AppStyles.content(context)),
+                    child: Text('inactive'.tr(), style: _valueStyle),
                   ),
                   DropdownMenuItem<String>(
                     value: 'on_leave',
-                    child: Text('on_leave'.tr(), style: AppStyles.content(context)),
+                    child: Text('on_leave'.tr(), style: _valueStyle),
                   ),
                 ],
                 onChanged: (val) {
@@ -308,7 +308,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                   });
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.md),
             ],
 
             if (_hasRequestTypes) ...[
@@ -325,8 +325,9 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                   return list.isEmpty ? null : list.first;
                 })(),
                 nameKey: 'title',
-                borderSide: BorderSide(color: Color(AppColors.inputBorder)),
-                borderRadius: BorderRadius.circular(AppRadius.md),
+                hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
+                borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
+                borderRadius: BorderRadius.circular(AppRadius.sm),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 onChanged: (val) {
                   setState(() {
@@ -335,16 +336,16 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                   });
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.md),
             ],
 
             if (widget.filtersConfig.showTimePeriod) ...[
               Material(
                 color: Colors.transparent,
-                child: SwitchListTile(
+                child: _CompactSwitchTile(
                   title: Row(
                     children: [
-                      Text('time_period'.tr(), style: AppStyles.content(context)),
+                      Text('time_period'.tr(), style: _valueStyle),
                       if (isLocked) ...[
                         const SizedBox(width: 8),
                         Container(
@@ -385,8 +386,9 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                 ),
               ),
               if (isLocked || (_filters['use_time_period'] ?? true)) ...[
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.md),
                 DropdownButtonFormField<String>(
+                style: _valueStyle,
                   decoration: _dropdownDecoration('period_type'.tr(), isLocked: isLocked),
                   value: _filters['period_type'] as String?,
                   isExpanded: true,
@@ -399,8 +401,8 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                       child: Text(
                         'time_frame'.tr(),
                         style: isLocked
-                            ? AppStyles.content(context).copyWith(color: Colors.black87)
-                            : AppStyles.content(context),
+                            ? _valueStyle.copyWith(color: Colors.black87)
+                            : _valueStyle,
                       ),
                     ),
                     DropdownMenuItem<String>(
@@ -408,8 +410,8 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                       child: Text(
                         'from_to'.tr(),
                         style: isLocked
-                            ? AppStyles.content(context).copyWith(color: Colors.black87)
-                            : AppStyles.content(context),
+                            ? _valueStyle.copyWith(color: Colors.black87)
+                            : _valueStyle,
                       ),
                     ),
                   ],
@@ -421,10 +423,11 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                           });
                         },
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.md),
 
                 if (_filters['period_type'] == 'time_frame' && _hasTimeFrames) ...[
                   DropdownButtonFormField<String>(
+                style: _valueStyle,
                     decoration: _dropdownDecoration('time_period'.tr(), isLocked: isLocked),
                     value: _filters['time_frame'] as String?,
                     isExpanded: true,
@@ -438,8 +441,8 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                           child: Text(
                             tf.label,
                             style: isLocked
-                                ? AppStyles.content(context).copyWith(color: Colors.black87)
-                                : AppStyles.content(context),
+                                ? _valueStyle.copyWith(color: Colors.black87)
+                                : _valueStyle,
                           ),
                         );
                       }),
@@ -452,12 +455,12 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                             });
                           },
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.md),
                 ],
 
                 if (_filters['period_type'] == 'from_to') ...[
                   _buildDateRangePicker('date_range'.tr(), 'date_from', 'date_to', isLocked: isLocked),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.md),
                 ],
 
                 if (isLocked) ...[
@@ -477,7 +480,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.md),
                 ],
               ],
             ],
@@ -485,8 +488,8 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
             if (_hasCompare) ...[
               Material(
                 color: Colors.transparent,
-                child: SwitchListTile(
-                  title: Text('compare_with'.tr(), style: AppStyles.content(context)),
+                child: _CompactSwitchTile(
+                  title: Text('compare_with'.tr(), style: _valueStyle),
                   value: _filters['compare'] ?? false,
                   activeColor: Color(AppColors.buttons),
                   onChanged: (val) {
@@ -497,19 +500,20 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                 ),
               ),
               if (_filters['compare'] == true) ...[
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.md),
                 DropdownButtonFormField<String>(
+                style: _valueStyle,
                   decoration: _dropdownDecoration('compare_period_type'.tr()),
                   value: _filters['compare_period_type'] as String?,
                   isExpanded: true,
                   items: [
                     DropdownMenuItem<String>(
                       value: 'time_frame',
-                      child: Text('time_frame'.tr(), style: AppStyles.content(context)),
+                      child: Text('time_frame'.tr(), style: _valueStyle),
                     ),
                     DropdownMenuItem<String>(
                       value: 'from_to',
-                      child: Text('from_to'.tr(), style: AppStyles.content(context)),
+                      child: Text('from_to'.tr(), style: _valueStyle),
                     ),
                   ],
                   onChanged: (val) {
@@ -518,10 +522,11 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                     });
                   },
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.md),
 
                 if (_filters['compare_period_type'] == 'time_frame' && _hasTimeFrames) ...[
                   DropdownButtonFormField<String>(
+                style: _valueStyle,
                     decoration: _dropdownDecoration('compare_time_period'.tr()),
                     value: _filters['compare_time_frame'] as String?,
                     isExpanded: true,
@@ -529,7 +534,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                       ...widget.filterOptions.timeFrames.map((tf) {
                         return DropdownMenuItem<String>(
                           value: tf.key,
-                          child: Text(tf.label, style: AppStyles.content(context)),
+                          child: Text(tf.label, style: _valueStyle),
                         );
                       }),
                     ],
@@ -539,12 +544,12 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                       });
                     },
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.md),
                 ],
 
                 if (_filters['compare_period_type'] == 'from_to') ...[
                   _buildDateRangePicker('compare_date_range'.tr(), 'compare_date_from', 'compare_date_to'),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.md),
                 ],
               ],
             ],
@@ -570,16 +575,11 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                   ],
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.md),
             ],
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(AppColors.buttons),
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppRadius.md)),
-              ),
-              onPressed: () {
+            const SizedBox(height: 30),
+            AppFilterActions(
+              onApply: () {
                 if (widget.filtersConfig.requestTypesRequired) {
                   final reqTypeId = _filters['request_type_id'];
                   if (reqTypeId == null) {
@@ -616,19 +616,59 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
 
                 widget.onApplyFilters(clean);
                 Navigator.pop(context);
+              
               },
-              child: Text(
-                'apply_filters'.tr(),
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold),
+              onClear: () {
+                setState(_resetFilters);
+                widget.onApplyFilters({
+                  ..._filters,
+                  'department_ids': <int>[],
+                  'employee_ids': <int>[],
+                }..removeWhere((k, v) => v == null || k == 'use_time_period'));
+                Navigator.pop(context);
+              },
+            ),
+            const SizedBox(height: 30),
+                ],
               ),
             ),
-            const SizedBox(height: 32),
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Switch row aligned with the fields (no extra side padding) and a smaller switch.
+class _CompactSwitchTile extends StatelessWidget {
+  final Widget title;
+  final bool value;
+  final Color activeColor;
+  final ValueChanged<bool>? onChanged;
+
+  const _CompactSwitchTile({
+    required this.title,
+    required this.value,
+    required this.activeColor,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(child: title),
+        Transform.scale(
+          scale: 0.75,
+          alignment: Alignment.centerRight,
+          child: Switch(
+            value: value,
+            activeColor: activeColor,
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            onChanged: onChanged,
+          ),
+        ),
+      ],
     );
   }
 }

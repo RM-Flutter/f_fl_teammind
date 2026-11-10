@@ -1,3 +1,11 @@
+import 'package:app_test/core/services/layout_service.dart';
+import 'package:app_test/core/widgets/app_responsive_grid.widget.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:app_test/core/widgets/app_card.widget.dart';
+import 'package:app_test/core/widgets/app_page_dots.widget.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/app_screen_shimmers.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/app_shimmer_list.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
@@ -210,52 +218,55 @@ class _SelectSmartCardTemplateScreenState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-          child: Text(
-            label,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-          ),
+        Text(
+          label,
+          style: AppStyles.heading(context)
+              .copyWith(fontSize: 13, fontWeight: FontWeight.w600),
         ),
-        SizedBox(
-          height: 40,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            itemCount: colorOptions.length,
-            itemBuilder: (context, index) {
-              final color = colorOptions[index];
-              final isSelected = color == selectedColor;
-              return GestureDetector(
-                onTap: () => onSelect(color),
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
-                  decoration: BoxDecoration(
-                    color: color,
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: isSelected ? Colors.blue : Colors.grey[300]!,
-                      width: isSelected ? 3 : 1,
-                    ),
-                    boxShadow: AppShadows.card,
-                  ),
-                  child: isSelected
-                      ? Icon(
-                          Icons.check,
-                          color: color.computeLuminance() > 0.5
-                              ? Colors.black
-                              : Colors.white,
-                          size: 20,
-                        )
-                      : null,
-                ),
-              );
-            },
-          ),
+        const SizedBox(height: AppSpacing.sm),
+        // Equal gaps, so the swatches always fit the card and never run off the edge.
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            for (final color in colorOptions)
+              _swatch(color, color == selectedColor, () => onSelect(color)),
+          ],
         ),
       ],
+    );
+  }
+
+  Widget _swatch(Color color, bool isSelected, VoidCallback onTap) {
+    final ring = Color(AppColors.buttons);
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: AppMotion.fast,
+        width: 34,
+        height: 34,
+        padding: const EdgeInsets.all(3),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+              color: isSelected ? ring : Colors.transparent, width: 2),
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            color: color,
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.black.withValues(alpha: 0.08)),
+          ),
+          child: isSelected
+              ? Icon(
+                  Icons.check_rounded,
+                  size: 16,
+                  color: color.computeLuminance() > 0.5
+                      ? Colors.black
+                      : Colors.white,
+                )
+              : null,
+        ),
+      ),
     );
   }
 
@@ -266,40 +277,19 @@ class _SelectSmartCardTemplateScreenState
     return ChangeNotifierProvider(
       create: (_) => SmartCardViewModel()..loadTemplates(context),
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(AppColors.background),
         appBar: AppBarWithBookmark(
-          backgroundColor: Colors.white,
+          backgroundColor: Color(AppColors.background),
           elevation: 0,
-          leading: IconButton(
-            icon: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Color(AppColors.secondaryButton),
-                shape: BoxShape.circle,
-              ),
-              child:
-                  const Icon(Icons.arrow_back, color: Colors.white, size: 18),
-            ),
-            onPressed: _goBack,
-          ),
+          leading: AppBackButton(onPressed: _goBack),
           title: AppStrings.selectTemplate.tr(),
-          titleStyle: TextStyle(
-            color: Color(AppColors.secondaryButton),
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-          ),
           centerTitle: true,
           routeName: 'selectSmartCardTemplateScreen',
         ),
         body: Consumer<SmartCardViewModel>(
           builder: (context, vm, child) {
             if (vm.isLoading) {
-              return Center(
-                child: CircularProgressIndicator(
-                  valueColor:
-                      AlwaysStoppedAnimation<Color>(Color(AppColors.buttons)),
-                ),
-              );
+              return const AppPagerShimmer();
             }
 
             if (vm.errorMessage != null && vm.templates.isEmpty) {
@@ -348,50 +338,61 @@ class _SelectSmartCardTemplateScreenState
               children: [
                 const SizedBox(height: 16),
                 Expanded(
-                  child: PageView.builder(
-                    controller: _pageController,
-                    itemCount: templates.length,
-                    onPageChanged: (index) =>
-                        setState(() => selectedTemplateIndex = index),
-                    itemBuilder: (context, index) {
-                      return _buildTemplateCard(templates[index], index);
-                    },
-                  ),
+                  child: LayoutService.isExpanded(context)
+                      // Wide windows: all the templates at once, tap one to select it.
+                      ? SingleChildScrollView(
+                          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page),
+                          child: AppResponsiveGrid(
+                            expanded: 4,
+                            children: [
+                              for (var i = 0; i < templates.length; i++)
+                                GestureDetector(
+                                  onTap: () => setState(() => selectedTemplateIndex = i),
+                                  child: _buildTemplateCard(templates[i], i),
+                                ),
+                            ],
+                          ),
+                        )
+                      : PageView.builder(
+                          controller: _pageController,
+                          itemCount: templates.length,
+                          onPageChanged: (index) =>
+                              setState(() => selectedTemplateIndex = index),
+                          itemBuilder: (context, index) {
+                            return _buildTemplateCard(templates[index], index);
+                          },
+                        ),
                 ),
                 const SizedBox(height: 12),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(templates.length, (index) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      width: 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: selectedTemplateIndex == index
-                            ? Color(AppColors.buttons)
-                            : Colors.grey[400],
-                      ),
-                    );
-                  }),
-                ),
+                if (!LayoutService.isExpanded(context))
+                  AppPageDots(count: templates.length, index: selectedTemplateIndex),
                 const SizedBox(height: 16),
 
                 // Colors selection section
-                _buildColorSelector(
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page),
+                  child: AppCard(
+                    child: Column(
+                      children: [
+                        _buildColorSelector(
                     AppStrings.primaryColor.tr(),
                     primaryColor,
                     (c) => setState(() => primaryColor = c)),
-                _buildColorSelector(
+                        const SizedBox(height: AppSpacing.lg),
+                        _buildColorSelector(
                     AppStrings.secondaryColor.tr(),
                     secondaryColor,
                     (c) => setState(() => secondaryColor = c)),
-                _buildColorSelector(
+                        const SizedBox(height: AppSpacing.lg),
+                        _buildColorSelector(
                     AppStrings.thirdColor.tr(),
                     thirdColor,
                     (c) => setState(() => thirdColor = c)),
-
-                const SizedBox(height: 24),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.lg),
                 Container(
                   padding: const EdgeInsets.all(16),
                   child: ElevatedButton(
@@ -400,12 +401,11 @@ class _SelectSmartCardTemplateScreenState
                         : () => _handleSelectTemplate(
                             templates[selectedTemplateIndex]),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(AppColors.secondaryButton),
+                      backgroundColor: Color(AppColors.buttons),
                       foregroundColor: Colors.white,
-                      minimumSize: const Size(double.infinity, 50),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppRadius.xl),
-                      ),
+                      elevation: 0,
+                      minimumSize: const Size(double.infinity, AppButtonSize.height),
+                      shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
                     ),
                     child: _isSaving
                         ? const SizedBox(
@@ -457,10 +457,10 @@ class _SelectSmartCardTemplateScreenState
           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        border: isSelected
-            ? Border.all(color: Color(AppColors.buttons), width: 3)
-            : Border.all(color: Colors.grey[300]!, width: 1),
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        border: Border.all(
+            color: isSelected ? Color(AppColors.buttons) : Color(AppColors.border),
+            width: isSelected ? 1.5 : 1),
         boxShadow: AppShadows.card,
       ),
       child: Stack(
@@ -470,7 +470,7 @@ class _SelectSmartCardTemplateScreenState
               Expanded(
                 child: ClipRRect(
                   borderRadius:
-                      const BorderRadius.vertical(top: Radius.circular(AppRadius.md)),
+                      const BorderRadius.vertical(top: Radius.circular(AppRadius.lg - 1)),
                   child: imageUrl != null && imageUrl.isNotEmpty
                       ? Image.network(
                           imageUrl,
@@ -478,15 +478,7 @@ class _SelectSmartCardTemplateScreenState
                           width: double.infinity,
                           loadingBuilder: (context, child, loadingProgress) {
                             if (loadingProgress == null) return child;
-                            return Container(
-                              color: Color(AppColors.buttons),
-                              child: const Center(
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            );
+                            return const ShimmerAnimatedLoading(circularRaduis: 0);
                           },
                           errorBuilder: (context, error, stackTrace) =>
                               Container(

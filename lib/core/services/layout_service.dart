@@ -22,6 +22,20 @@ class LayoutService {
     return SizeClass.expanded;
   }
 
+  /// Number of columns for a grid / list of cards at the current width: [compact] on phones,
+  /// [medium] from 600, [expanded] from 1024. Same breakpoints as every other layout decision.
+  static int columns(BuildContext context,
+      {int compact = 1, int medium = 2, int expanded = 3}) {
+    switch (sizeClassOf(context)) {
+      case SizeClass.compact:
+        return compact;
+      case SizeClass.medium:
+        return medium;
+      case SizeClass.expanded:
+        return expanded;
+    }
+  }
+
   static bool isCompact(BuildContext context) =>
       sizeClassOf(context) == SizeClass.compact;
   static bool isMedium(BuildContext context) =>

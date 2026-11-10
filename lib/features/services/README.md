@@ -21,3 +21,7 @@ Career tools that **visitors and "personal" accounts** can use without an employ
 | `valcation_calc/` | Offline vacation balance calculator |
 | `personality_test/` | Personality test screen |
 | `get_team_mind_system/` | "About Team Mind" marketing page (`rm_page/v1/show`) with a YouTube player and contact |
+
+## Wide screens
+
+Free Services use the same breakpoints as the rest of the app (600 and 1024, `LayoutService.columns`). Card lists and the service tiles use `AppResponsiveGrid` (tiles: 2 / 3 / 4 columns, lists: 1 / 2 / 3). Forms and My CV tabs use `AppColumnsFlow` (two columns from 1024). The home header height is `safeTop + 120` (collapsed `safeTop + 64`), so it is the same on a phone and on the web. Select Template shows every template as a grid from 1024 and the swipe carousel below.

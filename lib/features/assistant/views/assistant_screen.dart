@@ -15,6 +15,7 @@ import 'widgets/assistant_avatar_widget.dart';
 import 'widgets/assistant_mic_button_widget.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/widgets/app_content_width.widget.dart';
+import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
 
 /// شاشة مساعد TeamMind: محادثة نصية وصوتية بإجابات من ملف مساعدة محلي.
 class AssistantScreen extends StatefulWidget {
@@ -75,14 +76,18 @@ class _AssistantScreenState extends State<AssistantScreen> {
         }
         return Scaffold(
           backgroundColor: const Color(0xffFFFFFF),
-          appBar: AppBar(
-            surfaceTintColor: Colors.transparent,
-            backgroundColor: const Color(0xffFFFFFF),
-            title: Text(
-              AppStrings.teamMindAssistant.tr(),
-              style: AppStyles.heading(context)
-                  .copyWith(fontSize: AppSizes.s16, fontWeight: FontWeight.w700),
+          // Same app bar as the other screens (TemplatePage): white, navy title, round back button.
+          appBar: AppBarWithBookmark(
+            title: AppStrings.teamMindAssistant.tr(),
+            defaultTitle: AppStrings.teamMindAssistant.tr(),
+            backgroundColor: Colors.white,
+            showBookmark: false,
+            titleStyle: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: Color(AppColors.secondaryButton),
             ),
+            leading: const AppBackButton(),
             actions: [
               if (c.isSpeaking)
                 IconButton(

@@ -1,3 +1,7 @@
+import 'package:app_test/core/services/layout_service.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/core/widgets/template_page.widget.dart';
+import 'package:app_test/core/widgets/app_card.widget.dart';
 import 'package:app_test/core/services/app_error_reporter.dart';
 import 'dart:convert';
 
@@ -207,281 +211,297 @@ class _AboutTeamMindScreenState extends State<AboutTeamMindScreen> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Container(
-            height: 130, // Fixed height to show the background properly
-            decoration: BoxDecoration(
-              color: Color(AppColors.secondaryButton),
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(AppRadius.xl),
-                bottomRight: Radius.circular(AppRadius.xl),
-              ),
-            ),
-            child: Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(AppRadius.xl),
-                    bottomRight: Radius.circular(AppRadius.xl),
-                  ),
-                  child: Image.asset(
-                    "assets/images/request-app-bar.png",
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    height: 130,
-                  ),
-                ),
-                Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Color(AppColors.secondaryButton).withValues(alpha: 0.9),
-                      borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(AppRadius.xl),
-                        bottomRight: Radius.circular(AppRadius.xl),
+  /// Thumbnail of the YouTube video, or a plain tinted block when the url is not a YouTube one.
+  Widget _videoThumb() {
+    final videoId = _youtubeVideoId(_page!.videoUrl!);
+    final tint = Color(AppColors.secondaryButton).withValues(alpha: 0.1);
+    if (videoId == null) return Container(color: tint);
+    return CachedNetworkImage(
+      imageUrl: _youtubeThumbnailUrl(videoId),
+      fit: BoxFit.cover,
+      placeholder: (_, __) => const ShimmerAnimatedLoading(circularRaduis: 0),
+      errorWidget: (_, __, ___) =>
+          Container(color: tint, child: const Icon(Icons.videocam_off, size: 40)),
+    );
+  }
+
+  Widget _body(BuildContext context) {
+    if (_loading) return const _AboutLoading();
+    if (_error != null) {
+      return Padding(
+        padding: const EdgeInsets.all(AppSpacing.page),
+        child: AppCard(
+          child: Column(
+            children: [
+              Text(_error!,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.red)),
+              const SizedBox(height: AppSpacing.md),
+              TextButton(onPressed: _loadPage, child: Text(AppStrings.retry.tr())),
+            ],
+          ),
+        ),
+      );
+    }
+    final page = _page;
+    final hasContent = page?.content != null && page!.content!.isNotEmpty;
+    final hasImages = page?.images != null && page!.images.isNotEmpty;
+    final hasVideo = page?.videoUrl != null && page!.videoUrl!.isNotEmpty;
+    final wide = LayoutService.isExpanded(context);
+    final contentBlock = <Widget>[
+          if (hasContent) ...[
+            AppCard(animateIn: true, child: _HtmlContent(content: page!.content!)),
+            const SizedBox(height: AppSpacing.section),
+          ],
+    ];
+    final imagesBlock = <Widget>[
+          if (hasImages) ...[
+            SizedBox(
+              height: 120,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                clipBehavior: Clip.none,
+                itemCount: page!.images.length,
+                separatorBuilder: (_, __) => const SizedBox(width: AppSpacing.md),
+                itemBuilder: (context, index) {
+                  final img = page.images[index];
+                  final url = img.file ?? img.thumbnail ?? '';
+                  if (url.isEmpty) return const SizedBox.shrink();
+                  return GestureDetector(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FullScreenImageViewer(
+                          imageUrls: page.images,
+                          file: true,
+                          initialIndex: index,
+                          url: true,
+                          thum: false,
+                        ),
                       ),
                     ),
-                  ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(AppRadius.md),
+                      child: CachedNetworkImage(
+                        imageUrl: url,
+                        width: 120,
+                        height: 120,
+                        fit: BoxFit.cover,
+                        placeholder: (_, __) =>
+                            const ShimmerAnimatedLoading(width: 120, height: 120),
+                        errorWidget: (_, __, ___) => Container(
+                          width: 120,
+                          color: Colors.grey[200],
+                          child: const Icon(Icons.image_not_supported_outlined),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: AppSpacing.section),
+          ],
+    ];
+    final videoBlock = <Widget>[
+          if (hasVideo) ...[
+            GestureDetector(
+              onTap: () => context.pushNamed(
+                AppRoutes.mediaCenterYoutubeScreenView.name,
+                pathParameters: {
+                  'lang': context.locale.languageCode,
+                  'url': page!.videoUrl.toString(),
+                },
+              ),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(AppRadius.lg),
+                  boxShadow: AppShadows.card,
                 ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Padding(
-                    padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top), // Pad for status bar
-                    child: AppBarWithBookmark(
-                      backgroundColor: Colors.transparent,
-                      elevation: 0,
-                      leading: Padding(
-                        padding: const EdgeInsets.all(10),
-                        child: InkWell(
-                          onTap: _goBack,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(AppRadius.lg),
+                  child: AspectRatio(
+                    aspectRatio: 16 / 9,
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        _videoThumb(),
+                        Container(color: Colors.black.withValues(alpha: 0.12)),
+                        Center(
                           child: Container(
+                            width: 56,
+                            height: 56,
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
+                              color: Colors.black.withValues(alpha: 0.55),
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(Icons.arrow_back_sharp, color: Colors.white, size: 18),
-                          ),
-                        ),
-                      ),
-                      title: _page?.title ?? AppStrings.aboutTeamMind.tr(),
-                      titleStyle: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                      ),
-                      centerTitle: true,
-                      routeName: AppRoutes.aboutTeamMindScreen.name,
-                      bookmarkIconColor: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: _loading
-                ? const Center(child: CircularProgressIndicator())
-                : _error != null
-                ? Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      _error!,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(color: Colors.red),
-                    ),
-                    const SizedBox(height: 16),
-                    TextButton(
-                      onPressed: _loadPage,
-                      child: Text(AppStrings.retry.tr()),
-                    ),
-                  ],
-                ),
-              ),
-            )
-                : SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  if (_page?.content != null && _page!.content!.isNotEmpty) ...[
-                    _HtmlContent(content: _page!.content!),
-                    const SizedBox(height: 24),
-                  ],
-                  if (_page?.images != null && _page!.images.isNotEmpty) ...[
-                    SizedBox(
-                      height: 120,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: _page!.images.length,
-                        separatorBuilder: (_, __) => const SizedBox(width: 12),
-                        itemBuilder: (context, index) {
-                          final img = _page!.images[index];
-                          final url = img.file ?? img.thumbnail ?? '';
-                          if (url.isEmpty) return const SizedBox.shrink();
-                          return GestureDetector(
-                            onTap: (){
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => FullScreenImageViewer(
-                                      imageUrls: _page!.images,
-                                      file: true,
-                                      initialIndex: index,
-                                      url: true,
-                                      thum: false,
-                                    ),
-                                  )
-                              );
-                            },
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(AppRadius.md),
-                              child: CachedNetworkImage(
-                                imageUrl: url,
-                                width: 120,
-                                height: 120,
-                                fit: BoxFit.cover,
-                                placeholder: (_, __) => Container(
-                                  color: Colors.grey[300],
-                                  child: const Center(child: CircularProgressIndicator()),
-                                ),
-                                errorWidget: (_, __, ___) => Container(
-                                  color: Colors.grey[300],
-                                  child: const Icon(Icons.image_not_supported),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                  ],
-                  if (_page?.videoUrl != null && _page!.videoUrl!.isNotEmpty) ...[
-                    GestureDetector(
-                      onTap: () {
-                        context.pushNamed(
-                          AppRoutes.mediaCenterYoutubeScreenView.name,
-                          pathParameters: {
-                            'lang': context.locale.languageCode,
-                            'url': _page!.videoUrl.toString(),
-                          },
-                        );
-                      },
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(AppRadius.md),
-                        child: SizedBox(
-                          height: 200,
-                          width: double.infinity,
-                          child: Stack(
-                            fit: StackFit.expand,
-                            children: [
-                              Builder(
-                                builder: (context) {
-                                  final videoId = _youtubeVideoId(_page!.videoUrl!);
-                                  final thumbUrl = videoId != null
-                                      ? _youtubeThumbnailUrl(videoId)
-                                      : null;
-                                  if (thumbUrl != null) {
-                                    return CachedNetworkImage(
-                                      imageUrl: thumbUrl,
-                                      fit: BoxFit.cover,
-                                      placeholder: (_, __) => Container(
-                                        color: Color(AppColors.secondaryButton).withOpacity(0.1),
-                                        child: const Center(child: CircularProgressIndicator()),
-                                      ),
-                                      errorWidget: (_, __, ___) => Container(
-                                        color: Color(AppColors.secondaryButton).withOpacity(0.1),
-                                        child: const Icon(Icons.videocam_off, size: 48),
-                                      ),
-                                    );
-                                  }
-                                  return Container(
-                                    color: Color(AppColors.secondaryButton).withOpacity(0.1),
-                                  );
-                                },
-                              ),
-                              Center(
-                                child: Container(
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    color: Colors.black.withValues(alpha: 0.5),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Icon(
-                                    Icons.play_arrow,
-                                    size: 48,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                  ],
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () async {
-                              context.pushNamed(
-                                AppRoutes.contactUs.name,
-                                pathParameters: {
-                                  "lang": context.locale.languageCode,
-                                },
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(AppColors.buttons),
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(AppRadius.xl),
-                              ),
-                            ),
-                            child: Text(
-                              AppStrings.contactUs.tr(),
-                              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () async => _downloadAndOpenPdf(),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(AppColors.buttons),
-                              foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(AppRadius.xl),
-                              ),
-                            ),
-                            child: Text(
-                              AppStrings.downloadPdf.tr(),
-                              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                            child: const Icon(Icons.play_arrow_rounded,
+                                size: 36, color: Colors.white),
                           ),
                         ),
                       ],
                     ),
                   ),
-                ],
+                ),
               ),
             ),
+            const SizedBox(height: AppSpacing.section),
+          ],
+    ];
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+          AppSpacing.page, AppSpacing.md, AppSpacing.page, AppSpacing.xl),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Wide windows: text and photos on one side, the video on the other.
+          if (wide)
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [...contentBlock, ...imagesBlock],
+                  ),
+                ),
+                if (videoBlock.isNotEmpty) ...[
+                  const SizedBox(width: AppSpacing.page),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: videoBlock,
+                    ),
+                  ),
+                ],
+              ],
+            )
+          else ...[
+            ...contentBlock,
+            ...imagesBlock,
+            ...videoBlock,
+          ],
+          Row(
+            children: [
+              Expanded(
+                child: SizedBox(
+                  height: AppButtonSize.height,
+                  child: ElevatedButton(
+                    onPressed: () => context.pushNamed(
+                      AppRoutes.contactUs.name,
+                      pathParameters: {"lang": context.locale.languageCode},
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(AppColors.buttons),
+                      foregroundColor: Colors.white,
+                      elevation: 0,
+                      padding: AppButtonSize.padding,
+                      shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
+                    ),
+                    child: Text(AppStrings.contactUs.tr(),
+                        style: const TextStyle(
+                            fontSize: AppButtonSize.fontSize,
+                            fontWeight: FontWeight.w600)),
+                  ),
+                ),
+              ),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: SizedBox(
+                  height: AppButtonSize.height,
+                  child: OutlinedButton(
+                    onPressed: _downloadAndOpenPdf,
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Color(AppColors.secondaryButton),
+                      side: BorderSide(color: Color(AppColors.secondaryButton)),
+                      padding: AppButtonSize.padding,
+                      shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
+                    ),
+                    child: Text(AppStrings.downloadPdf.tr(),
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                            fontSize: AppButtonSize.fontSize,
+                            fontWeight: FontWeight.w600)),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TemplatePage(
+      pageContext: context,
+      title: _page?.title ?? AppStrings.aboutTeamMind.tr(),
+      routeName: AppRoutes.aboutTeamMindScreen.name,
+      backgroundColor: Color(AppColors.background),
+      onRefresh: _loadPage,
+      body: _body(context),
+    );
+  }
+}
+
+/// Skeleton in the order of the real page: text card, image strip, video, two buttons.
+class _AboutLoading extends StatelessWidget {
+  const _AboutLoading();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+          AppSpacing.page, AppSpacing.md, AppSpacing.page, AppSpacing.xl),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          AppCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: const [
+                ShimmerAnimatedLoading(width: 170, height: 16),
+                SizedBox(height: AppSpacing.md),
+                ShimmerAnimatedLoading(height: 12),
+                SizedBox(height: AppSpacing.sm),
+                ShimmerAnimatedLoading(height: 12),
+                SizedBox(height: AppSpacing.sm),
+                ShimmerAnimatedLoading(width: 220, height: 12),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppSpacing.section),
+          SizedBox(
+            height: 120,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              physics: const NeverScrollableScrollPhysics(),
+              children: const [
+                ShimmerAnimatedLoading(width: 120, height: 120, circularRaduis: AppRadius.md),
+                SizedBox(width: AppSpacing.md),
+                ShimmerAnimatedLoading(width: 120, height: 120, circularRaduis: AppRadius.md),
+                SizedBox(width: AppSpacing.md),
+                ShimmerAnimatedLoading(width: 120, height: 120, circularRaduis: AppRadius.md),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppSpacing.section),
+          const AspectRatio(
+            aspectRatio: 16 / 9,
+            child: ShimmerAnimatedLoading(circularRaduis: AppRadius.lg),
+          ),
+          const SizedBox(height: AppSpacing.section),
+          Row(
+            children: const [
+              Expanded(
+                  child: ShimmerAnimatedLoading(
+                      height: AppButtonSize.height, circularRaduis: AppRadius.pill)),
+              SizedBox(width: AppSpacing.md),
+              Expanded(
+                  child: ShimmerAnimatedLoading(
+                      height: AppButtonSize.height, circularRaduis: AppRadius.pill)),
+            ],
           ),
         ],
       ),

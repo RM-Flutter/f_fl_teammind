@@ -28,6 +28,7 @@ Reusable widgets that several features share. Check this folder before you build
 | `expandable_text_widget.dart` | Long text clamped to a few lines with a "Read more" / "Read less" toggle (only when it overflows) |
 | `slider_home_menu.dart`, `template_page.widget.dart` (its FAB hides on scroll, `hideFabOnScroll`; `brandedHeader: true` gives it the navy home header with rounded corners, used by Requests), `glassmorphism_card.widget.dart`, `gradient_bg_image.dart` | Layout pieces |
 | `cached_network_image_widget.dart`, `dynamic_image_widget.dart`, `full_image_screen.dart` | Images: cached, network or asset or SVG, and full screen with zoom |
+| `app_responsive_grid.widget.dart`, `app_columns_flow.widget.dart` | Wide-screen layout: `AppResponsiveGrid` puts cards in 1/2/3 columns (or any counts you pass) following `LayoutService.columns` (600 / 1024); `AppColumnsFlow` is a `Column` of fields that becomes two columns from 1024 |
 | `language_dropdown_button.widget.dart` | EN/AR switcher |
 | `custom_alert_dialog_with_two_buttons.dart` | Confirmation dialog |
 | `webview_wrapper.dart` (+ `_mobile`, `webview_web_impl.dart`, `webview_stub_impl.dart`), `webview_offers.dart` | Cross-platform WebView. Conditional imports choose `webview_flutter` on mobile or an iframe on the web. |

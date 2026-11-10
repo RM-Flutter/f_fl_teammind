@@ -26,7 +26,9 @@ class BlogListViewItem extends StatelessWidget {
         : null;
     final String? createdAt = item['created_at']?.toString();
 
-    return AppCard(animateIn: true, 
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.cardGap),
+      child: AppCard(animateIn: true,
       onTap: () {
         context.pushNamed(AppRoutes.defaultSinglePage.name,
             pathParameters: {
@@ -67,6 +69,7 @@ class BlogListViewItem extends StatelessWidget {
           ),
         ],
       ),
+    ),
     );
   }
 }

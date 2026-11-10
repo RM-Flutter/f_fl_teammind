@@ -12,7 +12,6 @@ import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/widgets/template_page.widget.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/widgets/text_form_widget.dart';
-import 'package:app_test/core/widgets/glassmorphism_card.widget.dart';
 
 import '../controllers/create_salary_advance_controller.dart';
 import 'package:app_test/core/constants/app_design.dart';
@@ -43,55 +42,34 @@ class _CreateSalaryAdvanceScreenState extends State<CreateSalaryAdvanceScreen> {
             pageContext: context,
             title: 'create_salary_advance'.tr(),
             body: SingleChildScrollView(
-              padding: EdgeInsets.all(AppSizes.s16),
-              child: GlassmorphismCard(
-                padding: EdgeInsets.all(AppSizes.s24),
-                backgroundColor: Colors.white,
-                opacity: 0.9,
-                boxShadow: AppShadows.card,
-                child: Form(
-                  key: controller.formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildTextField(
-                        controller: controller.totalController,
-                        hintText: 'total_amount'.tr(),
-                        keyboardType: TextInputType.number,
-                        prefixIcon: Icon(Icons.monetization_on_outlined, color: Color(AppColors.buttons)),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'field_required'.tr();
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 20),
-                      _buildTextField(
-                        controller: controller.howLongToPayController,
-                        hintText: 'how_long_to_pay_months'.tr(),
-                        keyboardType: TextInputType.number,
-                        prefixIcon: Icon(Icons.calendar_view_month, color: Color(AppColors.buttons)),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'field_required'.tr();
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 20),
-                      _buildTextField(
-                        controller: controller.fromDateController,
-                        hintText: 'from_date_yyyy_mm'.tr(),
-                        keyboardType: TextInputType.text,
-                        prefixIcon: Icon(Icons.calendar_month, color: Color(AppColors.buttons)),
-                        readOnly: true,
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'field_required'.tr();
-                          }
-                          return null;
-                        },
+              padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.page, vertical: AppSpacing.md),
+              child: Form(
+                key: controller.formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildTextField(
+                      controller: controller.totalController,
+                      hintText: 'total_amount'.tr(),
+                      keyboardType: TextInputType.number,
+                      validator: _required,
+                    ),
+                    gapH14,
+                    _buildTextField(
+                      controller: controller.howLongToPayController,
+                      hintText: 'how_long_to_pay_months'.tr(),
+                      keyboardType: TextInputType.number,
+                      validator: _required,
+                    ),
+                    gapH14,
+                    _buildTextField(
+                      controller: controller.fromDateController,
+                      hintText: 'from_date_yyyy_mm'.tr(),
+                      keyboardType: TextInputType.text,
+                      suffixIcon: const Icon(Icons.calendar_today),
+                      readOnly: true,
+                      validator: _required,
                         onTap: () async {
                           DateTime? pickedDate;
                           await showModalBottomSheet(
@@ -149,125 +127,70 @@ class _CreateSalaryAdvanceScreenState extends State<CreateSalaryAdvanceScreen> {
                             controller.setFromDate(formattedDate);
                           }
                         },
-                      ),
-                    SizedBox(height: 16),
+                    ),
+                    gapH14,
                     Text(
                       'attachments'.tr(),
-                      style: AppStyles.heading(context).copyWith(fontSize: 16),
+                      style: AppStyles.primaryContent(context)
+                          .copyWith(fontWeight: FontWeight.w600, fontSize: 14),
                     ),
-                    SizedBox(height: 8),
-                      InkWell(
-                        onTap: () async {
-                          final ImagePicker picker = ImagePicker();
-                          final List<XFile> images = await picker.pickMultiImage();
-                          
-                          if (images.isNotEmpty) {
-                            List<PlatformFile> platformFiles = [];
-                            for (var file in images) {
-                              platformFiles.add(PlatformFile(
-                                name: file.name,
-                                path: file.path,
-                                size: await file.length(),
-                                bytes: await file.readAsBytes(),
-                              ));
-                            }
-                            FilePickerResult result = FilePickerResult(platformFiles);
-                            controller.addAttachment(result);
-                          }
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.symmetric(vertical: 24),
-                          decoration: BoxDecoration(
-                            color: Color(AppColors.buttonSecondaryColor).withOpacity(0.03),
-                            border: Border.all(color: Color(AppColors.buttonSecondaryColor).withOpacity(0.3), width: 1.5, style: BorderStyle.solid),
-                            borderRadius: BorderRadius.circular(AppRadius.lg),
-                          ),
-                          child: Column(
-                            children: [
-                              Container(
-                                padding: EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  color: Color(AppColors.buttonSecondaryColor).withOpacity(0.1),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(Icons.cloud_upload_rounded, color: Color(AppColors.buttonSecondaryColor), size: 32),
+                    gapH14,
+                    for (int idx = 0; idx < controller.attachments.length; idx++) ...[
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(AppRadius.md),
+                          border: Border.all(color: Colors.grey.shade200),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.image, color: Colors.grey.shade600, size: 20),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Text(
+                                controller.attachments[idx].files.first.name,
+                                style: AppStyles.content(context),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              SizedBox(height: 12),
-                              Text(
-                                'add_attachment'.tr(), 
-                                style: AppStyles.content(context).copyWith(
-                                  color: Color(AppColors.buttonSecondaryColor),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.close_rounded, color: Colors.red, size: 18),
+                              onPressed: () => controller.removeAttachment(idx),
+                            ),
+                          ],
                         ),
                       ),
-                      if (controller.attachments.isNotEmpty) ...[
-                        SizedBox(height: 16),
-                        ...controller.attachments.asMap().entries.map((entry) {
-                          int idx = entry.key;
-                          var file = entry.value.files.first;
-                          return Container(
-                            margin: EdgeInsets.only(bottom: 8),
-                            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade100,
-                              borderRadius: BorderRadius.circular(AppRadius.sm),
-                              border: Border.all(color: Colors.grey.shade300),
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(Icons.image, color: Colors.grey.shade600),
-                                SizedBox(width: 12),
-                                Expanded(
-                                  child: Text(
-                                    file.name,
-                                    style: AppStyles.content(context),
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.close, color: Colors.red),
-                                  onPressed: () => controller.removeAttachment(idx),
-                                  padding: EdgeInsets.zero,
-                                  constraints: const BoxConstraints(),
-                                ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
-                      ],
-                    SizedBox(height: 40),
-                    controller.isLoading
-                        ? const Center(child: CircularProgressIndicator())
-                        : SizedBox(
-                            width: double.infinity,
-                            height: AppButtonSize.height,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Color(AppColors.buttons),
-                                foregroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
-                              ),
+                      gapH8,
+                    ],
+                    TextFormField(
+                      readOnly: true,
+                      onTap: () => _pickAttachments(controller),
+                      decoration: InputDecoration(
+                        hintText: 'add_attachment'.tr(),
+                        suffixIcon: const Icon(Icons.attach_file_rounded),
+                      ),
+                    ),
+                    gapH24,
+                    Center(
+                      child: controller.isLoading
+                          ? const CircularProgressIndicator()
+                          : CustomElevatedButton(
+                              backgroundColor: Color(AppColors.secondaryButton),
+                              titleSize: AppSizes.s14,
+                              radius: AppSizes.s24,
+                              title: 'submit'.tr(),
                               onPressed: () async {
                                 bool success = await controller.submitRequest(context);
                                 if (success && mounted) {
                                   context.pop(true);
                                 }
                               },
-                              child: Text(
-                                'submit'.tr(),
-                                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.white),
-                              ),
                             ),
-                          ),
-                    ],
-                  ),
+                    ),
+                    gapH24,
+                  ],
                 ),
               ),
             ),
@@ -277,12 +200,31 @@ class _CreateSalaryAdvanceScreenState extends State<CreateSalaryAdvanceScreen> {
     );
   }
 
+  String? _required(String? value) =>
+      (value == null || value.isEmpty) ? 'field_required'.tr() : null;
+
+  Future<void> _pickAttachments(CreateSalaryAdvanceController controller) async {
+    final ImagePicker picker = ImagePicker();
+    final List<XFile> images = await picker.pickMultiImage();
+    if (images.isEmpty) return;
+    final platformFiles = <PlatformFile>[];
+    for (var file in images) {
+      platformFiles.add(PlatformFile(
+        name: file.name,
+        path: file.path,
+        size: await file.length(),
+        bytes: await file.readAsBytes(),
+      ));
+    }
+    controller.addAttachment(FilePickerResult(platformFiles));
+  }
+
   Widget _buildTextField({
     required TextEditingController controller,
     required String hintText,
     required TextInputType keyboardType,
-    required Widget prefixIcon,
     required String? Function(String?) validator,
+    Widget? suffixIcon,
     bool readOnly = false,
     VoidCallback? onTap,
   }) {
@@ -292,36 +234,7 @@ class _CreateSalaryAdvanceScreenState extends State<CreateSalaryAdvanceScreen> {
       readOnly: readOnly,
       onTap: onTap,
       validator: validator,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      style: AppStyles.content(context).copyWith(fontWeight: FontWeight.w600),
-      decoration: InputDecoration(
-        labelText: hintText,
-        labelStyle: AppStyles.content(context).copyWith(color: Colors.grey.shade600),
-        prefixIcon: prefixIcon,
-        filled: true,
-        fillColor: Color(AppColors.buttonSecondaryColor).withOpacity(0.03),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadius.md),
-          borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadius.md),
-          borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadius.md),
-          borderSide: BorderSide(color: Color(AppColors.buttons), width: 1.5),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadius.md),
-          borderSide: BorderSide(color: Color(AppColors.failureRed), width: 1.5),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadius.md),
-          borderSide: BorderSide(color: Color(AppColors.failureRed), width: 2.0),
-        ),
-        contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      ),
+      decoration: InputDecoration(hintText: hintText, suffixIcon: suffixIcon),
     );
   }
 }

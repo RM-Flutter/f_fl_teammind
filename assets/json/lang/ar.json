@@ -1840,5 +1840,8 @@
   "call": "اتصال",
   "copied": "تم النسخ",
   "choose_language": "اختر اللغة",
-  "choose_language_hint": "هيتغير الأبلكيشن للغة اللي تختارها."
+  "choose_language_hint": "هيتغير الأبلكيشن للغة اللي تختارها.",
+  "invalid_video_url": "رابط الفيديو غير صالح",
+  "video_failed_to_load": "تعذّر تحميل الفيديو",
+  "open_in_youtube": "افتح في يوتيوب"
 }

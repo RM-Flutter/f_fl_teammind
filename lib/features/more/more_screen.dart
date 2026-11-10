@@ -181,7 +181,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                   'lang': context.locale.languageCode
                                 }),
                           ),
-                          _MoreSectionLabel(AppStrings.myWork.tr()),
+                          MoreSectionLabel(AppStrings.myWork.tr()),
                           DefaultListTile(
                             title: AppStrings.tasks.tr(),
                             src: AppIcons.tasks,
@@ -240,7 +240,7 @@ class _MoreScreenState extends State<MoreScreen> {
                               PackageHelper.hasPackage('fingerprint-sys') ||
                               PackageHelper.hasPackage('emp-payroll') ||
                               isShiftsEmployee)
-                            _MoreSectionLabel(AppStrings.myRequests.tr()),
+                            MoreSectionLabel(AppStrings.myRequests.tr()),
                           if (PackageHelper.hasPackage('emp-requests'))
                             DefaultListTile(
                               title: AppStrings.myRequests.tr(),
@@ -296,7 +296,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                   }),
                             ),
                           if (PackageHelper.hasPackage('emp-payroll'))
-                            _MoreSectionLabel(AppStrings.myPay.tr()),
+                            MoreSectionLabel(AppStrings.myPay.tr()),
                           // Removed redundant block
                           if (PackageHelper.hasPackage('emp-payroll'))
                             DefaultListTile(
@@ -341,7 +341,7 @@ class _MoreScreenState extends State<MoreScreen> {
                           // "Management" section: other departments / all company are open to every employee
                           if (RequestScopeHelper.canSeeTeam ||
                               PackageHelper.hasPackage('emp-requests'))
-                            _MoreSectionLabel(AppStrings.management.tr()),
+                            MoreSectionLabel(AppStrings.management.tr()),
                           if (gCache['is_teamleader_in'].isNotEmpty ||
                               gCache['is_manager_in'].isNotEmpty ||
                               gCache['is_hr'] == true ||
@@ -418,7 +418,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                       });
                                 },
                               ),
-                          _MoreSectionLabel(AppStrings.company.tr()),
+                          MoreSectionLabel(AppStrings.company.tr()),
                           if (PackageHelper.hasPackage('emp-requests'))
                             DefaultListTile(
                               title: AppStrings.employeesDirectory.tr(),
@@ -538,7 +538,7 @@ class _MoreScreenState extends State<MoreScreen> {
                             },
                           ),
 
-                          _MoreSectionLabel(AppStrings.helpAndPolicies.tr()),
+                          MoreSectionLabel(AppStrings.helpAndPolicies.tr()),
                           if (PackageHelper.hasPackage('emp-requests'))
                             DefaultListTile(
                               title: AppStrings.ticketSystem.tr(),
@@ -596,7 +596,7 @@ class _MoreScreenState extends State<MoreScreen> {
                               );
                             },
                           ),
-                          _MoreSectionLabel(AppStrings.myAccount.tr()),
+                          MoreSectionLabel(AppStrings.myAccount.tr()),
                           DefaultListTile(
                             title: AppStrings.personalInfo.tr(),
                             src: "assets/images/svg/mpi.svg",
@@ -760,10 +760,10 @@ class _MoreScreenState extends State<MoreScreen> {
 
 /// Small uppercase caption above a group of menu rows. 16 above it, 8 below it, so it reads as
 /// the title of the rows that follow (layout rule 3).
-class _MoreSectionLabel extends StatelessWidget {
+class MoreSectionLabel extends StatelessWidget {
   final String title;
 
-  const _MoreSectionLabel(this.title);
+  const MoreSectionLabel(this.title);
 
   @override
   Widget build(BuildContext context) {

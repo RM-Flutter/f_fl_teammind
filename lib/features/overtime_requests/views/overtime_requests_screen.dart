@@ -153,7 +153,19 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
       title: AppStrings.overtimeRequests.tr(),
       routeName: AppRoutes.overtimeRequestsScreen.name,
       actions: [
-        IconButton(
+        Consumer<OvertimeRequestsProvider>(
+          builder: (context, provider, _) {
+            final list = provider.isForDepartment
+                ? provider.teamRequests
+                : provider.myRequests;
+            // No list -> nothing to filter (unless a filter is active, so it can be cleared).
+            if (!provider.isLoading &&
+                list.isEmpty &&
+                !provider.currentFiltersMap.values
+                    .any((v) => v != null && v.isNotEmpty)) {
+              return const SizedBox.shrink();
+            }
+            return IconButton(
           icon: Icon(Icons.filter_list_rounded,
               color: Color(AppColors.secondaryButton)),
           onPressed: () async {
@@ -174,6 +186,8 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
             if (result != null && context.mounted) {
               provider.applyFilters(result, context);
             }
+          },
+        );
           },
         ),
       ],

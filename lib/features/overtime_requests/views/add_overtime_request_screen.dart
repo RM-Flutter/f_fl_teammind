@@ -5,7 +5,9 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_strings.dart';
+import '../../../../core/widgets/custom_elevated_button.widget.dart';
 import '../../../../core/routing/app_router.dart';
 import '../../../../core/services/alert_service/alerts_service.dart';
 import '../../../../core/utils/app_styles.dart';
@@ -25,11 +27,12 @@ class AddOvertimeRequestScreen extends StatefulWidget {
 
 class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
   final _durationController = TextEditingController();
+  final _dateController = TextEditingController();
   DateTime? selectedDate;
   Map<String, dynamic>? selectedEmployee;
   String? selectEmpId;
 
-  void _submit() async {
+  Future<void> _submit() async {
     if (selectedDate == null) {
       AlertsService.error(
         context: context,
@@ -117,52 +120,51 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
           builder: (context, provider, filterController, child) {
             return SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page, vertical: AppSpacing.xl),
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page, vertical: AppSpacing.md),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (widget.isForEmployee) ...[
-                  _buildCardSection(
-                    title: AppStrings.employeeName.tr(),
-                    icon: Icons.person_outline,
-                    child: SearchableDropdownSheet(
-                      items: filterController.employees,
-                      selectedValue: selectedEmployee,
-                      nameKey: 'name',
-                      hintText: AppStrings.employeeName.tr(),
-                      hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 14),
-                      height: 24,
-                      borderRadius: BorderRadius.circular(AppRadius.sm),
-                      borderSide: BorderSide(color: Colors.transparent, width: 0.0),
-                      contentPadding: EdgeInsets.zero,
-                      onChanged: (value) {
-                        setState(() {
-                          selectedEmployee = value;
-                          selectEmpId = value['id']?.toString();
-                        });
-                      },
-                    ),
+                  SearchableDropdownSheet(
+                    items: filterController.employees,
+                    selectedValue: selectedEmployee,
+                    nameKey: 'name',
+                    hintText: AppStrings.employeeName.tr(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedEmployee = value;
+                        selectEmpId = value['id']?.toString();
+                      });
+                    },
                   ),
-                  SizedBox(height: 24),
+                  gapH14,
                 ],
-                _buildCardSection(
-                  title: AppStrings.date.tr(),
-                  icon: Icons.calendar_today_outlined,
-                  child: _buildDatePicker(),
+                TextFormField(
+                  readOnly: true,
+                  controller: _dateController,
+                  onTap: _pickDate,
+                  decoration: InputDecoration(
+                    hintText: AppStrings.selectDate.tr(),
+                    suffixIcon: const Icon(Icons.calendar_today),
+                  ),
                 ),
-                SizedBox(height: 24),
-                _buildCardSection(
-                  title: AppStrings.durationMinutes.tr(),
-                  icon: Icons.timer_outlined,
-                  child: _buildDurationField(),
+                gapH14,
+                TextField(
+                  controller: _durationController,
+                  keyboardType: TextInputType.number,
+                  onChanged: (val) => setState(() {}),
+                  decoration: InputDecoration(
+                    hintText: AppStrings.durationMinutes.tr(),
+                    suffixText: AppStrings.minutes.tr(),
+                  ),
                 ),
                 if (_durationController.text.isNotEmpty) ...[
-                  SizedBox(height: 16),
+                  gapH14,
                   _buildDurationPreview(),
                 ],
-                SizedBox(height: 48),
-                _buildSubmitButton(provider),
-                SizedBox(height: 20),
+                gapH24,
+                Center(child: _buildSubmitButton(provider)),
+                gapH24,
               ],
             ),
           );
@@ -171,120 +173,20 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
     ));
   }
 
-  Widget _buildCardSection({required String title, required IconData icon, required Widget child}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(left: 4, bottom: 10),
-          child: Row(
-            children: [
-              Icon(icon, size: 18, color: Color(AppColors.buttons)),
-              SizedBox(width: 8),
-              Text(
-                title,
-                style: AppStyles.titleTextContent(context).copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                  color: Color(AppColors.secondaryButton).withOpacity(0.8),
-                ),
-              ),
-            ],
-          ),
-        ),
-        Container(
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(AppRadius.md),
-            boxShadow: AppShadows.card,
-            border: Border.all(color: Colors.grey.shade100),
-          ),
-          child: child,
-        ),
-      ],
+  Future<void> _pickDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate ?? DateTime.now(),
+      firstDate: DateTime.now().subtract(const Duration(days: 30)),
+      lastDate: DateTime.now().add(const Duration(days: 365)),
     );
-  }
-
-  Widget _buildDatePicker() {
-    return InkWell(
-      onTap: () async {
-        final picked = await showDatePicker(
-          context: context,
-          initialDate: DateTime.now(),
-          firstDate: DateTime.now().subtract(const Duration(days: 30)),
-          lastDate: DateTime.now().add(const Duration(days: 365)),
-          builder: (context, child) {
-            return Theme(
-              data: Theme.of(context).copyWith(
-                colorScheme: ColorScheme.light(
-                  primary: Color(AppColors.buttons),
-                  onPrimary: Colors.white,
-                  surface: Colors.white,
-                  onSurface: Color(AppColors.secondaryButton),
-                ),
-              ),
-              child: MediaQuery(
-                data: MediaQuery.of(context).copyWith(
-                  textScaler: TextScaler.noScaling,
-                ),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: MediaQuery.of(context).size.width * 0.92,
-                  ),
-                  child: child!,
-                ),
-              ),
-            );
-          },
-        );
-        if (picked != null) {
-          setState(() {
-            selectedDate = picked;
-          });
-        }
-      },
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              selectedDate != null
-                  ? DateFormat('EEEE, d MMMM yyyy', context.locale.languageCode).format(selectedDate!)
-                  : AppStrings.selectDate.tr(),
-              style: AppStyles.darkContent(context).copyWith(
-                fontSize: 15,
-                fontWeight: selectedDate != null ? FontWeight.bold : FontWeight.normal,
-                color: selectedDate != null ? Colors.black : Colors.grey.shade400,
-              ),
-            ),
-          ),
-          Icon(Icons.calendar_month, size: 18, color: Colors.grey.shade300),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDurationField() {
-    return TextField(
-      controller: _durationController,
-      keyboardType: TextInputType.number,
-      onChanged: (val) => setState(() {}),
-      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-      decoration: InputDecoration(
-        hintText: AppStrings.enterMinutes.tr(),
-        hintStyle: TextStyle(color: Colors.grey.shade300, fontWeight: FontWeight.normal),
-        suffixText: AppStrings.minutes.tr(),
-        suffixStyle: TextStyle(color: Colors.grey, fontSize: 13),
-        isDense: true,
-        contentPadding: EdgeInsets.zero,
-        border: InputBorder.none,
-        enabledBorder: InputBorder.none,
-        focusedBorder: InputBorder.none,
-        errorBorder: InputBorder.none,
-        disabledBorder: InputBorder.none,
-      ),
-    );
+    if (picked != null) {
+      setState(() {
+        selectedDate = picked;
+        _dateController.text =
+            DateFormat('EEEE, d MMMM yyyy', context.locale.languageCode).format(picked);
+      });
+    }
   }
 
   Widget _buildDurationPreview() {
@@ -329,29 +231,13 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
   }
 
   Widget _buildSubmitButton(OvertimeRequestsProvider provider) {
-    return SizedBox(
-      width: double.infinity,
-      height: AppButtonSize.height,
-      child: ElevatedButton(
-        onPressed: provider.isActionLoading ? null : _submit,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Color(AppColors.buttons),
-          foregroundColor: Colors.white,
-          elevation: 0,
-          shape: RoundedRectangleBorder(
-            borderRadius: AppRadius.button,
-          ),
-        ),
-        child: provider.isActionLoading
-            ? const CircularProgressIndicator(color: Colors.white)
-            : Text(
-                AppStrings.sendRequest.tr(),
-                style: AppStyles.whiteContent(context).copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
-                ),
-              ),
-      ),
+    if (provider.isActionLoading) return const CircularProgressIndicator();
+    return CustomElevatedButton(
+      backgroundColor: Color(AppColors.secondaryButton),
+      titleSize: AppSizes.s14,
+      radius: AppSizes.s24,
+      title: AppStrings.sendRequest.tr(),
+      onPressed: _submit,
     );
   }
 }

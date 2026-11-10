@@ -1,3 +1,5 @@
+import 'package:app_test/core/widgets/app_field_shell.widget.dart';
+import 'package:app_test/core/widgets/app_columns_flow.widget.dart';
 import 'dart:io';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/cv_generator/controllers/create_cv_view_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -23,8 +25,8 @@ class CreateCVPersonalTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.page),
+      child: AppColumnsFlow(itemGap: 16, 
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildTextField(
@@ -111,10 +113,10 @@ class CreateCVPersonalTab extends StatelessWidget {
           decoration: InputDecoration(
             hintText: hint,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppRadius.sm),
-              borderSide: const BorderSide(color: Colors.black),
+              borderRadius: AppField.borderRadius,
+              borderSide: const BorderSide(color: AppField.borderColor),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           ),
         ),
       ],
@@ -135,23 +137,24 @@ class CreateCVPersonalTab extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
+          icon: AppFieldShell.icon(Icons.keyboard_arrow_down_rounded),
           value: viewModel.familyStatus,
           decoration: InputDecoration(
             hintText: AppStrings.selectFamilyStatus.tr(),
-            hintStyle: TextStyle(color: Colors.grey.shade600),
+            hintStyle: AppField.hintStyle,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppRadius.sm),
-              borderSide: const BorderSide(color: Colors.black),
+              borderRadius: AppField.borderRadius,
+              borderSide: const BorderSide(color: AppField.borderColor),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           ),
-          style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style: AppField.valueStyle,
           items: ['single', 'married', 'divorced', 'widowed']
               .map((status) => DropdownMenuItem(
             value: status,
             child: Text(
               status,
-              style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              style: AppField.valueStyle,
             ),
           ))
               .toList(),
@@ -185,7 +188,8 @@ class CreateCVPersonalTab extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 8),
-        InkWell(
+        AppFieldShell(
+          trailingIcon: Icons.calendar_today_outlined,
           onTap: () async {
             final date = await showDatePicker(
               context: context,
@@ -198,26 +202,11 @@ class CreateCVPersonalTab extends StatelessWidget {
               viewModel.notifyListeners();
             }
           },
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.black),
-              borderRadius: BorderRadius.circular(AppRadius.sm),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  viewModel.birthday != null
-                      ? DateFormat('yyyy-MM-dd').format(viewModel.birthday!)
-                      : AppStrings.selectBirthday.tr(),
-                  style: TextStyle(
-                    color: viewModel.birthday != null ? Colors.black : Colors.grey,
-                  ),
-                ),
-                const Icon(Icons.calendar_today, size: 20),
-              ],
-            ),
+          child: Text(
+            viewModel.birthday != null
+                ? DateFormat('yyyy-MM-dd').format(viewModel.birthday!)
+                : AppStrings.selectBirthday.tr(),
+            style: viewModel.birthday != null ? AppField.valueStyle : AppField.hintStyle,
           ),
         ),
       ],
@@ -246,23 +235,24 @@ class CreateCVPersonalTab extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
+          icon: AppFieldShell.icon(Icons.keyboard_arrow_down_rounded),
           value: viewModel.gender,
           decoration: InputDecoration(
             hintText: AppStrings.selectGender.tr(),
-            hintStyle: TextStyle(color: Colors.grey.shade600),
+            hintStyle: AppField.hintStyle,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppRadius.sm),
-              borderSide: const BorderSide(color: Colors.black),
+              borderRadius: AppField.borderRadius,
+              borderSide: const BorderSide(color: AppField.borderColor),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           ),
-          style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style: AppField.valueStyle,
           items: ['male', 'female']
               .map((gender) => DropdownMenuItem(
             value: gender,
             child: Text(
               gender,
-              style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              style: AppField.valueStyle,
             ),
           ))
               .toList(),
@@ -308,10 +298,10 @@ class CreateCVPersonalTab extends StatelessWidget {
           selectedValue: selectedNationality,
           nameKey: 'title',
           hintText: AppStrings.selectNationality.tr(),
-          hintStyle: TextStyle(color: Colors.grey.shade600),
-          borderRadius: BorderRadius.circular(AppRadius.sm),
-          borderSide: const BorderSide(color: Colors.black),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          hintStyle: AppField.hintStyle,
+          borderRadius: AppField.borderRadius,
+          borderSide: const BorderSide(color: AppField.borderColor),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           onChanged: (value) {
             if (value.isNotEmpty && value['id'] != null) {
               viewModel.nationalityId = value['id'] as int;
@@ -357,10 +347,10 @@ class CreateCVPersonalTab extends StatelessWidget {
           selectedValue: countryValue,
           nameKey: 'title',
           hintText: AppStrings.selectCountry.tr(),
-          hintStyle: TextStyle(color: Colors.grey.shade600),
-          borderRadius: BorderRadius.circular(AppRadius.sm),
-          borderSide: const BorderSide(color: Colors.black),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          hintStyle: AppField.hintStyle,
+          borderRadius: AppField.borderRadius,
+          borderSide: const BorderSide(color: AppField.borderColor),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           onChanged: (value) {
             if (value.isNotEmpty && value['id'] != null) {
               viewModel.loadStates(context, value['id'] as int);
@@ -406,10 +396,10 @@ class CreateCVPersonalTab extends StatelessWidget {
           selectedValue: stateValue,
           nameKey: 'title',
           hintText: AppStrings.selectStateProvince.tr(),
-          hintStyle: TextStyle(color: Colors.grey.shade600),
-          borderRadius: BorderRadius.circular(AppRadius.sm),
-          borderSide: const BorderSide(color: Colors.black),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          hintStyle: AppField.hintStyle,
+          borderRadius: AppField.borderRadius,
+          borderSide: const BorderSide(color: AppField.borderColor),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           onChanged: (value) {
             if (value.isNotEmpty && value['id'] != null && value['id'] != -1) {
               viewModel.loadCities(context, value['id'] as int);
@@ -455,10 +445,10 @@ class CreateCVPersonalTab extends StatelessWidget {
           selectedValue: cityValue,
           nameKey: 'title',
           hintText: AppStrings.selectCity.tr(),
-          hintStyle: TextStyle(color: Colors.grey.shade600),
-          borderRadius: BorderRadius.circular(AppRadius.sm),
-          borderSide: const BorderSide(color: Colors.black),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          hintStyle: AppField.hintStyle,
+          borderRadius: AppField.borderRadius,
+          borderSide: const BorderSide(color: AppField.borderColor),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           onChanged: (value) {
             if (value.isNotEmpty && value['id'] != null && value['id'] != -1) {
               viewModel.cityId = value['id'] as int;

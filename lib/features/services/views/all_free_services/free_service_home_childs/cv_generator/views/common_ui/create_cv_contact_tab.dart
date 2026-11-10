@@ -1,3 +1,5 @@
+import 'package:app_test/core/widgets/app_field_shell.widget.dart';
+import 'package:app_test/core/widgets/app_columns_flow.widget.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/cv_generator/controllers/create_cv_view_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -13,8 +15,8 @@ class CreateCVContactTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.page),
+      child: AppColumnsFlow(itemGap: 16, 
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildTextField(
@@ -95,10 +97,10 @@ class CreateCVContactTab extends StatelessWidget {
           decoration: InputDecoration(
             hintText: hint,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppRadius.sm),
-              borderSide: const BorderSide(color: Colors.black),
+              borderRadius: AppField.borderRadius,
+              borderSide: const BorderSide(color: AppField.borderColor),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           ),
         ),
       ],

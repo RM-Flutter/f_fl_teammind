@@ -4,6 +4,6 @@ Generic screens for content that the server defines (blogs, announcements, prize
 
 - `views/default_page.dart`: `DefaultPage(type)` lists items of an entity type through `BlogProviderModel.getBlog(context, type)` (`/{type}/entities-operations`). It also runs the server popups for the screen (`GeneralListener.startAll` with `USG.popups`). Managers get an "add" action for notifications.
 - `views/default_list_page.dart`: list layout. Depending on the item it opens `defaultSinglePage`, or the points and Fawry screens for points-related types.
-- `views/default_details.dart`: single item details (HTML body, gallery, comments).
+- `views/default_details.dart`: single item details (HTML body, optional image). Uses `TemplatePage` like the other details screens (app bar with back + bookmark). The image only shows when it loads, so there is no blank area. Its loading skeleton has the same layout as the page.
 
 Routes: `defaultPage`, `defaultPage2`, `defaultListPage`, `defaultSinglePage`.

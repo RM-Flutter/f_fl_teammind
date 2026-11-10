@@ -1,3 +1,4 @@
+import 'package:app_test/core/utils/string_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -190,7 +191,7 @@ class AppBarWithBookmark extends StatelessWidget implements PreferredSizeWidget 
 
         return AppBar(
           title: titleWidget ??
-              (title != null ? Text(title!, style: effectiveTitleStyle) : null),
+              (title != null ? Text(title!.titleCase, style: effectiveTitleStyle) : null),
           leading: insetLeading,
           leadingWidth:
               (sideInset > 0 && hasLeading) ? kToolbarHeight + sideInset : null,

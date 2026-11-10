@@ -1841,5 +1841,8 @@
   "call": "Call",
   "copied": "Copied",
   "choose_language": "Choose Language",
-  "choose_language_hint": "The app will switch to the language you pick."
+  "choose_language_hint": "The app will switch to the language you pick.",
+  "invalid_video_url": "Invalid video link",
+  "video_failed_to_load": "The video could not be loaded",
+  "open_in_youtube": "Open In YouTube"
 }

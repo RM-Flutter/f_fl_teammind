@@ -87,7 +87,7 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
       builder: (ctx) {
         return Material(
           color: Color(AppColors.background),
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
           clipBehavior: Clip.antiAlias,
           child: FiltersBottomSheet(
             filtersConfig: widget.report.filtersConfig,
@@ -121,8 +121,8 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
             ? null
             : [
                 IconButton(
-                  icon: Icon(Icons.filter_alt_outlined,
-                      color: Color(AppColors.buttons)),
+                  icon: Icon(Icons.filter_list_rounded,
+                      color: Color(AppColors.secondaryButton)),
                   onPressed: _showFilters,
                 ),
               ],

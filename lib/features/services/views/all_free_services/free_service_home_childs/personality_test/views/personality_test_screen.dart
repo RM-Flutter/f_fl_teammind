@@ -134,7 +134,7 @@ class _PersonalityTestScreenState extends State<PersonalityTestScreen> {
     return Scaffold(
       backgroundColor: Color(AppColors.background),
       appBar: AppBarWithBookmark(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(AppColors.background),
         elevation: 0,
         leading: AppBackButton(onPressed: _goBack),
         title: AppStrings.personalityTest2.tr(),

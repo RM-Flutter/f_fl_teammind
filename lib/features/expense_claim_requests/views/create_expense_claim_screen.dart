@@ -10,7 +10,7 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/widgets/template_page.widget.dart';
-import 'package:app_test/core/widgets/glassmorphism_card.widget.dart';
+import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 
 import '../controllers/create_expense_claim_controller.dart';
 import 'package:app_test/core/constants/app_design.dart';
@@ -52,139 +52,84 @@ class _CreateExpenseClaimScreenState extends State<CreateExpenseClaimScreen> {
             pageContext: context,
             title: 'create_expense_claim'.tr(),
             body: SingleChildScrollView(
-              padding: EdgeInsets.all(AppSizes.s16),
-              child: GlassmorphismCard(
-                padding: EdgeInsets.all(AppSizes.s24),
-                backgroundColor: Colors.white,
-                opacity: 0.9,
-                boxShadow: AppShadows.card,
-                child: Form(
-                  key: controller.formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // ─── Header ───
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: Color(AppColors.buttons),
-                              borderRadius: BorderRadius.circular(AppRadius.md),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.page, vertical: AppSpacing.md),
+              child: Form(
+                key: controller.formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Reason (required)
+                    _buildTextField(
+                      controller: controller.reasonController,
+                      hintText: 'reason'.tr(),
+                      keyboardType: TextInputType.text,
+                      validator: (v) => (v == null || v.trim().isEmpty)
+                          ? 'field_required'.tr()
+                          : null,
+                    ),
+                    gapH14,
+                    // Money value (required)
+                    _buildTextField(
+                      controller: controller.moneyValueController,
+                      hintText: 'total_amount'.tr(),
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
+                      validator: (v) {
+                        if (v == null || v.trim().isEmpty) {
+                          return 'field_required'.tr();
+                        }
+                        if (double.tryParse(v.trim()) == null) {
+                          return 'invalid_value'.tr();
+                        }
+                        return null;
+                      },
+                    ),
+                    gapH14,
+                    // Date (optional, default: today)
+                    _buildTextField(
+                      controller: controller.dateFromController,
+                      hintText: 'expense_date'.tr(),
+                      keyboardType: TextInputType.text,
+                      suffixIcon: const Icon(Icons.calendar_today),
+                      readOnly: true,
+                      onTap: () => _pickDate(context, controller),
+                    ),
+                    gapH14,
+                    // Category (optional)
+                    _buildCategoryDropdown(context, controller, isArabic),
+                    gapH14,
+                    // Notes (optional)
+                    _buildTextField(
+                      controller: controller.notesController,
+                      hintText: 'notes'.tr(),
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 4,
+                      minLines: 2,
+                    ),
+                    gapH14,
+                    // Files (optional: jpg, jpeg, png, webp, pdf)
+                    _buildFilePicker(context, controller),
+                    gapH24,
+                    Center(
+                      child: controller.isLoading
+                          ? const CircularProgressIndicator()
+                          : CustomElevatedButton(
+                              backgroundColor: Color(AppColors.secondaryButton),
+                              titleSize: AppSizes.s14,
+                              radius: AppSizes.s24,
+                              title: 'submit'.tr(),
+                              onPressed: () async {
+                                bool success =
+                                    await controller.submitRequest(context);
+                                if (success && mounted) {
+                                  context.pop(true);
+                                }
+                              },
                             ),
-                            child: const Icon(Icons.receipt_long_rounded,
-                                color: Colors.white, size: 22),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              'create_expense_claim'.tr(),
-                              style: AppStyles.heading(context)
-                                  .copyWith(fontSize: 17, fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 28),
-
-                      // ─── Reason (REQUIRED) ───
-                      _buildTextField(
-                        controller: controller.reasonController,
-                        hintText: 'reason'.tr(),
-                        keyboardType: TextInputType.text,
-                        prefixIcon: Icon(Icons.notes_rounded,
-                            color: Color(AppColors.buttons)),
-                        validator: (v) =>
-                            (v == null || v.trim().isEmpty)
-                                ? 'field_required'.tr()
-                                : null,
-                      ),
-                      const SizedBox(height: 20),
-
-                      // ─── Money Value (REQUIRED) ───
-                      _buildTextField(
-                        controller: controller.moneyValueController,
-                        hintText: 'total_amount'.tr(),
-                        keyboardType:
-                            const TextInputType.numberWithOptions(decimal: true),
-                        prefixIcon: Icon(Icons.monetization_on_outlined,
-                            color: Color(AppColors.buttons)),
-                        validator: (v) {
-                          if (v == null || v.trim().isEmpty) {
-                            return 'field_required'.tr();
-                          }
-                          if (double.tryParse(v.trim()) == null) {
-                            return 'invalid_value'.tr();
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 20),
-
-                      // ─── Date From (OPTIONAL, default: today) ───
-                      _buildTextField(
-                        controller: controller.dateFromController,
-                        hintText: 'expense_date'.tr(),
-                        keyboardType: TextInputType.text,
-                        prefixIcon: Icon(Icons.calendar_month_rounded,
-                            color: Color(AppColors.buttons)),
-                        readOnly: true,
-                        onTap: () => _pickDate(context, controller),
-                      ),
-                      const SizedBox(height: 20),
-
-                      // ─── Category (OPTIONAL) ───
-                      _buildCategoryDropdown(
-                          context, controller, isArabic),
-                      const SizedBox(height: 20),
-
-                      // ─── Notes (OPTIONAL) ───
-                      _buildTextField(
-                        controller: controller.notesController,
-                        hintText: 'notes'.tr(),
-                        keyboardType: TextInputType.multiline,
-                        prefixIcon: Icon(Icons.description_outlined,
-                            color: Color(AppColors.buttons)),
-                        maxLines: 3,
-                      ),
-                      const SizedBox(height: 20),
-
-                      // ─── Files (OPTIONAL: jpg, jpeg, png, webp, pdf) ───
-                      _buildFilePicker(context, controller),
-
-                      const SizedBox(height: 40),
-
-                      // ─── Submit Button ───
-                      controller.isLoading
-                          ? const Center(child: CircularProgressIndicator())
-                          : SizedBox(
-                              width: double.infinity,
-                              height: AppButtonSize.height,
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(AppColors.buttons),
-                                  foregroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: AppRadius.button),
-                                ),
-                                onPressed: () async {
-                                  bool success =
-                                      await controller.submitRequest(context);
-                                  if (success && mounted) {
-                                    context.pop(true);
-                                  }
-                                },
-                                child: Text(
-                                  'submit'.tr(),
-                                  style: const TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),
-                                ),
-                              ),
-                            ),
-                    ],
-                  ),
+                    ),
+                    gapH24,
+                  ],
                 ),
               ),
             ),
@@ -243,30 +188,7 @@ class _CreateExpenseClaimScreenState extends State<CreateExpenseClaimScreen> {
           : controller.categoryController.text,
       dropdownColor: Colors.white,
       style: const TextStyle(color: Colors.black, fontSize: 14),
-      decoration: InputDecoration(
-        labelText: 'category'.tr(),
-        labelStyle: AppStyles.content(context)
-            .copyWith(color: Colors.grey.shade600),
-        prefixIcon:
-            Icon(Icons.category_outlined, color: Color(AppColors.buttons)),
-        filled: true,
-        fillColor: Color(AppColors.buttonSecondaryColor).withOpacity(0.03),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadius.md),
-          borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadius.md),
-          borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadius.md),
-          borderSide:
-              BorderSide(color: Color(AppColors.buttons), width: 1.5),
-        ),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      ),
+      decoration: InputDecoration(hintText: 'category'.tr()),
       items: _categories.map((cat) {
         final label = isArabic
             ? (categoryLabelsAr[cat['value']] ?? cat['label']!)
@@ -294,7 +216,44 @@ class _CreateExpenseClaimScreenState extends State<CreateExpenseClaimScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        GestureDetector(
+        Text(
+          'attachments'.tr(),
+          style: AppStyles.primaryContent(context)
+              .copyWith(fontWeight: FontWeight.w600, fontSize: 14),
+        ),
+        gapH14,
+        for (int idx = 0; idx < controller.attachments.length; idx++) ...[
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(AppRadius.md),
+              border: Border.all(color: Colors.grey.shade200),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.insert_drive_file_rounded,
+                    color: Colors.grey.shade600, size: 20),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    controller.attachments[idx].files.first.name,
+                    style: AppStyles.content(context),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close_rounded, color: Colors.red, size: 18),
+                  onPressed: () => controller.removeAttachment(idx),
+                ),
+              ],
+            ),
+          ),
+          gapH8,
+        ],
+        TextFormField(
+          readOnly: true,
           onTap: () async {
             final picker = ImagePicker();
             final List<XFile> images = await picker.pickMultiImage();
@@ -309,91 +268,14 @@ class _CreateExpenseClaimScreenState extends State<CreateExpenseClaimScreen> {
                   bytes: file,
                 ));
               }
-              FilePickerResult result = FilePickerResult(platformFiles);
-              controller.addAttachment(result);
+              controller.addAttachment(FilePickerResult(platformFiles));
             }
           },
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 24),
-            decoration: BoxDecoration(
-              color: Color(AppColors.buttonSecondaryColor).withOpacity(0.03),
-              border: Border.all(
-                  color: Color(AppColors.buttonSecondaryColor).withOpacity(0.3),
-                  width: 1.5,
-                  style: BorderStyle.solid),
-              borderRadius: BorderRadius.circular(AppRadius.lg),
-            ),
-            child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Color(AppColors.buttonSecondaryColor).withOpacity(0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(Icons.cloud_upload_rounded,
-                      color: Color(AppColors.buttonSecondaryColor), size: 32),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  'add_attachment'.tr(),
-                  style: AppStyles.content(context).copyWith(
-                    color: Color(AppColors.buttonSecondaryColor),
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'jpg, jpeg, png, webp, pdf',
-                  style: AppStyles.content(context).copyWith(
-                    color: Colors.grey.shade500,
-                    fontSize: 11,
-                  ),
-                ),
-              ],
-            ),
+          decoration: InputDecoration(
+            hintText: 'add_attachment'.tr(),
+            suffixIcon: const Icon(Icons.attach_file_rounded),
           ),
         ),
-        if (controller.attachments.isNotEmpty) ...[
-          const SizedBox(height: 16),
-          ...controller.attachments.asMap().entries.map((entry) {
-            int idx = entry.key;
-            var file = entry.value.files.first;
-            return Container(
-              margin: const EdgeInsets.only(bottom: 8),
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(AppRadius.sm),
-                border: Border.all(color: Colors.grey.shade300),
-              ),
-              child: Row(
-                children: [
-                  Icon(Icons.insert_drive_file_rounded,
-                      color: Colors.grey.shade600),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      file.name,
-                      style: AppStyles.content(context),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.close_rounded, color: Colors.red),
-                    onPressed: () => controller.removeAttachment(idx),
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(),
-                  ),
-                ],
-              ),
-            );
-          }).toList(),
-        ],
       ],
     );
   }
@@ -402,11 +284,12 @@ class _CreateExpenseClaimScreenState extends State<CreateExpenseClaimScreen> {
     required TextEditingController controller,
     required String hintText,
     required TextInputType keyboardType,
-    required Widget prefixIcon,
     String? Function(String?)? validator,
+    Widget? suffixIcon,
     bool readOnly = false,
     VoidCallback? onTap,
     int? maxLines,
+    int? minLines,
   }) {
     return TextFormField(
       controller: controller,
@@ -415,40 +298,8 @@ class _CreateExpenseClaimScreenState extends State<CreateExpenseClaimScreen> {
       onTap: onTap,
       validator: validator,
       maxLines: maxLines ?? 1,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      style: AppStyles.content(context).copyWith(fontWeight: FontWeight.w600),
-      decoration: InputDecoration(
-        labelText: hintText,
-        labelStyle: AppStyles.content(context)
-            .copyWith(color: Colors.grey.shade600),
-        prefixIcon: prefixIcon,
-        filled: true,
-        fillColor: Color(AppColors.buttonSecondaryColor).withOpacity(0.03),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadius.md),
-          borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadius.md),
-          borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadius.md),
-          borderSide: BorderSide(color: Color(AppColors.buttons), width: 1.5),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadius.md),
-          borderSide:
-              BorderSide(color: Color(AppColors.failureRed), width: 1.5),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadius.md),
-          borderSide:
-              BorderSide(color: Color(AppColors.failureRed), width: 2.0),
-        ),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      ),
+      minLines: minLines,
+      decoration: InputDecoration(hintText: hintText, suffixIcon: suffixIcon),
     );
   }
 }

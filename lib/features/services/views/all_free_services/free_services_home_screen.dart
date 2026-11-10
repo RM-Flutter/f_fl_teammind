@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:app_test/core/constants/app_constants.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/app_screen_shimmers.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/utils/base_page/mobile.scaffold.dart';
 import 'package:app_test/core/utils/base_page/mobile_header.dart';
@@ -160,14 +161,14 @@ class _FreeServicesHomeScreenState extends State<FreeServicesHomeScreen> {
           await Future.delayed(const Duration(milliseconds: 200));
         },
         child: CoreMobileScaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: Color(AppColors.background),
           controller: viewModel.scrollController,
           headers: [
             CoreHeader.transform(
               pinned: true,
-              color: Colors.white,
-              shrinkHeight: AppSizes.s100,
-              expandedHeight: AppSizes.s150,
+              color: Color(AppColors.background),
+              shrinkHeight: MediaQuery.paddingOf(context).top + 64,
+              expandedHeight: MediaQuery.paddingOf(context).top + 120,
               shrinkChild: const FreeServicesHeaderWidget(isExpanded: false),
               child: const SingleChildScrollView(
                 physics: AlwaysScrollableScrollPhysics(),
@@ -179,11 +180,9 @@ class _FreeServicesHomeScreenState extends State<FreeServicesHomeScreen> {
             Consumer<FreeServicesViewModel>(
               builder: (context, viewModel, child) {
                 if (viewModel.isLoading) {
-                  return const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(50),
-                      child: CircularProgressIndicator(),
-                    ),
+                  return const Padding(
+                    padding: EdgeInsets.only(top: AppSizes.s12),
+                    child: AppGridShimmer(),
                   );
                 }
 

@@ -397,7 +397,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: 10,),
+                                  SizedBox(height: 12,),
                                   CommentsWidget(
                                       "tasks",
                                       enable: "enable",

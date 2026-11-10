@@ -63,7 +63,8 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
           title: AppStrings.aboutApplication.tr(),
           showBookmark: false,
           backgroundColor: Color(AppColors.background),
-          body: Padding(
+          // Scrollable: the cards are taller than the screen (the Column alone overflowed).
+          body: SingleChildScrollView(
             padding: AppSpacing.listPadding,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,

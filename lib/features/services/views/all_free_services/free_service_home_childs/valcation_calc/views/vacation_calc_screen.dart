@@ -1,3 +1,8 @@
+import 'package:app_test/core/widgets/app_responsive_grid.widget.dart';
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:app_test/core/widgets/app_content_width.widget.dart';
+import 'package:app_test/core/widgets/app_card.widget.dart';
+import 'package:app_test/core/widgets/app_field_shell.widget.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/routing/app_router.dart';
@@ -149,202 +154,178 @@ class _VacationCalcScreenState extends State<VacationCalcScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final accent = Color(AppColors.buttons);
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(AppColors.background),
       appBar: AppBarWithBookmark(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(AppColors.background),
         elevation: 0,
-        leading: IconButton(
-          icon: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Color(AppColors.secondaryButton),
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
-          ),
-          onPressed: _goBack,
-        ),
+        leading: AppBackButton(onPressed: _goBack),
         title: AppStrings.vacationCalc2.tr(),
-        titleStyle: TextStyle(
-          color: Color(AppColors.secondaryButton),
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
         centerTitle: true,
         routeName: AppRoutes.vacationCalcScreen.name,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Date of commencement of work
-            _buildDropdownField(
-              label: commencementDate != null
-                  ? DateFormat('dd/MM/yyyy').format(commencementDate!)
-                  : AppStrings.dateOfCommencement.tr(),
-              onTap: () => _selectDate(context, true),
-            ),
-            
-            const SizedBox(height: 16),
-            
-            // Today's date/Time of taking leave
-            _buildDropdownField(
-              label: leaveDate != null
-                  ? DateFormat('dd/MM/yyyy').format(leaveDate!)
-                  : AppStrings.todaysDateLeave.tr(),
-              onTap: () => _selectDate(context, false),
-            ),
-            
-            const SizedBox(height: 16),
-            
-            // Type of leave
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey[300]!),
-                borderRadius: BorderRadius.circular(AppRadius.sm),
-              ),
-              child: DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  isExpanded: true,
-                  hint: Text(AppStrings.typeOfLeave.tr(), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),),
-                  value: leaveType,
-                  items: leaveTypes.map((type) {
-                    final typeName = _getLeaveTypeName(type);
-                    return DropdownMenuItem(
-                      value: typeName,
-                      child: Text(typeName, style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: Colors.black),),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      leaveType = value;
-                      // تحديث عدد الأيام الافتراضي عند تغيير النوع
-                      final defaultDays = _getDefaultDaysForType(value);
-                      _daysController.text = defaultDays > 0 ? defaultDays.toString() : '';
-                    });
-                  },
-                ),
-              ),
-            ),
-            
-            const SizedBox(height: 16),
-            
-            // Number of days agreed upon annually
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 0),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey[300]!),
-                borderRadius: BorderRadius.circular(AppRadius.sm),
-              ),
-              child: TextField(
-                controller: _daysController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  hintText: AppStrings.numberOfDaysAnnually.tr(),
-                  hintStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                  border: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  disabledBorder: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                ),
-              ),
-            ),
-            
-            const SizedBox(height: 24),
-            
-            // Calculate Button
-            Center(
-              child: ElevatedButton(
-                onPressed: _calculateDays,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(AppColors.secondaryButton),
-                  foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppRadius.xl),
-                  ),
-                ),
-                child: Text(
-                  AppStrings.calculateDays.tr(),
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-              ),
-            ),
-            
-            const SizedBox(height: 32),
-            
-            // Result
-            if (calculatedBalance != null) ...[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: AppContentWidth(
+        child: SingleChildScrollView(
+          padding: AppSpacing.listPadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              AppResponsiveGrid(
+                compact: 1,
+                medium: 2,
+                expanded: 2,
                 children: [
-                  Expanded(
-                    child: Text(
-                      AppStrings.holidayBalance.tr(),
-                      style: TextStyle(
-                        color: Color(AppColors.secondaryButton),
-                        fontSize: 14,
-                        height: 1.4,
-                      ),
-                    ),
+                  _dateField(
+                text: commencementDate != null
+                    ? DateFormat('dd/MM/yyyy').format(commencementDate!)
+                    : AppStrings.dateOfCommencement.tr(),
+                filled: commencementDate != null,
+                onTap: () => _selectDate(context, true),
+              ),
+                  _dateField(
+                text: leaveDate != null
+                    ? DateFormat('dd/MM/yyyy').format(leaveDate!)
+                    : AppStrings.todaysDateLeave.tr(),
+                filled: leaveDate != null,
+                onTap: () => _selectDate(context, false),
+              ),
+                  AppFieldShell(
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<String>(
+                    isExpanded: true,
+                    icon: AppFieldShell.icon(Icons.keyboard_arrow_down_rounded),
+                    hint: Text(AppStrings.typeOfLeave.tr(), style: AppField.hintStyle),
+                    value: leaveType,
+                    items: leaveTypes.map((type) {
+                      final typeName = _getLeaveTypeName(type);
+                      return DropdownMenuItem(
+                        value: typeName,
+                        child: Text(typeName, style: AppField.valueStyle),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        leaveType = value;
+                        // تحديث عدد الأيام الافتراضي عند تغيير النوع
+                        final defaultDays = _getDefaultDaysForType(value);
+                        _daysController.text = defaultDays > 0 ? defaultDays.toString() : '';
+                      });
+                    },
                   ),
-                  Text(
-                    calculatedBalance!.toStringAsFixed(1),
-                    style: TextStyle(
-                      color: Color(AppColors.secondaryButton),
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                    ),
+                ),
+              ),
+                  AppFieldShell(
+                child: TextField(
+                  controller: _daysController,
+                  keyboardType: TextInputType.number,
+                  style: AppField.valueStyle,
+                  decoration: InputDecoration(
+                    hintText: AppStrings.numberOfDaysAnnually.tr(),
+                    hintStyle: AppField.hintStyle,
+                    isDense: true,
+                    filled: false,
+                    contentPadding: EdgeInsets.zero,
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
                   ),
+                ),
+              ),
                 ],
               ),
-              
-              const SizedBox(height: 24),
-              
-              Text(
-                AppStrings.vacationCalcNote.tr(),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontSize: 13,
-                  height: 1.5,
+              const SizedBox(height: AppSpacing.section),
+              // Calculate button: the same primary button as the filter sheets and forms.
+              SizedBox(
+                height: AppButtonSize.height,
+                child: ElevatedButton(
+                  onPressed: _calculateDays,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: accent,
+                    foregroundColor: Colors.white,
+                    elevation: 0,
+                    padding: AppButtonSize.padding,
+                    shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
+                  ),
+                  child: Text(
+                    AppStrings.calculateDays.tr(),
+                    style: const TextStyle(
+                      fontSize: AppButtonSize.fontSize,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
               ),
+              // Result
+              if (calculatedBalance != null) ...[
+                const SizedBox(height: AppSpacing.section),
+                AppCard(
+                  animateIn: true,
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 44,
+                        height: 44,
+                        decoration: BoxDecoration(
+                          color: accent.withValues(alpha: 0.10),
+                          borderRadius: BorderRadius.circular(AppRadius.md),
+                        ),
+                        child: Icon(Icons.beach_access_outlined, color: accent, size: 24),
+                      ),
+                      const SizedBox(width: AppSpacing.md),
+                      Expanded(
+                        child: Text(
+                          AppStrings.holidayBalance.tr(),
+                          style: AppStyles.heading(context)
+                              .copyWith(fontSize: 14, fontWeight: FontWeight.w600, height: 1.4),
+                        ),
+                      ),
+                      const SizedBox(width: AppSpacing.md),
+                      Text(
+                        calculatedBalance!.toStringAsFixed(1),
+                        style: AppStyles.heading(context)
+                            .copyWith(fontSize: 28, fontWeight: FontWeight.w700, color: accent),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.md),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(Icons.info_outline_rounded, size: 18, color: AppField.iconColor),
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: Text(
+                        AppStrings.vacationCalcNote.tr(),
+                        style: AppStyles.greyContent(context).copyWith(fontSize: 12, height: 1.5),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildDropdownField({
-    required String label,
+  /// A date picker field: the hint when nothing is picked, the date when it is.
+  Widget _dateField({
+    required String text,
+    required bool filled,
     required VoidCallback onTap,
   }) {
-    return InkWell(
+    return AppFieldShell(
       onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey[300]!),
-          borderRadius: BorderRadius.circular(AppRadius.sm),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              label,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)
-            ),
-            Icon(Icons.keyboard_arrow_down, color: Colors.grey[600]),
-          ],
-        ),
+      trailingIcon: Icons.calendar_today_outlined,
+      child: Text(
+        text,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: filled ? AppField.valueStyle : AppField.hintStyle,
       ),
     );
   }

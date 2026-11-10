@@ -6,6 +6,7 @@ import 'package:app_test/features/reports/views/widgets/report_compare_tabs.dart
 import 'package:easy_localization/easy_localization.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:app_test/core/widgets/app_card.widget.dart';
 import 'package:go_router/go_router.dart';
 import 'package:app_test/core/constants/app_design.dart';
 
@@ -229,11 +230,13 @@ class _FlutterReportViewState extends State<FlutterReportView> {
             ),
           ),
           const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+          // Wrap: the two legend items overflowed the card on phones.
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 24,
+            runSpacing: 8,
             children: [
               _buildChartLegendItem('attendance_days'.tr(), att, total, const Color(0xFF10B981)),
-              const SizedBox(width: 24),
               _buildChartLegendItem('absence_days'.tr(), abs, total, const Color(0xFFEF4444)),
             ],
           ),
@@ -293,13 +296,11 @@ class _FlutterReportViewState extends State<FlutterReportView> {
             child: Stack(
               clipBehavior: Clip.none,
               children: [
-                CircleAvatar(
-                  radius: 22,
-                  backgroundColor: Color(AppColors.buttons).withOpacity(0.1),
-                  backgroundImage: emp.avatar.isNotEmpty ? NetworkImage(emp.avatar) : null,
-                  child: emp.avatar.isEmpty
-                      ? Icon(Icons.person, color: Color(AppColors.buttons), size: 22)
-                      : null,
+                // Photo, or the first letters of the name when there is none / it fails to load.
+                AppCardLeadingAvatar(
+                  imageUrl: emp.avatar,
+                  nameForInitials: emp.name,
+                  size: 44,
                 ),
                 Positioned(
                   right: -4,

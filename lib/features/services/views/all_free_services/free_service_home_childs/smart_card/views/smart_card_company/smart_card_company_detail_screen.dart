@@ -1,3 +1,8 @@
+import 'package:app_test/core/widgets/app_card.widget.dart';
+import 'package:app_test/core/widgets/app_responsive_grid.widget.dart';
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:app_test/core/utils/string_extensions.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/app_shimmer_list.dart';
 import 'dart:ui' as ui;
 import 'dart:convert';
 import 'package:app_test/core/constants/app_colors.dart';
@@ -153,7 +158,7 @@ class _SmartCardCompanyDetailScreenState
                   data: url,
                   version: QrVersions.auto,
                   size: 200,
-                  backgroundColor: Colors.white,
+                  backgroundColor: Color(AppColors.background),
                   dataModuleStyle: const QrDataModuleStyle(color: Colors.black),
                 ),
               ),
@@ -387,33 +392,18 @@ class _SmartCardCompanyDetailScreenState
     return ChangeNotifierProvider<SmartCardViewModel>.value(
       value: viewModel,
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(AppColors.background),
         appBar: AppBarWithBookmark(
-          backgroundColor: Colors.white,
+          backgroundColor: Color(AppColors.background),
           elevation: 0,
-          leading: IconButton(
-            icon: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Color(AppColors.secondaryButton),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
-            ),
-            onPressed: () {
+          leading: AppBackButton(onPressed: () {
               try {
                 GoRouter.of(context).pop();
               } catch (e) {
                 Navigator.of(context).pop();
               }
-            },
-          ),
+            }),
           title: AppStrings.smartCard2.tr(),
-          titleStyle: TextStyle(
-            color: Color(AppColors.secondaryButton),
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
           centerTitle: true,
           routeName: AppRoutes.smartCardCompanyDetailScreen.name,
         ),
@@ -434,32 +424,14 @@ class _SmartCardCompanyDetailScreenState
                 heroTag: 'smart_card_company_add',
                 onPressed: vm.isLoading ? null : () => _showAddProfileSheet(vm),
                 backgroundColor: Color(AppColors.buttons),
-                child: vm.isLoading
-                    ? const SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 2,
-                        ),
-                      )
-                    : const Icon(Icons.add, color: Colors.white),
+                child: const Icon(Icons.add, color: Colors.white),
               );
             }
             return FloatingActionButton(
               heroTag: 'smart_card_company_add_employees',
               onPressed: vm.isLoading ? null : () => _showAddProfileSheet(vm),
               backgroundColor: Color(AppColors.buttons),
-              child: vm.isLoading
-                  ? const SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 2,
-                      ),
-                    )
-                  : const Icon(Icons.add, color: Colors.white),
+              child: const Icon(Icons.add, color: Colors.white),
             );
           },
         ),
@@ -477,75 +449,50 @@ class _SmartCardCompanyDetailScreenState
                   children: [
                     Center(
                       child: Text(
-                        companyName,
-                        style: const TextStyle(
-                          color: Color(AppColors.black),
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
+                        companyName.titleCase,
+                        style: AppStyles.heading(context)
+                            .copyWith(fontSize: 16, fontWeight: FontWeight.w700),
                       ),
                     ),
                     const SizedBox(height: 24),
-                    Row(
+                    AppResponsiveGrid(
+                      compact: 2,
+                      medium: 2,
+                      expanded: 4,
                       children: [
-                        Expanded(
-                          child: buildActionCard(
-                            icon: "assets/images/svg/updateInfo.svg",
-                            label: AppStrings.updateCompanyInfo.tr(),
-                            onTap: _navigateToUpdateCompanyInfo,
-                          ),
+                        buildActionCard(
+                          icon: "assets/images/svg/updateInfo.svg",
+                          label: AppStrings.updateCompanyInfo.tr(),
+                          onTap: _navigateToUpdateCompanyInfo,
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: buildActionCard(
-                            icon: "assets/images/svg/selectTemp.svg",
-                            label: AppStrings.selectTemplate.tr(),
-                            onTap: _navigateToSelectTemplate,
-                          ),
+                        buildActionCard(
+                          icon: "assets/images/svg/selectTemp.svg",
+                          label: AppStrings.selectTemplate.tr(),
+                          onTap: _navigateToSelectTemplate,
+                        ),
+                        buildActionCard(
+                          icon: "assets/images/svg/copyLink.svg",
+                          label: AppStrings.copyProfileLink.tr(),
+                          onTap: _showCopyProfileLinkSheet,
+                        ),
+                        buildActionCard(
+                          icon: "assets/images/svg/downloadQr.svg",
+                          label: AppStrings.downloadQrCode.tr(),
+                          onTap: _showDownloadQrSheet,
                         ),
                       ],
                     ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: buildActionCard(
-                            icon: "assets/images/svg/copyLink.svg",
-                            label: AppStrings.copyProfileLink.tr(),
-                            onTap: _showCopyProfileLinkSheet,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: buildActionCard(
-                            icon: "assets/images/svg/downloadQr.svg",
-                            label: AppStrings.downloadQrCode.tr(),
-                            onTap: _showDownloadQrSheet,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 32),
-                    if (vm.isLoading)
-                      const Padding(
-                        padding: EdgeInsets.all(24.0),
-                        child: Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      ),
+                    const SizedBox(height: AppSpacing.section),
+                    if (vm.isLoading && vm.companyEmployees.isEmpty)
+                      const AppShimmerList(padding: EdgeInsets.zero, count: 2),
                     if (vm.companyEmployees.isNotEmpty) ...[
-                      Center(
-                        child: Text(
-                          AppStrings.employeeProfiles.tr(),
-                          style: const TextStyle(
-                            color: Color(AppColors.black),
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+                      Text(
+                        AppStrings.employeeProfiles.tr(),
+                        style: AppStyles.heading(context)
+                            .copyWith(fontSize: 15, fontWeight: FontWeight.w700),
                       ),
-                      const SizedBox(height: 16),
-                      ...vm.companyEmployees.map(
+                      const SizedBox(height: AppSpacing.sectionHeaderGap),
+                      AppResponsiveGrid(children: vm.companyEmployees.map(
                         (e) => _buildEmployeeCard(
                           e,
                           onTap: () async {
@@ -565,7 +512,7 @@ class _SmartCardCompanyDetailScreenState
                             }
                           },
                         ),
-                      ),
+                      ).toList()),
                       ],
                   ],
                 ),
@@ -577,31 +524,29 @@ class _SmartCardCompanyDetailScreenState
     );
   }
 
-  Widget _buildEmployeeCard(Map<String, dynamic> emp,
-      {VoidCallback? onTap}) {
-    final name =
-        emp['name']?.toString() ?? emp['id']?.toString() ?? '';
-    return InkWell(
+  Widget _buildEmployeeCard(Map<String, dynamic> emp, {VoidCallback? onTap}) {
+    final name = emp['name']?.toString() ?? emp['id']?.toString() ?? '';
+    return AppCard(
+      animateIn: true,
       onTap: onTap,
-      borderRadius: BorderRadius.circular(AppRadius.md),
-      child: Container(
-        width: double.infinity,
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(AppRadius.md),
-          border: Border.all(color: Colors.grey[300]!),
-          boxShadow: AppShadows.card,
-        ),
-        child: Text(
-          name,
-          style: const TextStyle(
-            color: Color(AppColors.black),
-            fontSize: 16,
-            fontWeight: FontWeight.w400,
+      child: Row(
+        children: [
+          AppCardLeadingAvatar(
+            fallbackText: name,
+            icon: Icons.person_outline,
+            accentColor: Color(AppColors.buttons),
           ),
-        ),
+          const SizedBox(width: AppSpacing.md),
+          Expanded(
+            child: Text(
+              name.titleCase,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppStyles.heading(context)
+                  .copyWith(fontSize: 14, fontWeight: FontWeight.w600),
+            ),
+          ),
+        ],
       ),
     );
   }

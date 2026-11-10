@@ -236,22 +236,37 @@ class LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
                                       onPressed: () async {},
                                       isPrimaryBackground: false,
                                     ),
+                                  if (gCache != null &&
+                                      gCache['can_visit'] == true)
+                                    SizedBox(height: belowButtonGap),
 
                                   SocialLoginSection(
                                     gCache: gCache,
                                     viewModel: viewModel,
                                     isLoginBySocial: isLoginBySocial,
                                   ),
-
+                                  // Same VISIBLE gap as between the buttons above: the
+                                  // Create Account button has no visible outline, so its
+                                  // empty top padding (~(height - text) / 2) is subtracted.
+                                  if (gCache != null &&
+                                      gCache['can_new_register'] == true)
+                                    SizedBox(
+                                        height: compact
+                                            ? (belowButtonGap -
+                                                    (AppSizes.createAccountHeight.h -
+                                                            15.sp) /
+                                                        2)
+                                                .clamp(0.0, belowButtonGap)
+                                            : belowButtonGap),
+                                  CreateAccountSection(
+                                    gCache: gCache,
+                                    viewModel: viewModel,
+                                  ),
                                       ],
                                     ),
                                     Column(
                                       children: [
                                         const SizedBox(height: AppSpacing.section),
-                                        CreateAccountSection(
-                                          gCache: gCache,
-                                          viewModel: viewModel,
-                                        ),
                                         const SizedBox(height: AppSpacing.sm),
                                         const LoginDomainBar(),
                                         SizedBox(

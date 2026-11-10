@@ -1,3 +1,5 @@
+import 'package:app_test/core/widgets/app_responsive_grid.widget.dart';
+import 'package:app_test/core/widgets/app_columns_flow.widget.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/my_cv/views/taps/widgets/cv_info_item_widget.dart' show CVInfoItem;
 import 'package:flutter/material.dart';
@@ -19,6 +21,10 @@ class CVJobInfoTab extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          AppColumnsFlow(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -63,20 +69,31 @@ class CVJobInfoTab extends StatelessWidget {
             icon: Icons.add_circle_outline,
           ),
           
-          // Experience Section
+        ],
+      ),
+          // Each section keeps its title and its entries together: the title is full width and the
+          // entries sit under it in 1 / 2 / 3 columns (an entry is never split across columns).
           _buildSectionTitle('EXPERIENCE'),
           if (jobInfo?.experiences != null && jobInfo!.experiences!.isNotEmpty)
-            ...jobInfo.experiences!.map((exp) => _buildExperienceItem(exp))
+            AppResponsiveGrid(
+              medium: 2,
+              expanded: 3,
+              children: jobInfo.experiences!.map((exp) => _buildExperienceItem(exp)).toList(),
+            )
           else
             const SizedBox.shrink(),
-          
-          // Portfolio Section
+
           _buildSectionTitle('PORTFOLIO'),
           if (jobInfo?.portfolios != null && jobInfo!.portfolios!.isNotEmpty)
-            ...jobInfo.portfolios!.map((portfolio) => _buildPortfolioItem(portfolio))
+            AppResponsiveGrid(
+              medium: 2,
+              expanded: 3,
+              children: jobInfo.portfolios!.map((p) => _buildPortfolioItem(p)).toList(),
+            )
           else
-            const Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            const AppResponsiveGrid(
+              medium: 2,
+              expanded: 3,
               children: [
                 CVInfoItem(label: 'اسم المشروع', value: null),
                 CVInfoItem(label: 'وصف المشروع', value: null),

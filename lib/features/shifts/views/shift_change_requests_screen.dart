@@ -102,11 +102,17 @@ class _ShiftChangeRequestsScreenState extends State<ShiftChangeRequestsScreen> {
 
     return Consumer<ShiftChangeController>(
       builder: (context, provider, child) {
+        // No list -> nothing to filter: hide the filter (unless a filter is active, so it can be cleared).
+        final currentList =
+            provider.isForDepartment ? provider.teamRequests : provider.myRequests;
+        final hideFilter = !provider.isLoading &&
+            currentList.isEmpty &&
+            !provider.currentFiltersMap.values.any((v) => v != null && v.isNotEmpty);
         return TemplatePage(
           pageContext: context,
           title: AppStrings.shiftChangeRequests.tr(),
           routeName: AppRoutes.shiftChangeRequests.name,
-          actions: [
+          actions: hideFilter ? null : [
             IconButton(
               icon: Icon(
                 Icons.filter_list_rounded,

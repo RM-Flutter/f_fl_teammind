@@ -92,12 +92,39 @@ class _AddNewTaskListWidgetState extends State<AddNewTaskListWidget> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              AppStrings.taskList.tr(),
-              style: AppStyles.primaryContent(context).copyWith(
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
-              ),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    AppStrings.taskList.tr(),
+                    style: AppStyles.primaryContent(context).copyWith(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+                // "+" next to the title instead of a separate "Add One" button.
+                Tooltip(
+                  message: AppStrings.addOne.tr(),
+                  child: InkWell(
+                    customBorder: const CircleBorder(),
+                    onTap: () {
+                      setState(() {
+                        value.tasksList2.add({"name": "", "status": false});
+                        _controllers.add(TextEditingController(text: ""));
+                      });
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Color(AppColors.secondaryButton),
+                      ),
+                      child: const Icon(Icons.add, color: Colors.white, size: 18),
+                    ),
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: 16),
 
@@ -154,31 +181,6 @@ class _AddNewTaskListWidgetState extends State<AddNewTaskListWidget> {
               );
             }),
 
-            SizedBox(height: 20),
-
-            ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(AppColors.secondaryButton),
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(AppRadius.xl),
-                ),
-              ),
-              onPressed: () {
-                setState(() {
-                  value.tasksList2.add({
-                    "name" : "",
-                    "status" : false
-                  });
-                  _controllers.add(TextEditingController(text: ""));
-                });
-              },
-              icon: Icon(Icons.add, color: Colors.white, size: 16,),
-              label: Text(
-                AppStrings.addOne.tr(),
-                style: AppStyles.whiteContent(context).copyWith(fontSize: 10, fontWeight: FontWeight.w500),
-              ),
-            ),
           ],
         );
       },

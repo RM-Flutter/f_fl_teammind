@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
@@ -8,7 +7,9 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_sizes.dart';
 import '../../../../core/constants/app_strings.dart';
+import '../../../../core/widgets/custom_elevated_button.widget.dart';
 import '../../../../core/routing/app_router.dart';
 import '../../../../core/utils/app_styles.dart';
 import '../../../../core/widgets/template_page.widget.dart';
@@ -42,7 +43,7 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
     }
   }
 
-  void _submit() async {
+  Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -114,130 +115,70 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
         builder: (context, provider, child) {
           return SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page, vertical: AppSpacing.xl),
+            padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.page, vertical: AppSpacing.md),
             child: Form(
               key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildCardSection(
-                    title: AppStrings.accomplishments.tr(),
-                    subtitle: AppStrings.whatHaveYouDoneToday.tr(),
-                    icon: Icons.task_alt_rounded,
-                    iconColor: Colors.green.shade500,
-                    child: _buildTextField(_doneController, AppStrings.detailCompletedTasks.tr()),
+                  _buildTextField(_doneController, AppStrings.accomplishments.tr(),
+                      AppStrings.detailCompletedTasks.tr()),
+                  gapH14,
+                  _buildTextField(_inProgressController,
+                      AppStrings.inProgressTasks.tr(), AppStrings.detailOngoingTasks.tr()),
+                  gapH14,
+                  _buildTextField(_problemsController,
+                      AppStrings.blockersAndProblems.tr(), AppStrings.describeBlockers.tr()),
+                  gapH14,
+                  Text(
+                    AppStrings.attachments.tr(),
+                    style: AppStyles.primaryContent(context)
+                        .copyWith(fontWeight: FontWeight.w600, fontSize: 14),
                   ),
-                  SizedBox(height: 20),
-                  _buildCardSection(
-                    title: AppStrings.inProgressTasks.tr(),
-                    subtitle: AppStrings.whatAreYouCurrentlyWorkingOn.tr(),
-                    icon: Icons.sync_rounded,
-                    iconColor: Colors.blue.shade500,
-                    child: _buildTextField(_inProgressController, AppStrings.detailOngoingTasks.tr()),
-                  ),
-                  SizedBox(height: 20),
-                  _buildCardSection(
-                    title: AppStrings.blockersAndProblems.tr(),
-                    subtitle: AppStrings.anyIssuesYouFaced.tr(),
-                    icon: Icons.warning_amber_rounded,
-                    iconColor: Colors.orange.shade500,
-                    child: _buildTextField(_problemsController, AppStrings.describeBlockers.tr()),
-                  ),
-                  SizedBox(height: 20),
-                  _buildCardSection(
-                    title: AppStrings.attachments.tr(),
-                    subtitle: AppStrings.uploadScreenshots.tr(),
-                    icon: Icons.attach_file_rounded,
-                    iconColor: Color(AppColors.buttons),
-                    child: Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Column(
+                  gapH14,
+                  for (int i = 0; i < selectedFiles.length; i++) ...[
+                    Container(
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(AppRadius.md),
+                        border: Border.all(color: Colors.grey.shade200),
+                      ),
+                      child: Row(
                         children: [
-                          if (selectedFiles.isNotEmpty) ...[
-                            ListView.separated(
-                              shrinkWrap: true,
- padding: EdgeInsets.zero,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: selectedFiles.length,
-                              separatorBuilder: (context, index) => SizedBox(height: 10),
-                              itemBuilder: (context, index) {
-                                final file = selectedFiles[index].files.first;
-                                return Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.shade50,
-                                    borderRadius: BorderRadius.circular(AppRadius.md),
-                                    border: Border.all(color: Colors.grey.shade200),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.insert_drive_file_rounded, color: Colors.grey.shade600, size: 24),
-                                      SizedBox(width: 12),
-                                      Expanded(
-                                        child: Text(
-                                          file.name, 
-                                          maxLines: 1, 
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500)
-                                        ),
-                                      ),
-                                      IconButton(
-                                        icon: Container(
-                                          padding: EdgeInsets.all(4),
-                                          decoration: BoxDecoration(
-                                            color: Colors.red.withOpacity(0.1),
-                                            shape: BoxShape.circle,
-                                          ),
-                                          child: Icon(Icons.close_rounded, color: Colors.red, size: 16)
-                                        ),
-                                        onPressed: () {
-                                          setState(() {
-                                            selectedFiles.removeAt(index);
-                                          });
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),
-                            SizedBox(height: 16),
-                          ],
-                          InkWell(
-                            onTap: _pickFiles,
-                            borderRadius: BorderRadius.circular(AppRadius.md),
-                            child: Container(
-                              width: double.infinity,
-                              padding: EdgeInsets.symmetric(vertical: 16),
-                              decoration: BoxDecoration(
-                                color: Color(AppColors.buttons).withOpacity(0.05),
-                                borderRadius: BorderRadius.circular(AppRadius.md),
-                                border: Border.all(color: Color(AppColors.buttons).withOpacity(0.2), style: BorderStyle.solid),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.cloud_upload_rounded, color: Color(AppColors.buttons), size: 32),
-                                  SizedBox(height: 8),
-                                  Text(
-                                    AppStrings.tapToBrowseFiles.tr(),
-                                    style: TextStyle(
-                                      color: Color(AppColors.buttons),
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                          Icon(Icons.insert_drive_file_rounded,
+                              color: Colors.grey.shade600, size: 20),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(selectedFiles[i].files.first.name,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(fontSize: 13)),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.close_rounded,
+                                color: Colors.red, size: 18),
+                            onPressed: () =>
+                                setState(() => selectedFiles.removeAt(i)),
                           ),
                         ],
                       ),
                     ),
+                    gapH8,
+                  ],
+                  TextFormField(
+                    readOnly: true,
+                    onTap: _pickFiles,
+                    decoration: InputDecoration(
+                      hintText: AppStrings.tapToBrowseFiles.tr(),
+                      suffixIcon: const Icon(Icons.attach_file_rounded),
+                    ),
                   ),
-                  SizedBox(height: 48),
-                  _buildSubmitButton(provider, isEditing),
-                  SizedBox(height: 40),
+                  gapH24,
+                  Center(child: _buildSubmitButton(provider, isEditing)),
+                  gapH24,
                 ],
               ),
             ),
@@ -247,69 +188,8 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
     );
   }
 
-  Widget _buildCardSection({
-    required String title, 
-    required String subtitle, 
-    required IconData icon, 
-    required Color iconColor, 
-    required Widget child
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-        boxShadow: AppShadows.card,
-        border: Border.all(color: Colors.grey.shade100, width: 1.5),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(16, 16, 16, 12),
-            child: Row(
-              children: [
-                Container(
-                  padding: EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: iconColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(AppRadius.md),
-                  ),
-                  child: Icon(icon, size: 20, color: iconColor),
-                ),
-                SizedBox(width: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: AppStyles.titleTextContent(context).copyWith(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: Color(AppColors.secondaryButton),
-                      ),
-                    ),
-                    SizedBox(height: 2),
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey.shade500,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Divider(height: 1, color: Colors.grey.shade100),
-          child,
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTextField(TextEditingController controller, String hint) {
+  Widget _buildTextField(
+      TextEditingController controller, String label, String hint) {
     return TextFormField(
       controller: controller,
       validator: (value) {
@@ -320,51 +200,18 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
       },
       maxLines: 4,
       minLines: 2,
-      style: TextStyle(fontSize: 14, color: Colors.black87, height: 1.5),
-      decoration: InputDecoration(
-        hintText: hint,
-        hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 13),
-        filled: true,
-        fillColor: Colors.transparent,
-        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        border: InputBorder.none,
-        enabledBorder: InputBorder.none,
-        focusedBorder: InputBorder.none,
-      ),
+      decoration: InputDecoration(hintText: label),
     );
   }
 
   Widget _buildSubmitButton(DailyReportsProvider provider, bool isEditing) {
-    return Container(
-      width: double.infinity,
-      height: 55,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-        boxShadow: AppShadows.card,
-      ),
-      child: ElevatedButton(
-        onPressed: provider.isActionLoading ? null : _submit,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Color(AppColors.buttons),
-          foregroundColor: Colors.white,
-          elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg)),
-        ),
-        child: provider.isActionLoading
-            ? const SizedBox(
-                height: 24, 
-                width: 24, 
-                child: CircularProgressIndicator(color: Colors.white, strokeWidth: 3)
-              )
-            : Text(
-                isEditing ? AppStrings.updateReport.tr() : AppStrings.saveReport.tr(),
-                style: AppStyles.whiteContent(context).copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                  letterSpacing: 0.5,
-                ),
-              ),
-      ),
+    if (provider.isActionLoading) return const CircularProgressIndicator();
+    return CustomElevatedButton(
+      backgroundColor: Color(AppColors.secondaryButton),
+      titleSize: AppSizes.s14,
+      radius: AppSizes.s24,
+      title: isEditing ? AppStrings.updateReport.tr() : AppStrings.saveReport.tr(),
+      onPressed: _submit,
     );
   }
 }

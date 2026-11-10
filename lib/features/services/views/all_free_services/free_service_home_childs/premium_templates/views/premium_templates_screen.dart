@@ -1,3 +1,9 @@
+import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
+import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
+import 'package:app_test/core/widgets/text_form_widget.dart';
+import 'package:app_test/core/widgets/app_filter_actions.widget.dart';
+import 'package:app_test/core/widgets/app_card.widget.dart';
+import 'package:app_test/core/widgets/app_responsive_grid.widget.dart';
 import 'package:app_test/core/services/app_toast.dart';
 import 'dart:io' if (dart.library.html) 'directory_stub.dart' as io;
 import 'dart:html' if (dart.library.io) 'dart_html_stub.dart' as html;
@@ -97,91 +103,28 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
               );
             }
             
-            return Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
-              ),
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Handle bar
-                  Container(
-                    width: 40,
-                    height: 4,
-                    margin: const EdgeInsets.only(bottom: 16),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(AppRadius.xs),
-                    ),
-                  ),
-                  
-                  Text(
-                    AppStrings.filter.tr(),
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xff09051C),
-                    ),
-                  ),
-                  
-                  const SizedBox(height: 20),
-                  
-                  // File Type Dropdown
-                  SizedBox(
-                    height: 50,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(AppRadius.sm),
-                        border: Border.all(color: Colors.grey[300]!),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          isExpanded: true,
-                          hint: Text(
-                            AppStrings.fileType.tr(),
-                            style: const TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.w400),
-                          ),
-                          value: selectedFileType,
-                          items: items,
-                          onChanged: (value) {
-                            setModalState(() {
-                              selectedFileType = value;
-                            });
-                            setState(() {
-                              selectedFileType = value;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                  
-                  const SizedBox(height: 20),
-                  
-                  // Filter Button
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      _applyFilter();
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(AppColors.secondaryButton),
-                      foregroundColor: Colors.white,
-                      minimumSize: const Size(150, 45),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppRadius.xl),
-                      ),
-                    ),
-                    child: Text(AppStrings.filter.tr(), style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12),),
-                  ),
-                  
-                  const SizedBox(height: 16),
-                ],
-              ),
+            return AppFilterSheetFrame(
+              title: AppStrings.filter.tr(),
+              onApply: () {
+                Navigator.pop(context);
+                _applyFilter();
+              },
+              onClear: () {
+                setState(() => selectedFileType = null);
+                Navigator.pop(context);
+                _applyFilter();
+              },
+              children: [
+                defaultDropdownField(
+                  title: AppStrings.fileType.tr(),
+                  value: selectedFileType,
+                  items: items,
+                  onChanged: (value) {
+                    setModalState(() => selectedFileType = value);
+                    setState(() => selectedFileType = value);
+                  },
+                ),
+              ],
             );
           },
         );
@@ -250,27 +193,12 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
     return ChangeNotifierProvider<PremiumFilesViewModel>.value(
       value: viewModel,
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Color(AppColors.background),
         appBar: AppBarWithBookmark(
-          backgroundColor: Colors.white,
+          backgroundColor: Color(AppColors.background),
           elevation: 0,
-          leading: IconButton(
-            icon: Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Color(AppColors.secondaryButton),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.arrow_back, color: Colors.white, size: 18),
-            ),
-            onPressed: _goBack,
-          ),
+          leading: const AppBackButton(),
           title: AppStrings.premiumTemplates2.tr(),
-          titleStyle: TextStyle(
-            color: Color(AppColors.secondaryButton),
-            fontSize: 18,
-            fontWeight: FontWeight.w500,
-          ),
           centerTitle: true,
           routeName: AppRoutes.premiumTemplatesScreen.name,
         ),
@@ -362,34 +290,18 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
                   final filteredFiles = _getFilteredFiles();
 
                   if (filteredFiles.isEmpty) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.folder_open,
-                            size: 48,
-                            color: Colors.grey[400],
-                          ),
-                          const SizedBox(height: 16),
-                          Text(
-                            AppStrings.noDataFounded.tr(),
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
+                    return NoExistingPlaceholderScreen(title: AppStrings.noDataFounded.tr());
                   }
 
-                  return ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    itemCount: filteredFiles.length,
-                    itemBuilder: (context, index) {
-                      return _buildTemplateCard(filteredFiles[index]);
-                    },
+                  return RefreshIndicator(
+                    onRefresh: () async => _applyFilter(),
+                    child: SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      padding: const EdgeInsets.fromLTRB(AppSpacing.page, 0, AppSpacing.page, 80),
+                      child: AppResponsiveGrid(
+                        children: filteredFiles.map(_buildTemplateCard).toList(),
+                      ),
+                    ),
                   );
                 },
               ),
@@ -408,20 +320,12 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
     final isDownloading = _downloadProgress.containsKey(fileId);
     final progress = _downloadProgress[fileId] ?? 0.0;
     
-    return InkWell(
+    return GestureDetector(
       onTap: isDownloading ? null : () => _downloadFile(file),
-      borderRadius: BorderRadius.circular(AppRadius.md),
       child: Stack(
         children: [
-          Container(
-            margin: const EdgeInsets.only(bottom: 12),
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(AppRadius.md),
-              border: Border.all(color: Colors.grey[300]!),
-              boxShadow: AppShadows.card,
-            ),
+          AppCard(
+            animateIn: true,
             child: Row(
               children: [
                 // Template Image/Icon
@@ -438,15 +342,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
                         ? CachedNetworkImage(
                             imageUrl: imageUrl,
                             fit: BoxFit.cover,
-                            placeholder: (context, url) => Container(
-                              color: Color(AppColors.buttons),
-                              child: const Center(
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
+                            placeholder: (context, url) => const ShimmerAnimatedLoading(circularRaduis: 0),
                             errorWidget: (context, url, error) => Container(
                               color: Color(AppColors.buttons),
                               child: const Icon(
@@ -520,7 +416,6 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
           if (isDownloading)
             Positioned.fill(
               child: Container(
-                margin: const EdgeInsets.only(bottom: 12),
                 decoration: BoxDecoration(
                   color: Colors.black.withValues(alpha: 0.7),
                   borderRadius: BorderRadius.circular(AppRadius.md),

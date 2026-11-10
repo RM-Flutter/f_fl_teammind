@@ -70,6 +70,7 @@ class _EvaluationRequireScreenState extends State<EvaluationRequireScreen> {
                   children: [
                     if(viewModel.evaluations.isEmpty == true) CustomElevatedButton(
                         backgroundColor: Color(AppColors.buttons),
+                        height: AppSizes.buttonSmallHeight,
                         titleSize: AppSizes.s12,
                         title: AppStrings.myEvaluations.tr(),
                         onPressed: () async => await context.pushNamed(
