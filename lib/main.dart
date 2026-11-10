@@ -13,6 +13,7 @@ import 'package:app_test/features/more/notifications/controllers/notification_co
 import 'app.dart';
 import 'features/assistant/controllers/assistant_controller.dart';
 import 'core/services/fcm_token.service.dart';
+import 'core/services/web_notification_click.dart';
 import 'features/more/user_device/controllers/user_device_controller.dart';
 import 'features/overtime_requests/controllers/overtime_requests_controller.dart';
 import 'features/shifts/controllers/shift_change_controller.dart';
@@ -71,6 +72,8 @@ void main() async {
   registerErrorHandlers();
   await EasyLocalization.ensureInitialized();
   await CacheHelper.init();
+  // Web: open the page of a clicked push notification (no-op on mobile).
+  WebNotificationClick.init();
   AppConstants.updateFingerprintSecurityFromUsgFingerprintChecks();
   await LocalNotificationService.init();
 

@@ -40,7 +40,8 @@ abstract class AppImages {
   // for in-app notifications
   /// Coloured (navy + blue) logo for light surfaces, e.g. the white disc on the login screen.
   static const String loginLogoColored = 'assets/images/app_logos.png';
-  static const String logoWithWihteText = 'assets/images/logo.png';
+  // The notification banner's logo. assets/images/logo.png does not exist (the banner showed a broken image).
+  static const String logoWithWihteText = 'assets/images/app_logos.png';
   // for alerts messages
   static const String alertsBack = '$_alertsImagesDirectory/back.svg';
   static const String alertsBubbles = '$_alertsImagesDirectory/bubbles.svg';

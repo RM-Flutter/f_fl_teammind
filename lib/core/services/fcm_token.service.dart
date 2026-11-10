@@ -22,6 +22,30 @@ abstract class FcmTokenService {
 
   static bool _listenerAttached = false;
 
+  /// The getToken() call in progress, shared by every caller.
+  /// On web, two getToken() calls at the same time each create their own push
+  /// subscription: the browser keeps only one of the tokens and the other never
+  /// receives anything. Before this, the app cached (and sent to the backend) a
+  /// token Firebase had already replaced, so web pushes never arrived.
+  static Future<String?>? _inFlight;
+
+  /// The only place that may call FirebaseMessaging.getToken(). Concurrent
+  /// callers wait for the same request; a non-empty result is cached.
+  static Future<String?> getToken() {
+    return _inFlight ??= () async {
+      try {
+        final token =
+            await FirebaseMessaging.instance.getToken(vapidKey: vapidKey);
+        if (token != null && token.isNotEmpty) {
+          await CacheHelper.setString(key: _cacheKey, value: token);
+        }
+        return token;
+      } finally {
+        _inFlight = null;
+      }
+    }();
+  }
+
   /// Completes after the first getToken() attempt of this launch (success or
   /// not). The web token can change between launches, so start_app waits for
   /// it instead of sending the previous launch's token.
@@ -74,10 +98,8 @@ abstract class FcmTokenService {
 
     for (int attempt = 1; attempt <= maxAttempts; attempt++) {
       try {
-        final token =
-            await FirebaseMessaging.instance.getToken(vapidKey: vapidKey);
+        final token = await getToken();
         if (token != null && token.isNotEmpty) {
-          await CacheHelper.setString(key: _cacheKey, value: token);
           debugPrint('🔑 FCM token obtained (attempt $attempt)');
           _markFirstAttemptDone();
           return;

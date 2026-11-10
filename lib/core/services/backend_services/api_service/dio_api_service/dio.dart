@@ -57,15 +57,19 @@ class DioHelper{
         )
     );
 
-    dio!.interceptors.add(PrettyDioLogger(
-        requestHeader: true,
-        requestBody: true,
-        responseBody: true,
-        responseHeader: false,
-        error: true,
-        compact: true,
-        maxWidth: 90));
-    dio!.interceptors.add(TalkerLoggerService.dioLogger);
+    // Debug builds only: these print request bodies and headers (passwords,
+    // auth tokens) to the console, which anyone can read in a release web build.
+    if (kDebugMode) {
+      dio!.interceptors.add(PrettyDioLogger(
+          requestHeader: true,
+          requestBody: true,
+          responseBody: true,
+          responseHeader: false,
+          error: true,
+          compact: true,
+          maxWidth: 90));
+      dio!.interceptors.add(TalkerLoggerService.dioLogger);
+    }
     dio!.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) {

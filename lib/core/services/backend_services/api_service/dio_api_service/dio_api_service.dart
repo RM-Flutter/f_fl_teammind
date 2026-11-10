@@ -81,17 +81,21 @@ class DioApiService implements BackEndServicesInterface {
       ),
     );
 
-    _dio.interceptors.add(
-      PrettyDioLogger(
-        requestHeader: true,
-        requestBody: true,
-        responseHeader: true,
-        responseBody: true,
-        error: true,
-        compact: false,
-        maxWidth: 90,
-      ),
-    );
+    // Debug builds only: it prints request bodies and headers (passwords, auth
+    // tokens) to the console, which anyone can read in a release web build.
+    if (kDebugMode) {
+      _dio.interceptors.add(
+        PrettyDioLogger(
+          requestHeader: true,
+          requestBody: true,
+          responseHeader: true,
+          responseBody: true,
+          error: true,
+          compact: false,
+          maxWidth: 90,
+        ),
+      );
+    }
   }
 
   // Check if error should be retried

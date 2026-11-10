@@ -7,6 +7,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'backend_services/api_service/dio_api_service/shared.dart';
 import 'general_listener.dart';
+import 'package:app_test/core/constants/app_images.dart';
+import 'notification_service/timeout_message_service.dart';
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -16,7 +18,13 @@ class NotificationService {
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
   late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
+  static bool _initStarted = false;
+
+  /// Runs once per app launch. MyApp.build calls it, and build can run many
+  /// times; each extra run used to start another getToken() (see FcmTokenService).
   Future<void> init(BuildContext? context) async {
+    if (_initStarted) return;
+    _initStarted = true;
     await _requestPermissions(context);
     _initializeLocalNotifications(context);
     _setupForegroundMessages();
@@ -52,8 +60,8 @@ class NotificationService {
   Future<void> _safeRetrieveFcmToken() async {
 
     try {
-      String? token =
-          await _messaging.getToken(vapidKey: FcmTokenService.vapidKey);
+      // Through FcmTokenService so it shares the one getToken() request.
+      String? token = await FcmTokenService.getToken();
       debugPrint("🔑 FCM Token: $token");
     } catch (e) {
       debugPrint("⚠️ Failed to get FCM token: $e");
@@ -131,9 +139,26 @@ class NotificationService {
   }
 
   void _showNotification(RemoteMessage message) async {
-    // No local notifications on web: the in-app banner (TimeoutMessage, via
-    // PushNotificationService) covers the foreground there.
-    if (kIsWeb) return;
+    // Web has no local notifications: show the in-app banner. This listener runs
+    // from app start, logged in or not (PushNotificationService only starts after
+    // a logged-in splash, so after a fresh login the web showed nothing).
+    if (kIsWeb) {
+      final title = message.data['title'] ?? message.notification?.title ?? '';
+      final body = message.data['body'] ?? message.notification?.body ?? '';
+      final endpoint = message.data['endpoint'];
+      TimeoutMessage.show(
+        title: title,
+        message: body,
+        logoWithWihteText: AppImages.logoWithWihteText,
+        width: 360,
+        onClick: () {
+          if (endpoint is String && endpoint.isNotEmpty) {
+            _handleMessage(endpoint, null);
+          }
+        },
+      );
+      return;
+    }
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
     // Get title and body (should already be validated by _shouldShowNotification)

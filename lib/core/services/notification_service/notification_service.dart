@@ -203,8 +203,11 @@ abstract class PushNotificationService {
       }
 
       //showing the notification on the app screen (foreground)
-      // Filter out notifications with no title or body
-      if (notification != null) {
+      // Filter out notifications with no title or body.
+      // Web: NotificationService (core/services/notification_service.dart)
+      // already shows the banner for every foreground message; skip here so it
+      // is not shown twice.
+      if (notification != null && !kIsWeb) {
         final title = notification.title ?? '';
         final body = notification.body ?? '';
 
