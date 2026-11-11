@@ -45,7 +45,7 @@ class TaskDetailsHeaderWidget extends StatelessWidget {
     );
     return Container(
       width: 1.sw,
-      height: 300,
+      height: AppSizes.detailsHeaderHeight,
       decoration: BoxDecoration(
         color: Color(AppColors.secondaryButton),
         borderRadius: BorderRadius.only(
@@ -63,7 +63,7 @@ class TaskDetailsHeaderWidget extends StatelessWidget {
               fit: BoxFit.fill,
               alignment: const Alignment(0.5, 0.0),
               width: 1.sw,
-              height: 300,
+              height: AppSizes.detailsHeaderHeight,
             ),
           ),
           Positioned.fill(

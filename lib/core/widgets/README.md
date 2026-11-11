@@ -32,5 +32,7 @@ Reusable widgets that several features share. Check this folder before you build
 | `language_dropdown_button.widget.dart` | EN/AR switcher |
 | `custom_alert_dialog_with_two_buttons.dart` | Confirmation dialog |
 | `webview_wrapper.dart` (+ `_mobile`, `webview_web_impl.dart`, `webview_stub_impl.dart`), `webview_offers.dart` | Cross-platform WebView. Conditional imports choose `webview_flutter` on mobile or an iframe on the web. |
+| `app_details_sheet.widget.dart` | Pieces of every details bottom sheet: `AppDetailsHeader`, `AppDetailsHighlight`, `AppInfoCard` / `AppInfoRow`, `AppSheetActions` |
+| `app_sheet_submit_button.widget.dart` | The single action of a bottom sheet: centered, navy, with loading |
 
 `customized_drop_down.dart` and `employee_social_contacts_widget.dart` are empty files.

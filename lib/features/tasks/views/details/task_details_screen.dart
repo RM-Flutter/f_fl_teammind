@@ -1,4 +1,5 @@
 import 'package:app_test/core/utils/app_styles.dart';
+import 'package:app_test/core/widgets/comments/comments_title.widget.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:convert';
 
@@ -371,32 +372,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                       ),
                                     ),
                                   SizedBox(height: 20,),
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 10),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                border: Border.all(strokeAlign: 1, color: Color(AppColors.divider))
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Text(AppStrings.comments.tr(), style: AppStyles.primaryContent(context).copyWith(fontSize: 14,
-                                          fontWeight: FontWeight.bold)),
-                                      Expanded(
-                                        child: Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 10),
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                border: Border.all(strokeAlign: 1, color: Color(AppColors.divider))
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                  const CommentsTitle(),
                                   SizedBox(height: 12,),
                                   CommentsWidget(
                                       "tasks",

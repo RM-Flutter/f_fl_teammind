@@ -1,4 +1,5 @@
 import 'package:app_test/core/utils/app_styles.dart';
+import 'package:app_test/core/widgets/comments/comments_title.widget.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/widgets/comments/logic/controller.dart';
 import 'package:app_test/core/widgets/comments/send_comment_widget.dart';
@@ -317,53 +318,7 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                                   ?.commentStatus !=
                                               null) ...[
                                             SizedBox(height: 20),
-                                            Row(
-                                              children: [
-                                                Expanded(
-                                                  child: Padding(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 10),
-                                                    child: Container(
-                                                      decoration: BoxDecoration(
-                                                        border: Border.all(
-                                                            strokeAlign: 1,
-                                                            color: Color(
-                                                                AppColors
-                                                                    .divider)),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Text(
-                                                  AppStrings.lastedComments
-                                                      .tr()
-                                                      ,
-                                                  style: AppStyles.darkContent(
-                                                          context)
-                                                      .copyWith(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  child: Padding(
-                                                    padding:
-                                                        EdgeInsets.symmetric(
-                                                            horizontal: 10),
-                                                    child: Container(
-                                                      decoration: BoxDecoration(
-                                                        border: Border.all(
-                                                            strokeAlign: 1,
-                                                            color: Color(
-                                                                AppColors
-                                                                    .divider)),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                                            const CommentsTitle(),
                                             SizedBox(height: 10),
                                             CommentsWidget(
                                               "rmnotifications",

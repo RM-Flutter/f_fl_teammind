@@ -21,7 +21,7 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 300,
+      height: AppSizes.detailsHeaderHeight,
       decoration: BoxDecoration(
         color: Color(AppColors.secondaryButton),
         borderRadius: BorderRadius.only(
@@ -39,7 +39,7 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
               "assets/images/png/tasks-app-bar.png",
               fit: BoxFit.cover,
               width: double.infinity,
-              height: 300,
+              height: AppSizes.detailsHeaderHeight,
             ),
           ),
           Positioned.fill(

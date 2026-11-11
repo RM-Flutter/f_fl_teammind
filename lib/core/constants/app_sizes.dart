@@ -89,6 +89,9 @@ abstract class AppSizes {
   /// Height of every single-line field and every dropdown (rule 15).
   static const double fieldHeight = 52;
 
+  /// Navy header of the details screens (task, notification, daily report).
+  static const double detailsHeaderHeight = 240;
+
   // ---------------------------------------------------------------------------
   // Figma frame 375 x 812. On phones use these with `.w` / `.h` so the layout
   // keeps the design proportions on every screen.

@@ -11,6 +11,6 @@ Low-level UI building blocks with no business logic.
 | `error_handling/global_error_handler.dart` | `registerErrorHandlers()`, called first in `main()`. It catches Flutter and zone errors and forwards them to Talker, Sentry and Telegram (`services/telegram_error_service.dart`). |
 | `placeholder_no_existing_screen/` | `NoExistingPlaceholderScreen`: the one "nothing here yet" view (company logo on a tinted disc with two slow signal rings (still when the device has animations off), title, optional `message`, `compact` for empty sections inside a page) |
 | `app_styles.dart`, `styles.dart` | Text styles |
-| `modal_sheet_helper.dart` | Helper to open the standard bottom sheet |
+| `modal_sheet_helper.dart` | Helper to open the standard bottom sheet. `fitContent: true` makes the height follow the content (`height` becomes the maximum) |
 | `tab_bar_widget.dart`, `general_screen_message_widget.dart`, `gradient_bg_image.dart`, `overlay_gradient_widget.dart` | Small shared widgets |
 | `helpers/media_query_values.dart` | Screen size shortcuts |

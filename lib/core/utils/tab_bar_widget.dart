@@ -33,7 +33,7 @@ Widget defaultTapBarItem({
       const tabTextStyle = TextStyle(
         fontSize: 11,
         color: Colors.white,
-        fontWeight: FontWeight.w900,
+        fontWeight: FontWeight.bold,
       );
       // Width a tab needs to show its whole title, plus the tab's horizontal padding
       double fittedWidth(String title) {

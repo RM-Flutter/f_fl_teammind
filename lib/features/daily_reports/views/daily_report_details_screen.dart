@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/services/app_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -7,7 +8,9 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:open_filex/open_filex.dart';
-import 'dart:html' if (dart.library.io) '../../../../core/services/dart_html_stub.dart' as html;
+import 'dart:html'
+    if (dart.library.io) '../../../../core/services/dart_html_stub.dart'
+    as html;
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
@@ -18,7 +21,7 @@ import '../models/daily_report_model.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/widgets/app_content_width.widget.dart';
 import 'package:app_test/core/widgets/app_card.widget.dart';
-import 'package:app_test/core/widgets/app_section_header.widget.dart';
+import 'package:app_test/core/widgets/comments/comments_title.widget.dart';
 import 'package:app_test/core/widgets/bookmark_widgets/bookmark_button.widget.dart';
 import 'package:app_test/core/routing/app_router.dart';
 
@@ -27,7 +30,8 @@ class DailyReportDetailsScreen extends StatefulWidget {
   const DailyReportDetailsScreen({super.key, required this.report});
 
   @override
-  State<DailyReportDetailsScreen> createState() => _DailyReportDetailsScreenState();
+  State<DailyReportDetailsScreen> createState() =>
+      _DailyReportDetailsScreenState();
 }
 
 class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
@@ -42,7 +46,8 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
           return (response as dynamic).blob();
         }).then((blob) {
           final blobUrl = html.Url.createObjectUrlFromBlob(blob as dynamic);
-          final html.AnchorElement downloadAnchor = html.AnchorElement(href: blobUrl);
+          final html.AnchorElement downloadAnchor =
+              html.AnchorElement(href: blobUrl);
           downloadAnchor.download = fileName;
           downloadAnchor.style.display = 'none';
           html.document.body?.append(downloadAnchor);
@@ -97,7 +102,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
 
       if (mounted) Navigator.of(context).pop();
       await OpenFilex.open(filePath);
-      
+
       AppToast.showToast(
         msg: '✅ ${'downloaded'.tr()}: $fileName',
         backgroundColor: Colors.green,
@@ -133,7 +138,8 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
   /// centered and the metadata (date, employee) under it.
   Widget _buildHeroHeader(BuildContext context) {
     final dateFormatted = widget.report.createdAt != null
-        ? DateFormat('EEEE, dd MMMM yyyy', context.locale.languageCode).format(widget.report.createdAt!)
+        ? DateFormat('EEEE, dd MMMM yyyy', context.locale.languageCode)
+            .format(widget.report.createdAt!)
         : '';
     final employeeName = widget.report.employeeProfile?.name;
     const radius = BorderRadius.vertical(bottom: Radius.circular(AppRadius.xl));
@@ -143,80 +149,98 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
           children: [
             Icon(icon, color: Color(AppColors.buttons), size: 16),
             const SizedBox(width: 6),
-            Text(text, style: AppStyles.whiteContent(context).copyWith(fontSize: 12, fontWeight: FontWeight.w500)),
+            Text(text,
+                style: AppStyles.whiteContent(context)
+                    .copyWith(fontSize: 12, fontWeight: FontWeight.w500)),
           ],
         );
 
-    return ClipRRect(
-      borderRadius: radius,
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: Image.asset('assets/images/png/tasks-app-bar.png', fit: BoxFit.cover),
-          ),
-          Positioned.fill(child: ColoredBox(color: Color(AppColors.secondaryButton).withValues(alpha: 0.9))),
-          SafeArea(
-            bottom: false,
-            child: AppContentWidth(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(AppSpacing.page, 10, AppSpacing.page, 28),
-                child: Column(
-                  children: [
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            InkWell(
-                              onTap: () => Navigator.of(context).pop(),
-                              customBorder: const CircleBorder(),
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withValues(alpha: 0.15),
-                                  shape: BoxShape.circle,
+    return SizedBox(
+      height: AppSizes.detailsHeaderHeight,
+      child: ClipRRect(
+        borderRadius: radius,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: Image.asset('assets/images/png/tasks-app-bar.png',
+                  fit: BoxFit.cover),
+            ),
+            Positioned.fill(
+                child: ColoredBox(
+                    color: Color(AppColors.secondaryButton)
+                        .withValues(alpha: 0.9))),
+            SafeArea(
+              bottom: false,
+              child: AppContentWidth(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.page, 10, AppSpacing.page, 10),
+                  child: Column(
+                    children: [
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              InkWell(
+                                onTap: () => Navigator.of(context).pop(),
+                                customBorder: const CircleBorder(),
+                                child: Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withValues(alpha: 0.15),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Icon(Icons.arrow_back,
+                                      color: Colors.white, size: 20),
                                 ),
-                                child: const Icon(Icons.arrow_back, color: Colors.white, size: 20),
                               ),
-                            ),
-                            BookmarkButton(
-                              routeName: AppRoutes.dailyReportDetailsScreen.name,
-                              defaultTitle: AppStrings.reportDetails.tr(),
-                              iconColor: Colors.white,
-                            ),
-                          ],
-                        ),
-                        Text(
-                          AppStrings.reportDetails.tr(),
-                          style: AppStyles.whiteHeading(context).copyWith(fontSize: 18, fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 28),
-                    if (employeeName != null)
-                      Text(
-                        employeeName,
-                        textAlign: TextAlign.center,
-                        style: AppStyles.whiteHeading(context)
-                            .copyWith(fontSize: 24, fontWeight: FontWeight.w800, height: 1.1),
+                              BookmarkButton(
+                                routeName:
+                                    AppRoutes.dailyReportDetailsScreen.name,
+                                defaultTitle: AppStrings.reportDetails.tr(),
+                                iconColor: Colors.white,
+                              ),
+                            ],
+                          ),
+                          Text(
+                            AppStrings.reportDetails.tr(),
+                            style: AppStyles.whiteHeading(context).copyWith(
+                                fontSize: 18, fontWeight: FontWeight.w600),
+                          ),
+                        ],
                       ),
-                    const SizedBox(height: 16),
-                    Wrap(
-                      alignment: WrapAlignment.center,
-                      spacing: 16,
-                      runSpacing: 8,
-                      children: [
-                        if (dateFormatted.isNotEmpty) meta(Icons.calendar_today_outlined, dateFormatted),
-                        meta(Icons.description_outlined, AppStrings.reportDetails.tr()),
-                      ],
-                    ),
-                  ],
+                      const Spacer(),
+                      if (employeeName != null)
+                        Text(
+                          employeeName,
+                          textAlign: TextAlign.center,
+                          style: AppStyles.whiteHeading(context).copyWith(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w800,
+                              height: 1.1),
+                        ),
+                      const SizedBox(height: 16),
+                      Wrap(
+                        alignment: WrapAlignment.center,
+                        spacing: 16,
+                        runSpacing: 8,
+                        children: [
+                          if (dateFormatted.isNotEmpty)
+                            meta(Icons.calendar_today_outlined, dateFormatted),
+                          meta(Icons.description_outlined,
+                              AppStrings.reportDetails.tr()),
+                        ],
+                      ),
+                      const Spacer(),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -226,7 +250,9 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (context) => CommentProvider()..getComment(context, "employee-daily-reports", widget.report.id.toString()),
+          create: (context) => CommentProvider()
+            ..getComment(
+                context, "employee-daily-reports", widget.report.id.toString()),
         )
       ],
       child: Scaffold(
@@ -234,7 +260,8 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
         body: RefreshIndicator.adaptive(
           onRefresh: () async {
             if (context.mounted) {
-              context.read<CommentProvider>().getComment(context, "employee-daily-reports", widget.report.id.toString());
+              context.read<CommentProvider>().getComment(context,
+                  "employee-daily-reports", widget.report.id.toString());
             }
           },
           child: SingleChildScrollView(
@@ -255,14 +282,16 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                           title: AppStrings.accomplishments.tr(),
                           icon: Icons.check_circle_rounded,
                           iconColor: Color(AppColors.successGreen),
-                          content: widget.report.done ?? AppStrings.noAccomplishmentsRecorded.tr(),
+                          content: widget.report.done ??
+                              AppStrings.noAccomplishmentsRecorded.tr(),
                         ),
                         const SizedBox(height: AppSpacing.cardGap),
                         _buildSection(
                           title: AppStrings.inProgressTasks.tr(),
                           icon: Icons.sync_rounded,
                           iconColor: Color(AppColors.buttons),
-                          content: widget.report.inProgress ?? AppStrings.noOngoingTasksRecorded.tr(),
+                          content: widget.report.inProgress ??
+                              AppStrings.noOngoingTasksRecorded.tr(),
                         ),
                         const SizedBox(height: 16),
 
@@ -270,31 +299,32 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                           title: AppStrings.blockersAndProblems.tr(),
                           icon: Icons.warning_rounded,
                           iconColor: Color(AppColors.warningYellow),
-                          content: widget.report.problems ?? AppStrings.noProblemsRecorded.tr(),
+                          content: widget.report.problems ??
+                              AppStrings.noProblemsRecorded.tr(),
                         ),
                         const SizedBox(height: 16),
 
-                        if (widget.report.attachments != null && widget.report.attachments!.isNotEmpty) ...[
+                        if (widget.report.attachments != null &&
+                            widget.report.attachments!.isNotEmpty) ...[
                           _buildAttachmentsSection(widget.report.attachments!),
                           const SizedBox(height: 24),
                         ],
 
                         // Comments Section
-                        AppSectionHeader(title: AppStrings.comments.tr()),
-                        const SizedBox(height: AppSpacing.sectionHeaderGap),
+                        const CommentsTitle(),
+                        const SizedBox(height: 12),
                         Consumer<CommentProvider>(
-                          builder: (context, commentProvider, child) {
-                            return CommentsWidget(
-                              "employee-daily-reports",
-                              enable: "enable",
-                              comments: commentProvider.comments,
-                              pageNumber: commentProvider.pageNumber,
-                              loading: commentProvider.isGetCommentLoading,
-                              scrollController: _scrollController,
-                              id: widget.report.id.toString(),
-                            );
-                          }
-                        ),
+                            builder: (context, commentProvider, child) {
+                          return CommentsWidget(
+                            "employee-daily-reports",
+                            enable: "enable",
+                            comments: commentProvider.comments,
+                            pageNumber: commentProvider.pageNumber,
+                            loading: commentProvider.isGetCommentLoading,
+                            scrollController: _scrollController,
+                            id: widget.report.id.toString(),
+                          );
+                        }),
                         const SizedBox(height: 50),
                       ],
                     ),
@@ -337,7 +367,9 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
             ],
           ),
           const SizedBox(height: AppSpacing.md),
-          Text(content, style: AppStyles.greyContent(context).copyWith(fontSize: 14, height: 1.6)),
+          Text(content,
+              style: AppStyles.greyContent(context)
+                  .copyWith(fontSize: 14, height: 1.6)),
         ],
       ),
     );
@@ -363,40 +395,53 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                     color: tones.tint,
                     border: Border.all(color: tones.ring, width: 1.5),
                   ),
-                  child: Icon(Icons.attach_file_rounded, size: 18, color: tones.text),
+                  child: Icon(Icons.attach_file_rounded,
+                      size: 18, color: tones.text),
                 ),
                 const SizedBox(width: AppSpacing.md),
-                Expanded(child: Text(AppStrings.attachments.tr(), style: AppStyles.heading(context))),
+                Expanded(
+                    child: Text(AppStrings.attachments.tr(),
+                        style: AppStyles.heading(context))),
               ],
             ),
           ),
           Padding(
-            padding: const EdgeInsetsDirectional.only(start: AppSpacing.page, end: AppSpacing.page, bottom: AppSpacing.page),
+            padding: const EdgeInsetsDirectional.only(
+                start: AppSpacing.page,
+                end: AppSpacing.page,
+                bottom: AppSpacing.page),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               physics: const BouncingScrollPhysics(),
               child: Row(
                 children: List.generate(attachments.length, (index) {
                   final attachment = attachments[index];
-                  final isImage = attachment.fileType?.toLowerCase() == 'png' || 
-                                  attachment.fileType?.toLowerCase() == 'jpg' || 
-                                  attachment.fileType?.toLowerCase() == 'jpeg' ||
-                                  attachment.fileType?.toLowerCase() == 'webp' ||
-                                  attachment.fileType?.toLowerCase() == 'gif' ||
-                                  (attachment.imageList != null &&
-                                      attachment.imageList!['thumbnail'] != null);
+                  final isImage = attachment.fileType?.toLowerCase() == 'png' ||
+                      attachment.fileType?.toLowerCase() == 'jpg' ||
+                      attachment.fileType?.toLowerCase() == 'jpeg' ||
+                      attachment.fileType?.toLowerCase() == 'webp' ||
+                      attachment.fileType?.toLowerCase() == 'gif' ||
+                      (attachment.imageList != null &&
+                          attachment.imageList!['thumbnail'] != null);
 
                   Widget cardChild;
 
-                  if (isImage && attachment.imageList != null && attachment.imageList!['thumbnail'] != null) {
-                    final double screenWidth = MediaQuery.of(context).size.width;
+                  if (isImage &&
+                      attachment.imageList != null &&
+                      attachment.imageList!['thumbnail'] != null) {
+                    final double screenWidth =
+                        MediaQuery.of(context).size.width;
                     final String thumbUrl = screenWidth > 600
-                        ? (attachment.imageList!['large'] ?? attachment.imageList!['medium'] ?? attachment.imageList!['thumbnail'])
-                        : (attachment.imageList!['medium'] ?? attachment.imageList!['thumbnail']);
-                    final String originalUrl = attachment.imageList!['original'] ?? 
-                                               attachment.imageList!['large'] ?? 
-                                               attachment.imageList!['medium'] ?? 
-                                               attachment.imageList!['thumbnail'];
+                        ? (attachment.imageList!['large'] ??
+                            attachment.imageList!['medium'] ??
+                            attachment.imageList!['thumbnail'])
+                        : (attachment.imageList!['medium'] ??
+                            attachment.imageList!['thumbnail']);
+                    final String originalUrl =
+                        attachment.imageList!['original'] ??
+                            attachment.imageList!['large'] ??
+                            attachment.imageList!['medium'] ??
+                            attachment.imageList!['thumbnail'];
                     cardChild = GestureDetector(
                       onTap: () {
                         showGeneralDialog(
@@ -405,7 +450,8 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                           barrierDismissible: true,
                           barrierLabel: 'close'.tr(),
                           transitionDuration: const Duration(milliseconds: 300),
-                          pageBuilder: (context, animation, secondaryAnimation) {
+                          pageBuilder:
+                              (context, animation, secondaryAnimation) {
                             return Scaffold(
                               backgroundColor: Colors.transparent,
                               body: SafeArea(
@@ -418,15 +464,26 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                                       child: CachedNetworkImage(
                                         imageUrl: originalUrl,
                                         fit: BoxFit.contain,
-                                        placeholder: (context, url) => const Center(
-                                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2)
-                                        ),
-                                        errorWidget: (context, url, error) => Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                        placeholder: (context, url) =>
+                                            const Center(
+                                                child:
+                                                    CircularProgressIndicator(
+                                                        color: Colors.white,
+                                                        strokeWidth: 2)),
+                                        errorWidget: (context, url, error) =>
+                                            Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
-                                            const Icon(Icons.broken_image_rounded, color: Colors.white54, size: 64),
+                                            const Icon(
+                                                Icons.broken_image_rounded,
+                                                color: Colors.white54,
+                                                size: 64),
                                             const SizedBox(height: 16),
-                                            Text("failed_to_load_image".tr(), style: const TextStyle(color: Colors.white54, fontSize: 14)),
+                                            Text("failed_to_load_image".tr(),
+                                                style: const TextStyle(
+                                                    color: Colors.white54,
+                                                    fontSize: 14)),
                                           ],
                                         ),
                                       ),
@@ -438,10 +495,12 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                                         icon: Container(
                                           padding: const EdgeInsets.all(8),
                                           decoration: BoxDecoration(
-                                            color: Colors.white.withOpacity(0.1),
+                                            color:
+                                                Colors.white.withOpacity(0.1),
                                             shape: BoxShape.circle,
                                           ),
-                                          child: const Icon(Icons.close_rounded, color: Colors.white, size: 24),
+                                          child: const Icon(Icons.close_rounded,
+                                              color: Colors.white, size: 24),
                                         ),
                                         onPressed: () => Navigator.pop(context),
                                       ),
@@ -453,13 +512,18 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                                         icon: Container(
                                           padding: const EdgeInsets.all(8),
                                           decoration: BoxDecoration(
-                                            color: Colors.white.withOpacity(0.1),
+                                            color:
+                                                Colors.white.withOpacity(0.1),
                                             shape: BoxShape.circle,
                                           ),
-                                          child: const Icon(Icons.download_rounded, color: Colors.white, size: 24),
+                                          child: const Icon(
+                                              Icons.download_rounded,
+                                              color: Colors.white,
+                                              size: 24),
                                         ),
                                         onPressed: () {
-                                          _downloadFile(originalUrl, "image_${attachment.id}.jpg");
+                                          _downloadFile(originalUrl,
+                                              "image_${attachment.id}.jpg");
                                         },
                                       ),
                                     ),
@@ -477,26 +541,37 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                               tag: 'image_${attachment.id}',
                               child: Container(
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(AppRadius.lg),
+                                  borderRadius:
+                                      BorderRadius.circular(AppRadius.lg),
                                   boxShadow: AppShadows.card,
                                 ),
                                 child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(AppRadius.lg),
+                                  borderRadius:
+                                      BorderRadius.circular(AppRadius.lg),
                                   child: CachedNetworkImage(
                                     imageUrl: thumbUrl,
                                     fit: BoxFit.cover,
                                     placeholder: (context, url) => Container(
                                       color: Colors.grey.shade100,
-                                      child: const Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                                      child: const Center(
+                                          child: CircularProgressIndicator(
+                                              strokeWidth: 2)),
                                     ),
-                                    errorWidget: (context, url, error) => Container(
+                                    errorWidget: (context, url, error) =>
+                                        Container(
                                       color: Colors.grey.shade100,
                                       child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
-                                          Icon(Icons.broken_image_rounded, color: Colors.grey.shade400, size: 32),
+                                          Icon(Icons.broken_image_rounded,
+                                              color: Colors.grey.shade400,
+                                              size: 32),
                                           const SizedBox(height: 4),
-                                          Text("error".tr(), style: TextStyle(fontSize: 10, color: Colors.grey.shade500)),
+                                          Text("error".tr(),
+                                              style: TextStyle(
+                                                  fontSize: 10,
+                                                  color: Colors.grey.shade500)),
                                         ],
                                       ),
                                     ),
@@ -510,7 +585,8 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                             left: 8,
                             child: GestureDetector(
                               onTap: () {
-                                _downloadFile(originalUrl, "image_${attachment.id}.jpg");
+                                _downloadFile(
+                                    originalUrl, "image_${attachment.id}.jpg");
                               },
                               child: Container(
                                 padding: const EdgeInsets.all(6),
@@ -542,7 +618,8 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                         decoration: BoxDecoration(
                           color: const Color(0xFFF9FAFB),
                           borderRadius: BorderRadius.circular(AppRadius.lg),
-                          border: Border.all(color: Colors.grey.shade200, width: 1.5),
+                          border: Border.all(
+                              color: Colors.grey.shade200, width: 1.5),
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -550,20 +627,27 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                             Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: Color(AppColors.buttons).withOpacity(0.1),
+                                color:
+                                    Color(AppColors.buttons).withOpacity(0.1),
                                 shape: BoxShape.circle,
                               ),
-                              child: Icon(Icons.insert_drive_file_rounded, size: 28, color: Color(AppColors.buttons)),
+                              child: Icon(Icons.insert_drive_file_rounded,
+                                  size: 28, color: Color(AppColors.buttons)),
                             ),
                             const SizedBox(height: 8),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 12),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 12),
                               child: Text(
-                                attachment.fileName ?? attachment.fileType ?? "File", 
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Color(0xFF4B5563))
-                              ),
+                                  attachment.fileName ??
+                                      attachment.fileType ??
+                                      "File",
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: Color(0xFF4B5563))),
                             ),
                           ],
                         ),
