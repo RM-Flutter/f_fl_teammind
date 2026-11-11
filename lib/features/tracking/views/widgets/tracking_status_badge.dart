@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import '../../../../core/services/localization_service.dart';
-import '../../data/models/tracking_status.enum.dart';
-import 'package:app_test/core/constants/app_design.dart';
 
+import 'package:app_test/core/widgets/app_status_badge.widget.dart';
+import '../../data/models/tracking_status.enum.dart';
+
+/// Tracking status of a request, as the app's standard status pill ([AppStatusBadge]).
+/// Hidden when the request has no tracking at all.
 class TrackingStatusBadge extends StatelessWidget {
   final RequestTrackingStatus? status;
   final String? rawStatus;
@@ -32,39 +34,27 @@ class TrackingStatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final st = resolvedStatus;
-    if (st == RequestTrackingStatus.notRequired) {
-      return const SizedBox.shrink();
-    }
-
-    final bool isAr = isArabic ?? LocalizationService.isArabic(context: context);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(
-        color: st.backgroundColor,
-        borderRadius: BorderRadius.circular(AppRadius.sm),
-        border: Border.all(color: st.borderColor.withOpacity(0.6)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            st.icon,
-            size: 13,
-            color: st.textColor,
-          ),
-          const SizedBox(width: 4),
-          Text(
-            st.getLabel(isArabic: isAr),
-            style: TextStyle(
-              color: st.textColor,
-              fontSize: 11,
-              fontWeight: FontWeight.bold,
-              fontFamily: isAr ? 'Cairo' : 'Poppins',
-            ),
-          ),
-        ],
-      ),
-    );
+    if (st == RequestTrackingStatus.notRequired) return const SizedBox.shrink();
+    return AppStatusBadge(label: st.getLabel(), color: st.baseColor, icon: st.icon);
   }
+}
+
+/// Status of one tracking session (leg), as the app's standard status pill.
+class TrackingSessionStatusBadge extends StatelessWidget {
+  final TrackingSessionStatus status;
+  const TrackingSessionStatusBadge({super.key, required this.status});
+
+  @override
+  Widget build(BuildContext context) =>
+      AppStatusBadge(label: status.getLabel(), color: status.color, icon: status.icon);
+}
+
+/// Live presence of an employee on the group map, as the app's standard status pill.
+class EmployeePresenceBadge extends StatelessWidget {
+  final EmployeeTrackingPresence presence;
+  const EmployeePresenceBadge({super.key, required this.presence});
+
+  @override
+  Widget build(BuildContext context) =>
+      AppStatusBadge(label: presence.label, color: presence.color, icon: presence.icon);
 }

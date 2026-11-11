@@ -43,8 +43,9 @@ The user-facing punch flow (method dispatch, face liveness and verification) liv
 
 | File | What it does / how |
 |---|---|
-| `notification_service.dart` | `NotificationService.init(context)`, called from `app.dart`. It requests permission, creates the local-notification channels, shows foreground FCM messages as local notifications, and handles taps from the background or terminated state (`onMessageOpenedApp`, `getInitialMessage`). |
-| `fcm_token.service.dart` | Gets the FCM token at app start with retries, listens to `onTokenRefresh`, and caches `fcm_token`. `start_app` sends it when it differs from `last_sent_fcm_token`. |
+| `notification_service.dart` | `NotificationService.init(context)`, called from `app.dart` (runs once per launch even though `build` runs many times). It requests permission, creates the local-notification channels, shows foreground FCM messages as local notifications (on web as the in-app `TimeoutMessage` banner, logged in or not), and handles taps from the background or terminated state (`onMessageOpenedApp`, `getInitialMessage`). |
+| `fcm_token.service.dart` | Gets the FCM token at app start with retries, listens to `onTokenRefresh`, and caches `fcm_token`. `start_app` sends it when it differs from `last_sent_fcm_token`. `FcmTokenService.getToken()` is the only place allowed to call `FirebaseMessaging.getToken()`: on web, two calls at once each create a push subscription and only one token survives, so the app used to cache and send a dead token. |
+| `web_notification_click.dart` (+ `_stub`, `_web_impl`) | Web only. `WebNotificationClick.init()` in `main()`. Opens the `endpoint` of a clicked push notification: `web/firebase-messaging-sw.js` posts it to an open app window, or opens the app with `?notification_endpoint=...`, which is stored as `initialNotification` for the splash. The service worker also shows data-only messages, which the browser does not show by itself. |
 | [notification_service/](notification_service/README.md) | Local notifications, check-in reminders, timeout dialogs |
 | `general_listener.dart` | `GeneralListener`. It shows server-defined popups (`USG.popups`) for the current screen and resolves backend route keys to app routes through `assets/json/routes.json` (`analyzeRoute`). It also handles notification taps. |
 

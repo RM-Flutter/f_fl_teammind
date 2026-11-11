@@ -25,6 +25,7 @@ import 'package:flutter/foundation.dart';
 import '../../features/authentication/login/views/login_screen.dart';
 import '../../features/tracking/views/screens/live_group_map_screen.dart';
 import '../../features/tracking/views/screens/tracking_demo_hub_screen.dart';
+import '../../features/tracking/views/screens/tracking_reports_screen.dart';
 import '../../features/authentication/login/views/update_main_data.dart';
 import '../../features/complaints/views/complain_list/complains_screen.dart';
 import '../../features/complaints/views/complains_details/complain_details_screen.dart';
@@ -168,6 +169,7 @@ enum AppRoutes {
   requestDetails,
   liveGroupMap,
   trackingDemoHub,
+  trackingReports,
   addRequest,
   requestsCalendar,
   employeesList,
@@ -1188,6 +1190,28 @@ GoRouter goRouter(BuildContext context) {
                   return AppRouterTransitions.slideTransition(
                     key: state.pageKey,
                     child: const LiveGroupMapScreen(),
+                    animation: animationController,
+                    begin: const Offset(1.0, 0.0),
+                  );
+                },
+              ),
+              GoRoute(
+                path: 'trackingReports',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.trackingReports.name,
+                pageBuilder: (context, state) {
+                  final animationController = AnimationController(
+                    vsync: ticker,
+                  );
+                  animationController.addStatusListener((status) {
+                    if (status == AnimationStatus.completed ||
+                        status == AnimationStatus.dismissed) {
+                      animationController.dispose();
+                    }
+                  });
+                  return AppRouterTransitions.slideTransition(
+                    key: state.pageKey,
+                    child: const TrackingReportsScreen(),
                     animation: animationController,
                     begin: const Offset(1.0, 0.0),
                   );

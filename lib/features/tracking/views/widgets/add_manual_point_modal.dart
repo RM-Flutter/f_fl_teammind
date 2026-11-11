@@ -1,10 +1,15 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import '../../../../core/constants/app_colors.dart';
-import '../../../../core/services/localization_service.dart';
-import '../../../../core/utils/app_styles.dart';
-import 'package:app_test/core/constants/app_design.dart';
 
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:app_test/core/widgets/app_field_shell.widget.dart';
+import 'package:app_test/core/widgets/app_filter_actions.widget.dart' show AppFilterTitle;
+import 'tracking_choice_chip.dart';
+
+/// Bottom sheet to save a key (manual) point during an active leg. The title is optional; the
+/// point is saved with the current location and sent right away (spec: mobile §4).
 class AddManualPointModal extends StatefulWidget {
   final Function(String label) onSubmit;
 
@@ -26,20 +31,12 @@ class AddManualPointModal extends StatefulWidget {
 class _AddManualPointModalState extends State<AddManualPointModal> {
   final TextEditingController _controller = TextEditingController();
 
-  final List<String> _quickSuggestionsAr = [
-    'وصلت عند العميل 📍',
-    'انتهاء الاجتماع 🤝',
-    'بدء المعاينة الميدانية 🔍',
-    'تسليم العقد والمستندات 📄',
-    'توقف للاستراحة ☕',
-  ];
-
-  final List<String> _quickSuggestionsEn = [
-    'Arrived at Client 📍',
-    'Meeting Ended 🤝',
-    'Field Inspection Started 🔍',
-    'Contract & Documents Handover 📄',
-    'Short Break ☕',
+  static const _suggestionKeys = [
+    'tracking_suggestion_arrived',
+    'tracking_suggestion_meeting_ended',
+    'tracking_suggestion_inspection',
+    'tracking_suggestion_handover',
+    'tracking_suggestion_break',
   ];
 
   @override
@@ -48,173 +45,109 @@ class _AddManualPointModalState extends State<AddManualPointModal> {
     super.dispose();
   }
 
-  void _submit(bool isAr) {
+  void _submit() {
     final text = _controller.text.trim();
-    final defaultLabel = 'manual_point'.tr();
-    widget.onSubmit(text.isEmpty ? defaultLabel : text);
+    widget.onSubmit(text.isEmpty ? 'manual_point'.tr() : text);
     Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
-    final bool isAr = LocalizationService.isArabic(context: context);
-    final suggestions = isAr ? _quickSuggestionsAr : _quickSuggestionsEn;
-
-    return Container(
-      padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-        top: 16,
-        left: 20,
-        right: 20,
-      ),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Drag handle
-          Center(
-            child: Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Color(AppColors.divider),
-                borderRadius: BorderRadius.circular(AppRadius.xs),
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          // Title
-          Row(
+    return Padding(
+      padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Color(AppColors.background),
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
+        ),
+        child: SafeArea(
+          top: false,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
+              const SizedBox(height: 10),
               Container(
-                padding: const EdgeInsets.all(8),
+                width: 63,
+                height: 5,
                 decoration: BoxDecoration(
-                  color: Color(AppColors.buttons).withOpacity(0.1),
-                  shape: BoxShape.circle,
+                  color: Color(AppColors.disableButton),
+                  borderRadius: BorderRadius.circular(AppRadius.pill),
                 ),
-                child: Icon(Icons.add_location_alt_rounded, color: Color(AppColors.buttons), size: 22),
               ),
-              const SizedBox(width: 12),
-              Expanded(
+              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.all(20),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text('record_milestone_manually'.tr(),
-                      style: AppStyles.heading(context).copyWith(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Color(AppColors.titleText),
+                    AppFilterTitle('tracking_add_key_point'.tr()),
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      'tracking_add_key_point_hint'.tr(),
+                      textAlign: TextAlign.center,
+                      style: AppStyles.greyContent(context).copyWith(fontSize: 12.5, height: 1.4),
+                    ),
+                    const SizedBox(height: AppSpacing.lg),
+                    AppFieldShell(
+                      child: TextField(
+                        controller: _controller,
+                        autofocus: true,
+                        style: AppField.valueStyle,
+                        textInputAction: TextInputAction.done,
+                        onSubmitted: (_) => _submit(),
+                        decoration: InputDecoration(
+                          hintText: 'tracking_point_title_optional'.tr(),
+                          hintStyle: AppField.hintStyle,
+                          isDense: true,
+                          filled: false,
+                          contentPadding: EdgeInsets.zero,
+                          border: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 2),
-                    Text('recorded_instantly_and_notifies_management_of_your'.tr(),
-                      style: AppStyles.subtitleContent(context).copyWith(fontSize: 11),
+                    const SizedBox(height: AppSpacing.md),
+                    Wrap(
+                      spacing: AppSpacing.sm,
+                      runSpacing: AppSpacing.sm,
+                      children: [
+                        for (final key in _suggestionKeys)
+                          TrackingChoiceChip(
+                            label: key.tr(),
+                            selected: _controller.text == key.tr(),
+                            onTap: () => setState(() {
+                              _controller.text = key.tr();
+                              _controller.selection =
+                                  TextSelection.collapsed(offset: _controller.text.length);
+                            }),
+                          ),
+                      ],
                     ),
+                    const SizedBox(height: 30),
+                    SizedBox(
+                      height: AppButtonSize.height,
+                      child: ElevatedButton.icon(
+                        onPressed: _submit,
+                        icon: const Icon(Icons.add_location_alt_outlined, size: 20),
+                        label: Text('tracking_save_point'.tr(),
+                            style: const TextStyle(
+                                fontSize: AppButtonSize.fontSize, fontWeight: FontWeight.w600)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(AppColors.buttons),
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
                   ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          // Quick suggestions
-          Text('quick_suggestions'.tr(),
-            style: AppStyles.content(context).copyWith(
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xff606060),
-            ),
-          ),
-          const SizedBox(height: 8),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: suggestions.map((suggestion) {
-                return Padding(
-                  padding: const EdgeInsets.only(left: 8),
-                  child: ActionChip(
-                    backgroundColor: Color(AppColors.cardBackground),
-                    side: BorderSide(color: Color(AppColors.border)),
-                    label: Text(
-                      suggestion,
-                      style: AppStyles.content(context).copyWith(fontSize: 11),
-                    ),
-                    onPressed: () {
-                      _controller.text = suggestion;
-                      setState(() {});
-                    },
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
-          const SizedBox(height: 14),
-          // Text input
-          TextField(
-            controller: _controller,
-            decoration: InputDecoration(
-              hintText: 'enter_stop_description_or_note_optional'.tr(),
-              hintStyle: AppStyles.hintContent(context).copyWith(fontSize: 12),
-              filled: true,
-              fillColor: Color(AppColors.cardBackground),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(AppRadius.sm),
-                borderSide: BorderSide(color: Color(AppColors.border)),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(AppRadius.sm),
-                borderSide: BorderSide(color: Color(AppColors.border)),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(AppRadius.sm),
-                borderSide: BorderSide(color: Color(AppColors.buttons)),
-              ),
-            ),
-          ),
-          const SizedBox(height: 20),
-          // Action Buttons
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.pill)),
-                    side: BorderSide(color: Color(AppColors.border)),
-                  ),
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text('assistantEnrollCancel'.tr(),
-                    style: AppStyles.content(context).copyWith(color: const Color(0xff606060)),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                flex: 2,
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(AppColors.buttons),
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.pill)),
-                    elevation: 0,
-                  ),
-                  onPressed: () => _submit(isAr),
-                  icon: const Icon(Icons.check_circle_outline, size: 18, color: Colors.white),
-                  label: Text('record_milestone'.tr(),
-                    style: AppStyles.whiteContent(context).copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 13,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
+        ),
       ),
     );
   }

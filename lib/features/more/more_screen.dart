@@ -418,6 +418,22 @@ class _MoreScreenState extends State<MoreScreen> {
                                       });
                                 },
                               ),
+                          // Team tracking map + tracking reports (request-linked tracking).
+                          if (gCache['is_teamleader_in'].isNotEmpty ||
+                              gCache['is_manager_in'].isNotEmpty ||
+                              gCache['is_hr'] == true ||
+                              gCache['top_management'] == true)
+                            DefaultListTile(
+                              title: 'tracking_team_map'.tr(),
+                              icon: Icons.share_location_rounded,
+                              onTap: () async {
+                                await context.pushNamed(
+                                    AppRoutes.liveGroupMap.name,
+                                    pathParameters: {
+                                      'lang': context.locale.languageCode
+                                    });
+                              },
+                            ),
                           MoreSectionLabel(AppStrings.company.tr()),
                           if (PackageHelper.hasPackage('emp-requests'))
                             DefaultListTile(

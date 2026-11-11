@@ -1,27 +1,14 @@
 import 'package:flutter/material.dart';
 import '../models/employee_tracking_summary.model.dart';
+import '../models/tracking_report_row.model.dart';
 import '../models/tracking_point.model.dart';
 import '../models/tracking_session.model.dart';
 import '../models/tracking_status.enum.dart';
+import '../../views/widgets/tracking_route_map.dart' show TrackingPalette;
 
 class TrackingDummyData {
-  /// Palette of 10 distinct colors matching TeamMind's design system
-  static const List<Color> palette = [
-    Color(0xFF3389EE), // 0: Primary Button Blue
-    Color(0xff2D6A4F), // 1: Success Green
-    Color(0xffFCA652), // 2: Warning Orange
-    Color(0xff9C4995), // 3: Purple
-    Color(0xff3AC0E5), // 4: Light Cyan
-    Color(0xff2C376C), // 5: Navy Blue
-    Color(0xffc72c41), // 6: Failure Red
-    Color(0xffAE702B), // 7: Golden Brown (oC2)
-    Color(0xff606060), // 8: Slate Gray
-    Color(0xFF00A1FF), // 9: Bright Sky Blue
-  ];
-
-  static Color getEmployeeColor(int index) {
-    return palette[index % palette.length];
-  }
+  /// Colour of the employee / leg at [index] (see [TrackingPalette]).
+  static Color getEmployeeColor(int index) => TrackingPalette.colorAt(index);
 
   // =========================================================
   // Request 101 - Employee 5 (أحمد محمود / Ahmed Mahmoud)
@@ -401,4 +388,170 @@ class TrackingDummyData {
       lastUpdatedAgoSeconds: 10800,
     ),
   ];
+
+  // =========================================================
+  // Group map: routes, a second page and report rows
+  // =========================================================
+
+  /// Employees of a group-map page (spec: 10 per page). Page 1 is [dummyEmployees], page 2 holds
+  /// three more, so the pagination can be reviewed.
+  static const int pageSize = 10;
+
+  static int get totalEmployees => dummyEmployees.length + _extraEmployees.length;
+
+  static List<EmployeeTrackingSummaryModel> employeesPage(int page) {
+    final all = [...dummyEmployees, ..._extraEmployees];
+    final start = (page - 1) * pageSize;
+    if (start >= all.length) return const [];
+    return all.sublist(start, (start + pageSize).clamp(0, all.length));
+  }
+
+  static final List<EmployeeTrackingSummaryModel> _extraEmployees = [
+    EmployeeTrackingSummaryModel(
+      employeeId: 33,
+      employeeName: 'ياسر فؤاد',
+      employeeNameEn: 'Yasser Fouad',
+      departmentName: 'المبيعات الميدانية',
+      departmentNameEn: 'Field Sales',
+      colorIndex: 0,
+      status: 'active',
+      lastPoint: TrackingPointModel(
+        clientPointId: 'pt-yasser',
+        latitude: 30.0580,
+        longitude: 31.3000,
+        recordedAt: DateTime.now().subtract(const Duration(minutes: 4)),
+        pointType: 'manual',
+        label: 'زيارة عميل جديد',
+        labelEn: 'New Client Visit',
+      ),
+      lastUpdatedAgoSeconds: 240,
+    ),
+    EmployeeTrackingSummaryModel(
+      employeeId: 34,
+      employeeName: 'دينا كمال',
+      employeeNameEn: 'Dina Kamal',
+      departmentName: 'خدمة العملاء والدعم',
+      departmentNameEn: 'Customer Support',
+      colorIndex: 1,
+      status: 'offline',
+      lastPoint: TrackingPointModel(
+        clientPointId: 'pt-dina',
+        latitude: 30.0300,
+        longitude: 31.2400,
+        recordedAt: DateTime.now().subtract(const Duration(hours: 1, minutes: 30)),
+        label: 'مقر العميل',
+        labelEn: 'Client Office',
+      ),
+      lastUpdatedAgoSeconds: 5400,
+    ),
+    const EmployeeTrackingSummaryModel(
+      employeeId: 35,
+      employeeName: 'كريم سامي',
+      employeeNameEn: 'Karim Samy',
+      departmentName: 'فريق التوزيع',
+      departmentNameEn: 'Distribution Team',
+      colorIndex: 2,
+      status: 'no_active_tracking',
+    ),
+  ];
+
+  /// The route of an employee on the group map: their recorded legs when the dummy data has
+  /// points, otherwise a believable route that ends at their last point.
+  static List<TrackingSessionModel> routeFor(EmployeeTrackingSummaryModel e, int index) {
+    final withPoints = e.sessions.where((s) => s.points.isNotEmpty).toList();
+    if (withPoints.isNotEmpty) return withPoints;
+    final last = e.lastPoint;
+    if (last == null) return const [];
+    final isActive = e.status == 'active';
+    final minutes = e.activeSession?.durationMinutes ?? 120;
+    final start = last.recordedAt.subtract(Duration(minutes: minutes));
+    final sign = index.isEven ? 1.0 : -1.0;
+    final points = <TrackingPointModel>[];
+    for (var i = 0; i <= 7; i++) {
+      final t = i / 7;
+      final lat = last.latitude - 0.016 * (1 - t) + 0.0025 * sign * (i % 2);
+      final lng = last.longitude - 0.020 * sign * (1 - t) + 0.0018 * (i % 3);
+      final at = start.add(Duration(minutes: (minutes * t).round()));
+      if (i == 0) {
+        points.add(TrackingPointModel(
+          clientPointId: 'pt-${e.employeeId}-s', latitude: lat, longitude: lng, recordedAt: at,
+          label: 'نقطة الانطلاق', labelEn: 'Start Point', isStartPoint: true));
+      } else if (i == 7) {
+        points.add(TrackingPointModel(
+          clientPointId: 'pt-${e.employeeId}-last', latitude: last.latitude, longitude: last.longitude,
+          recordedAt: last.recordedAt, pointType: last.isManual ? 'manual' : 'auto',
+          label: last.label, labelEn: last.labelEn, isEndPoint: !isActive && !last.isManual));
+      } else if (i == 4 && !last.isManual) {
+        points.add(TrackingPointModel(
+          clientPointId: 'pt-${e.employeeId}-m', latitude: lat, longitude: lng, recordedAt: at,
+          pointType: 'manual', label: last.label, labelEn: last.labelEn));
+      } else {
+        points.add(TrackingPointModel(
+          clientPointId: 'pt-${e.employeeId}-$i', latitude: lat, longitude: lng, recordedAt: at));
+      }
+    }
+    return [
+      TrackingSessionModel(
+        id: e.employeeId * 100,
+        requestId: e.activeSession?.requestId ?? e.employeeId * 10,
+        employeeId: e.employeeId,
+        startedAt: start,
+        endedAt: isActive ? null : last.recordedAt,
+        status: isActive ? TrackingSessionStatus.active : TrackingSessionStatus.completed,
+        lastPointAt: last.recordedAt,
+        durationMinutes: minutes,
+        pointsCount: points.length,
+        manualPointsCount: points.where((p) => p.isManual).length,
+        points: points,
+      ),
+    ];
+  }
+
+  /// Rows for the tracking reports (Manager / HR compliance and history).
+  static List<TrackingReportRowModel> reportRows(bool isArabic) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    TrackingReportRowModel row(int i, EmployeeTrackingSummaryModel e, String typeAr, String typeEn,
+        RequestTrackingStatus status, {bool required = true, int days = 0}) {
+      final started = status == RequestTrackingStatus.requiredNotStarted ||
+              status == RequestTrackingStatus.optionalNotStarted ||
+              status == RequestTrackingStatus.requiredMissing
+          ? null
+          : today.subtract(Duration(days: days)).add(Duration(hours: 9, minutes: 10 + i * 4));
+      final minutes = started == null ? 0 : 95 + i * 23;
+      return TrackingReportRowModel(
+        employeeId: e.employeeId,
+        employeeName: e.getName(isArabic: isArabic),
+        departmentName: e.getDepartment(isArabic: isArabic),
+        requestId: 4100 + i,
+        requestType: isArabic ? typeAr : typeEn,
+        isRequired: required,
+        status: status,
+        requestDate: today.subtract(Duration(days: days)),
+        startedAt: started,
+        endedAt: status == RequestTrackingStatus.completed && started != null
+            ? started.add(Duration(minutes: minutes))
+            : null,
+        lastUpdateAt: started?.add(Duration(minutes: minutes)),
+        sessionsCount: started == null ? 0 : 1 + i % 3,
+        durationMinutes: minutes,
+        pointsCount: started == null ? 0 : 40 + i * 9,
+        distanceKm: started == null ? 0 : 3.4 + i * 1.7,
+      );
+    }
+
+    final e = dummyEmployees;
+    return [
+      row(0, e[0], 'مأمورية', 'Mission', RequestTrackingStatus.active),
+      row(1, e[1], 'زيارة عميل', 'Client Visit', RequestTrackingStatus.completed),
+      row(2, e[2], 'مأمورية', 'Mission', RequestTrackingStatus.active),
+      row(3, e[3], 'تسليم مستندات', 'Documents Delivery', RequestTrackingStatus.requiredNotStarted),
+      row(4, e[4], 'مأمورية', 'Mission', RequestTrackingStatus.completed, days: 1),
+      row(5, e[5], 'زيارة عميل', 'Client Visit', RequestTrackingStatus.requiredMissing, days: 2),
+      row(6, e[6], 'نقل بضائع', 'Goods Transfer', RequestTrackingStatus.active),
+      row(7, e[7], 'زيارة عميل', 'Client Visit', RequestTrackingStatus.optionalNotStarted, required: false),
+      row(8, e[8], 'نقل بضائع', 'Goods Transfer', RequestTrackingStatus.completed, days: 1),
+      row(9, e[9], 'مأمورية', 'Mission', RequestTrackingStatus.completed, days: 3),
+    ];
+  }
 }

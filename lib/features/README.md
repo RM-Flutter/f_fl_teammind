@@ -44,4 +44,4 @@ Screens are registered in `lib/core/routing/app_router.dart`. Most features read
 | [assistant](assistant/README.md) | TeamMind assistant: offline voice and text help for "how do I…" questions, with an optional "Hey TeamMind" wake phrase |
 | [pages](pages/README.md) | Generic list, detail and page screens for server-defined content types |
 | [services](services/README.md) | Free services (also open to visitors): CV builder, smart card, templates, vacation calculator, personality test |
-| [tracking](tracking/README.md) | Field tracking UI (design stage, runs on dummy data) |
+| [tracking](tracking/README.md) | Request-linked employee tracking: request tab, group map and reports (UI only, dummy data) |

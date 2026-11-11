@@ -9,7 +9,7 @@ A static `Dio` set up in `DioHelper.initail(context)`. It is called from `app.da
 - `baseUrl = AppConstants.baseUrl` (`<custom_domain or default>/api`), 30 s timeouts, and `validateStatus: < 500`. A 4xx response therefore arrives as a normal response, not an exception.
 - Default headers: `Accept`, `Content-Type`, `lang` (from the cache) and `X-App-Type: web|mobile`. Each call adds `Authorization: Bearer <token>` and the device unique id.
 - Interceptors:
-  - PrettyDioLogger and Talker logging
+  - PrettyDioLogger and Talker logging (debug builds only: they print request bodies and headers, including passwords and tokens)
   - a response check: if the body has `error: INSTANCE_SUSPENDED` or `LICENCE_ACCESS_DENIED`, it navigates (via `rootNavigatorKey`) to the `instanceSuspended` or `licenceDenied` route
   - one retry with a fresh connection after a timeout or connection reset (`dio_adapter_reset.dart`)
 - Helpers: `getData`, `postData`, `putData`, `patchData`, `deleteData`, `postFormData`, `getDataAsBytes`, `downloadData(WithProgress)`, `uploadImage`.

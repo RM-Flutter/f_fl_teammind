@@ -7,12 +7,44 @@ import '../../data/models/approvable_details_model.dart';
 import 'tabs/reason_tab.dart';
 import 'tabs/manager_response_tab.dart';
 import 'tabs/information_tab.dart';
+import 'package:app_test/features/tracking/views/widgets/tracking_section_employee.dart';
+import 'package:app_test/features/tracking/views/widgets/tracking_section_manager.dart';
 import 'package:app_test/core/constants/app_design.dart';
 
 class CustomTabbarViewApprovableDetails extends StatelessWidget {
   final ApprovableDetailsModel details;
 
-  const CustomTabbarViewApprovableDetails({super.key, required this.details});
+  /// Approvable type (`employee_requests`, `overtime` ...). Tracking belongs to requests only.
+  final String? type;
+
+  /// The signed-in employee owns this request: the tracking tab shows the employee view
+  /// (start / stop, key points); otherwise the manager / HR view.
+  final bool isApplicant;
+
+  const CustomTabbarViewApprovableDetails({
+    super.key,
+    required this.details,
+    this.type,
+    this.isApplicant = false,
+  });
+
+  /// Spec: tracking is linked to requests. Until the API sends the request type's
+  /// `tracking_requirement`, the tab shows on every employee request (dummy data).
+  bool get _showTracking => type == null || type == 'employee_requests';
+
+  /// Start shows only when today is inside the request's dates.
+  bool get _isDateMatched {
+    final from = DateTime.tryParse(details.dateFrom ?? '');
+    final to = DateTime.tryParse(details.dateTo ?? '') ?? from;
+    if (from == null) return true;
+    final today = DateUtils.dateOnly(DateTime.now());
+    return !today.isBefore(DateUtils.dateOnly(from)) && !today.isAfter(DateUtils.dateOnly(to!));
+  }
+
+  bool get _isCancelled {
+    final s = (details.status ?? '').toLowerCase();
+    return s == 'canceled' || s == 'cancelled';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +56,7 @@ class CustomTabbarViewApprovableDetails extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: AppSpacing.page, right: AppSpacing.page, top: AppSpacing.md, bottom: 0),
       child: DefaultTabController(
-        length: 3,
+        length: _showTracking ? 4 : 3,
         child: Column(
           children: [
             Container(
@@ -81,6 +113,18 @@ class CustomTabbarViewApprovableDetails extends StatelessWidget {
                       ),
                     ),
                   ),
+                  if (_showTracking)
+                    Tab(
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          'tracking'.tr(),
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -101,6 +145,17 @@ class CustomTabbarViewApprovableDetails extends StatelessWidget {
                       updatedAt: details.updatedAt,
                       employeeActions: details.employeeActions,
                     ),
+                    if (_showTracking)
+                      SingleChildScrollView(
+                        child: isApplicant
+                            ? TrackingSectionEmployee(
+                                request: details,
+                                padding: EdgeInsets.zero,
+                                isDateMatched: _isDateMatched,
+                                isRequestCancelled: _isCancelled,
+                              )
+                            : TrackingSectionManager(request: details, padding: EdgeInsets.zero),
+                      ),
                   ],
                 ),
               ),

@@ -41,6 +41,15 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
   int? selectId;
   bool _filtersLoaded = false;
 
+  /// Tracking filter (spec: requests list): null = any, 'with_tracking', 'without_tracking'.
+  /// Shows requests that should have tracking but do not. UI only until the API supports it.
+  static String? _trackingFilter = _validTracking(CacheHelper.getString("trackingFilter"));
+
+  /// Only the two real values are kept; anything else (an empty cache value, an old value) is
+  /// "any". A value that is not one of the dropdown items would crash the DropdownButton.
+  static String? _validTracking(String? v) =>
+      v == 'with_tracking' || v == 'without_tracking' ? v : null;
+
   /// الحالة الحالية للفلتر (نستخدمها عند الإغلاق بدل الكاش لتجنب إرسال id بعد المسح)
   static Map<String, String?> _buildFilterMap(AddNewRequestController viewModels, FilterController viewModel) {
     String? fromStr;
@@ -69,11 +78,13 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
       'selectStatus': viewModels.selectStatus,
       'from': fromStr,
       'to': toStr,
+      'tracking': _trackingFilter,
     };
   }
 
   static Map<String, String?> _emptyFilterMap() => {
     'reqId': null, 'empId': null, 'depId': null, 'selectStatus': null, 'from': null, 'to': null,
+    'tracking': null,
   };
 
   void _loadSavedFilters(BuildContext context, AddNewRequestController viewModels, FilterController viewModel) {
@@ -476,6 +487,17 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                           readOnly: true,
                                           onTap: () => viewModels.selectDateFilter(context, filter: true),
                                         ),
+                                        const SizedBox(height: AppSpacing.md),
+                                        defaultDropdownField(
+                                          value: _validTracking(_trackingFilter),
+                                          title: 'tracking_filter'.tr(),
+                                          items: [
+                                            DropdownMenuItem(value: 'any', child: Text('tracking_filter_any'.tr(), style: AppField.valueStyle)),
+                                            DropdownMenuItem(value: 'with_tracking', child: Text('tracking_filter_with'.tr(), style: AppField.valueStyle)),
+                                            DropdownMenuItem(value: 'without_tracking', child: Text('tracking_filter_without'.tr(), style: AppField.valueStyle)),
+                                          ],
+                                          onChanged: (v) => setState(() => _trackingFilter = _validTracking(v)),
+                                        ),
                                         const SizedBox(height: 30,),
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -545,6 +567,11 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                                   await CacheHelper.setString(key: "to", value: normalizeDateToEnglish(DateService.formateDateTimeBeforeSendToServer(
                                                       dateTime: viewModels.selectedDateOrDatetimeRange!.end)).toString() ?? "");
                                                 }
+                                                if (_trackingFilter == null) {
+                                                  await CacheHelper.deleteData(key: "trackingFilter");
+                                                } else {
+                                                  await CacheHelper.setString(key: "trackingFilter", value: _trackingFilter!);
+                                                }
                                                 if (!context.mounted) return;
                                                 Navigator.pop(context, _buildFilterMap(viewModels, viewModel));
                                               },
@@ -573,6 +600,8 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                                 await CacheHelper.deleteData(key: "empId");
                                                 await CacheHelper.deleteData(key: "from");
                                                 await CacheHelper.deleteData(key: "to");
+                                                await CacheHelper.deleteData(key: "trackingFilter");
+                                                _trackingFilter = null;
                                                 if (!context.mounted) return;
                                                 Navigator.pop(context, _emptyFilterMap());
                                               },

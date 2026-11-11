@@ -202,7 +202,14 @@ class _ApprovableDetailsScreenState extends State<ApprovableDetailsScreen> {
                     child: ConstrainedBox(
                       constraints: LayoutService.contentConstraints(context),
                       child:
-                          CustomTabbarViewApprovableDetails(details: details),
+                          CustomTabbarViewApprovableDetails(
+                        details: details,
+                        type: widget.type,
+                        isApplicant: details.employeeId == null ||
+                            userSettings?.empId == null ||
+                            details.employeeId.toString() ==
+                                userSettings?.empId.toString(),
+                      ),
                     ),
                   ),
                 ),

@@ -1,33 +1,36 @@
-import 'package:easy_localization/easy_localization.dart' hide TextDirection;
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import '../../../../core/constants/app_colors.dart';
-import '../../../../core/services/localization_service.dart';
-import '../../../../core/utils/app_styles.dart';
+import 'package:go_router/go_router.dart';
+
+import 'package:app_test/core/routing/app_router.dart';
+
+import 'package:app_test/core/constants/app_colors.dart';
+import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/utils/app_styles.dart';
+import 'package:app_test/core/widgets/app_card.widget.dart';
+import 'package:app_test/core/widgets/app_section_header.widget.dart';
+import 'package:app_test/core/widgets/template_page.widget.dart';
 import '../../data/dummy/tracking_dummy_data.dart';
 import '../../data/models/employee_tracking_summary.model.dart';
-import '../../data/models/tracking_point.model.dart';
+import '../../data/models/tracking_session.model.dart';
 import '../../data/models/tracking_status.enum.dart';
-import '../widgets/manual_point_tile.dart';
+import '../widgets/tracking_choice_chip.dart';
+import '../widgets/tracking_key_points_timeline.dart';
+import '../widgets/tracking_route_map.dart';
 import '../widgets/tracking_status_badge.dart';
-import 'package:app_test/core/constants/app_design.dart';
 
-enum MapTimeFilter {
-  live,
-  today,
-  customDate;
+/// Time range shown on the group map (spec: Live / Today (history) / a picked day).
+enum _MapMode { live, today, date }
 
-  String getLabel({bool isArabic = true}) {
-    switch (this) {
-      case MapTimeFilter.live:
-        return 'live_now'.tr();
-      case MapTimeFilter.today:
-        return 'today'.tr();
-      case MapTimeFilter.customDate:
-        return 'custom_date'.tr();
-    }
-  }
-}
-
+/// Team tracking map for managers / HR (spec: mobile screen 4).
+///
+/// - Live, Today or a picked day.
+/// - Up to 10 employees per page, each in the colour of their position on the page
+///   ([TrackingPalette]); their routes are drawn in the same colour.
+/// - Pick one employee to see their status card (Active / Stopped / Offline / No active tracking,
+///   last update) and their key points; the others are faded on the map.
+///
+/// UI only: all data is dummy ([TrackingDummyData]).
 class LiveGroupMapScreen extends StatefulWidget {
   const LiveGroupMapScreen({super.key});
 
@@ -36,655 +39,384 @@ class LiveGroupMapScreen extends StatefulWidget {
 }
 
 class _LiveGroupMapScreenState extends State<LiveGroupMapScreen> {
-  MapTimeFilter _timeFilter = MapTimeFilter.live;
-  DateTime _selectedDate = DateTime.now();
-  int _currentPage = 1;
-  static const int _perPage = 10;
+  _MapMode _mode = _MapMode.live;
+  DateTime? _pickedDate;
+  int _page = 1;
+  int? _selectedEmployeeId;
 
-  late List<EmployeeTrackingSummaryModel> _employees;
-  EmployeeTrackingSummaryModel? _selectedEmployee;
+  List<EmployeeTrackingSummaryModel> get _employees => TrackingDummyData.employeesPage(_page);
 
-  @override
-  void initState() {
-    super.initState();
-    _employees = List.from(TrackingDummyData.dummyEmployees);
-    if (_employees.isNotEmpty) {
-      _selectedEmployee = _employees.first;
-    }
-  }
+  int get _pages => (TrackingDummyData.totalEmployees / TrackingDummyData.pageSize).ceil();
 
-  void _onRefresh() {
-    setState(() {
-      _employees = List.from(TrackingDummyData.dummyEmployees);
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('employee_locations_updated_live'.tr(),
-        ),
-        backgroundColor: const Color(0xFF3389EE),
-        duration: const Duration(seconds: 1),
-      ),
-    );
-  }
-
-  Future<void> _pickCustomDate() async {
-    final picked = await showDatePicker(
+  Future<void> _pickDate() async {
+    final now = DateTime.now();
+    final date = await showDatePicker(
       context: context,
-      initialDate: _selectedDate,
-      firstDate: DateTime.now().subtract(const Duration(days: 90)),
-      lastDate: DateTime.now(),
-      builder: (context, child) {
-        return Theme(
-          data: ThemeData.light().copyWith(
-            primaryColor: Color(AppColors.buttons),
-            colorScheme: ColorScheme.light(primary: Color(AppColors.buttons)),
-          ),
-          child: child!,
-        );
-      },
+      initialDate: _pickedDate ?? now.subtract(const Duration(days: 1)),
+      firstDate: now.subtract(const Duration(days: 180)), // points are kept for 6 months
+      lastDate: now,
     );
-    if (picked != null) {
+    if (date != null) {
       setState(() {
-        _selectedDate = picked;
-        _timeFilter = MapTimeFilter.customDate;
+        _pickedDate = date;
+        _mode = _MapMode.date;
       });
     }
   }
 
+  void _goToPage(int page) => setState(() {
+        _page = page;
+        _selectedEmployeeId = null;
+      });
+
   @override
   Widget build(BuildContext context) {
-    final bool isAr = LocalizationService.isArabic(context: context);
-    final activeCount = _employees.where((e) => e.isActive).length;
+    final isAr = context.locale.languageCode == 'ar';
+    final employees = _employees;
+    final routes = <int, List<TrackingSessionModel>>{
+      for (var i = 0; i < employees.length; i++) employees[i].employeeId: TrackingDummyData.routeFor(employees[i], i),
+    };
+    final selectedIndex = employees.indexWhere((e) => e.employeeId == _selectedEmployeeId);
+    final selected = selectedIndex == -1 ? null : employees[selectedIndex];
 
-    return Scaffold(
-      backgroundColor: Color(AppColors.scaffoldBackGround), // 0xFFF5F8FA
+    final lines = <TrackingRouteLine>[
+      for (var i = 0; i < employees.length; i++)
+        for (final s in routes[employees[i].employeeId]!)
+          TrackingRouteLine(
+            color: TrackingPalette.colorAt(i),
+            points: s.points,
+            showLivePosition: _mode == _MapMode.live && employees[i].status == 'active' && s.isActive,
+            liveLabel: employees[i].getName(isArabic: isAr).split(' ').first,
+            dimmed: selected != null && selected.employeeId != employees[i].employeeId,
+          ),
+    ];
+
+    final dateLabel = _pickedDate == null
+        ? 'tracking_pick_day'.tr()
+        : DateFormat('d MMM', context.locale.languageCode).format(_pickedDate!);
+    final from = (_page - 1) * TrackingDummyData.pageSize + 1;
+    final to = from + employees.length - 1;
+
+    return TemplatePage(
+      pageContext: context,
+      title: 'tracking_team_map'.tr(),
+      routeName: AppRoutes.liveGroupMap.name,
+      backgroundColor: Color(AppColors.background),
+      onRefresh: () async => setState(() {}),
+      actions: [
+        IconButton(
+          tooltip: 'tracking_reports'.tr(),
+          icon: Icon(Icons.assessment_outlined, color: Color(AppColors.secondaryButton)),
+          onPressed: () => context.pushNamed(
+            AppRoutes.trackingReports.name,
+            pathParameters: {'lang': context.locale.languageCode},
+          ),
+        ),
+      ],
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // ── Header AppBar (Matching TeamMind Curved Header) ──
-          Container(
-            decoration: BoxDecoration(
-              color: Color(AppColors.secondaryButton), // 0xFF090B60
-              image: const DecorationImage(
-                image: AssetImage('assets/images/request-app-bar.png'),
-                fit: BoxFit.fill,
-              ),
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(AppRadius.xl),
-                bottomRight: Radius.circular(AppRadius.xl),
-              ),
+          const SizedBox(height: AppSpacing.md),
+          // Time range.
+          TrackingChipsRow(chips: [
+            TrackingChoiceChip(
+              label: 'tracking_live'.tr(),
+              icon: Icons.sensors_rounded,
+              selected: _mode == _MapMode.live,
+              onTap: () => setState(() => _mode = _MapMode.live),
             ),
-            child: SafeArea(
-              bottom: false,
-              child: Column(
+            TrackingChoiceChip(
+              label: 'tracking_today'.tr(),
+              icon: Icons.today_outlined,
+              selected: _mode == _MapMode.today,
+              onTap: () => setState(() => _mode = _MapMode.today),
+            ),
+            TrackingChoiceChip(
+              label: dateLabel,
+              icon: Icons.event_outlined,
+              selected: _mode == _MapMode.date,
+              onTap: _pickDate,
+            ),
+          ]),
+          const SizedBox(height: AppSpacing.md),
+          // Employees of this page, each with their route colour.
+          TrackingChipsRow(chips: [
+            TrackingChoiceChip(
+              label: 'tracking_all_employees'.tr(namedArgs: {'n': '${employees.length}'}),
+              selected: selected == null,
+              onTap: () => setState(() => _selectedEmployeeId = null),
+            ),
+            for (var i = 0; i < employees.length; i++)
+              TrackingChoiceChip(
+                label: employees[i].getName(isArabic: isAr),
+                dotColor: TrackingPalette.colorAt(i),
+                selected: employees[i].employeeId == _selectedEmployeeId,
+                onTap: () => setState(() => _selectedEmployeeId = employees[i].employeeId),
+              ),
+          ]),
+          const SizedBox(height: AppSpacing.md),
+          Padding(
+            padding: AppSpacing.pagePadding,
+            child: Container(
+              height: 320,
+              decoration: BoxDecoration(
+                borderRadius: AppRadius.card,
+                border: AppBorders.card,
+                boxShadow: AppShadows.card,
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: Stack(
                 children: [
-                  // App Bar Row
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    child: Row(
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 20),
-                          onPressed: () => Navigator.of(context).maybePop(),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('field_team_live_tracking_map'.tr(),
-                                style: AppStyles.whiteHeading(context).copyWith(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text('active_staff_10_shown'.tr(namedArgs: {'active_count': '$activeCount'}),
-                                style: AppStyles.whiteContent(context).copyWith(
-                                  fontSize: 11,
-                                  color: Colors.white70,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        IconButton(
-                          tooltip: 'refresh_locations'.tr(),
-                          icon: const Icon(Icons.refresh_rounded, color: Colors.white, size: 22),
-                          onPressed: _onRefresh,
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // Segment Toggle (الآن / اليوم / تاريخ محدد)
-                  Container(
-                    margin: const EdgeInsets.only(left: 16, right: 16, bottom: 16, top: 4),
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(AppRadius.md),
-                    ),
-                    child: Row(
-                      children: [
-                        _FilterTabItem(
-                          label: MapTimeFilter.live.getLabel(isArabic: isAr),
-                          isActive: _timeFilter == MapTimeFilter.live,
-                          onTap: () => setState(() => _timeFilter = MapTimeFilter.live),
-                        ),
-                        _FilterTabItem(
-                          label: MapTimeFilter.today.getLabel(isArabic: isAr),
-                          isActive: _timeFilter == MapTimeFilter.today,
-                          onTap: () => setState(() => _timeFilter = MapTimeFilter.today),
-                        ),
-                        _FilterTabItem(
-                          label: MapTimeFilter.customDate.getLabel(isArabic: isAr),
-                          isActive: _timeFilter == MapTimeFilter.customDate,
-                          onTap: _pickCustomDate,
-                        ),
-                      ],
+                  Positioned.fill(child: TrackingRouteMap(lines: lines, showAutoPoints: selected != null)),
+                  PositionedDirectional(
+                    top: AppSpacing.sm,
+                    start: AppSpacing.sm,
+                    child: _MapTag(
+                      text: _mode == _MapMode.live
+                          ? 'tracking_live_now'.tr()
+                          : _mode == _MapMode.today
+                              ? 'tracking_history_today'.tr()
+                              : 'tracking_history_of'.tr(namedArgs: {'date': dateLabel}),
+                      live: _mode == _MapMode.live,
                     ),
                   ),
                 ],
               ),
             ),
           ),
-
-          // ── Horizontal Employee Chips ──
-          Container(
-            color: Colors.white,
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Row(
-                children: _employees.map((emp) {
-                  final isSelected = _selectedEmployee?.employeeId == emp.employeeId;
-                  final empColor = TrackingDummyData.getEmployeeColor(emp.colorIndex);
-
-                  return Padding(
-                    padding: const EdgeInsets.only(left: 8),
-                    child: InkWell(
-                      onTap: () => setState(() => _selectedEmployee = emp),
-                      borderRadius: BorderRadius.circular(AppRadius.pill),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                        decoration: BoxDecoration(
-                          color: isSelected ? empColor.withOpacity(0.12) : Color(AppColors.cardBackground),
-                          borderRadius: BorderRadius.circular(AppRadius.pill),
-                          border: Border.all(
-                            color: isSelected ? empColor : Color(AppColors.border),
-                            width: isSelected ? 1.8 : 1.0,
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              width: 12,
-                              height: 12,
-                              decoration: BoxDecoration(
-                                color: empColor,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              emp.getName(isArabic: isAr),
-                              style: AppStyles.content(context).copyWith(
-                                fontSize: 11.5,
-                                fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                                color: isSelected ? empColor : Color(AppColors.bodyText),
-                              ),
-                            ),
-                            if (emp.isActive) ...[
-                              const SizedBox(width: 4),
-                              Container(
-                                width: 6,
-                                height: 6,
-                                decoration: const BoxDecoration(
-                                  color: Color(0xff2D6A4F),
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-          ),
-
-          // ── Interactive Map View ──
-          Expanded(
-            child: Stack(
-              children: [
-                // Canvas Visualizer
-                Positioned.fill(
-                  child: InteractiveViewer(
-                    boundaryMargin: const EdgeInsets.all(80),
-                    minScale: 0.4,
-                    maxScale: 5.0,
-                    child: CustomPaint(
-                      painter: _GroupLiveMapPainter(
-                        employees: _employees,
-                        selectedEmployeeId: _selectedEmployee?.employeeId,
-                        isArabic: isAr,
-                      ),
-                      child: const SizedBox.expand(),
-                    ),
-                  ),
-                ),
-
-                // Palette Guide Pill
-                Positioned(
-                  top: 10,
-                  right: 12,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.92),
-                      borderRadius: BorderRadius.circular(AppRadius.sm),
-                      boxShadow: AppShadows.raised,
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.palette_outlined, size: 14, color: Colors.black54),
-                        const SizedBox(width: 6),
-                        Text('dynamic_palette_staff'.tr(namedArgs: {'length': '${_employees.length}'}),
-                          style: AppStyles.content(context).copyWith(fontSize: 10.5, color: Colors.black87),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // ── Selected Employee Summary Card ──
-          if (_selectedEmployee != null)
-            _EmployeeDetailsCard(
-              employee: _selectedEmployee!,
-              color: TrackingDummyData.getEmployeeColor(_selectedEmployee!.colorIndex),
-              isArabic: isAr,
-            ),
-
-          // ── Pagination Footer ──
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border(top: BorderSide(color: Color(AppColors.border))),
-            ),
+          const SizedBox(height: AppSpacing.sm),
+          // Pagination (10 per page).
+          Padding(
+            padding: AppSpacing.pagePadding,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('page_of_2_18_employees_total'.tr(namedArgs: {'current_page': '$_currentPage'}),
-                  style: AppStyles.subtitleContent(context).copyWith(fontSize: 11.5),
-                ),
-                Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back_ios, size: 14),
-                      onPressed: _currentPage > 1 ? () => setState(() => _currentPage--) : null,
-                      color: Color(AppColors.buttons),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(
-                        color: Color(AppColors.buttons).withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(AppRadius.xs),
-                      ),
-                      child: Text(
-                        '$_currentPage',
-                        style: TextStyle(
-                          color: Color(AppColors.buttons),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.arrow_forward_ios, size: 14),
-                      onPressed: _currentPage < 2 ? () => setState(() => _currentPage++) : null,
-                      color: Color(AppColors.buttons),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _FilterTabItem extends StatelessWidget {
-  final String label;
-  final bool isActive;
-  final VoidCallback onTap;
-
-  const _FilterTabItem({
-    required this.label,
-    required this.isActive,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 7),
-          decoration: BoxDecoration(
-            color: isActive ? Color(AppColors.buttons) : Colors.transparent,
-            borderRadius: BorderRadius.circular(AppRadius.sm),
-          ),
-          alignment: Alignment.center,
-          child: Text(
-            label,
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: isActive ? FontWeight.bold : FontWeight.w500,
-              fontSize: 12,
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _EmployeeDetailsCard extends StatefulWidget {
-  final EmployeeTrackingSummaryModel employee;
-  final Color color;
-  final bool isArabic;
-
-  const _EmployeeDetailsCard({
-    required this.employee,
-    required this.color,
-    this.isArabic = true,
-  });
-
-  @override
-  State<_EmployeeDetailsCard> createState() => _EmployeeDetailsCardState();
-}
-
-class _EmployeeDetailsCardState extends State<_EmployeeDetailsCard> {
-  bool _showTimeline = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final emp = widget.employee;
-    final isAr = widget.isArabic;
-    final activeSess = emp.activeSession;
-    final keyPoints = activeSess?.manualPoints ?? [];
-    final empName = emp.getName(isArabic: isAr);
-
-    return Container(
-      constraints: BoxConstraints(maxHeight: _showTimeline ? 260 : 130),
-      margin: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-      padding: const EdgeInsets.all(12),
-      decoration: ShapeDecoration(
-        color: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.md),
-          side: BorderSide(color: widget.color.withOpacity(0.5), width: 1.5),
-        ),
-        shadows: AppShadows.raised,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header Row
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 18,
-                backgroundColor: widget.color,
-                child: Text(
-                  empName.isNotEmpty ? empName[0] : ('e'.tr()),
-                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          empName,
-                          style: AppStyles.content(context).copyWith(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Color(AppColors.titleText),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        TrackingStatusBadge(
-                          status: emp.isActive
-                              ? RequestTrackingStatus.active
-                              : (emp.status == 'completed'
-                                  ? RequestTrackingStatus.completed
-                                  : RequestTrackingStatus.optionalNotStarted),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      '${emp.getDepartment(isArabic: isAr)} • ${emp.getLastUpdatedText(isArabic: isAr)}',
-                      style: AppStyles.subtitleContent(context).copyWith(fontSize: 11),
-                    ),
-                  ],
-                ),
-              ),
-              if (keyPoints.isNotEmpty)
-                IconButton(
-                  tooltip: _showTimeline
-                      ? ('hide_points'.tr())
-                      : ('show_milestones'.tr()),
-                  icon: Icon(_showTimeline ? Icons.keyboard_arrow_down : Icons.timeline, color: widget.color),
-                  onPressed: () => setState(() => _showTimeline = !_showTimeline),
-                ),
-            ],
-          ),
-
-          const SizedBox(height: 8),
-          Divider(color: Color(AppColors.divider), height: 1),
-          const SizedBox(height: 8),
-
-          // Last point or Session status
-          if (emp.lastPoint != null)
-            Row(
-              children: [
-                Icon(Icons.pin_drop_rounded, size: 14, color: widget.color),
-                const SizedBox(width: 6),
                 Expanded(
                   child: Text(
-                    emp.lastPoint!.getDisplayLabel(isArabic: isAr),
-                    style: AppStyles.content(context).copyWith(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    'tracking_employees_range'.tr(namedArgs: {
+                      'from': '$from',
+                      'to': '$to',
+                      'total': '${TrackingDummyData.totalEmployees}',
+                    }),
+                    style: AppStyles.greyContent(context).copyWith(fontSize: 12),
                   ),
                 ),
+                _PageButton(
+                  icon: Icons.chevron_left_rounded,
+                  onTap: _page > 1 ? () => _goToPage(_page - 1) : null,
+                ),
+                const SizedBox(width: AppSpacing.sm),
+                Text('$_page / $_pages', style: AppStyles.heading(context).copyWith(fontSize: 13, fontWeight: FontWeight.w600)),
+                const SizedBox(width: AppSpacing.sm),
+                _PageButton(
+                  icon: Icons.chevron_right_rounded,
+                  onTap: _page < _pages ? () => _goToPage(_page + 1) : null,
+                ),
               ],
-            )
-          else
-            Text('no_active_tracking_session_recorded_currently_for'.tr(),
-              style: AppStyles.hintContent(context).copyWith(fontSize: 11.5),
             ),
-
-          // Optional Expanded Timeline
-          if (_showTimeline && keyPoints.isNotEmpty) ...[
-            const SizedBox(height: 8),
-            Expanded(
-              child: ListView.builder(
-                itemCount: keyPoints.length,
-                itemBuilder: (context, idx) {
-                  return ManualPointTile(
-                    point: keyPoints[idx],
-                    isLast: idx == keyPoints.length - 1,
-                    isArabic: isAr,
-                  );
-                },
-              ),
-            ),
-          ],
+          ),
+          const SizedBox(height: AppSpacing.section),
+          Padding(
+            padding: AppSpacing.pagePadding,
+            child: selected == null
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      AppSectionHeader(title: 'tracking_employees'.tr()),
+                      const SizedBox(height: AppSpacing.sectionHeaderGap),
+                      for (var i = 0; i < employees.length; i++) ...[
+                        if (i > 0) const SizedBox(height: AppSpacing.cardGap),
+                        _EmployeeRow(
+                          employee: employees[i],
+                          color: TrackingPalette.colorAt(i),
+                          onTap: () => setState(() => _selectedEmployeeId = employees[i].employeeId),
+                        ),
+                      ],
+                    ],
+                  )
+                : _EmployeeStatusCard(
+                    employee: selected,
+                    color: TrackingPalette.colorAt(selectedIndex),
+                    sessions: routes[selected.employeeId]!,
+                  ),
+          ),
+          const SizedBox(height: AppSpacing.listBottom),
         ],
       ),
     );
   }
 }
 
-class _GroupLiveMapPainter extends CustomPainter {
-  final List<EmployeeTrackingSummaryModel> employees;
-  final int? selectedEmployeeId;
-  final bool isArabic;
-
-  _GroupLiveMapPainter({
-    required this.employees,
-    this.selectedEmployeeId,
-    this.isArabic = true,
-  });
+/// "Live now" / "History · 12 Nov" tag in the corner of the map.
+class _MapTag extends StatelessWidget {
+  final String text;
+  final bool live;
+  const _MapTag({required this.text, required this.live});
 
   @override
-  void paint(Canvas canvas, Size size) {
-    // 1. Grid
-    final gridPaint = Paint()
-      ..color = const Color(0xFFE8EEF5)
-      ..strokeWidth = 1.0;
+  Widget build(BuildContext context) {
+    final color = live ? Color(AppColors.successGreen) : Color(AppColors.secondaryButton);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(AppRadius.pill),
+        boxShadow: AppShadows.card,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(width: 8, height: 8, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
+          const SizedBox(width: 6),
+          Text(text, style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w600, color: AppColors.statusTones(color).text)),
+        ],
+      ),
+    );
+  }
+}
 
-    const gridSize = 32.0;
-    for (double x = 0; x < size.width; x += gridSize) {
-      canvas.drawLine(Offset(x, 0), Offset(x, size.height), gridPaint);
-    }
-    for (double y = 0; y < size.height; y += gridSize) {
-      canvas.drawLine(Offset(0, y), Offset(size.width, y), gridPaint);
-    }
+class _PageButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback? onTap;
+  const _PageButton({required this.icon, this.onTap});
 
-    // 2. Gather all points
-    final allPoints = <TrackingPointModel>[];
-    for (final emp in employees) {
-      if (emp.lastPoint != null) allPoints.add(emp.lastPoint!);
-      for (final s in emp.sessions) {
-        allPoints.addAll(s.points);
-      }
-    }
+  @override
+  Widget build(BuildContext context) {
+    final enabled = onTap != null;
+    return Material(
+      color: Colors.white,
+      shape: CircleBorder(side: BorderSide(color: AppField.borderColor)),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: SizedBox(
+          width: 34,
+          height: 34,
+          // Flutter mirrors chevrons by itself in RTL.
+          child: Icon(icon, size: 20, color: enabled ? Color(AppColors.secondaryButton) : AppField.borderColor),
+        ),
+      ),
+    );
+  }
+}
 
-    if (allPoints.isEmpty) return;
+/// One employee in the "all employees" list: route colour ring, name, department, presence and
+/// how long ago the last point arrived.
+class _EmployeeRow extends StatelessWidget {
+  final EmployeeTrackingSummaryModel employee;
+  final Color color;
+  final VoidCallback onTap;
+  const _EmployeeRow({required this.employee, required this.color, required this.onTap});
 
-    double minLat = allPoints.first.latitude;
-    double maxLat = allPoints.first.latitude;
-    double minLng = allPoints.first.longitude;
-    double maxLng = allPoints.first.longitude;
+  @override
+  Widget build(BuildContext context) {
+    final isAr = context.locale.languageCode == 'ar';
+    return AppCard.listItem(
+      context: context,
+      title: employee.getName(isArabic: isAr),
+      subtitle: employee.getDepartment(isArabic: isAr),
+      thirdLine: employee.getLastUpdatedText(isArabic: isAr),
+      avatarUrl: employee.avatarUrl,
+      avatarInitialsText: employee.getName(isArabic: isAr),
+      accentColor: color,
+      trailing: EmployeePresenceBadge(presence: EmployeeTrackingPresence.fromRaw(employee.status)),
+      onTap: onTap,
+    );
+  }
+}
 
-    for (final p in allPoints) {
-      if (p.latitude < minLat) minLat = p.latitude;
-      if (p.latitude > maxLat) maxLat = p.latitude;
-      if (p.longitude < minLng) minLng = p.longitude;
-      if (p.longitude > maxLng) maxLng = p.longitude;
-    }
+/// The picked employee: presence, last update, current leg, then their key points in time order.
+class _EmployeeStatusCard extends StatelessWidget {
+  final EmployeeTrackingSummaryModel employee;
+  final Color color;
+  final List<TrackingSessionModel> sessions;
+  const _EmployeeStatusCard({required this.employee, required this.color, required this.sessions});
 
-    final latRange = (maxLat - minLat).abs() > 0.0001 ? (maxLat - minLat) : 0.01;
-    final lngRange = (maxLng - minLng).abs() > 0.0001 ? (maxLng - minLng) : 0.01;
-
-    const margin = 55.0;
-    final usableW = size.width - margin * 2;
-    final usableH = size.height - margin * 2;
-
-    Offset toCanvas(double lat, double lng) {
-      final x = margin + ((lng - minLng) / lngRange) * usableW;
-      final y = size.height - margin - ((lat - minLat) / latRange) * usableH;
-      return Offset(x, y);
-    }
-
-    // 3. Draw routes for each employee
-    for (final emp in employees) {
-      final empColor = TrackingDummyData.getEmployeeColor(emp.colorIndex);
-      final isSel = selectedEmployeeId == emp.employeeId;
-
-      for (final s in emp.sessions) {
-        if (s.points.length < 2) continue;
-
-        final linePaint = Paint()
-          ..color = empColor.withOpacity(isSel ? 0.95 : 0.6)
-          ..strokeWidth = isSel ? 4.5 : 2.5
-          ..strokeCap = StrokeCap.round
-          ..style = PaintingStyle.stroke;
-
-        final path = Path();
-        for (int i = 0; i < s.points.length; i++) {
-          final pt = toCanvas(s.points[i].latitude, s.points[i].longitude);
-          if (i == 0) {
-            path.moveTo(pt.dx, pt.dy);
-          } else {
-            path.lineTo(pt.dx, pt.dy);
-          }
-        }
-        canvas.drawPath(path, linePaint);
-      }
-    }
-
-    // 4. Draw employee live markers (pins with initials and pulsing ring)
-    for (final emp in employees) {
-      if (emp.lastPoint == null) continue;
-
-      final pt = toCanvas(emp.lastPoint!.latitude, emp.lastPoint!.longitude);
-      final empColor = TrackingDummyData.getEmployeeColor(emp.colorIndex);
-      final isSel = selectedEmployeeId == emp.employeeId;
-
-      // Pulse ring for active or selected
-      if (isSel || emp.isActive) {
-        canvas.drawCircle(pt, isSel ? 20 : 14, Paint()..color = empColor.withOpacity(0.2));
-      }
-
-      // Outer pin circle
-      canvas.drawCircle(
-        pt,
-        isSel ? 12 : 9,
-        Paint()
-          ..color = Colors.white
-          ..style = PaintingStyle.fill,
-      );
-      canvas.drawCircle(
-        pt,
-        isSel ? 12 : 9,
-        Paint()
-          ..color = empColor
-          ..strokeWidth = isSel ? 3.0 : 2.0
-          ..style = PaintingStyle.stroke,
-      );
-      canvas.drawCircle(pt, isSel ? 8 : 6, Paint()..color = empColor);
-
-      // Name label
-      final empDisplayName = emp.getName(isArabic: isArabic);
-      final tp = TextPainter(
-        text: TextSpan(
-          text: empDisplayName,
-          style: TextStyle(
-            color: isSel ? empColor : Colors.black87,
-            fontSize: isSel ? 11 : 9.5,
-            fontWeight: isSel ? FontWeight.bold : FontWeight.w600,
-            backgroundColor: Colors.white.withOpacity(0.85),
+  @override
+  Widget build(BuildContext context) {
+    final isAr = context.locale.languageCode == 'ar';
+    final active = employee.activeSession;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        AppCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  AppCardLeadingAvatar(
+                    imageUrl: employee.avatarUrl,
+                    nameForInitials: employee.getName(isArabic: isAr),
+                    borderColor: color,
+                  ),
+                  const SizedBox(width: AppSpacing.md),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(employee.getName(isArabic: isAr),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppStyles.heading(context).copyWith(fontSize: 14, fontWeight: FontWeight.w600)),
+                        const SizedBox(height: 2),
+                        Text(employee.getDepartment(isArabic: isAr),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppStyles.greyContent(context).copyWith(fontSize: 12)),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: AppSpacing.sm),
+                  EmployeePresenceBadge(presence: EmployeeTrackingPresence.fromRaw(employee.status)),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.md),
+              Divider(height: 1, color: Color(AppColors.divider)),
+              const SizedBox(height: AppSpacing.md),
+              _InfoLine(
+                icon: Icons.update_rounded,
+                label: 'tracking_last_update'.tr(),
+                value: employee.getLastUpdatedText(isArabic: isAr),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              _InfoLine(
+                icon: Icons.timer_outlined,
+                label: 'tracking_current_leg'.tr(),
+                value: active != null ? active.getDurationFormatted() : '—',
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              _InfoLine(
+                icon: Icons.repeat_rounded,
+                label: 'tracking_start_stop_count'.tr(),
+                value: '${sessions.length}',
+              ),
+            ],
           ),
         ),
-        textDirection: isArabic ? TextDirection.rtl : TextDirection.ltr,
-      )..layout();
-      tp.paint(canvas, Offset(pt.dx - tp.width / 2, pt.dy - (isSel ? 28 : 23)));
-    }
+        const SizedBox(height: AppSpacing.section),
+        AppSectionHeader(title: 'tracking_key_points'.tr()),
+        const SizedBox(height: AppSpacing.sectionHeaderGap),
+        TrackingKeyPointsTimeline(sessions: sessions, accent: color, showLeg: sessions.length > 1),
+      ],
+    );
   }
+}
+
+class _InfoLine extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+  const _InfoLine({required this.icon, required this.label, required this.value});
 
   @override
-  bool shouldRepaint(covariant _GroupLiveMapPainter oldDelegate) => true;
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(icon, size: 16, color: AppField.iconColor),
+        const SizedBox(width: AppSpacing.sm),
+        Expanded(child: Text(label, style: AppStyles.greyContent(context).copyWith(fontSize: 12.5))),
+        Text(value, style: AppStyles.heading(context).copyWith(fontSize: 12.5, fontWeight: FontWeight.w600)),
+      ],
+    );
+  }
 }

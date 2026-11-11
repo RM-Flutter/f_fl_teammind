@@ -2,6 +2,12 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 
+/// Neutral grey used for "nothing to show" states (same grey as field hints).
+const Color _kNeutral = Color(0xFF8A8FA3);
+
+/// Tracking state of a whole request (simplified, see the spec "Request-Level Status").
+/// Colours come from the app palette and are split with [AppColors.statusTones], like every
+/// other status badge in the app.
 enum RequestTrackingStatus {
   notRequired,
   optionalNotStarted,
@@ -27,75 +33,46 @@ enum RequestTrackingStatus {
     }
   }
 
-  Color get textColor {
+  /// The one colour of this status; badges derive text / tint / border from it.
+  Color get baseColor {
     switch (this) {
       case RequestTrackingStatus.active:
-        return const Color(0xff2D6A4F); // successGreen
+        return Color(AppColors.successGreen);
       case RequestTrackingStatus.completed:
-        return const Color(0xFF090B60); // titleTextColor
+        return Color(AppColors.buttons);
       case RequestTrackingStatus.requiredNotStarted:
-        return const Color(0xffE65100); // deep orange
+        return Color(AppColors.warningYellow);
       case RequestTrackingStatus.requiredMissing:
-        return const Color(0xffc72c41); // errorColor
+        return Color(AppColors.failureRed);
       case RequestTrackingStatus.optionalNotStarted:
-        return const Color(0xff606060); // subtitleTextColor
       case RequestTrackingStatus.notRequired:
-        return const Color(0xFFA3A3A3);
+        return _kNeutral;
     }
   }
 
-  Color get backgroundColor {
-    switch (this) {
-      case RequestTrackingStatus.active:
-        return const Color(0xFFE8F5E9); // green 50
-      case RequestTrackingStatus.completed:
-        return const Color(0xFFE3F2FD); // blue 50
-      case RequestTrackingStatus.requiredNotStarted:
-        return const Color(0xFFFFF3E0); // orange 50
-      case RequestTrackingStatus.requiredMissing:
-        return const Color(0xFFFFEBEE); // red 50
-      case RequestTrackingStatus.optionalNotStarted:
-        return const Color(0xFFF5F8FA);
-      case RequestTrackingStatus.notRequired:
-        return Colors.transparent;
-    }
-  }
-
-  Color get borderColor {
-    switch (this) {
-      case RequestTrackingStatus.active:
-        return const Color(0xFF4CAF50);
-      case RequestTrackingStatus.completed:
-        return const Color(0xFF3389EE);
-      case RequestTrackingStatus.requiredNotStarted:
-        return const Color(0xFFFCA652);
-      case RequestTrackingStatus.requiredMissing:
-        return const Color(0xFFEF5350);
-      case RequestTrackingStatus.optionalNotStarted:
-        return const Color(0xFFDFDFDF);
-      case RequestTrackingStatus.notRequired:
-        return Colors.transparent;
-    }
-  }
+  Color get textColor => AppColors.statusTones(baseColor).text;
+  Color get backgroundColor => AppColors.statusTones(baseColor).tint;
+  Color get borderColor => AppColors.statusTones(baseColor).border;
 
   IconData get icon {
     switch (this) {
       case RequestTrackingStatus.active:
-        return Icons.radio_button_checked;
+        return Icons.radio_button_checked_rounded;
       case RequestTrackingStatus.completed:
-        return Icons.check_circle_outline;
+        return Icons.check_circle_outline_rounded;
       case RequestTrackingStatus.requiredNotStarted:
         return Icons.error_outline_rounded;
       case RequestTrackingStatus.requiredMissing:
         return Icons.cancel_outlined;
       case RequestTrackingStatus.optionalNotStarted:
-        return Icons.radio_button_unchecked;
+        return Icons.radio_button_unchecked_rounded;
       case RequestTrackingStatus.notRequired:
-        return Icons.remove;
+        return Icons.remove_rounded;
     }
   }
 }
 
+/// State of one tracking session (leg).
 enum TrackingSessionStatus {
   active,
   completed,
@@ -118,13 +95,161 @@ enum TrackingSessionStatus {
   Color get color {
     switch (this) {
       case TrackingSessionStatus.active:
-        return const Color(0xff2D6A4F);
+        return Color(AppColors.successGreen);
       case TrackingSessionStatus.completed:
-        return const Color(0xFF3389EE);
+        return Color(AppColors.buttons);
       case TrackingSessionStatus.interrupted:
-        return const Color(0xffFCA652);
+        return Color(AppColors.warningYellow);
       case TrackingSessionStatus.cancelled:
-        return const Color(0xffc72c41);
+        return _kNeutral;
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case TrackingSessionStatus.active:
+        return Icons.radio_button_checked_rounded;
+      case TrackingSessionStatus.completed:
+        return Icons.check_circle_outline_rounded;
+      case TrackingSessionStatus.interrupted:
+        return Icons.pause_circle_outline_rounded;
+      case TrackingSessionStatus.cancelled:
+        return Icons.block_rounded;
+    }
+  }
+}
+
+/// What the phone can do with the location right now (spec: mobile §5). Anything but [ok] is shown
+/// to the employee as a clear banner, never as a silent gap.
+enum TrackingLocationState {
+  ok,
+  waitingForLocation,
+  permissionRequired,
+  permissionLimited,
+  offline;
+
+  String get title {
+    switch (this) {
+      case TrackingLocationState.ok:
+        return '';
+      case TrackingLocationState.waitingForLocation:
+        return 'tracking_waiting_for_location'.tr();
+      case TrackingLocationState.permissionRequired:
+        return 'tracking_permission_required'.tr();
+      case TrackingLocationState.permissionLimited:
+        return 'tracking_permission_limited'.tr();
+      case TrackingLocationState.offline:
+        return 'tracking_offline'.tr();
+    }
+  }
+
+  String get message {
+    switch (this) {
+      case TrackingLocationState.ok:
+        return '';
+      case TrackingLocationState.waitingForLocation:
+        return 'tracking_waiting_for_location_hint'.tr();
+      case TrackingLocationState.permissionRequired:
+        return 'tracking_permission_required_hint'.tr();
+      case TrackingLocationState.permissionLimited:
+        return 'tracking_permission_limited_hint'.tr();
+      case TrackingLocationState.offline:
+        return 'tracking_offline_hint'.tr();
+    }
+  }
+
+  Color get color {
+    switch (this) {
+      case TrackingLocationState.ok:
+        return Color(AppColors.successGreen);
+      case TrackingLocationState.waitingForLocation:
+        return Color(AppColors.buttons);
+      case TrackingLocationState.permissionRequired:
+        return Color(AppColors.failureRed);
+      case TrackingLocationState.permissionLimited:
+      case TrackingLocationState.offline:
+        return Color(AppColors.warningYellow);
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case TrackingLocationState.ok:
+        return Icons.my_location_rounded;
+      case TrackingLocationState.waitingForLocation:
+        return Icons.gps_not_fixed_rounded;
+      case TrackingLocationState.permissionRequired:
+        return Icons.location_disabled_rounded;
+      case TrackingLocationState.permissionLimited:
+        return Icons.location_searching_rounded;
+      case TrackingLocationState.offline:
+        return Icons.cloud_off_rounded;
+    }
+  }
+
+  /// Whether the banner has a button that opens the phone's location settings.
+  bool get hasSettingsAction =>
+      this == TrackingLocationState.permissionRequired ||
+      this == TrackingLocationState.permissionLimited;
+}
+
+/// Live presence of an employee on the group map (spec: mobile screen 4, employee status card).
+enum EmployeeTrackingPresence {
+  active,
+  stopped,
+  offline,
+  noActiveTracking;
+
+  static EmployeeTrackingPresence fromRaw(String raw) {
+    switch (raw) {
+      case 'active':
+        return EmployeeTrackingPresence.active;
+      case 'completed':
+      case 'stopped':
+        return EmployeeTrackingPresence.stopped;
+      case 'offline':
+        return EmployeeTrackingPresence.offline;
+      default:
+        return EmployeeTrackingPresence.noActiveTracking;
+    }
+  }
+
+  String get label {
+    switch (this) {
+      case EmployeeTrackingPresence.active:
+        return 'active_2'.tr();
+      case EmployeeTrackingPresence.stopped:
+        return 'tracking_stopped'.tr();
+      case EmployeeTrackingPresence.offline:
+        return 'tracking_offline'.tr();
+      case EmployeeTrackingPresence.noActiveTracking:
+        return 'no_active_tracking'.tr();
+    }
+  }
+
+  Color get color {
+    switch (this) {
+      case EmployeeTrackingPresence.active:
+        return Color(AppColors.successGreen);
+      case EmployeeTrackingPresence.stopped:
+        return Color(AppColors.buttons);
+      case EmployeeTrackingPresence.offline:
+        return Color(AppColors.warningYellow);
+      case EmployeeTrackingPresence.noActiveTracking:
+        return _kNeutral;
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case EmployeeTrackingPresence.active:
+        return Icons.radio_button_checked_rounded;
+      case EmployeeTrackingPresence.stopped:
+        return Icons.stop_circle_outlined;
+      case EmployeeTrackingPresence.offline:
+        return Icons.cloud_off_rounded;
+      case EmployeeTrackingPresence.noActiveTracking:
+        return Icons.remove_circle_outline_rounded;
     }
   }
 }
