@@ -17,6 +17,10 @@ import '../../../../core/widgets/comments/logic/controller.dart';
 import '../models/daily_report_model.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/widgets/app_content_width.widget.dart';
+import 'package:app_test/core/widgets/app_card.widget.dart';
+import 'package:app_test/core/widgets/app_section_header.widget.dart';
+import 'package:app_test/core/widgets/bookmark_widgets/bookmark_button.widget.dart';
+import 'package:app_test/core/routing/app_router.dart';
 
 class DailyReportDetailsScreen extends StatefulWidget {
   final DailyReportModel report;
@@ -125,128 +129,90 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
     super.dispose();
   }
 
+  /// Same header as Notification Details: navy with the app texture, back + bookmark, the title
+  /// centered and the metadata (date, employee) under it.
   Widget _buildHeroHeader(BuildContext context) {
-    String dateFormatted = widget.report.createdAt != null 
-      ? DateFormat('EEEE, dd MMMM yyyy', context.locale.languageCode).format(widget.report.createdAt!)
-      : 'Unknown Date';
-    String? employeeName = widget.report.employeeProfile?.name;
+    final dateFormatted = widget.report.createdAt != null
+        ? DateFormat('EEEE, dd MMMM yyyy', context.locale.languageCode).format(widget.report.createdAt!)
+        : '';
+    final employeeName = widget.report.employeeProfile?.name;
+    const radius = BorderRadius.vertical(bottom: Radius.circular(AppRadius.xl));
 
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Color(AppColors.secondaryButton),
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(AppRadius.xl),
-          bottomRight: Radius.circular(AppRadius.xl),
-        ),
-        boxShadow: AppShadows.card,
-      ),
+    Widget meta(IconData icon, String text) => Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: Color(AppColors.buttons), size: 16),
+            const SizedBox(width: 6),
+            Text(text, style: AppStyles.whiteContent(context).copyWith(fontSize: 12, fontWeight: FontWeight.w500)),
+          ],
+        );
+
+    return ClipRRect(
+      borderRadius: radius,
       child: Stack(
         children: [
-          Positioned(
-            right: -60,
-            top: -60,
-            child: CircleAvatar(
-              radius: 140,
-              backgroundColor: Colors.white.withOpacity(0.04),
-            ),
+          Positioned.fill(
+            child: Image.asset('assets/images/png/tasks-app-bar.png', fit: BoxFit.cover),
           ),
-          Positioned(
-            left: -40,
-            bottom: -30,
-            child: CircleAvatar(
-              radius: 90,
-              backgroundColor: Colors.white.withOpacity(0.06),
-            ),
-          ),
-          AppContentWidth(
-            child: Padding(
-              padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).padding.top + 10, bottom: 40),
-              child: Column(
-                children: [
-                  // AppBar
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Positioned.fill(child: ColoredBox(color: Color(AppColors.secondaryButton).withValues(alpha: 0.9))),
+          SafeArea(
+            bottom: false,
+            child: AppContentWidth(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(AppSpacing.page, 10, AppSpacing.page, 28),
+                child: Column(
+                  children: [
+                    Stack(
+                      alignment: Alignment.center,
                       children: [
-                        // Circular back button
-                        InkWell(
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.15),
-                              shape: BoxShape.circle,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            InkWell(
+                              onTap: () => Navigator.of(context).pop(),
+                              customBorder: const CircleBorder(),
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.15),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(Icons.arrow_back, color: Colors.white, size: 20),
+                              ),
                             ),
-                            child: const Icon(
-                              Icons.arrow_back_sharp,
-                              color: Colors.white,
-                              size: 18,
+                            BookmarkButton(
+                              routeName: AppRoutes.dailyReportDetailsScreen.name,
+                              defaultTitle: AppStrings.reportDetails.tr(),
+                              iconColor: Colors.white,
                             ),
-                          ),
+                          ],
                         ),
                         Text(
                           AppStrings.reportDetails.tr(),
-                          style: AppStyles.whiteHeading(context).copyWith(fontSize: 20, fontWeight: FontWeight.w800),
-                        ),
-                        const SizedBox(width: 38), // placeholder to center title
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 25),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(AppRadius.xl),
-                      border: Border.all(color: Colors.white.withOpacity(0.2), width: 1),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.calendar_month_rounded, color: Colors.white, size: 16),
-                        const SizedBox(width: 8),
-                        Text(
-                          dateFormatted,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 13,
-                          ),
+                          style: AppStyles.whiteHeading(context).copyWith(fontSize: 18, fontWeight: FontWeight.w600),
                         ),
                       ],
                     ),
-                  ),
-                  if (employeeName != null) ...[
+                    const SizedBox(height: 28),
+                    if (employeeName != null)
+                      Text(
+                        employeeName,
+                        textAlign: TextAlign.center,
+                        style: AppStyles.whiteHeading(context)
+                            .copyWith(fontSize: 24, fontWeight: FontWeight.w800, height: 1.1),
+                      ),
                     const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    Wrap(
+                      alignment: WrapAlignment.center,
+                      spacing: 16,
+                      runSpacing: 8,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.1),
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Icon(Icons.person_rounded, color: Colors.white70, size: 16),
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          employeeName,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
+                        if (dateFormatted.isNotEmpty) meta(Icons.calendar_today_outlined, dateFormatted),
+                        meta(Icons.description_outlined, AppStrings.reportDetails.tr()),
                       ],
                     ),
                   ],
-                ],
+                ),
               ),
             ),
           ),
@@ -264,7 +230,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
         )
       ],
       child: Scaffold(
-        backgroundColor: const Color(0xFFF8F9FA),
+        backgroundColor: Color(AppColors.background),
         body: RefreshIndicator.adaptive(
           onRefresh: () async {
             if (context.mounted) {
@@ -281,24 +247,21 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                 _buildHeroHeader(context),
                 AppContentWidth(
                   child: Padding(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(AppSpacing.page),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _buildSection(
                           title: AppStrings.accomplishments.tr(),
                           icon: Icons.check_circle_rounded,
-                          iconColor: const Color(0xFF10B981),
-                          bgColor: const Color(0xFFD1FAE5),
+                          iconColor: Color(AppColors.successGreen),
                           content: widget.report.done ?? AppStrings.noAccomplishmentsRecorded.tr(),
                         ),
-                        const SizedBox(height: 16),
-                        
+                        const SizedBox(height: AppSpacing.cardGap),
                         _buildSection(
                           title: AppStrings.inProgressTasks.tr(),
                           icon: Icons.sync_rounded,
-                          iconColor: const Color(0xFF3B82F6),
-                          bgColor: const Color(0xFFDBEAFE),
+                          iconColor: Color(AppColors.buttons),
                           content: widget.report.inProgress ?? AppStrings.noOngoingTasksRecorded.tr(),
                         ),
                         const SizedBox(height: 16),
@@ -306,8 +269,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                         _buildSection(
                           title: AppStrings.blockersAndProblems.tr(),
                           icon: Icons.warning_rounded,
-                          iconColor: const Color(0xFFF59E0B),
-                          bgColor: const Color(0xFFFEF3C7),
+                          iconColor: Color(AppColors.warningYellow),
                           content: widget.report.problems ?? AppStrings.noProblemsRecorded.tr(),
                         ),
                         const SizedBox(height: 16),
@@ -318,25 +280,8 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                         ],
 
                         // Comments Section
-                        Row(
-                          children: [
-                            Expanded(child: Divider(color: Colors.grey.shade300, thickness: 1)),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
-                              child: Text(
-                                AppStrings.comments.tr(),
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w800,
-                                  color: Colors.grey.shade500,
-                                  letterSpacing: 1.2,
-                                ),
-                              ),
-                            ),
-                            Expanded(child: Divider(color: Colors.grey.shade300, thickness: 1)),
-                          ],
-                        ),
-                        const SizedBox(height: 24),
+                        AppSectionHeader(title: AppStrings.comments.tr()),
+                        const SizedBox(height: AppSpacing.sectionHeaderGap),
                         Consumer<CommentProvider>(
                           builder: (context, commentProvider, child) {
                             return CommentsWidget(
@@ -367,117 +312,66 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
     required String title,
     required IconData icon,
     required Color iconColor,
-    required Color bgColor,
     required String content,
   }) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-        border: Border.all(color: Colors.grey.shade100, width: 1.5),
-        boxShadow: AppShadows.card,
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-        child: IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+    final tones = AppColors.statusTones(iconColor);
+    return AppCard(
+      animateIn: true,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
               Container(
-                width: 6,
-                color: iconColor,
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: bgColor,
-                              borderRadius: BorderRadius.circular(AppRadius.sm),
-                            ),
-                            child: Icon(icon, size: 18, color: iconColor),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Text(
-                              title,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: Color(0xFF1F2937),
-                                letterSpacing: -0.3,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        content,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          height: 1.6,
-                          color: Color(0xFF4B5563),
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: tones.tint,
+                  border: Border.all(color: tones.ring, width: 1.5),
                 ),
+                child: Icon(icon, size: 18, color: tones.text),
               ),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(child: Text(title, style: AppStyles.heading(context))),
             ],
           ),
-        ),
+          const SizedBox(height: AppSpacing.md),
+          Text(content, style: AppStyles.greyContent(context).copyWith(fontSize: 14, height: 1.6)),
+        ],
       ),
     );
   }
 
   Widget _buildAttachmentsSection(List<ReportAttachmentModel> attachments) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(AppRadius.xl),
-        boxShadow: AppShadows.card,
-      ),
+    final tones = AppColors.statusTones(Color(AppColors.buttons));
+    return AppCard(
+      animateIn: true,
+      padding: EdgeInsets.zero,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.all(20),
+            padding: AppSpacing.cardPadding,
             child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  width: 36,
+                  height: 36,
                   decoration: BoxDecoration(
-                    color: Color(AppColors.buttons).withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(AppRadius.lg),
+                    shape: BoxShape.circle,
+                    color: tones.tint,
+                    border: Border.all(color: tones.ring, width: 1.5),
                   ),
-                  child: Icon(Icons.attach_file_rounded, size: 22, color: Color(AppColors.buttons)),
+                  child: Icon(Icons.attach_file_rounded, size: 18, color: tones.text),
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Text(
-                    AppStrings.attachments.tr(),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                      color: Color(0xFF1F2937),
-                    ),
-                  ),
-                ),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(child: Text(AppStrings.attachments.tr(), style: AppStyles.heading(context))),
               ],
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+            padding: const EdgeInsetsDirectional.only(start: AppSpacing.page, end: AppSpacing.page, bottom: AppSpacing.page),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               physics: const BouncingScrollPhysics(),

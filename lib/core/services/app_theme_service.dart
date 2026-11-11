@@ -158,8 +158,10 @@ abstract class AppThemeService {
         fontFamily: LocalizationService.isArabic(context: context)
             ? AppConstants.fontFamilyCairo
             : AppConstants.fontFamilyPoppins,
+        hoverColor: AppField.hoverColor,
         // application input decoration theme
         inputDecorationTheme: InputDecorationTheme(
+          hoverColor: AppField.hoverColor,
           // Hint, end icon and size are the same for every field (rule 15, AppField).
           hintStyle: AppField.hintStyle,
           suffixIconColor: AppField.iconColor,

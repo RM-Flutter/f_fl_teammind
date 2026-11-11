@@ -26,6 +26,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../../controllers/rewards_and_penalties_controller.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/widgets/app_details_sheet.widget.dart';
 
 class RewardsAndPenaltiesDetailsModal extends StatefulWidget {
   final dynamic rewardAndPenalty;
@@ -236,67 +237,57 @@ class _RewardsAndPenaltiesDetailsModalState
     final amount = rewardAndPenalty.amount?.toString() ?? "0";
     final actionKey = getDynamicKey(rewardAndPenalty.action);
     final payrollDate = rewardAndPenalty.payroll?.dateFrom;
+    final isRewardType = getDynamicKey(rewardAndPenalty.type).toLowerCase().contains('reward') ||
+        getDynamicKey(rewardAndPenalty.type).toLowerCase().contains('bonus');
+    final accent = isRewardType ? Color(AppColors.successGreen) : Color(AppColors.failureRed);
+    final statusLabel = actionKey == 'applied'
+        ? AppStrings.applied.tr()
+        : actionKey == 'waiting'
+            ? 'waiting'.tr()
+            : null;
+    final statusColor = actionKey == 'applied' ? Color(AppColors.successGreen) : Color(AppColors.warningYellow);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        gapH16,
         if (rewardAndPenalty.profile?.name != null)
-          InkWell(
-            borderRadius: BorderRadius.circular(AppRadius.sm),
-            // Open the employee's profile
+          AppDetailsHeader(
+            icon: isRewardType ? Icons.emoji_events_outlined : Icons.warning_amber_rounded,
+            color: accent,
+            title: rewardAndPenalty.profile!.name!,
+            subtitle: rewardAndPenalty.manager?.name == null
+                ? null
+                : '${AppStrings.from.tr()} ${rewardAndPenalty.manager!.name!}',
+            badgeLabel: statusLabel,
+            badgeColor: statusColor,
             onTap: rewardAndPenalty.profile?.id == null
                 ? null
-                : () => context.pushNamed(AppRoutes.employeeDetails.name,
-                    pathParameters: {
+                : () => context.pushNamed(AppRoutes.employeeDetails.name, pathParameters: {
                       'id': rewardAndPenalty.profile!.id.toString(),
                       'lang': context.locale.languageCode,
                     }),
-            child: Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(AppSizes.s10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(AppRadius.sm),
-                color: Color(AppColors.buttons),
-              ),
-              child: Center(
-                child: Text(
-                  rewardAndPenalty.profile!.name!,
-                  style: AppStyles.whiteContent(context).copyWith(
-                      fontWeight: FontWeight.w500, fontSize: AppSizes.s12),
-                ),
-              ),
-            ),
           ),
-        gapH12,
-        if (typeValue.isNotEmpty)
-          RewardAndPenaltyRowTile(
-              title: '${AppStrings.requestType.tr()}: ', subtitle: typeValue),
-        RewardAndPenaltyRowTile(
-            title: '${AppStrings.amounts.tr()}: ',
-            subtitle: "$amount $categoryValue"),
-        if (rewardAndPenalty.dueDate != null)
-          RewardAndPenaltyRowTile(
-              title: '${AppStrings.dueDate.tr()}: ',
-              subtitle: formatDateString2(rewardAndPenalty.dueDate) ?? ''),
-        if (rewardAndPenalty.createdAt != null)
-          RewardAndPenaltyRowTile(
-              title: '${AppStrings.createdAt.tr()}: ',
-              subtitle: formatDateString(rewardAndPenalty.createdAt) ?? ''),
-        RewardAndPenaltyRowTile(
-            title: '${AppStrings.applied.tr()}: ',
-            subtitle: actionKey == "applied"
-                ? "${AppStrings.yes.tr()} (${payrollDate ?? AppStrings.thereIsNoSalary.tr()})"
-                : AppStrings.no.tr()),
-        if (rewardAndPenalty.manager?.name != null)
-          RewardAndPenaltyRowTile(
-              title: '${AppStrings.from.tr()}: ',
-              subtitle: rewardAndPenalty.manager!.name!),
-        if (rewardAndPenalty.reason != null &&
-            rewardAndPenalty.reason!.isNotEmpty)
-          RewardAndPenaltyRowTile(
-              title: '${AppStrings.reason.tr()}: ',
-              subtitle: rewardAndPenalty.reason!),
+        const SizedBox(height: AppSpacing.section),
+        AppDetailsHighlight(
+          value: '$amount $categoryValue',
+          caption: [
+            if (typeValue.isNotEmpty) typeValue,
+            if (rewardAndPenalty.dueDate != null) formatDateString2(rewardAndPenalty.dueDate) ?? '',
+          ].where((e) => e.isNotEmpty).join(' · '),
+          color: accent,
+        ),
+        const SizedBox(height: AppSpacing.section),
+        AppInfoCard(rows: [
+          if (rewardAndPenalty.createdAt != null)
+            AppInfoRow(label: AppStrings.createdAt.tr(), value: formatDateString(rewardAndPenalty.createdAt) ?? ''),
+          AppInfoRow(
+              label: AppStrings.applied.tr(),
+              value: actionKey == "applied"
+                  ? "${AppStrings.yes.tr()} (${payrollDate ?? AppStrings.thereIsNoSalary.tr()})"
+                  : AppStrings.no.tr()),
+          if (rewardAndPenalty.reason != null && rewardAndPenalty.reason!.isNotEmpty)
+            AppInfoRow(label: AppStrings.reason.tr(), value: rewardAndPenalty.reason!),
+        ]),
         if (rewardAndPenalty.files != null &&
             rewardAndPenalty.files!.isNotEmpty) ...[
           gapH16,
@@ -380,68 +371,25 @@ class _RewardsAndPenaltiesDetailsModalState
           ),
         ],
         if ((actionKey == "waiting" && (rewardAndPenalty.canCancel ?? true)) || canShowComplaintButton) ...[
-          gapH24,
-          Row(
-            children: [
-              if (canShowComplaintButton)
-                Expanded(
-                  child: CustomElevatedButton(
-                    titleSize: AppSizes.s10,
-                    buttonStyle: ElevatedButton.styleFrom(
-                      fixedSize: const Size.fromHeight(50),
-                      alignment: Alignment.center,
-                      shadowColor: Colors.transparent,
-                      backgroundColor: Color(AppColors.secondaryButton),
-                      foregroundColor: Colors.white,
-                      elevation: AppElevation.card,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppRadius.xl),
-                      ),
-                    ),
-                    onPressed: () async {
-                      final subject = 'complaint_regarding_penalty'.tr();
-
-                      final details = LocalizationService.isArabic(context: context)
-                          ? 'أتقدم بتظلم/شكوى بخصوص الجزاء الموقع عليّ:\n\n- القيمة: $amount $categoryValue\n- تاريخ توقيع الجزاء: ${formatDateString(rewardAndPenalty.createdAt) ?? ''}\n- السبب: ${rewardAndPenalty.reason ?? ''}\n\nنص الشكوى:\n'
-                          : 'I am submitting a complaint regarding the penalty applied to me:\n\n- Amount: $amount $categoryValue\n- Date: ${formatDateString(rewardAndPenalty.createdAt) ?? ''}\n- Reason: ${rewardAndPenalty.reason ?? ''}\n\nComplaint Details:\n';
-
-                      context.pushNamed(
-                        AppRoutes.newComplainScreen.name,
-                        pathParameters: {'lang': context.locale.languageCode},
-                        extra: {
-                          'initialSubject': subject,
-                          'initialDetails': details,
-                        },
-                      );
-                    },
-                    title: AppStrings.complaint.tr(),
-                  ),
-                ),
-              if (canShowComplaintButton && (actionKey == "waiting" && (rewardAndPenalty.canCancel ?? true)))
-                const SizedBox(width: 12),
-              if (actionKey == "waiting" && (rewardAndPenalty.canCancel ?? true))
-                Expanded(
-                  child: CustomElevatedButton(
-                    titleSize: AppSizes.s12,
-                    buttonStyle: ElevatedButton.styleFrom(
-                      fixedSize: const Size.fromHeight(50),
-                      alignment: Alignment.center,
-                      shadowColor: Colors.transparent,
-                      backgroundColor: Colors.red,
-                      foregroundColor: Colors.white,
-                      elevation: AppElevation.card,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppRadius.xl),
-                      ),
-                    ),
-                    onPressed: () async {
-                      context.pop();
-                      widget.onCancel?.call();
-                    },
-                    title: 'cancel'.tr(),
-                  ),
-                ),
-            ],
+          const SizedBox(height: AppSpacing.section),
+          AppSheetActions(
+            primaryLabel: canShowComplaintButton ? AppStrings.complaint.tr() : null,
+            onPrimary: () {
+              final subject = 'complaint_regarding_penalty'.tr();
+              final details = LocalizationService.isArabic(context: context)
+                  ? 'أتقدم بتظلم/شكوى بخصوص الجزاء الموقع عليّ:\n\n- القيمة: $amount $categoryValue\n- تاريخ توقيع الجزاء: ${formatDateString(rewardAndPenalty.createdAt) ?? ''}\n- السبب: ${rewardAndPenalty.reason ?? ''}\n\nنص الشكوى:\n'
+                  : 'I am submitting a complaint regarding the penalty applied to me:\n\n- Amount: $amount $categoryValue\n- Date: ${formatDateString(rewardAndPenalty.createdAt) ?? ''}\n- Reason: ${rewardAndPenalty.reason ?? ''}\n\nComplaint Details:\n';
+              context.pushNamed(
+                AppRoutes.newComplainScreen.name,
+                pathParameters: {'lang': context.locale.languageCode},
+                extra: {'initialSubject': subject, 'initialDetails': details},
+              );
+            },
+            dangerLabel: (actionKey == "waiting" && (rewardAndPenalty.canCancel ?? true)) ? 'cancel'.tr() : null,
+            onDanger: () {
+              context.pop();
+              widget.onCancel?.call();
+            },
           ),
         ],
         gapH24,

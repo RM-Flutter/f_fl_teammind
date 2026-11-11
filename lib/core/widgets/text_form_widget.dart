@@ -148,8 +148,11 @@ Widget defaultDropdownField(
   // Same box, hint and arrow as every other field (rule 15). The arrow is the DropdownButton's
   // own icon so the whole field, up to the edge, opens the menu.
   return AppFieldShell(
+    contentPadding: 0,
     child: DropdownButtonHideUnderline(
       child: DropdownButton<String>(
+        padding: const EdgeInsetsDirectional.symmetric(horizontal: AppField.horizontalPadding),
+        focusColor: Colors.transparent,
         dropdownColor: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.md),
         icon: AppFieldShell.icon(icon ?? Icons.keyboard_arrow_down_rounded),

@@ -329,13 +329,7 @@ class ApprovableBottomActionBar extends StatelessWidget {
                   from: details.dateFrom,
                   status: details.status,
                 );
-                await Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => UpdateSalaryAdvanceScreen(
-                      existingRequest: salaryModel,
-                    ),
-                  ),
-                );
+                await UpdateSalaryAdvanceScreen.show(context, salaryModel);
                 if (context.mounted) {
                   cubit.fetchDetails(context: context, type: type, id: id);
                 }

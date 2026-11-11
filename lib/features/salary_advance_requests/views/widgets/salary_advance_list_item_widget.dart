@@ -141,13 +141,7 @@ class SalaryAdvanceListItemWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(AppRadius.pill),
                   onTap: () async {
                     HapticFeedback.mediumImpact();
-                    final updated = await Navigator.of(context).push<bool>(
-                      MaterialPageRoute(
-                        builder: (_) => UpdateSalaryAdvanceScreen(
-                          existingRequest: request,
-                        ),
-                      ),
-                    );
+                    final updated = await UpdateSalaryAdvanceScreen.show(context, request);
                     if (updated == true) {
                       onRefresh?.call();
                     }

@@ -12,12 +12,17 @@ class AppFieldShell extends StatelessWidget {
   final VoidCallback? onTap;
   final double? height;
 
+  /// Side padding of the content. Zero when [child] draws its own padding (a [DropdownButton]) so
+  /// its hover / focus fills the whole field up to the border.
+  final double contentPadding;
+
   const AppFieldShell({
     super.key,
     required this.child,
     this.trailingIcon,
     this.onTap,
     this.height,
+    this.contentPadding = AppField.horizontalPadding,
   });
 
   /// The icon used by every field's end: always this size and colour.
@@ -38,7 +43,7 @@ class AppFieldShell extends StatelessWidget {
         child: SizedBox(
           height: height ?? AppField.height,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppField.horizontalPadding),
+            padding: EdgeInsets.symmetric(horizontal: contentPadding),
             child: Row(
               children: [
                 Expanded(child: Align(alignment: AlignmentDirectional.centerStart, child: child)),

@@ -191,8 +191,11 @@ class _VacationCalcScreenState extends State<VacationCalcScreen> {
                 onTap: () => _selectDate(context, false),
               ),
                   AppFieldShell(
+                contentPadding: 0,
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
+                    padding: const EdgeInsetsDirectional.symmetric(horizontal: AppField.horizontalPadding),
+                    focusColor: Colors.transparent,
                     isExpanded: true,
                     icon: AppFieldShell.icon(Icons.keyboard_arrow_down_rounded),
                     hint: Text(AppStrings.typeOfLeave.tr(), style: AppField.hintStyle),

@@ -59,6 +59,7 @@ class RewardAndPenaltyCardWidget extends StatelessWidget {
         onTap: () async => await ModalSheetHelper.showModalSheet(
             context: context,
             viewProfile: false,
+        fitContent: true,
             modalContent: RewardsAndPenaltiesDetailsModal(
               rewardAndPenalty: rewardAndPenalty,
               onCancel: () {

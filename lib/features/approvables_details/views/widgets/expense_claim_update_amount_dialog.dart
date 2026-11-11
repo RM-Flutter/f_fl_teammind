@@ -5,7 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/services/alert_service/alerts_service.dart';
 import 'package:app_test/core/utils/app_styles.dart';
-import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
+import 'package:app_test/core/widgets/app_sheet_submit_button.widget.dart';
 import 'package:app_test/features/expense_claim_requests/shared/repos/expense_claim_repo.dart';
 import '../../cubit/approvable_details_cubit.dart';
 import '../../data/models/approvable_details_model.dart';
@@ -127,9 +127,8 @@ class ExpenseClaimUpdateAmountDialog {
                   const SizedBox(height: 24),
 
                   // Submit Button
-                  CustomElevatedButton(
+                  AppSheetSubmitButton(
                     title: 'save_changes_2'.tr(),
-                    backgroundColor: Color(AppColors.buttons),
                     onPressed: isLoading
                         ? () async {}
                         : () async {

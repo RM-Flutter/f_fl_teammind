@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
+import 'package:app_test/core/widgets/app_filter_actions.widget.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/routing/app_router.dart';
@@ -18,6 +19,7 @@ abstract class ModalSheetHelper {
         required Widget modalContent,
         required double height,
         required bool viewProfile,
+        bool fitContent = false,
         id,
         String? title}) async {
     return await showModalBottomSheet(
@@ -30,7 +32,15 @@ abstract class ModalSheetHelper {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
       ),
-      builder: (BuildContext context) => AnimatedContainer(
+      builder: (BuildContext context) => fitContent
+          ? _FitContentSheet(
+              maxHeight: height,
+              title: title,
+              viewProfile: viewProfile,
+              id: id,
+              child: modalContent,
+            )
+          : AnimatedContainer(
         duration: const Duration(milliseconds: 150),
         height: height + MediaQuery.of(context).viewInsets.bottom,
         color: Colors.white,
@@ -57,10 +67,12 @@ abstract class ModalSheetHelper {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
-                      child: Text(title!,
-                          style: Theme.of(context).textTheme.headlineLarge!.copyWith(
-                            color: Color(AppColors.buttons),
-                          )),
+                      child: viewProfile == true
+                          ? Text(title!,
+                              style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                                    color: Color(AppColors.buttons),
+                                  ))
+                          : AppFilterTitle(title!),
                     ),
                     if(viewProfile == true) ...[
                       const SizedBox(width: 8),
@@ -91,6 +103,57 @@ abstract class ModalSheetHelper {
                     ))
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Sheet whose height follows its content (up to [maxHeight]); long content scrolls. Same handle,
+/// title and padding as the fixed-height sheet.
+class _FitContentSheet extends StatelessWidget {
+  final double maxHeight;
+  final String? title;
+  final bool viewProfile;
+  final dynamic id;
+  final Widget child;
+
+  const _FitContentSheet({
+    required this.maxHeight,
+    required this.title,
+    required this.viewProfile,
+    required this.id,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxHeight: maxHeight + MediaQuery.of(context).viewInsets.bottom),
+      child: Material(
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(AppSizes.s16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                height: AppSizes.s5,
+                width: AppSizes.s80,
+                decoration: BoxDecoration(
+                    color: Color(AppColors.disableButton), borderRadius: BorderRadius.circular(AppRadius.xs)),
+              ),
+              gapH24,
+              if (title != null) AppFilterTitle(title!),
+              const SizedBox(height: AppSpacing.lg),
+              Flexible(
+                child: SingleChildScrollView(
+                  keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
+                  child: child,
+                ),
+              ),
+            ],
           ),
         ),
       ),

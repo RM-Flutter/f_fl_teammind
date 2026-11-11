@@ -240,6 +240,9 @@ abstract class AppField {
   static const Color valueColor = Color(0xFF1B1D3A);
   static const Color borderColor = Color(0xFFE3E5EE);
 
+  /// Web hover of any field: one tint, filling the whole field.
+  static const Color hoverColor = Color(0x0F12136E);
+
   static const TextStyle hintStyle =
       TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: hintColor);
   static const TextStyle valueStyle =

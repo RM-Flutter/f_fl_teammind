@@ -14,7 +14,7 @@ class CommissionCardWidget extends StatelessWidget {
 
   const CommissionCardWidget({super.key, required this.commission});
 
-  Color _resolveStatusColor() {
+  static Color statusColorOf(CommissionModel commission) {
     final badge = (commission.statusBadge ?? '').toLowerCase();
     if (badge.contains('warning')) return Color(AppColors.warningYellow);
     if (badge.contains('success')) return Color(AppColors.successGreen);
@@ -27,7 +27,7 @@ class CommissionCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final statusColor = _resolveStatusColor();
+    final statusColor = statusColorOf(commission);
     final amount = commission.localizedAmount;
     final datePart =
         CommissionModel.formatDatePart(context, commission.createdAt);
@@ -46,6 +46,7 @@ class CommissionCardWidget extends StatelessWidget {
       onTap: () => ModalSheetHelper.showModalSheet(
         context: context,
         viewProfile: false,
+        fitContent: true,
         title: 'commission_details'.tr(),
         height: MediaQuery.of(context).size.height * 0.65,
         modalContent: CommissionDetailsModal(commission: commission),
