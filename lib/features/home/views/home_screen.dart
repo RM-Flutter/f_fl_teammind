@@ -17,6 +17,7 @@ import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_p
 import 'package:app_test/core/widgets/main_app_fab_widget/main_app_fab.widget.dart';
 import 'package:app_test/features/home/data/models/home_widget_type.dart';
 import 'package:app_test/features/home/views/widgets/bookmark_list_widget.dart';
+import 'package:app_test/core/widgets/hide_on_scroll_fab.widget.dart';
 import 'package:app_test/features/home/views/widgets/loading/home_appbar_loading.dart';
 import 'package:app_test/features/home/views/widgets/loading/home_body_loading.dart';
 import 'package:app_test/features/home/views/widgets/page_body_widgets/my_requests/my_requests_widget.dart';
@@ -244,6 +245,8 @@ class _HomeScreenState extends State<HomeScreen> {
           await Future.delayed(const Duration(milliseconds: 200));
         },
         child: CoreMobileScaffold(
+          // Buttons stay while scrolling and leave softly only near the end of the page.
+          fabScrollMode: FabScrollMode.nearEnd,
           backgroundColor: Color(AppColors.scaffoldBackGround),
           controller: viewModel.homeScrollController,
           headers: [

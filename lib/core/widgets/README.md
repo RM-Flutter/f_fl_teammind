@@ -16,7 +16,7 @@ Reusable widgets that several features share. Check this folder before you build
 | `app_fab.widget.dart` | `AppFab`: the app's only floating button, round and icon-only (default "+"); put the words in `tooltip`. |
 | `app_content_width.widget.dart` | `AppContentWidth`: limits page content to 720 (medium) / 960 (expanded) and centres it; no effect on phones. Already inside `TemplatePage` and `CoreMobileScaffold`. |
 | `app_adaptive_wrap.widget.dart` | `AppAdaptiveWrap`: cards in 1 / 2 / 3 columns by window size, `cardGap` between them. For lists of small same-shaped cards. |
-| `hide_on_scroll_fab.widget.dart` | `HideOnScrollFabHost` / `HideOnScrollFab`: floating buttons fade + slide away while scrolling down or at the end of the list (the iOS bounce does not bring them back) and come back when scrolling up. Built into `CoreMobileScaffold` and `TemplatePage`; wrap a plain `Scaffold` with it. |
+| `hide_on_scroll_fab.widget.dart` | `HideOnScrollFabHost` / `HideOnScrollFab`: floating buttons fade + slide away while scrolling down or at the end of the list (the iOS bounce does not bring them back) and come back when scrolling up. Built into `CoreMobileScaffold` and `TemplatePage`; wrap a plain `Scaffold` with it. `FabScrollMode.nearEnd` keeps them while scrolling and fades them out only near the end of the page (Home).|
 | `button_widget.dart`, `custom_elevated_button.widget.dart`, `custom_floating_action_button.widget.dart` | Standard buttons. `ButtonWidget` is the canonical one. |
 | `text_form_widget.dart`, `all_text_field.dart` | Text inputs |
 | `all_bottom_sheet.dart`, `quick_action_sheet.dart` | Standard bottom sheets and the quick actions sheet |

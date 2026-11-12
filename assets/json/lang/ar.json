@@ -1938,5 +1938,6 @@
   "tracking_suggestion_meeting_ended": "انتهى الاجتماع",
   "tracking_suggestion_inspection": "بدء المعاينة",
   "tracking_suggestion_handover": "تسليم المستندات",
-  "tracking_suggestion_break": "استراحة قصيرة"
+  "tracking_suggestion_break": "استراحة قصيرة",
+  "cannot_open_app_copied": "لا يوجد تطبيق على هذا الجهاز يفتحه، فتم نسخه."
 }

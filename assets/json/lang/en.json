@@ -1939,5 +1939,6 @@
   "tracking_suggestion_meeting_ended": "Meeting Ended",
   "tracking_suggestion_inspection": "Inspection Started",
   "tracking_suggestion_handover": "Documents Handed Over",
-  "tracking_suggestion_break": "Short Break"
+  "tracking_suggestion_break": "Short Break",
+  "cannot_open_app_copied": "No app on this device can open it, so it was copied."
 }

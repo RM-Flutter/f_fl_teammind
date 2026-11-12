@@ -46,6 +46,9 @@ class CoreMobileScaffold extends StatelessWidget {
   /// Hide [floatingActionButton] smoothly while scrolling down (layout rule 6).
   final bool hideFabOnScroll;
 
+  /// When the floating buttons hide (see [FabScrollMode]).
+  final FabScrollMode fabScrollMode;
+
   const CoreMobileScaffold({
     super.key,
     this.padding,
@@ -83,6 +86,7 @@ class CoreMobileScaffold extends StatelessWidget {
     this.endDrawerEnableOpenDragGesture = true,
     this.restorationId,
     this.hideFabOnScroll = true,
+    this.fabScrollMode = FabScrollMode.direction,
   }) : assert(
             body != null ||
                 children != null ||
@@ -94,6 +98,7 @@ class CoreMobileScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return HideOnScrollFabHost(
       enabled: hideFabOnScroll,
+      mode: fabScrollMode,
       builder: (context, wrapFab) => Scaffold(
       floatingActionButton: wrapFab(floatingActionButton),
       backgroundColor: backgroundColor,

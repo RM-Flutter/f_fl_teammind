@@ -4,6 +4,8 @@ import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/widgets/app_status_badge.widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:app_test/core/services/app_toast.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../models/cv_hub_models.dart';
@@ -58,6 +60,21 @@ class _IconCircle extends StatelessWidget {
 
 // ─── Candidate Info ─────────────────────────────────────────────────────────
 
+/// Opens the mail / phone app. Where no app can open it (a simulator, a desktop browser without a
+/// mail client) the value is copied instead and a short message says so, so the tap never does
+/// nothing.
+Future<void> _openContact(Uri uri, String value) async {
+  var opened = false;
+  try {
+    opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+  } catch (_) {
+    opened = false;
+  }
+  if (opened) return;
+  await Clipboard.setData(ClipboardData(text: value));
+  AppToast.showToast(msg: 'cannot_open_app_copied'.tr());
+}
+
 class CandidateInfoTab extends StatelessWidget {
   final CandidateModel? candidate;
   const CandidateInfoTab({super.key, required this.candidate});
@@ -72,7 +89,7 @@ class CandidateInfoTab extends StatelessWidget {
           label: 'Email'.tr(),
           value: c!.email!,
           actionIcon: Icons.send_rounded,
-          onTap: () => launchUrl(Uri(scheme: 'mailto', path: c.email)),
+          onTap: () => _openContact(Uri(scheme: 'mailto', path: c.email), c.email!),
         ),
       if (_has(c?.phone))
         _ContactRow(
@@ -80,7 +97,8 @@ class CandidateInfoTab extends StatelessWidget {
           label: 'Phone'.tr(),
           value: c!.phone!,
           actionIcon: Icons.call_rounded,
-          onTap: () => launchUrl(Uri(scheme: 'tel', path: c.phone)),
+          onTap: () => _openContact(
+              Uri(scheme: 'tel', path: c.phone!.replaceAll(RegExp(r'[^0-9+]'), '')), c.phone!),
         ),
     ];
 

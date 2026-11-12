@@ -19,6 +19,16 @@ import '../services/layout_service.dart';
 ///   ),
 /// );
 /// ```
+/// When the floating buttons hide.
+enum FabScrollMode {
+  /// Hide while scrolling down, show again when scrolling up (default).
+  direction,
+
+  /// Stay visible while scrolling; hide only when the page is (almost) at its end, so they never
+  /// cover the last items. Used by the Home screen.
+  nearEnd,
+}
+
 class HideOnScrollFabHost extends StatefulWidget {
   final Widget Function(
       BuildContext context, Widget? Function(Widget? fab) wrapFab) builder;
@@ -26,10 +36,13 @@ class HideOnScrollFabHost extends StatefulWidget {
   /// Set to false to keep the buttons always visible.
   final bool enabled;
 
+  final FabScrollMode mode;
+
   const HideOnScrollFabHost({
     super.key,
     required this.builder,
     this.enabled = true,
+    this.mode = FabScrollMode.direction,
   });
 
   @override
@@ -48,7 +61,12 @@ class _HideOnScrollFabHostState extends State<HideOnScrollFabHost> {
   Widget? _wrapFab(Widget? fab) {
     if (fab == null) return null;
     if (!widget.enabled) return fab;
-    return HideOnScrollFab(visible: _visible, child: fab);
+    return HideOnScrollFab(
+      visible: _visible,
+      // Near the end the buttons leave slower, so it reads as a soft fade, not a jump.
+      duration: widget.mode == FabScrollMode.nearEnd ? AppMotion.slow : AppMotion.normal,
+      child: fab,
+    );
   }
 
   @override
@@ -58,7 +76,9 @@ class _HideOnScrollFabHostState extends State<HideOnScrollFabHost> {
     final child = widget.builder(context, _wrapFab);
     return NotificationListener<ScrollNotification>(
       onNotification: (notification) {
-        if (widget.enabled) {
+        if (widget.enabled && widget.mode == FabScrollMode.nearEnd) {
+          HideOnScrollFab.handleNearEnd(_visible, notification);
+        } else if (widget.enabled) {
           HideOnScrollFab.handleScroll(_visible, notification);
         } else if (!_visible.value) {
           _visible.value = true;
@@ -75,8 +95,27 @@ class _HideOnScrollFabHostState extends State<HideOnScrollFabHost> {
 class HideOnScrollFab extends StatelessWidget {
   final ValueListenable<bool> visible;
   final Widget child;
+  final Duration duration;
 
-  const HideOnScrollFab({super.key, required this.visible, required this.child});
+  const HideOnScrollFab({
+    super.key,
+    required this.visible,
+    required this.child,
+    this.duration = AppMotion.normal,
+  });
+
+  /// How far before the end of the page the buttons start to leave.
+  static const double nearEndDistance = 140;
+
+  /// [FabScrollMode.nearEnd]: visible everywhere except the last [nearEndDistance] of the page.
+  /// Scroll views that cannot scroll (e.g. the header's inner one) are ignored.
+  static void handleNearEnd(ValueNotifier<bool> visible, ScrollNotification notification) {
+    final metrics = notification.metrics;
+    if (metrics.axis != Axis.vertical) return;
+    if (metrics.maxScrollExtent - metrics.minScrollExtent <= 0) return;
+    final show = metrics.pixels < metrics.maxScrollExtent - nearEndDistance;
+    if (visible.value != show) visible.value = show;
+  }
 
   /// Updates [visible] from a scroll notification. Returns nothing; never stops the bubble.
   static void handleScroll(
@@ -133,15 +172,15 @@ class HideOnScrollFab extends StatelessWidget {
         ignoring: !isVisible,
         child: AnimatedSlide(
           offset: isVisible ? Offset.zero : const Offset(0, 0.35),
-          duration: AppMotion.normal,
+          duration: duration,
           curve: isVisible ? AppMotion.enter : AppMotion.exit,
           child: AnimatedScale(
             scale: isVisible ? 1 : 0.85,
-            duration: AppMotion.normal,
+            duration: duration,
             curve: isVisible ? AppMotion.enter : AppMotion.exit,
             child: AnimatedOpacity(
               opacity: isVisible ? 1 : 0,
-              duration: AppMotion.normal,
+              duration: duration,
               curve: isVisible ? AppMotion.enter : AppMotion.exit,
               child: child,
             ),
