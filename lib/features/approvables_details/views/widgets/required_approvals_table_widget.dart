@@ -5,7 +5,6 @@ import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/services/localization_service.dart';
 import '../../data/models/approvable_details_model.dart';
 import 'approvals_table/approval_level_card.dart';
-import 'package:app_test/core/constants/app_design.dart';
 
 class RequiredApprovalsTableWidget extends StatelessWidget {
   final List<RequiredApprovalModel> requiredApprovals;
@@ -34,15 +33,10 @@ class RequiredApprovalsTableWidget extends StatelessWidget {
     final sortedLevels = groupedMap.keys.toList()..sort();
     final isArabic = LocalizationService.isArabic(context: context);
 
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: AppSizes.s4),
-      padding: AppSpacing.cardPadding,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        border: AppBorders.card,
-        boxShadow: AppShadows.card,
-      ),
+    // No outer card: the level cards sit straight on the page, lined up with the tabs, so the
+    // list gets the full width (the extra white box and its padding only took space).
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.s4),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

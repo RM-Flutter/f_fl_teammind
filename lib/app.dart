@@ -4,6 +4,7 @@ import 'package:app_test/core/services/backend_services/api_service/dio_api_serv
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:app_test/core/services/notification_service.dart';
 import 'core/services/app_theme_service.dart';
+import 'core/widgets/tablet_zoom.widget.dart';
 import 'core/platform/platform_is.dart';
 import 'core/routing/app_router.dart';
 import 'package:flutter/gestures.dart';
@@ -30,8 +31,9 @@ class MyApp extends StatelessWidget {
     final appGoRouter = goRouter(context);
     // `.w` / `.h` / `.sp` scale the 375x812 Figma sizes on phones only. On tablets and desktop the
     // design size is the real window, so they return the number as written (no giant text).
-    return MediaQuery.fromView(
-      view: View.of(context),
+    // TabletZoom gives tablets (native only) a bigger UI; phones and web get the real view as
+    // before. It replaces MediaQuery.fromView, so ScreenUtil and MaterialApp see the zoomed size.
+    return TabletZoom(
       child: Builder(builder: (context) {
       final size = MediaQuery.sizeOf(context);
       final isPhone = LayoutService.sizeClassForWidth(size.width) == SizeClass.compact;

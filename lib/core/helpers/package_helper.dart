@@ -1,5 +1,6 @@
 import 'package:app_test/core/constants/user_consts.dart';
 
+
 class PackageHelper {
   static bool hasPackage(String packageSlug) {
     return true;
