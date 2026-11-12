@@ -1,5 +1,6 @@
 import Flutter
 import UIKit
+import UserNotifications
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -8,6 +9,10 @@ import UIKit
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     GeneratedPluginRegistrant.register(with: self)
+    // Notifications that arrive while the app is open go through FlutterAppDelegate, which hands
+    // them to firebase_messaging (onMessage) and flutter_local_notifications. Without this the
+    // app showed nothing for a push received in the foreground.
+    UNUserNotificationCenter.current().delegate = self as UNUserNotificationCenterDelegate
     let controller = window?.rootViewController as! FlutterViewController
         let secureChannel = FlutterMethodChannel(name: "com.rightminddev.rmemp/secure", binaryMessenger: controller.binaryMessenger)
         secureChannel.setMethodCallHandler { (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
@@ -50,5 +55,15 @@ import UIKit
             }
         }
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+  }
+
+  // Clear the red number on the app icon once the user opens the app.
+  override func applicationDidBecomeActive(_ application: UIApplication) {
+    super.applicationDidBecomeActive(application)
+    if #available(iOS 16.0, *) {
+      UNUserNotificationCenter.current().setBadgeCount(0)
+    } else {
+      application.applicationIconBadgeNumber = 0
+    }
   }
 }

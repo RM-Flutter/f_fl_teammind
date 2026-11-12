@@ -3,14 +3,8 @@ import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/routing/app_router.dart' show rootNavigatorKey;
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/core/constants/app_images.dart';
-import 'package:app_test/core/services/validation_service.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
-import 'package:app_test/core/platform/platform_is.dart';
-import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../constants/app_colors.dart';
 import 'custom_alert.dart';
 import '../app_error_reporter.dart';
@@ -219,6 +213,9 @@ abstract class AlertsService {
         Widget? icon,
         bool? viewPassword = false,
         bool? isArabic,
+        bool destructive = false,
+        String? confirmText,
+        String? cancelText,
       }) async {
     var formKey = GlobalKey<FormState>();
     var result = await showGeneralDialog<bool>(
@@ -231,122 +228,148 @@ abstract class AlertsService {
         type: animationType,
         body: Form(
           key: formKey,
-          child: Card(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(AppRadius.xl)),
-            color: Color(AppColors.background),
-            child: SizedBox(
-              width: PlatformIs.mobile ? AppSizes.s320 : AppSizes.s600,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  if (imageAssert != null) const SizedBox(height: AppSizes.s60),
-                  if (imageAssert == null) const SizedBox(height: AppSizes.s50),
-                  imageAssert != null
-                      ? Image.asset(imageAssert,
-                      width: AppSizes.s150, height: AppSizes.s90)
-                      : icon != null
-                      ? SizedBox(
-                    width: AppSizes.s150,
-                    height: AppSizes.s90,
-                    child: icon,
-                  )
-                      : const SizedBox(),
-                  if (imageAssert != null) const SizedBox(height: AppSizes.s25),
-                  Text(
-                    title,
-                    style: const TextStyle(
-                        fontSize: AppSizes.s25, color: Color(AppColors.black)),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: AppSizes.s20),
-                  message != null
-                      ? Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: AppSizes.s30),
-                    child: Text(
-                      message,
-                      style: TextStyle(
-                          fontSize: AppSizes.s18, color: Color(0xff606060)),
-                      textAlign: TextAlign.center,
-                      softWrap: true,
-                      maxLines: 4,
-                    ),
-                  )
-                      : const SizedBox(),
-                  const SizedBox(height: AppSizes.s10),
-                  if (viewPassword == true)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Form(
-                        key: form3Key,
-                        child: TextFormField(
-                          controller: passwordForRemoveAccountController,
-                          keyboardType: TextInputType.visiblePassword,
-                          decoration: InputDecoration(
-                              hintText: AppStrings.password.tr()),
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return AppStrings.pleaseEnterAPassword.tr();
-                            }
-                            return null;
-                          },
+          // Clean confirmation card: icon in a tinted circle, title, message, then
+          // No (outlined) and Yes (filled, red when [destructive]) side by side.
+          child: Builder(builder: (dialogContext) {
+            final accent = destructive
+                ? Color(AppColors.failureRed)
+                : Color(AppColors.buttons);
+            final width = (MediaQuery.sizeOf(dialogContext).width - 32).clamp(0.0, 400.0);
+            void confirm() {
+              if (viewPassword == true) {
+                if (form3Key != null && form3Key.currentState?.validate() == true) {
+                  Navigator.of(dialogContext).pop(true);
+                }
+              } else {
+                Navigator.of(dialogContext).pop(true);
+              }
+            }
+
+            return Material(
+              color: Colors.white,
+              elevation: AppElevation.overlay,
+              shadowColor: Colors.black26,
+              borderRadius: BorderRadius.circular(AppRadius.lg),
+              child: SizedBox(
+                width: width,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      if (imageAssert != null)
+                        Image.asset(imageAssert, width: 120, height: 80)
+                      else
+                        Container(
+                          width: 64,
+                          height: 64,
+                          decoration: BoxDecoration(
+                            color: accent.withOpacity(0.1),
+                            shape: BoxShape.circle,
+                          ),
+                          alignment: Alignment.center,
+                          child: icon ??
+                              Icon(
+                                destructive
+                                    ? Icons.warning_amber_rounded
+                                    : Icons.help_outline_rounded,
+                                color: accent,
+                                size: 30,
+                              ),
+                        ),
+                      const SizedBox(height: 16),
+                      Text(
+                        title,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: Color(AppColors.secondaryButton),
                         ),
                       ),
-                    ),
-                  const SizedBox(height: AppSizes.s10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      ButtonTheme(
-                          minWidth: AppSizes.s100,
-                          height: AppSizes.s60,
-                          child: CustomElevatedButton(
-                            width: AppSizes.s100,
-                            backgroundColor:
-                            Color(AppColors.buttons),
-                            titleSize: AppSizes.s18,
-                            title: AppStrings.yes.tr(),
-                            onPressed: onTap ??
-                                    () async {
-                                  if (viewPassword == true) {
-                                    if (form3Key != null &&
-                                        form3Key.currentState?.validate() ==
-                                            true) {
-                                      Navigator.of(dialogContext)
-                                          .pop(true); // بيرجع موافقة
-                                    }
-                                  } else {
-                                    Navigator.of(dialogContext)
-                                        .pop(true); // بيرجع موافقة
-                                  }
-                                },
-                          )),
-                      const SizedBox(width: 15.0),
-                      ButtonTheme(
-                        minWidth: AppSizes.s100,
-                        height: AppSizes.s60,
-                        child: MaterialButton(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(AppRadius.pill)),
-                          color: Color(AppColors.background),
-                          onPressed: () {
-                            Navigator.of(dialogContext).pop(false);
-                            return;
-                          },
-                          child: Text(AppStrings.no.tr(),
-                              style:
-                              TextStyle(color: Color(AppColors.buttons))),
+                      if (message != null) ...[
+                        const SizedBox(height: 8),
+                        Text(
+                          message,
+                          textAlign: TextAlign.center,
+                          maxLines: 4,
+                          softWrap: true,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            height: 1.5,
+                            color: Color(0xFF475467),
+                          ),
                         ),
+                      ],
+                      if (viewPassword == true) ...[
+                        const SizedBox(height: 16),
+                        Form(
+                          key: form3Key,
+                          child: TextFormField(
+                            controller: passwordForRemoveAccountController,
+                            keyboardType: TextInputType.visiblePassword,
+                            decoration: InputDecoration(
+                                hintText: AppStrings.password.tr()),
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return AppStrings.pleaseEnterAPassword.tr();
+                              }
+                              return null;
+                            },
+                          ),
+                        ),
+                      ],
+                      const SizedBox(height: 24),
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: SizedBox(
+                              height: 46,
+                              child: OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: Color(AppColors.secondaryButton),
+                                  side: BorderSide(color: Colors.grey.shade300),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: AppRadius.button),
+                                ),
+                                onPressed: () => Navigator.of(dialogContext).pop(false),
+                                child: Text(
+                                  cancelText ?? AppStrings.no.tr(),
+                                  style: const TextStyle(
+                                      fontSize: 15, fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: SizedBox(
+                              height: 46,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: accent,
+                                  foregroundColor: Colors.white,
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: AppRadius.button),
+                                ),
+                                onPressed: onTap ?? confirm,
+                                child: Text(
+                                  confirmText ?? AppStrings.yes.tr(),
+                                  style: const TextStyle(
+                                      fontSize: 15, fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  const SizedBox(height: AppSizes.s50),
-                ],
+                ),
               ),
-            ),
-          ),
+            );
+          }),
         ),
       ),
     );

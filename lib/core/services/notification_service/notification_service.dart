@@ -1,11 +1,7 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
-import 'package:app_test/core/constants/app_images.dart';
-import 'timeout_message_service.dart';
 
 ///  A service to handle push notifications using Firebase Messaging.
 ///  This class manages initialization, token handling, and notification reception.
@@ -88,9 +84,8 @@ abstract class PushNotificationService {
             callbackWhenHandelOnNotificationCliked: null);
       });
 
-      // Background message handler
-      FirebaseMessaging.onBackgroundMessage(
-          _firebaseMessagingBackgroundHandler);
+      // The background handler is registered once in main() (before runApp), as Firebase
+      // requires; registering it here only happened after a logged-in splash.
 
       try {
         // await _sendToken(
@@ -152,13 +147,6 @@ abstract class PushNotificationService {
   //   _isTokenInit = true;
   // }
 
-  /// Handles background messages.
-  static Future<void> _firebaseMessagingBackgroundHandler(
-      RemoteMessage message) async {
-    await Firebase.initializeApp();
-    debugPrint('A background message just showed up: ${message.messageId}');
-  }
-
   /// Handles notifications received in different states of the application.
   /// [methodThatTakePayloadDataToPerformSomeFunctionalitiesBeforeShowingNotificationOnAppScreen] propert to perform method That Take Payload Data from Recived Message To Perform Some Functionalities Before Showing Notification On App Screen
   /// for example :
@@ -189,7 +177,6 @@ abstract class PushNotificationService {
         Future<void> Function({required dynamic payload})?
         callbackWhenHandelOnNotificationCliked}) async {
     if (isForeground) {
-      RemoteNotification? notification = message.notification;
       dynamic payload;
       if (message.data['payload'] != null) {
         payload = jsonDecode(message.data['payload']);
@@ -202,33 +189,9 @@ abstract class PushNotificationService {
             .call(payload: payload);
       }
 
-      //showing the notification on the app screen (foreground)
-      // Filter out notifications with no title or body.
-      // Web: NotificationService (core/services/notification_service.dart)
-      // already shows the banner for every foreground message; skip here so it
-      // is not shown twice.
-      if (notification != null && !kIsWeb) {
-        final title = notification.title ?? '';
-        final body = notification.body ?? '';
-
-        // Don't show if title or body is empty, null, or equals "No Title"/"No Body"
-        if (title.isNotEmpty &&
-            title != 'No Title' &&
-            body.isNotEmpty &&
-            body != 'No Body') {
-          TimeoutMessage.show(
-              title: title,
-              logoWithWihteText: AppImages.logoWithWihteText,
-              message: body,
-              width: kIsWeb ? 360 : 200,
-              onClick: () => handleOnNotificationClicked(
-                  payload: payload,
-                  callbackWhenHandelOnNotificationCliked:
-                  callbackWhenHandelOnNotificationCliked));
-        } else {
-          debugPrint("⚠️ Skipping notification: No valid title or body");
-        }
-      }
+      // The notification itself is shown by NotificationService (core/services/
+      // notification_service.dart): the system banner on iOS, a local notification on Android,
+      // the in-app banner on web. Showing an in-app banner here too gave every push twice.
     }
   }
 

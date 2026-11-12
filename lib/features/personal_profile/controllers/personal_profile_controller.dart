@@ -801,6 +801,10 @@ class PersonalProfileController extends ChangeNotifier {
     try {
       await AlertsService.confirmMessage(
         context, AppStrings.deleteAccount.tr(),
+        // Red, like logout: it deletes the account.
+        destructive: true,
+        icon: Icon(Icons.delete_forever_rounded,
+            color: Color(AppColors.failureRed), size: 30),
         form3Key: form3Key,
         viewPassword: true,
         passwordForRemoveAccountController: passwordForRemoveAccountController,

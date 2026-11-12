@@ -3,6 +3,10 @@ import 'dart:async';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:provider/provider.dart';
+import 'package:app_test/core/routing/app_router.dart' show rootNavigatorKey;
+import 'package:app_test/core/services/app_config_service.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/dio.dart';
 
 /// Single place for FCM token: generated at app start with retry,
 /// updated via onTokenRefresh. No cached fallback when getToken() returns null.
@@ -123,8 +127,31 @@ abstract class FcmTokenService {
       if (token.isNotEmpty) {
         CacheHelper.setString(key: _cacheKey, value: token);
         debugPrint('🔑 FCM token refreshed and cached');
+        _sendRefreshedToken(token);
       }
     });
+  }
+
+  /// A token that changes while the app runs is sent to the server right away (device_sys), so
+  /// pushes keep arriving without waiting for the next start_app. Only for a logged-in user;
+  /// otherwise login / start_app send it.
+  static Future<void> _sendRefreshedToken(String token) async {
+    final context = rootNavigatorKey.currentContext;
+    if (context == null) return;
+    try {
+      final config = Provider.of<AppConfigService>(context, listen: false);
+      if (!config.isLogin || config.token.isEmpty) return;
+      final response = await DioHelper.postData(
+        context: context,
+        url: '/rm_users/v1/device_sys',
+        data: {'action': 'set', 'key': 'notification_token', 'value': token},
+      );
+      if (response.data is Map && response.data['status'] == true) {
+        await CacheHelper.setString(key: 'last_sent_fcm_token', value: token);
+      }
+    } catch (e) {
+      debugPrint('⚠️ FCM refreshed token not sent: $e');
+    }
   }
 
   /// Adds this launch's token to a login/register `device_info` map. The

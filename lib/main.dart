@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/notification_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -61,9 +62,14 @@ GlobalKey<NavigatorState>? navigatorKey = GlobalKey<NavigatorState>();
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
+/// Runs in its own isolate for pushes that arrive while the app is in the background or closed
+/// (mobile only). Must be top-level and kept by the compiler, hence the pragma.
+@pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   debugPrint("🔹 Background Notification: ${message.notification?.title}");
+  // Android data-only pushes are not shown by Firebase; show them as a local notification.
+  await NotificationService.showDataOnlyInBackground(message);
 }
 
 void main() async {
@@ -84,6 +90,9 @@ void main() async {
   );
   if (kIsWeb) {
     await FirebaseMessaging.instance.setAutoInitEnabled(true);
+  } else {
+    // Registered once, before runApp, for every user (logged in or not).
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   }
 
   // Needs Firebase to be initialized first; not awaited so it never blocks startup.

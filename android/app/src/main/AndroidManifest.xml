@@ -75,10 +75,6 @@
                 android:resource="@style/NormalTheme"/>
 
             <meta-data
-                android:name="com.google.firebase.messaging.default_notification_channel_id"
-                android:value="default_channel_id"/>
-
-            <meta-data
                 android:name="flutterEmbedding"
                 android:value="2" />
 
@@ -87,6 +83,16 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <!-- Firebase reads these only from <application> (inside <activity> they were ignored):
+             the channel of pushes shown while the app is in the background, and their small icon
+             (a white silhouette; the launcher icon shows as a grey square). -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="default_channel_id"/>
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/notif_icon"/>
 
         <!-- Required Receivers -->
         <receiver android:exported="false" android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver"/>

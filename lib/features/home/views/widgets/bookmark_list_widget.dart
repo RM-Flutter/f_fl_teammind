@@ -94,6 +94,9 @@ class _BookmarkListWidgetState extends State<BookmarkListWidget> {
       context,
       AppStrings.deleteBookmark.tr(),
       message: AppStrings.areYouSureDeleteBookmark.tr(),
+      destructive: true,
+      icon: Icon(Icons.delete_outline_rounded,
+          color: Color(AppColors.failureRed), size: 30),
     );
 
     if (confirmed == true) {

@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_colors.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:app_test/core/services/talker_service.dart';
@@ -566,7 +567,10 @@ class AppConfigService extends ChangeNotifier {
     if (viewAlert == true) {
       bool isLogout = await AlertsService.confirmMessage(
           context, AppStrings.logout.tr(),
-          message: AppStrings.areYouSureYouWantToLogout.tr());
+          message: AppStrings.areYouSureYouWantToLogout.tr(),
+          destructive: true,
+          icon: Icon(Icons.logout_rounded,
+              color: Color(AppColors.failureRed), size: 30));
       if (isLogout == false) return;
     }
 

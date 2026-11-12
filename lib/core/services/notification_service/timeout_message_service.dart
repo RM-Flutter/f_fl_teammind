@@ -58,6 +58,7 @@ class TimeoutMessage {
             top: top,
             width: width,
             left: left,
+            duration: Duration(milliseconds: timeoutMiniseconds),
             onCLick: onClick));
     if (PlatformIs.web) {
       // Web: the router's navigator owns the overlay (main.dart's navigatorKey
@@ -81,6 +82,8 @@ class TimeoutMessage {
   }
 }
 
+/// In-app notification banner: a white card at the top end of the screen with the app logo,
+/// the title and message, a close button and a thin bar that counts down until it hides.
 class TimeoutMessageDialog extends StatefulWidget {
   final String title;
   final String? message;
@@ -88,6 +91,7 @@ class TimeoutMessageDialog extends StatefulWidget {
   final double? left;
   final double? top;
   final double? width;
+  final Duration duration;
   final Function()? onCLick;
   final String logoWithWihteText;
   const TimeoutMessageDialog(
@@ -99,123 +103,171 @@ class TimeoutMessageDialog extends StatefulWidget {
         this.top,
         this.width,
         this.left,
+        this.duration = const Duration(seconds: 5),
         this.onCLick});
   @override
   TimeoutMessageDialogState createState() => TimeoutMessageDialogState();
 }
 
 class TimeoutMessageDialogState extends State<TimeoutMessageDialog>
-    with SingleTickerProviderStateMixin {
-  AnimationController? controller;
-  Animation<double>? _feedAnimation;
-  Animation<Offset>? _offsetFloat;
-  double? left;
-  double? top;
-  double? width;
-  bool isArabic = false;
+    with TickerProviderStateMixin {
+  late final AnimationController controller;
+  late final AnimationController _countdown;
+  late final Animation<double> _fade;
+  late final Animation<Offset> _slide;
+  bool _hovered = false;
 
   @override
   void initState() {
-    isArabic = false;
+    super.initState();
+    controller = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 350));
+    _fade = CurvedAnimation(parent: controller, curve: Curves.easeOut);
+    _slide = Tween(begin: const Offset(0, -0.4), end: Offset.zero).animate(
+        CurvedAnimation(parent: controller, curve: Curves.easeOutCubic));
+    _countdown = AnimationController(vsync: this, duration: widget.duration)
+      ..forward();
 
     TimeoutMessage.beforeClose = () async {
-      await controller?.animateBack(0);
+      if (mounted) await controller.reverse();
     };
+    controller.forward();
+  }
 
-    super.initState();
+  @override
+  void dispose() {
+    controller.dispose();
+    _countdown.dispose();
+    super.dispose();
+  }
 
-    controller = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500));
-
-    _feedAnimation = Tween<double>(begin: 0.0, end: 1)
-        .animate(CurvedAnimation(parent: controller!, curve: Curves.easeIn));
-
-    _offsetFloat =
-        Tween(begin: const Offset(0.0, -0.9), end: Offset.zero).animate(
-          CurvedAnimation(
-            parent: controller!,
-            curve: Curves.fastOutSlowIn,
-          ),
-        );
-
-    controller!.addListener(() {
-      setState(() {});
-    });
-
-    controller!.forward();
+  void _open() {
+    TimeoutMessage.hide();
+    widget.onCLick?.call();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (widget.parentContext != null) {
-      RenderBox? renderBox =
-      widget.parentContext!.findRenderObject() as RenderBox;
-      var size = renderBox.size;
-      var offset = renderBox.localToGlobal(Offset.zero);
-      top = widget.top ?? offset.dy + size.height + 5.0;
-      width = widget.width ?? size.width;
-    }
-    return Positioned(
-      right: (left ?? widget.left),
-      left: isArabic ? left ?? widget.left : null,
-      top: top ?? widget.top,
-      width: width ?? widget.width,
-      child: Padding(
-        padding: const EdgeInsets.all(20.0),
+    final screen = MediaQuery.sizeOf(context);
+    final safeTop = MediaQuery.paddingOf(context).top;
+    // Phones: almost full width. Wider screens: a 380 card at the top end.
+    final cardWidth = screen.width < 600
+        ? screen.width - 2 * AppSpacing.page
+        : (widget.width ?? 380).clamp(320.0, 420.0);
+    final accent = Color(AppColors.buttons);
+    final navy = Color(AppColors.secondaryButton);
+    final hasMessage = widget.message != null && widget.message!.trim().isNotEmpty;
+
+    return PositionedDirectional(
+      top: safeTop + AppSpacing.page,
+      end: AppSpacing.page,
+      width: cardWidth,
+      child: FadeTransition(
+        opacity: _fade,
         child: SlideTransition(
-          position: _offsetFloat!,
-          child: Opacity(
-            opacity: _feedAnimation!.value,
-            child: MaterialButton(
-                padding: const EdgeInsets.all(10),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(AppRadius.md)),
-                color: Color(AppColors.buttons),
-                elevation: AppElevation.overlay,
-                child: Padding(
-                  padding: const EdgeInsets.all(5.0),
+          position: _slide,
+          child: MouseRegion(
+            cursor: SystemMouseCursors.click,
+            onEnter: (_) => setState(() => _hovered = true),
+            onExit: (_) => setState(() => _hovered = false),
+            child: Material(
+              color: Colors.transparent,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 150),
+                transform: Matrix4.translationValues(0, _hovered ? -2 : 0, 0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(AppRadius.lg),
+                  border: Border.all(color: accent.withOpacity(0.12)),
+                  boxShadow: AppShadows.overlay,
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: InkWell(
+                  onTap: _open,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      CircleAvatar(
-                          radius: 25,
-                          child: Image.asset(widget.logoWithWihteText)),
-                      const SizedBox(
-                        height: 10,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsetsDirectional.fromSTEB(14, 14, 6, 14),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // App logo in a soft tinted tile.
+                            Container(
+                              width: 44,
+                              height: 44,
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: accent.withOpacity(0.08),
+                                borderRadius: BorderRadius.circular(AppRadius.md),
+                              ),
+                              child: Image.asset(widget.logoWithWihteText,
+                                  fit: BoxFit.contain,
+                                  errorBuilder: (_, __, ___) => Icon(
+                                      Icons.notifications_active_rounded,
+                                      color: accent)),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    widget.title,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      height: 1.3,
+                                      fontWeight: FontWeight.w700,
+                                      color: navy,
+                                    ),
+                                  ),
+                                  if (hasMessage) ...[
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      widget.message!,
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                        fontSize: 12.5,
+                                        height: 1.45,
+                                        color: Color(0xFF475467),
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                            // Close without opening.
+                            IconButton(
+                              onPressed: TimeoutMessage.hide,
+                              visualDensity: VisualDensity.compact,
+                              splashRadius: 18,
+                              icon: Icon(Icons.close_rounded,
+                                  size: 18, color: Colors.grey.shade500),
+                            ),
+                          ],
+                        ),
                       ),
-                      Text(widget.title,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Color(AppColors.secondaryButton))),
-                      const SizedBox(
-                        height: 5,
+                      // Time left before it hides.
+                      AnimatedBuilder(
+                        animation: _countdown,
+                        builder: (_, __) => LinearProgressIndicator(
+                          value: 1 - _countdown.value,
+                          minHeight: 3,
+                          backgroundColor: accent.withOpacity(0.08),
+                          color: accent,
+                        ),
                       ),
-                      widget.message == null
-                          ? Container()
-                          : Text(widget.message!,
-                          style: TextStyle(
-                              fontWeight: FontWeight.normal,
-                              color:
-                              Theme.of(context).colorScheme.tertiary))
                     ],
                   ),
                 ),
-                onPressed: () {
-                  TimeoutMessage.hide();
-                  if (widget.onCLick != null) {
-                    widget.onCLick!();
-                  }
-                }),
+              ),
+            ),
           ),
         ),
       ),
     );
-  }
-
-  divider() {
-    return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Container(height: 1, color: Colors.white));
   }
 }
