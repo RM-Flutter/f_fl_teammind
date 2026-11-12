@@ -1,0 +1,385 @@
+<title>Team Mind UI Consistency</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&family=Poppins:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one reading column; four fixes, each = problem → cause → proposal (with a phone-sized mock) → steps → done-when */
+:root {
+  --bg: #F5F6FB; --surface: #FFFFFF; --fg: #171A3A; --muted: #5E6283; --line: #E2E4F0;
+  --navy: #12136E; --accent: #3A8DED; --accent-soft: #E7F0FD;
+  --bad: #C2364B; --bad-soft: #FBE9EC; --good: #1F8A5B; --good-soft: #E4F4EC; --code-bg: #EEF0F8;
+  --app-bg: #F6F7FB; --app-card: #FFFFFF; --app-navy: #12136E; --app-blue: #3A8DED; --app-text: #1B1D3A; --app-sub: #8A8DA8;
+  --f-body: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+  --f-app: "Poppins", "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0D0F24; --surface: #161936; --fg: #E8E9F6; --muted: #A2A5C6; --line: #2A2E55;
+  --navy: #AEB2FF; --accent: #6AAAF5; --accent-soft: #1B2A4A; --bad: #F08597; --bad-soft: #3A1A24;
+  --good: #6BD3A2; --good-soft: #163327; --code-bg: #1F2347; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0D0F24; --surface: #161936; --fg: #E8E9F6; --muted: #A2A5C6; --line: #2A2E55;
+  --navy: #AEB2FF; --accent: #6AAAF5; --accent-soft: #1B2A4A; --bad: #F08597; --bad-soft: #3A1A24;
+  --good: #6BD3A2; --good-soft: #163327; --code-bg: #1F2347; color-scheme: dark; }
+
+body { background: var(--bg); color: var(--fg); font-family: var(--f-body); font-size: 15.5px; line-height: 1.75; }
+.wrap { max-width: 780px; margin: 0 auto; padding-block: 40px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 44px; }
+header { display: flex; flex-direction: column; gap: 8px; }
+.eyebrow { font-size: 12px; letter-spacing: .06em; color: var(--accent); font-weight: 700; }
+h1 { font-size: 30px; line-height: 1.3; margin: 0; color: var(--navy); text-wrap: balance; }
+.lead { color: var(--muted); margin: 0; max-width: 62ch; }
+.toc { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.toc a { text-decoration: none; color: var(--navy); background: var(--surface); border: 1px solid var(--line);
+  padding: 6px 14px; border-radius: 999px; font-size: 13.5px; font-weight: 500; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+section.plan { display: flex; flex-direction: column; gap: 20px; }
+h2 { font-size: 22px; margin: 0; color: var(--navy); display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; text-wrap: balance; }
+h2 .tag { font-size: 12px; font-weight: 500; color: var(--muted); background: var(--surface); border: 1px solid var(--line); padding: 2px 10px; border-radius: 999px; }
+h3 { font-size: 16px; margin: 0; }
+p { margin: 0; max-width: 65ch; }
+.block { display: flex; flex-direction: column; gap: 10px; }
+.why { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.why .label { font-size: 12px; font-weight: 700; color: var(--bad); }
+
+code, .mono { font-family: var(--f-mono); font-size: 13px; background: var(--code-bg); padding: 1px 6px; border-radius: 4px; direction: ltr; unicode-bidi: isolate; }
+pre { margin: 0; background: var(--code-bg); border-radius: 10px; padding: 14px 16px; overflow-x: auto; direction: ltr; text-align: left; }
+pre code { background: none; padding: 0; font-size: 12.8px; line-height: 1.6; }
+
+ol.steps { margin: 0; padding: 0; list-style: none; counter-reset: s; display: flex; flex-direction: column; gap: 12px; }
+ol.steps > li { counter-increment: s; display: grid; grid-template-columns: 32px 1fr; gap: 12px; min-width: 0; }
+ol.steps > li::before { content: counter(s); width: 28px; height: 28px; border-radius: 50%; background: var(--navy); color: var(--surface);
+  display: grid; place-items: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+ol.steps > li > div { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+
+.done { background: var(--good-soft); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; }
+.done h3 { color: var(--good); }
+.done ul, .plain { margin: 0; padding-inline-start: 20px; display: flex; flex-direction: column; gap: 4px; }
+.ask { border-inline-start: 3px solid var(--accent); padding-inline-start: 12px; display: flex; flex-direction: column; gap: 4px; }
+.ask b { color: var(--accent); }
+
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 540px; font-size: 13.5px; }
+th, td { text-align: start; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; color: var(--muted); font-weight: 500; }
+tr:last-child td { border-bottom: 0; }
+
+/* phone mocks: always light, like the app */
+.mocks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 600px) { .mocks { grid-template-columns: 1fr; } h1 { font-size: 25px; } }
+figure { margin: 0; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+figcaption { font-size: 13px; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+figcaption .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.dot.before { background: var(--bad); } .dot.after { background: var(--good); }
+.phone { background: var(--app-bg); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; font-family: var(--f-app); direction: ltr; color: var(--app-text); }
+.bar { background: #fff; height: 46px; display: flex; align-items: center; justify-content: center; position: relative; font-weight: 700; color: var(--app-navy); font-size: 14px; }
+.bar .back { position: absolute; left: 10px; width: 26px; height: 26px; border-radius: 50%; background: var(--app-navy); }
+.bar .bm { position: absolute; right: 12px; width: 10px; height: 14px; border: 2px solid var(--app-navy); border-bottom-width: 0; }
+.ph-body { padding: 12px; display: flex; flex-direction: column; gap: 10px; min-height: 150px; }
+.ph-body.tight { padding-top: 0; }
+.mcard { background: var(--app-card); border-radius: 10px; height: 40px; box-shadow: 0 1px 2px rgba(18,19,110,.06); }
+.oldsw { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 11px; height: 28px; }
+.oldsw i { width: 40px; height: 20px; border-radius: 10px; background: #2E3570; position: relative; }
+.oldsw i::after { content: ""; position: absolute; left: 3px; top: 3px; width: 14px; height: 14px; border-radius: 50%; background: #fff; }
+.seg { background: #E9EBF5; border-radius: 999px; padding: 3px; display: grid; grid-template-columns: 1fr 1fr; font-size: 11.5px; font-weight: 600; }
+.seg span { text-align: center; padding: 6px 0; border-radius: 999px; color: #6B6F93; }
+.seg span.on { background: #fff; color: var(--app-navy); box-shadow: 0 1px 3px rgba(18,19,110,.12); }
+.empty { display: flex; flex-direction: column; align-items: center; gap: 6px; padding-block: 22px; text-align: center; }
+.empty .ic { width: 56px; height: 56px; border-radius: 50%; background: #E7F0FD; display: grid; place-items: center; }
+.empty .ic svg { width: 26px; height: 26px; }
+.empty b { font-size: 13px; color: var(--app-text); }
+.empty small { font-size: 11px; color: var(--app-sub); max-width: 26ch; line-height: 1.5; }
+.empty .cta { margin-top: 6px; font-size: 11px; font-weight: 600; color: #fff; background: var(--app-blue); padding: 6px 14px; border-radius: 999px; }
+.oldempty { display: flex; flex-direction: column; align-items: center; gap: 8px; padding-block: 28px; font-size: 11.5px; color: #8A8A8A; }
+.oldempty .a { width: 34px; height: 30px; border-radius: 4px; background: #6D6D6D; }
+.oldempty .b { width: 34px; height: 30px; border-radius: 50% 50% 4px 4px; border: 6px solid var(--app-navy); border-bottom-color: transparent; }
+.calbtn { background: var(--app-blue); color: #fff; border-radius: 999px; font-size: 11.5px; font-weight: 600; text-align: center; padding: 10px; }
+.calcard { background: #fff; border-radius: 12px; padding: 10px; display: flex; gap: 10px; align-items: center; box-shadow: 0 1px 2px rgba(18,19,110,.06); }
+.calcard .ib { width: 34px; height: 34px; border-radius: 9px; background: #E7F0FD; display: grid; place-items: center; flex: none; }
+.calcard .t { display: flex; flex-direction: column; flex: 1; min-width: 0; line-height: 1.35; }
+.calcard .t b { font-size: 12px; } .calcard .t small { font-size: 10.5px; color: var(--app-sub); }
+.calcard .chev { color: var(--app-sub); font-size: 14px; }
+.navyhead { background: var(--app-navy); color: #fff; height: 58px; border-radius: 0 0 16px 16px; display: grid; place-items: center; font-weight: 700; font-size: 14px; }
+footer { color: var(--muted); font-size: 13px; }
+
+.opts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 680px) { .opts { grid-template-columns: 1fr; } }
+.opt { background: var(--app-bg); border: 1px solid var(--line); border-radius: 16px; padding: 18px 10px; display: flex; flex-direction: column; align-items: center; gap: 8px; font-family: var(--f-app); color: var(--app-text); text-align: center; position: relative; min-width: 0; }
+.opt.pick { border: 2px solid var(--good); }
+.opt .badge { position: absolute; top: 8px; inset-inline-end: 8px; font-family: var(--f-body); font-size: 11px; font-weight: 700; background: var(--good-soft); color: var(--good); padding: 1px 8px; border-radius: 6px; }
+.opt .name { font-family: var(--f-body); font-size: 12.5px; color: var(--muted); font-weight: 500; margin-top: 4px; }
+.opt b { font-size: 13px; } .opt small { font-size: 11px; color: var(--app-sub); line-height: 1.5; max-width: 24ch; }
+.logo { width: 34px; height: 34px; position: relative; }
+.logo::before { content: ""; position: absolute; inset: 4px 2px 2px; border: 6px solid var(--app-navy); border-bottom-color: transparent; border-radius: 50%; }
+.logo::after { content: ""; position: absolute; width: 8px; height: 8px; left: 13px; top: 15px; border-radius: 50%; background: var(--app-blue); }
+.o-disc { width: 92px; height: 92px; border-radius: 50%; background: #fff; display: grid; place-items: center; box-shadow: 0 8px 24px rgba(58,141,237,.18); }
+.o-tint { width: 76px; height: 76px; border-radius: 22px; background: #E7F0FD; display: grid; place-items: center; }
+.o-rings { width: 110px; height: 110px; border-radius: 50%; display: grid; place-items: center; background: radial-gradient(circle, transparent 38%, rgba(58,141,237,.10) 39%, rgba(58,141,237,.10) 40%, transparent 41%, transparent 58%, rgba(58,141,237,.07) 59%, rgba(58,141,237,.07) 60%, transparent 61%); }
+.o-rings .core { width: 58px; height: 58px; border-radius: 50%; background: #E7F0FD; display: grid; place-items: center; }
+.gapline { display: flex; flex-direction: column; font-family: var(--f-app); }
+.gaprow { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--muted); font-family: var(--f-body); }
+.gap { background: repeating-linear-gradient(45deg, rgba(194,54,75,.18) 0 4px, transparent 4px 8px); border-radius: 4px; }
+.gap.ok { background: repeating-linear-gradient(45deg, rgba(31,138,91,.22) 0 4px, transparent 4px 8px); }
+
+.chip { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: var(--app-blue); background: #E7F0FD; border: 1px solid #C9DDF8; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+.rcard { background: #fff; border-radius: 12px; padding: 10px; display: flex; align-items: center; gap: 10px; box-shadow: 0 1px 2px rgba(18,19,110,.06); }
+.av { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--app-blue); background: #E7F0FD; flex: none; display: grid; place-items: center; font-size: 11px; font-weight: 700; color: var(--app-blue); }
+.rt { flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.35; }
+.rt b { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .rt small { font-size: 10.5px; color: var(--app-sub); }
+.chev2 { color: var(--app-sub); font-size: 15px; }
+.oldcard { background: #fff; border: 1px solid #EEE; border-radius: 6px; padding: 10px; display: flex; flex-direction: column; gap: 4px; }
+.oldcard b { font-size: 12px; font-weight: 500; } .oldcard small { font-size: 10.5px; color: var(--app-sub); }
+.fabx { align-self: flex-end; background: var(--app-blue); color: #fff; font-size: 11.5px; font-weight: 600; padding: 10px 14px; border-radius: 14px; }
+.fab { align-self: flex-end; width: 40px; height: 40px; border-radius: 50%; background: var(--app-blue); color: #fff; display: grid; place-items: center; font-size: 20px; box-shadow: 0 4px 10px rgba(58,141,237,.35); }
+.bigname { text-align: center; font-size: 19px; font-weight: 400; padding-block: 4px; }
+.blackbar { background: #000; height: 16px; }
+.bp { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 600px) { .bp { grid-template-columns: 1fr; } }
+.bpc { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.bpc .w { font-family: var(--f-mono); font-size: 12px; color: var(--accent); direction: ltr; text-align: start; }
+.bpc b { font-size: 15px; } .bpc ul { margin: 0; padding-inline-start: 18px; font-size: 13.5px; color: var(--muted); display: flex; flex-direction: column; gap: 2px; }
+.dev { display: flex; gap: 8px; align-items: flex-end; height: 70px; direction: ltr; }
+.dev span { background: var(--accent-soft); border: 1.5px solid var(--accent); border-radius: 6px; }
+
+.sw { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+@media (max-width: 600px) { .sw { grid-template-columns: 1fr; } }
+.swc { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px; font-family: var(--f-app); min-width: 0; }
+.swc .t { font-family: var(--f-body); font-size: 12.5px; color: var(--muted); }
+.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.bdg { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 999px; }
+.ring { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; }
+.dots { display: flex; gap: 6px; } .dots span { width: 28px; height: 28px; border-radius: 8px; border: 1px solid rgba(0,0,0,.06); }
+.contrast { font-family: var(--f-mono); font-size: 11.5px; direction: ltr; text-align: start; }
+.over { display: flex; gap: 6px; align-items: center; font-size: 11px; font-family: var(--f-app); white-space: nowrap; overflow: hidden; position: relative; }
+.over .c { padding: 4px 10px; border-radius: 999px; border: 1px solid #ccc; }
+.over .stripe { position: absolute; inset-inline-end: 0; top: 0; bottom: 0; width: 22px; background: repeating-linear-gradient(45deg,#f5d000 0 5px,#222 5px 10px); }
+.sechead { display: flex; justify-content: space-between; align-items: center; font-family: var(--f-app); font-size: 12px; font-weight: 600; }
+.sechead a { color: var(--app-blue); font-size: 11px; text-decoration: none; }
+.chips { display: flex; gap: 6px; overflow: hidden; font-family: var(--f-app); font-size: 11px; }
+.chips span { padding: 4px 10px; border-radius: 999px; border: 1px solid #ddd; white-space: nowrap; }
+.chips span.on { background: var(--app-blue); color: #fff; border-color: var(--app-blue); }
+
+.hd-old { background: #12136E; color: #fff; height: 150px; border-radius: 0 0 16px 16px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 14px; gap: 3px; font-family: var(--f-app); }
+.hd-old .pic, .hd-new .pic { border-radius: 50%; background: #9FB3C8; border: 2px solid rgba(255,255,255,.6); }
+.hd-old b { font-size: 14px; } .hd-old small { font-size: 9.5px; opacity: .8; letter-spacing: .05em; }
+.hd-new { background: #12136E; color: #fff; border-radius: 0 0 16px 16px; padding: 40px 12px 14px; display: flex; gap: 10px; align-items: center; font-family: var(--f-app); }
+.hd-new .t { display: flex; flex-direction: column; line-height: 1.35; min-width: 0; }
+.hd-new b { font-size: 13px; } .hd-new small { font-size: 10px; opacity: .8; }
+.ruler { font-family: var(--f-mono); font-size: 11px; color: var(--muted); direction: ltr; text-align: center; }
+.shadow-row { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; }
+@media (max-width: 640px) { .shadow-row { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+.sh { background: #F6F7FB; border: 1px solid var(--line); border-radius: 14px; padding: 18px 12px 12px; display: flex; flex-direction: column; align-items: center; gap: 10px; min-width: 0; }
+.sh .box { width: 100%; height: 44px; background: #fff; border-radius: 12px; }
+.sh .n { font-family: var(--f-mono); font-size: 12px; color: var(--accent); direction: ltr; }
+.sh .u { font-size: 12px; color: var(--muted); text-align: center; }
+.login { position: relative; height: 230px; background: linear-gradient(180deg,#6b7bb5,#12136E); border-radius: 14px; overflow: hidden; font-family: var(--f-app); color: #fff; }
+.login .btn { position: absolute; left: 50%; transform: translateX(-50%); background: #3A8DED; border-radius: 999px; font-size: 10.5px; font-weight: 600; padding: 6px 26px; }
+.login .cna { position: absolute; left: 0; right: 0; text-align: center; font-size: 10px; letter-spacing: .05em; }
+.login .pill { position: absolute; left: 50%; transform: translateX(-50%); background: rgba(80,80,80,.55); border-radius: 999px; font-size: 10px; padding: 5px 14px; white-space: nowrap; }
+.login .overlap { outline: 2px dashed #F08597; outline-offset: 2px; }
+.loginok { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; gap: 8px; padding-bottom: 12px; }
+.loginok .btn, .loginok .cna, .loginok .pill { position: static; transform: none; }
+
+.cmp { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+@media (max-width: 600px) { .cmp { grid-template-columns: 1fr; } }
+.cbox { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 8px; align-items: center; font-family: var(--f-app); min-width: 0; }
+.cbox .t { font-family: var(--f-body); font-size: 12.5px; color: var(--muted); align-self: stretch; }
+.pbtn { background: #3A8DED; color: #fff; border-radius: 999px; font-size: 12px; font-weight: 600; padding: 8px 0; width: 160px; text-align: center; }
+.lg { position: relative; background: linear-gradient(180deg,#8a95c4,#12136E); border-radius: 14px; height: 250px; overflow: hidden; font-family: var(--f-app); color: #fff; }
+.lg .logo2 { position: absolute; left: 50%; transform: translateX(-50%); width: 34px; height: 34px; border-radius: 50%; border: 6px solid #fff; border-bottom-color: transparent; }
+.lg .ttl { position: absolute; left: 0; right: 0; text-align: center; font-size: 12px; }
+.lg .fld { position: absolute; background: #fff; border-radius: 8px; height: 22px; }
+.rule { font-family: var(--f-mono); font-size: 11.5px; direction: ltr; text-align: start; color: var(--muted); }
+
+.cmp { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; }
+@media (max-width: 600px) { .cmp { grid-template-columns: 1fr; } }
+.cbox { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 8px; align-items: center; font-family: var(--f-app); min-width: 0; }
+.cbox .t { font-family: var(--f-body); font-size: 12.5px; color: var(--muted); align-self: stretch; }
+.pbtn { background: #3A8DED; color: #fff; border-radius: 999px; font-size: 12px; font-weight: 600; padding: 8px 0; width: 160px; text-align: center; }
+.lg { position: relative; background: linear-gradient(180deg,#8a95c4,#12136E); border-radius: 14px; height: 250px; overflow: hidden; font-family: var(--f-app); color: #fff; }
+.lg .logo2 { position: absolute; left: 50%; transform: translateX(-50%); width: 34px; height: 34px; border-radius: 50%; border: 6px solid #fff; border-bottom-color: transparent; }
+.lg .ttl { position: absolute; left: 0; right: 0; text-align: center; font-size: 12px; }
+.lg .fld { position: absolute; background: #fff; border-radius: 8px; height: 22px; }
+.rule { font-family: var(--f-mono); font-size: 11.5px; direction: ltr; text-align: start; color: var(--muted); }
+</style>
+
+<div class="wrap" dir="rtl" lang="ar">
+  <header>
+    <span class="eyebrow">TEAM MIND · خطة تعديل · الجولة السادسة</span>
+    <h1>توحيد شكل الشاشات في Team Mind</h1>
+    <p class="lead">الجولة دي بتصلح غلطاتي اللي فاتت: الهيدر اتصغر بطريقة وحشة، والـ Login وقع، والويب اتبوظ. وبتكمّل 4 حاجات: الترجمة في الأبلكيشن كله، وقاعدة واحدة للحروف (Title Case)، واسم الموظف في الـ app bar، وسهم "عرض" بعد الكلمة. وفي الآخر طريقة شغل جديدة: مش هقول إن حاجة خلصت قبل ما أشغلها بنفسي على الموبايل والويب.</p>
+    <nav class="toc" aria-label="المحتوى">
+      <a href="#rules">قبل أي حاجة</a>
+      <a href="#header">١ · هيدر Employee Info</a>
+      <a href="#login">٢ · الـ Login</a>
+      <a href="#tr">٣ · الترجمة</a>
+      <a href="#case">٤ · Title Case</a>
+      <a href="#name">٥ · الاسم في الـ app bar وسهم "عرض"</a>
+      <a href="#verify">٦ · التجربة قبل التسليم</a>
+    </nav>
+  </header>
+
+  <section class="plan" id="rules">
+    <h2>قبل أي حاجة: اللي إنت صلحته مش هلمسه</h2>
+    <div class="why"><span class="label">اللي لقيته على الجهاز دلوقتي</span>
+      <ul class="plain">
+        <li><b>الويب:</b> إنت عدّلت <code>LayoutService</code> و<code>AppContentWidth</code> وعملت commit (‏<code>856a363</code>). المحتوى بقى بعرض الشاشة كلها، والليستات عمود واحد، و<code>main_layout_screen</code> رجع بالـ bottom bar من غير الـ rail. ده هيفضل زي ما هو، وأي حاجة جديدة هتمشي عليه.</li>
+        <li><b>الـ Login:</b> رجع لنسخة الـ commit، يعني footer مثبّت بـ <code>Positioned</code>، ومعاه تعديلاتك على حجم الخط والخلفية. تعديلاتك دي هتفضل.</li>
+        <li><b>الهيدر:</b> لسه بنسختي الصغيرة (صف أفقي، وصورة 72)، والنسخة الأصلية محفوظة في الـ commit ‏<code>82eb67c</code>.</li>
+      </ul></div>
+  </section>
+
+  <!-- 1 -->
+  <section class="plan" id="header">
+    <h2>هيدر Employee Info: يرجع زي ما كان مع تصغير بسيط</h2>
+    <ol class="steps">
+      <li><div><b>أرجّع الملف الأصلي.</b><p>‏<code>profile_details_header.widget.dart</code> يرجع لنسخة <code>82eb67c</code> زي ما هي: كل حاجة في النص، والصورة فوق، وتحتها الاسم والمسمى الوظيفي والقسم، ونفس الخلفية والزرار.</p></div></li>
+      <li><div><b>تصغير بسيط بس.</b>
+        <div class="table-wrap"><table>
+          <thead><tr><th></th><th>الأصلي</th><th>بعد</th></tr></thead>
+          <tbody>
+            <tr><td>ارتفاع الهيدر</td><td>370</td><td>330</td></tr>
+            <tr><td>الصورة</td><td>100</td><td>88</td></tr>
+            <tr><td>المسافة بين الـ app bar والصورة</td><td>12</td><td>4</td></tr>
+            <tr><td>المسافة بين الصورة والاسم</td><td>12</td><td>8</td></tr>
+            <tr><td>حجم الاسم</td><td>22</td><td>20</td></tr>
+          </tbody>
+        </table></div>
+        <p>الأرقام دي هتتحط في <code>AppSizes</code> (‏<code>profileHeaderHeight</code> و<code>profileHeaderAvatar</code>). والـ token القديم <code>profileHeaderAvatar = 72</code> هيتغير لـ 88.</p></div></li>
+      <li><div><b>المسمى الوظيفي والقسم.</b><p>دلوقتي بيتكتبوا بالحروف الكبيرة كلها (<code>MANAGER</code> و<code>HR MANAGEMENT</code>). هيتكتبوا زي ما جايين من السيرفر من غير <code>toUpperCase</code>، علشان يمشوا على قاعدة الـ Title Case (الجزء ٤).</p></div></li>
+    </ol>
+  </section>
+
+  <!-- 2 -->
+  <section class="plan" id="login">
+    <h2>الـ Login: أشتغل عليه بحذر، وأجربه قبل ما أسلّمه</h2>
+    <div class="why"><span class="label">ليه وقع المرة اللي فاتت</span>
+      <p>حطيت الفورم في <code>SliverFillRemaining(hasScrollBody: false)</code>. الـ widget ده بيسأل المحتوى عن ارتفاعه الطبيعي (intrinsic height)، والعنوان "Login to Right Mind" معمول بـ <code>AutoSizeText</code>، وده جواه <code>LayoutBuilder</code>، والـ <code>LayoutBuilder</code> مش بيقدر يجاوب على السؤال ده. فالـ layout وقع والشاشة فضيت. والـ analyzer ما بيكشفش المشكلة دي، بتبان بس لما الأبلكيشن يشتغل. وأنا ما شغلتوش، وده كان غلط مني.</p>
+      <p><b>المشكلة الحالية على الويب:</b> "CREATE NEW ACCOUNT" وشريط الدومين متثبتين بـ <code>Positioned</code> فوق الصفحة، والفورم بيعمل scroll من تحتهم، فبيدخلوا في بعض.</p></div>
+    <div class="mocks">
+      <figure><div class="lg"><span class="logo2" style="top:58px"></span><span class="ttl" style="top:108px">Login to<br>Right Mind</span><span class="fld" style="top:150px;left:22%;right:22%"></span><span class="fld" style="top:180px;left:22%;right:22%"></span></div><figcaption><span class="dot before"></span>دلوقتي: المحتوى نازل لتحت، والجناب 50</figcaption></figure>
+      <figure><div class="lg"><span class="logo2" style="top:34px"></span><span class="ttl" style="top:78px">Login to<br>Right Mind</span><span class="fld" style="top:118px;left:7%;right:7%"></span><span class="fld" style="top:148px;left:7%;right:7%"></span></div><figcaption><span class="dot after"></span>بعد: المحتوى أعلى، والجناب 24</figcaption></figure>
+    </div>
+    <ol class="steps">
+      <li><div><b>الشكل الجديد من غير أي widget بيسأل عن الارتفاع الطبيعي.</b>
+<pre><code>LayoutBuilder(builder: (context, c) =&gt; SingleChildScrollView(
+  child: ConstrainedBox(
+    constraints: BoxConstraints(minHeight: c.maxHeight),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [ formColumn, footerColumn ],   // no Spacer / Expanded / IntrinsicHeight
+    ),
+  ),
+))</code></pre>
+        <p>الـ <code>Column</code> بياخد ارتفاع الشاشة على الأقل، والـ <code>spaceBetween</code> بيوزّع المسافة الفاضية. فلو الفورم قصير الـ footer بيفضل تحت الشاشة، ولو طويل (موبايل صغير، أو الكيبورد مفتوح، أو شباك ويب قصير) الـ footer بيعمل scroll مع المحتوى. مفيش حاجة مثبّتة فوق حاجة، فمستحيل يدخلوا في بعض. والطريقة دي مش محتاجة أي حاجة تتقاس مسبقاً.</p></div></li>
+      <li><div><b>أشيل الـ <code>Positioned</code> الاتنين والـ <code>SizedBox(150)</code>.</b><p>شريط الدومين يبطّل يلف نفسه بـ <code>SafeArea</code>، والمسافة اللي تحت (الـ home indicator) تتحسب من <code>MediaQuery.paddingOf(context).bottom</code> في آخر الـ footer.</p></div></li>
+      <li><div><b>اللوجو والمحتوى يطلعوا لفوق.</b><p><code>loginTopSpacer</code> يبقى <b>56</b> بدل 119، وده المسافة تحت أزرار Saved accounts واللغة بس، علشان اللوجو ما يلمسهمش. وعلى الويب والتابلت 32. و<code>loginLogoTitleGap</code> يبقى 20 بدل 34، و<code>loginTitleFormGap</code> يبقى 24 بدل 32. والتلاتة من غير <code>.h</code>، علشان ما يكبروش على الموبايلات الطويلة ويرجّعوا المساحة الفاضية.</p></div></li>
+      <li><div><b>الـ padding من الجناب أقل.</b><p>دلوقتي عرض الفورم ثابت <code>275.w</code>، وده بيسيب حوالي 50 من كل ناحية على iPhone. هيبقى عرض الشاشة ناقص <b>24</b> من كل ناحية (<code>AppSizes.loginSidePadding</code>)، يعني على عرض 390 يبقى 342 بدل 275. وأقصى عرض 420 على التابلت والويب. وزراير Login وAdd Company يفضلوا بنفس عرضهم في النص.</p></div></li>
+      <li><div><b>اللي إنت عملته يفضل.</b><p>حجم خط العنوان <code>20.sp</code>، وخط "CREATE NEW ACCOUNT" <code>12.sp</code>، والخلفية المتحركة بالـ <code>widthFactor</code> الجديد. مش هلمس الحاجات دي.</p></div></li>
+    </ol>
+    <div class="done"><h3>هنعتبره خلص لما</h3><ul>
+      <li>أشغّل الشاشة بنفسي على iPhone (simulator) وعلى Chrome بعرض 1440 وبعرض 390، وأبعتلك screenshot من كل واحد.</li>
+      <li>على الويب، لما أعمل scroll لآخر الصفحة مفيش أي حاجة بتعدي فوق حاجة، وأبعتلك screenshot بعد الـ scroll.</li>
+      <li>مفيش أي error في الـ console وأنا بفتح الشاشة.</li>
+    </ul></div>
+  </section>
+
+  <!-- 3 -->
+  <section class="plan" id="tr">
+    <h2>الترجمة: كل حاجة في الأبلكيشن تتترجم</h2>
+    <div class="why"><span class="label">اللي لقيته بالسكريبت</span>
+      <p>عملت سكريبت بيقرأ كل <code>.tr()</code> في <code>lib</code> (‏1288 key)، ويقارنها بـ <code>en.json</code> و<code>ar.json</code>.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>الحالة</th><th>العدد</th><th>الأمثلة</th></tr></thead>
+        <tbody>
+          <tr><td>key مستخدم ومش موجود في <code>ar.json</code></td><td><b>8</b></td><td><code>submitted</code> (Daily reports)، <code>view</code> (Payrolls)، <code>EGP</code>، <code>downloading</code>، <code>error_occurred</code>، <code>invalid_value</code>، <code>submitted_successfully</code>، <code>thereIsNoComments</code></td></tr>
+          <tr><td>key في <code>en.json</code> ومش في <code>ar.json</code></td><td>7</td><td>هطلعهم وهتأكد من كل واحد</td></tr>
+          <tr><td>نص إنجليزي مكتوب في الكود من غير <code>.tr()</code></td><td><b>20</b></td><td>"Try Again" و"Retry" و"Close" و"Gallery" و"Camera" و"Select Photo" و"Happy Birthday!" و"Go Home" و"No result found." و"Error"…</td></tr>
+          <tr><td>نص ثابت مكتوب جوه الكود</td><td>1</td><td><code>management_response_widget</code>: "HASSAN RAMY ASKS YOU TO CANCEL THIS REQUEST" (نص تجريبي، لازم يتشال)</td></tr>
+          <tr><td>حالات جاية من السيرفر وبتتعرض زي ما هي</td><td>هتأكد</td><td>أي <code>label: x.status</code> من غير <code>.tr()</code></td></tr>
+        </tbody>
+      </table></div></div>
+    <ol class="steps">
+      <li><div><b>الـ 8 keys الناقصين.</b><p>هضيفهم في الملفين. بالعربي: <code>submitted</code> = "تم الإرسال"، و<code>view</code> = "عرض"، و<code>EGP</code> = "ج.م"، و<code>downloading</code> = "جاري التحميل"، و<code>error_occurred</code> = "حدث خطأ"، و<code>invalid_value</code> = "قيمة غير صحيحة"، و<code>submitted_successfully</code> = "تم الإرسال بنجاح"، و<code>thereIsNoComments</code> = "لا توجد تعليقات". وأي key منهم مش موجود في <code>en.json</code> هضيفه برضه.</p></div></li>
+      <li><div><b>الـ 20 نص الإنجليزي.</b><p>كل واحد يبقى key في <code>AppStrings</code> و<code>en.json</code> و<code>ar.json</code>. لو فيه key موجود بنفس المعنى (زي <code>try_again</code>) هستخدمه بدل ما أعمل جديد. والنص التجريبي "HASSAN RAMY…" هيتشال ويتبدل بالنص اللي جاي من الـ API.</p></div></li>
+      <li><div><b>سكريبت يفضل في المشروع.</b><p><code>tool/check_translations.py</code> بيطبع أي key ناقص من الملفين، وأي <code>Text('English')</code> من غير <code>.tr()</code>. وهيتشغل مع <code>tool/check_design_tokens.sh</code>، والمفروض يطبع صفر قبل أي commit.</p></div></li>
+      <li><div><b>الأرقام في العربي.</b><p>في صورة Payrolls التاريخ اللي فوق بالأرقام العربية ("يوليو ٢٠٢٦")، واللي تحته بالأرقام الإنجليزية (2026-07-01). هخليهم بنفس الطريقة، بنفس قاعدة باقي الأبلكيشن (‏<code>DateService</code>).</p></div></li>
+    </ol>
+  </section>
+
+  <!-- 4 -->
+  <section class="plan" id="case">
+    <h2>Title Case في الأبلكيشن كله <span class="tag">280 مكان + 55 قيمة</span></h2>
+    <div class="why"><span class="label">الوضع دلوقتي</span>
+      <ul class="plain">
+        <li>فيه <b>280</b> <code>.toUpperCase()</code> في <b>113</b> ملف. أكتر حاجة في <code>more</code> و<code>points</code> و<code>employee_profiles</code> و<code>core/widgets</code>. منهم حوالي 10 بس بيعملوا initials أو مقارنات في الـ logic، ودول هيفضلوا.</li>
+        <li>فيه <b>55</b> قيمة في <code>en.json</code> مكتوبة كابيتل بالكامل، زي <code>LOGIN</code> و<code>NEXT</code> و<code>SKIP</code> و<code>YOUR PHONE</code> و<code>FORGET PASSWORD?</code> و<code>BY EMAIL</code> و<code>FOLLOW US</code>.</li>
+        <li>فيه 39 قيمة بتبدأ بحرف صغير. أغلبها أجزاء جملة بتتلزق في جملة تانية ("must include"، "is Required")، وهراجعها واحدة واحدة.</li>
+        <li>العربي مش متأثر، لأن العربي مفيهوش كابيتل.</li>
+      </ul></div>
+    <div class="cmp">
+      <div class="cbox"><span class="t">دلوقتي</span><span class="pbtn">LOGIN</span><span class="pbtn">Add Company</span><span style="font-size:11px;letter-spacing:.06em">CREATE NEW ACCOUNT</span></div>
+      <div class="cbox"><span class="t">بعد</span><span class="pbtn">Login</span><span class="pbtn">Add Company</span><span style="font-size:11px">Create New Account</span></div>
+    </div>
+    <div class="block">
+      <h3>القاعدة</h3>
+      <p class="rule">Title Case: every word starts with a capital — "Add Company", "Forgot Password?", "View All", "Create New Account"</p>
+      <ul class="plain">
+        <li><b>بتتطبق على:</b> الزراير، وعناوين الشاشات والأقسام، والتابات، والـ chips، والـ badges، والـ labels، والـ placeholders.</li>
+        <li><b>الجمل الكاملة</b> (رسايل الخطأ، والشرح، والـ empty state) بتبدأ بحرف كابيتل وتكمل عادي، زي "Interviews scheduled for you will show up here."</li>
+        <li><b>اللي يفضل كابيتل:</b> الاختصارات (EGP وHR وCV وID وPDF) والـ initials بس.</li>
+        <li><b>ممنوع</b> <code>.toUpperCase()</code> على أي نص بيظهر للمستخدم. شكل الحروف بيتحدد من قيمة الترجمة نفسها.</li>
+      </ul>
+    </div>
+    <ol class="steps">
+      <li><div><b>قيم <code>en.json</code>.</b><p>الـ 55 قيمة تبقى Title Case: <code>LOGIN</code> بقت <code>Login</code>، و<code>FORGET PASSWORD?</code> بقت <code>Forgot Password?</code> (مع تصليح الإملاء)، و<code>BY EMAIL</code> بقت <code>By Email</code>. الـ keys ما بتتغيرش، و<code>ar.json</code> مش هلمسه.</p></div></li>
+      <li><div><b>أشيل الـ <code>.toUpperCase()</code>.</b><p>من حوالي 270 مكان بيظهر فيهم كلام للمستخدم. هعدّي ملف ملف، مش بـ replace أعمى، لأن فيه مقارنات زي <code>status.toUpperCase() == 'PAID'</code> لو اتشالت هتبوظ.</p></div></li>
+      <li><div><b>الكلام اللي جاي من السيرفر.</b><p>زي اسم الموظف ("mohamed ryad")، والقسم، والمسمى الوظيفي. هعمل extension اسمها <code>titleCase</code> في <code>core/utils/string_extensions.dart</code>، بتخلي أول حرف من كل كلمة كابيتل، ومش بتلمس العربي ولا الاختصارات. وهستخدمها في الكروت والهيدرز.</p></div></li>
+      <li><div><b>عناوين أقسام More.</b><p>(MY WORK، MY REQUESTS…) تبقى "My Work" و"My Requests"، بنفس الوزن والـ letter-spacing.</p></div></li>
+      <li><div><b>القيم اللي بتبدأ بحرف صغير.</b><p>من الـ 39، اللي بتظهر لوحدها تتصلح، واللي بتتلزق في نص جملة تفضل زي ما هي.</p></div></li>
+      <li><div><b>قاعدة وفحص.</b><p>قاعدة 14 في <code>app_design.dart</code>، وأحدّث <code>CLAUDE.md</code>. وفي <code>tool/check_design_tokens.sh</code> فحص بيطلع أي <code>.toUpperCase()</code> جديد (ما عدا اللي جنبه <code>// initials</code> أو <code>// compare</code>)، وأي قيمة في <code>en.json</code> كلها كابيتل ومش اختصار.</p></div></li>
+    </ol>
+    <div class="done"><h3>هنعتبره خلص لما</h3><ul>
+      <li>في الـ Login: "Login" و"Add Company" و"Create New Account" و"Forgot Password?" و"By Email" كلهم Title Case.</li>
+      <li>في More وTeam Fingerprint وEmployee Info والـ Blogs والزراير: مفيش كلام كله كابيتل.</li>
+      <li>الأسماء اللي جاية من السيرفر بتظهر "Mohamed Ryad".</li>
+      <li>الفحص بيعدّي، والعربي مش متأثر.</li>
+    </ul></div>
+  </section>
+
+  <!-- 5 -->
+  <section class="plan" id="name">
+    <h2>اسم الموظف في الـ app bar، وسهم "عرض" بعد الكلمة</h2>
+    <ol class="steps">
+      <li><div><b>Payrolls.</b><p>الاسم دلوقتي صف تحت الـ app bar بحجم 20 (<code>payrolls_list_screen.dart</code>). لما الشاشة تتفتح لموظف تاني، عنوان الـ app bar هيبقى اسمه، والصف ده هيتشال، زي ما عملنا في Fingerprint.</p></div></li>
+      <li><div><b>نفس الشيء في الشاشات التانية اللي فيها اسم موظف.</b><p>Evaluation (‏<code>evaluation_screen.dart</code>)، وRewards &amp; penalties، وRequests by employee. أي شاشة بتتفتح لموظف معين هيبقى اسمه هو العنوان.</p></div></li>
+      <li><div><b>سهم "عرض".</b><p>في <code>payroll_list_item_widget.dart</code> الـ chip مستخدم <code>icon:</code>، فالسهم بييجي قبل الكلمة. هيبقى <code>trailingIcon:</code> فالسهم ييجي بعد "عرض"، وبيتقلب لوحده في العربي. وكلمة "view" هتتترجم لـ "عرض" (من الجزء ٣). ودورت على أي chip تاني فيه سهم قبل الكلمة، وده المكان الوحيد.</p></div></li>
+    </ol>
+  </section>
+
+  <!-- 6 -->
+  <section class="plan" id="verify">
+    <h2>التجربة قبل التسليم</h2>
+    <div class="why"><span class="label">ليه</span><p>الجولتين اللي فاتوا قلت "خلص" بعد الـ analyzer بس، والـ analyzer ما بيكشفش مشاكل الـ layout. فالـ Login وقع، والويب اتبوظ وإنت اللي صلحته. من الجولة دي، كل جزء هيتجرب قبل ما أقولك إنه خلص.</p></div>
+    <ol class="steps">
+      <li><div><b>الويب.</b><p>أشغّل <code>flutter run -d web-server</code> وأفتح الشاشة في الـ browser اللي جوه التطبيق، بعرض 1440 وبعرض 390. وأبص على الـ console، وأبعتلك screenshot.</p></div></li>
+      <li><div><b>الموبايل.</b><p>أشغّله على الـ iOS simulator، وأعدّي على الشاشات اللي اتغيرت في العربي والإنجليزي، وأبعتلك screenshot.</p></div></li>
+      <li><div><b>الحاجات التلقائية.</b><p><code>flutter analyze</code> من غير errors، و<code>tool/check_design_tokens.sh</code> و<code>tool/check_translations.py</code> بيطبعوا صفر.</p></div></li>
+      <li><div><b>لو مقدرتش أجرّب حاجة.</b><p>هقولك بالظبط إيه اللي ما اتجربش، ومش هقول إنه خلص.</p></div></li>
+    </ol>
+  </section>
+
+  <section class="plan" id="order">
+    <h2>ترتيب التنفيذ</h2>
+    <ol class="steps">
+      <li><div><b>الهيدر</b><p>رجوع للنسخة الأصلية مع التصغير البسيط، وتجربة على الموبايل والويب.</p></div></li>
+      <li><div><b>الـ Login</b><p>تجربة على الموبايل والويب، مع screenshot بعد الـ scroll.</p></div></li>
+      <li><div><b>Payrolls والاسم في الـ app bar وسهم "عرض"</b></div></li>
+      <li><div><b>الترجمة</b><p>الـ 8 keys، والـ 20 نص، والسكريبت.</p></div></li>
+      <li><div><b>Title Case</b><p>الـ 41 قيمة، وبعدها الـ 280 <code>toUpperCase</code> ملف ملف.</p></div></li>
+    </ol>
+  </section>
+
+  <footer>اتعملت من الكود على branch ‏<span class="mono">new-version2</span> بعد الـ commit ‏<span class="mono">856a363</span>. الجولة الخامسة محفوظة في <span class="mono">docs/plans/ui_consistency_plan_round5.html</span>.</footer>
+</div>

@@ -1,0 +1,213 @@
+<title>Free Services Wide Screens</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column, tables for the per-screen changes, small CSS schematics for columns per breakpoint. */
+:root {
+  --bg: #F6F7FB;
+  --surface: #FFFFFF;
+  --fg: #141A3A;
+  --muted: #5B6180;
+  --line: #E3E5EE;
+  --accent: #2F7FE0;
+  --navy: #0A0F5C;
+  --soft: #EAF2FD;
+  --warn: #B4570A;
+  --warn-soft: #FDF1E4;
+  --ok: #1D7A4E;
+  --ok-soft: #E6F5EC;
+  --font-body: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E1124; --surface: #171B33; --fg: #E8EAF6; --muted: #A2A7C4; --line: #2A2F4D;
+    --accent: #6AA8F0; --navy: #B9C0FF; --soft: #1C2B48; --warn: #F0A35E; --warn-soft: #3A2A18;
+    --ok: #6CCB9A; --ok-soft: #173326; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E1124; --surface: #171B33; --fg: #E8EAF6; --muted: #A2A7C4; --line: #2A2F4D;
+  --accent: #6AA8F0; --navy: #B9C0FF; --soft: #1C2B48; --warn: #F0A35E; --warn-soft: #3A2A18;
+  --ok: #6CCB9A; --ok-soft: #173326; color-scheme: dark;
+}
+html { direction: rtl; }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--font-body);
+  font-size: 15px; line-height: 1.75;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 64px;
+}
+main { max-width: 880px; margin: 0 auto; display: grid; gap: 40px; }
+h1, h2, h3 { color: var(--navy); line-height: 1.35; text-wrap: balance; margin: 0; }
+h1 { font-size: 28px; font-weight: 700; }
+h2 { font-size: 20px; font-weight: 700; }
+h3 { font-size: 16px; font-weight: 600; }
+p { margin: 0; max-width: 68ch; }
+code { font-family: var(--font-mono); font-size: 13px; direction: ltr; unicode-bidi: isolate;
+  background: var(--soft); color: var(--navy); padding: 1px 6px; border-radius: 6px; }
+.lede { color: var(--muted); }
+section { display: grid; gap: 14px; }
+.eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .06em; color: var(--accent); }
+ul, ol { margin: 0; padding-inline-start: 22px; display: grid; gap: 6px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; }
+.note { border-radius: 12px; padding: 14px 16px; }
+.note.warn { background: var(--warn-soft); color: var(--warn); }
+.note.ok { background: var(--ok-soft); color: var(--ok); }
+.note strong { font-weight: 700; }
+
+/* Breakpoint schematics */
+.bps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+@media (max-width: 640px) { .bps { grid-template-columns: 1fr; } }
+.bp { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px; display: grid; gap: 10px; }
+.bp .name { font-weight: 700; color: var(--navy); }
+.bp .range { font-family: var(--font-mono); font-size: 12px; color: var(--muted); direction: ltr; text-align: right; }
+.cols { display: grid; gap: 4px; }
+.cols span { height: 18px; border-radius: 4px; background: var(--soft); border: 1px solid var(--line); }
+.cols.c1 { grid-template-columns: 1fr; } .cols.c2 { grid-template-columns: repeat(2, 1fr); }
+.cols.c3 { grid-template-columns: repeat(3, 1fr); } .cols.c4 { grid-template-columns: repeat(4, 1fr); }
+.cols.tile span { height: 26px; background: var(--accent); opacity: .35; border: 0; }
+.bp .lbl { font-size: 12px; color: var(--muted); }
+
+/* Tables */
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+table { width: 100%; border-collapse: collapse; min-width: 640px; }
+th, td { text-align: start; vertical-align: top; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+th { font-size: 12px; font-weight: 600; letter-spacing: .04em; color: var(--muted); background: var(--bg); }
+tr:last-child td { border-bottom: 0; }
+td:first-child { font-weight: 600; color: var(--navy); white-space: nowrap; }
+td.now { color: var(--muted); }
+.tag { display: inline-block; font-size: 12px; font-weight: 600; border-radius: 999px; padding: 1px 10px; }
+.tag.same { background: var(--bg); color: var(--muted); border: 1px solid var(--line); }
+
+ol.steps { counter-reset: s; list-style: none; padding: 0; gap: 10px; }
+ol.steps li { counter-increment: s; display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: start; }
+ol.steps li::before { content: counter(s); width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--navy); color: var(--surface); font-size: 13px; font-weight: 700; }
+</style>
+
+<main>
+  <header style="display:grid; gap:10px">
+    <span class="eyebrow">TEAM MIND · FREE SERVICES · الويب والشاشات الكبيرة</span>
+    <h1>خطة شاشات الـ Free Services على الشاشات الكبيرة</h1>
+    <p class="lede">شبكة الخدمات تبقى ٣ أو ٤ في الصف، والهيدر يصغر ويطلع صف الاسم والمنيو لفوق. وكمان كل شاشات الـ Free Services تملا العرض بأعمدة زيادة بدل الفراغات الكبيرة على الجنب. لسه مفيش كود اتغير، دي الخطة بس.</p>
+  </header>
+
+  <section>
+    <h2>ليه في فراغات على الجنب دلوقتي</h2>
+    <div class="panel">
+      <ul>
+        <li><strong>Smart Card</strong> محطوط لها حد أقصى للعرض بإيدها: <code>BoxConstraints(maxWidth: 700)</code>. ده سبب الفراغ اللي في صورتك. باقي التطبيق مالوش الحد ده، لأن <code>LayoutService.contentMaxWidth</code> = <code>double.infinity</code> (اختيارك إن المحتوى يملا الويب).</li>
+        <li>باقي شاشات الـ Free Services بتملا العرض، بس بعمود واحد. فالفورم أو الكارت بيتمط لعرض ١٩٠٠px. ده نفس الإحساس بالفراغ، بس جوا الكارت بدل ما يكون على الجنب.</li>
+        <li>شبكة الخدمات في الـ Home عمودين ثابتين في <code>services_grid_widget.dart</code> مهما كان عرض الشاشة.</li>
+        <li>الهيدر ارتفاعه ثابت 190 (و110 وهو مصغّر)، والارتفاع ده محسوب على الموبايل ومعاه الـ status bar (حوالي 59). على الويب مفيش status bar، فبيفضل 190 كله، والصف مثبت على بعد 28 من تحت، فبيبان كبير وتقيل.</li>
+      </ul>
+    </div>
+    <div class="note warn"><strong>مش هلمس:</strong> <code>contentMaxWidth</code> و<code>AppContentWidth</code> فاضلين زي ما إنت ظبطتهم. الحل إن الأعمدة تزيد، مش إن العرض يقل.</div>
+  </section>
+
+  <section>
+    <h2>القاعدة: أعمدة حسب عرض الشاشة</h2>
+    <p>نفس الحدود الموجودة في <code>LayoutService</code> (‎600 و‎1024)، علشان كل الشاشات تتغير عند نفس النقطة:</p>
+    <div class="bps">
+      <div class="bp">
+        <span class="name">موبايل</span><span class="range">width &lt; 600</span>
+        <span class="lbl">ليستات وفورمات</span><div class="cols c1"><span></span></div>
+        <span class="lbl">كروت الخدمات</span><div class="cols c2 tile"><span></span><span></span></div>
+      </div>
+      <div class="bp">
+        <span class="name">تابلت / ويب صغير</span><span class="range">600 – 1024</span>
+        <span class="lbl">ليستات</span><div class="cols c2"><span></span><span></span></div>
+        <span class="lbl">كروت الخدمات</span><div class="cols c3 tile"><span></span><span></span><span></span></div>
+      </div>
+      <div class="bp">
+        <span class="name">ويب كبير</span><span class="range">width ≥ 1024</span>
+        <span class="lbl">ليستات</span><div class="cols c3"><span></span><span></span><span></span></div>
+        <span class="lbl">كروت الخدمات</span><div class="cols c4 tile"><span></span><span></span><span></span><span></span></div>
+      </div>
+    </div>
+    <div class="note ok"><strong>الموبايل مش هيتغير:</strong> تحت 600 كل حاجة زي ما هي دلوقتي بالظبط.</div>
+  </section>
+
+  <section>
+    <h2>حاجتين مشتركين في <code>core</code></h2>
+    <div class="panel" style="display:grid; gap:12px">
+      <div>
+        <h3><code>LayoutService.columns(context, {compact, medium, expanded})</code></h3>
+        <p>دالة واحدة بترجع عدد الأعمدة حسب العرض. مثلًا الخدمات <code>(2, 3, 4)</code> والليستات <code>(1, 2, 3)</code>. بتتحط جنب <code>listColumns</code> الموجودة.</p>
+      </div>
+      <div>
+        <h3><code>AppResponsiveGrid</code> <span class="lbl" style="color:var(--muted); font-weight:400">— <code>core/widgets/app_responsive_grid.widget.dart</code></span></h3>
+        <p>بيوزع الكروت على عدد الأعمدة ده، بمسافة 12 أفقي ورأسي (<code>AppSpacing.md</code>). الكروت اللي في نفس الصف بنفس العرض والارتفاع، والصف الأخير لو ناقص بيتساب فاضي من الآخر (مش بيتمط). بيستخدمه الـ Home والـ Smart Card والـ Premium Templates وأي ليست كروت. والـ shimmer بتاع كل شاشة بيستخدمه هو كمان، فالـ loading بيترسم بنفس عدد الأعمدة.</p>
+      </div>
+      <div>
+        <h3>الفورمات: حقلين في الصف من 1024</h3>
+        <p>حقول الإدخال العادية بتتقسم اتنين اتنين. الحقول متعددة السطور، والرفع، والصورة، والتابات بتفضل بعرض كامل. زرار الحفظ بياخد عرض عمود واحد وبيتحط في البداية، بدل ما يتمط على عرض الشاشة كلها.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>الهيدر بتاع Free Services Home</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>الحالة</th><th>دلوقتي</th><th>بعد التعديل</th></tr></thead>
+        <tbody>
+          <tr><td>الارتفاع وهو مفتوح</td><td class="now">190 ثابت</td><td><code>safeTop + 120</code>: حوالي 179 على iPhone (أقل شوية)، و120 على الويب</td></tr>
+          <tr><td>الارتفاع وهو مصغّر</td><td class="now">110 ثابت</td><td><code>safeTop + 64</code></td></tr>
+          <tr><td>مكان صف الاسم والمنيو</td><td class="now">على بعد 28 من تحت</td><td>في نص المساحة اللي تحت الـ status bar ومرفوع 6 لفوق، فبيبان أعلى ومتوازن على الويب والموبايل</td></tr>
+          <tr><td>على الويب العريض</td><td class="now">الأفاتار ملزوق في الطرف</td><td>الصف بيبدأ عند نفس حافة الكروت اللي تحته (16)، والمنيو عند الطرف التاني</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="lede">الارتفاع ده بيتحسب مرة واحدة ويتبعت لـ <code>CoreHeader.transform</code> وللـ widget، علشان الصورة والمسافة اللي تحتها يكونوا متطابقين.</p>
+  </section>
+
+  <section>
+    <h2>شاشة شاشة</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>الشاشة</th><th>دلوقتي على الويب</th><th>على الشاشات الكبيرة بعد التعديل</th></tr></thead>
+        <tbody>
+          <tr><td>Free Services Home</td><td class="now">عمودين، الكارت عرضه حوالي 970px</td><td>3 أعمدة من 600، و4 من 1024. ارتفاع الكارت 108 زي ما هو. الـ shimmer بنفس الأعمدة</td></tr>
+          <tr><td>Smart Card</td><td class="now">عرض 700 في النص وفراغ على الجنبين</td><td>نشيل حد الـ 700. كروت الشركات والبروفايل الشخصي في شبكة 1 / 2 / 3. كروت "Call Us For" بعرض خلية واحدة من نفس الشبكة بدل ما تتمط. نص المقدمة سطوره بحد أقصى 720 علشان يتقري، والصفحة نفسها بتملا العرض</td></tr>
+          <tr><td>Smart Card · تفاصيل الشركة</td><td class="now">كروت الأكشن اتنين اتنين، والموظفين عمود واحد</td><td>كروت الأكشن الأربعة في صف واحد من 1024، والموظفين في شبكة 1 / 2 / 3</td></tr>
+          <tr><td>Premium Templates</td><td class="now">ليست عمود واحد ممطوط</td><td>شبكة 1 / 2 / 3. البحث والفلتر فوق بعرض كامل</td></tr>
+          <tr><td>My CV</td><td class="now">كروت المعلومات عمودين ممطوطين</td><td>2 / 3 / 4 أعمدة. التابات والمقدمة بعرض كامل</td></tr>
+          <tr><td>CV Generator · Create / Update، وSmart Card · تعديل الشركة والموظف</td><td class="now">حقل واحد في الصف، والزرار ممطوط</td><td>حقلين في الصف من 1024. الصورة والتابات بعرض كامل. الزرار بعرض عمود</td></tr>
+          <tr><td>Vacation Calc</td><td class="now">4 حقول تحت بعض بعرض الشاشة</td><td>الحقول في شبكة 2×2 من 600. الزرار وكارت النتيجة جنب بعض من 1024</td></tr>
+          <tr><td>Select Template (CV والـ Smart Card)</td><td class="now">كارت واحد في النص بالسحب</td><td>من 1024 تبقى شبكة templates (3 أو 4 في الصف) وتختار بالضغط، والكارت المختار عليه حد. في الـ Smart Card لوحة الألوان على الجنب. الزرار تحت. على الموبايل السحب بيفضل زي ما هو</td></tr>
+          <tr><td>About Team Mind</td><td class="now">نص وصور وفيديو تحت بعض بعرض الشاشة</td><td>من 1024 عمودين: النص والصور في ناحية، والفيديو في الناحية التانية، والزراير تحتهم</td></tr>
+          <tr><td>Free More</td><td class="now">نفس More tab</td><td><span class="tag same">من غير تغيير</span> بتفضل زي More tab بالظبط علشان يفضلوا متطابقين</td></tr>
+          <tr><td>Video · Personality Test</td><td class="now">الـ WebView ماليّ الصفحة</td><td><span class="tag same">من غير تغيير</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>ترتيب الشغل</h2>
+    <ol class="steps">
+      <li><span><code>LayoutService.columns</code> و<code>AppResponsiveGrid</code>، وتحديث <code>AppGridShimmer</code> و<code>AppShimmerList</code> علشان ياخدوا عدد الأعمدة.</span></li>
+      <li><span>الهيدر وشبكة الـ Home (أول حاجتين في رسالتك).</span></li>
+      <li><span>Smart Card، وبعدها تفاصيل الشركة.</span></li>
+      <li><span>Premium Templates وMy CV.</span></li>
+      <li><span>الفورمات: CV create وupdate، وتعديل الشركة والموظف، وVacation Calc.</span></li>
+      <li><span>Select Template (الاتنين) وAbout Team Mind.</span></li>
+      <li><span>README بتاع <code>features/services</code> وقاعدة الأعمدة في رأس <code>app_design.dart</code>.</span></li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>إزاي هتأكد</h2>
+    <div class="panel">
+      <ul>
+        <li><code>flutter analyze lib</code> من غير errors، و<code>tool/check_design_tokens.sh</code>، و<code>check_translations.py</code>.</li>
+        <li>هشغل الويب في الـ browser pane وأصوّر كل شاشة على عرض 1440 و1024 و800 و390، بالعربي والإنجليزي. قبل كده نسختي من الويب كانت بتقف عند الـ splash، فلو حصل كده تاني هقولك وهطلب منك تشوفها على السيرفر اللي شغال عندك.</li>
+        <li>هتأكد إن مفيش حاجة بتغطي حاجة، وإن الصف الأخير في الشبكة مش ممطوط، وإن الموبايل تحت 600 زي ما هو.</li>
+      </ul>
+    </div>
+  </section>
+</main>

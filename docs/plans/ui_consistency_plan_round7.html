@@ -1,0 +1,301 @@
+<title>Sheets And Field Hover</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&family=Poppins:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one reading column; four fixes, each = problem → cause → proposal (with a phone-sized mock) → steps → done-when */
+:root {
+  --bg: #F5F6FB; --surface: #FFFFFF; --fg: #171A3A; --muted: #5E6283; --line: #E2E4F0;
+  --navy: #12136E; --accent: #3A8DED; --accent-soft: #E7F0FD;
+  --bad: #C2364B; --bad-soft: #FBE9EC; --good: #1F8A5B; --good-soft: #E4F4EC; --code-bg: #EEF0F8;
+  --app-bg: #F6F7FB; --app-card: #FFFFFF; --app-navy: #12136E; --app-blue: #3A8DED; --app-text: #1B1D3A; --app-sub: #8A8DA8;
+  --f-body: "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif;
+  --f-app: "Poppins", "Segoe UI", sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0D0F24; --surface: #161936; --fg: #E8E9F6; --muted: #A2A5C6; --line: #2A2E55;
+  --navy: #AEB2FF; --accent: #6AAAF5; --accent-soft: #1B2A4A; --bad: #F08597; --bad-soft: #3A1A24;
+  --good: #6BD3A2; --good-soft: #163327; --code-bg: #1F2347; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #0D0F24; --surface: #161936; --fg: #E8E9F6; --muted: #A2A5C6; --line: #2A2E55;
+  --navy: #AEB2FF; --accent: #6AAAF5; --accent-soft: #1B2A4A; --bad: #F08597; --bad-soft: #3A1A24;
+  --good: #6BD3A2; --good-soft: #163327; --code-bg: #1F2347; color-scheme: dark; }
+
+body { background: var(--bg); color: var(--fg); font-family: var(--f-body); font-size: 15.5px; line-height: 1.75; }
+.wrap { max-width: 780px; margin: 0 auto; padding-block: 40px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex; flex-direction: column; gap: 44px; }
+header { display: flex; flex-direction: column; gap: 8px; }
+.eyebrow { font-size: 12px; letter-spacing: .06em; color: var(--accent); font-weight: 700; }
+h1 { font-size: 30px; line-height: 1.3; margin: 0; color: var(--navy); text-wrap: balance; }
+.lead { color: var(--muted); margin: 0; max-width: 62ch; }
+.toc { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.toc a { text-decoration: none; color: var(--navy); background: var(--surface); border: 1px solid var(--line);
+  padding: 6px 14px; border-radius: 999px; font-size: 13.5px; font-weight: 500; }
+a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+section.plan { display: flex; flex-direction: column; gap: 20px; }
+h2 { font-size: 22px; margin: 0; color: var(--navy); display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; text-wrap: balance; }
+h2 .tag { font-size: 12px; font-weight: 500; color: var(--muted); background: var(--surface); border: 1px solid var(--line); padding: 2px 10px; border-radius: 999px; }
+h3 { font-size: 16px; margin: 0; }
+p { margin: 0; max-width: 65ch; }
+.block { display: flex; flex-direction: column; gap: 10px; }
+.why { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.why .label { font-size: 12px; font-weight: 700; color: var(--bad); }
+
+code, .mono { font-family: var(--f-mono); font-size: 13px; background: var(--code-bg); padding: 1px 6px; border-radius: 4px; direction: ltr; unicode-bidi: isolate; }
+pre { margin: 0; background: var(--code-bg); border-radius: 10px; padding: 14px 16px; overflow-x: auto; direction: ltr; text-align: left; }
+pre code { background: none; padding: 0; font-size: 12.8px; line-height: 1.6; }
+
+ol.steps { margin: 0; padding: 0; list-style: none; counter-reset: s; display: flex; flex-direction: column; gap: 12px; }
+ol.steps > li { counter-increment: s; display: grid; grid-template-columns: 32px 1fr; gap: 12px; min-width: 0; }
+ol.steps > li::before { content: counter(s); width: 28px; height: 28px; border-radius: 50%; background: var(--navy); color: var(--surface);
+  display: grid; place-items: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+ol.steps > li > div { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+
+.done { background: var(--good-soft); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px; }
+.done h3 { color: var(--good); }
+.done ul, .plain { margin: 0; padding-inline-start: 20px; display: flex; flex-direction: column; gap: 4px; }
+.ask { border-inline-start: 3px solid var(--accent); padding-inline-start: 12px; display: flex; flex-direction: column; gap: 4px; }
+.ask b { color: var(--accent); }
+
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 540px; font-size: 13.5px; }
+th, td { text-align: start; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12px; color: var(--muted); font-weight: 500; }
+tr:last-child td { border-bottom: 0; }
+
+/* phone mocks: always light, like the app */
+.mocks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 600px) { .mocks { grid-template-columns: 1fr; } h1 { font-size: 25px; } }
+figure { margin: 0; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+figcaption { font-size: 13px; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+figcaption .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.dot.before { background: var(--bad); } .dot.after { background: var(--good); }
+.phone { background: var(--app-bg); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; font-family: var(--f-app); direction: ltr; color: var(--app-text); }
+.bar { background: #fff; height: 46px; display: flex; align-items: center; justify-content: center; position: relative; font-weight: 700; color: var(--app-navy); font-size: 14px; }
+.bar .back { position: absolute; left: 10px; width: 26px; height: 26px; border-radius: 50%; background: var(--app-navy); }
+.bar .bm { position: absolute; right: 12px; width: 10px; height: 14px; border: 2px solid var(--app-navy); border-bottom-width: 0; }
+.ph-body { padding: 12px; display: flex; flex-direction: column; gap: 10px; min-height: 150px; }
+.ph-body { padding: 12px; display: flex; flex-direction: column; gap: 10px; min-height: 150px; }
+footer { color: var(--muted); font-size: 13px; }
+.sheet { background: #fff; border-radius: 16px 16px 0 0; margin-top: 6px; padding: 10px 14px 16px; display: flex; flex-direction: column; gap: 10px; min-height: 290px; }
+.handle { width: 46px; height: 4px; border-radius: 4px; background: #C9CCDA; align-self: center; }
+.s-title-old { font-size: 17px; font-weight: 700; color: var(--app-blue); }
+.s-title { font-size: 14px; font-weight: 500; text-align: center; color: var(--app-text); }
+.bluebar { background: var(--app-blue); color: #fff; font-size: 11.5px; text-align: center; padding: 7px; border-radius: 6px; }
+.kv-old { font-size: 11.5px; line-height: 1.5; } .kv-old b { color: var(--app-blue); font-weight: 500; }
+.btnrow { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: auto; }
+.pill { border-radius: 999px; font-size: 11.5px; font-weight: 600; text-align: center; padding: 9px 6px; color: #fff; }
+.pill.navy { background: var(--app-navy); } .pill.red { background: #E2533F; } .pill.blue { background: var(--app-blue); }
+.pill.out { background: #fff; color: var(--app-navy); border: 1px solid var(--app-navy); }
+.pill.redout { background: #fff; color: #C62828; border: 1px solid #F1C5C5; }
+.hdr { display: flex; gap: 10px; align-items: center; }
+.hdr .ic { width: 38px; height: 38px; border-radius: 50%; border: 2px solid #C62828; display: grid; place-items: center; color: #C62828; font-size: 15px; flex: none; }
+.hdr .t { flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.35; }
+.hdr .t b { font-size: 12.5px; } .hdr .t small { font-size: 10.5px; color: var(--app-sub); }
+.badge2 { font-size: 10px; font-weight: 600; color: #B26A00; background: #FFF4E0; border: 1px solid #F4D9A8; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+.amount { text-align: center; padding: 6px 0 2px; } .amount b { font-size: 20px; color: #C62828; } .amount small { display: block; font-size: 10px; color: var(--app-sub); }
+.icard { background: #fff; border: 1px solid #ECEEF5; border-radius: 12px; padding: 2px 10px; }
+.irow { display: flex; justify-content: space-between; gap: 10px; font-size: 11px; padding: 7px 0; border-bottom: 1px solid #F0F1F6; }
+.irow:last-child { border-bottom: 0; } .irow span { color: var(--app-sub); } .irow b { font-weight: 600; text-align: end; }
+.s-head { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 700; color: var(--app-navy); border-bottom: 1px solid #E6E7EE; padding-bottom: 8px; }
+.cur { background: #EEF4FE; border-radius: 8px; font-size: 11px; padding: 8px; }
+.inp { border: 1.5px solid var(--app-blue); background: #F4F4F4; border-radius: 10px; font-size: 12px; padding: 9px 10px; display: flex; justify-content: space-between; }
+.inp small { color: var(--app-sub); }
+.btn-left { align-self: flex-start; width: 46%; } .btn-mid { align-self: center; width: 60%; }
+.field { position: relative; height: 40px; border: 1px solid #E3E5EE; border-radius: 10px; background: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 12px; font-size: 11.5px; color: #8A8DA8; overflow: hidden; }
+.field .hl { position: absolute; inset: 0; background: rgba(18,19,110,.06); }
+.field .hl.inset { inset: 3px 26px 3px 12px; border-radius: 6px; background: #EFEFEF; }
+.field span, .field i { position: relative; font-style: normal; }
+.lbl { font-size: 10.5px; color: var(--muted); font-family: var(--f-body); }
+</style>
+
+<div class="wrap" dir="rtl" lang="ar">
+  <header>
+    <span class="eyebrow">TEAM MIND · خطة تعديل · الجولة السابعة</span>
+    <h1>شيتات التفاصيل، زرار الشيت، والـ hover في الويب</h1>
+    <p class="lead">٣ تعديلات. كل واحد فيه: المشكلة، وسببها في الكود، والشكل المقترح، والخطوات، وإمتى نعتبره خلص. الخطة دي من غير أي تعديل في الكود لسه.</p>
+    <nav class="toc" aria-label="المحتوى">
+      <a href="#details">١ · شيت التفاصيل (جزاء / مكافأة / عمولة)</a>
+      <a href="#submit">٢ · زرار الشيت الواحد</a>
+      <a href="#hover">٣ · الـ hover على الفيلدز (ويب)</a>
+      <a href="#check">٤ · المراجعة</a>
+    </nav>
+  </header>
+
+  <section class="plan" id="details">
+    <h2>١ · شيت التفاصيل <span class="tag">Penalty Info · Reward Info · Commission Details</span></h2>
+    <div class="why">
+      <span class="label">ليه شكله مش حلو</span>
+      <ul class="plain">
+        <li>العنوان كبير وأزرق وعلى الشمال، وده مختلف عن عناوين شيتات الفلاتر اللي وحدناها (في النص، 18، w500).</li>
+        <li>الاسم جوه شريط أزرق مليان، وبعده سطور "Label: Value" ملزوقة في بعض. الـ Label أزرق والقيمة سودا، ومفيش أي ترتيب بصري.</li>
+        <li>أهم معلومة (المبلغ) شكلها زي أي سطر، و"100 Amount" مش مفهومة.</li>
+        <li>الحالة (Waiting / Applied) مكتوبة كلمة "No" بدل badge زي باقي الأبلكيشن.</li>
+        <li>الشيت طوله ثابت (75% من الشاشة)، فبيفضل فيه فراغ أبيض تحت الزراير.</li>
+        <li>الزراير ارتفاعها 50 وخطها 10، مش زي <code>AppButtonSize</code> (48 / 14).</li>
+        <li>شيت العمولات (<code>commission_details_modal.dart</code>) نفس الشكل بالظبط، ومتكرر فيه نفس الـ RowTile.</li>
+      </ul>
+    </div>
+
+    <div class="mocks">
+      <figure>
+        <div class="phone"><div class="ph-body"><div class="sheet">
+          <div class="handle"></div>
+          <div class="s-title-old">Penalty Info</div>
+          <div class="bluebar">mohamed ryad</div>
+          <div class="kv-old"><b>Request Type:</b> Penalty<br><b>Amount:</b> 100 Amount<br><b>Due Date:</b> Sep 2026<br><b>Applied:</b> No<br><b>From:</b> Mohamed samir<br><b>Reason:</b> non</div>
+          <div class="btnrow"><div class="pill navy">Complaint</div><div class="pill red">Cancel</div></div>
+        </div></div></div>
+        <figcaption><span class="dot before"></span>دلوقتي</figcaption>
+      </figure>
+      <figure>
+        <div class="phone"><div class="ph-body"><div class="sheet">
+          <div class="handle"></div>
+          <div class="s-title">Penalty Info</div>
+          <div class="hdr"><div class="ic">!</div><div class="t"><b>mohamed ryad</b><small>From Mohamed Samir</small></div><span class="badge2">Waiting</span></div>
+          <div class="amount"><b>100 EGP</b><small>Penalty · Due Sep 2026</small></div>
+          <div class="icard">
+            <div class="irow"><span>Created At</span><b>Tue, 22 Sep 2026</b></div>
+            <div class="irow"><span>Applied</span><b>No</b></div>
+            <div class="irow"><span>Reason</span><b>non</b></div>
+          </div>
+          <div class="btnrow"><div class="pill navy">Complaint</div><div class="pill redout">Cancel</div></div>
+        </div></div></div>
+        <figcaption><span class="dot after"></span>المقترح</figcaption>
+      </figure>
+    </div>
+
+    <div class="block">
+      <h3>الخطوات</h3>
+      <ol class="steps">
+        <li><div><b>widget واحد للتفاصيل في core</b>
+          <span><code>core/widgets/app_details_sheet/</code> فيه 3 أجزاء: <code>AppDetailsHeader</code> (أيقونة ملونة حسب النوع، والاسم، وسطر صغير، و<code>AppStatusBadge</code>)، و<code>AppDetailsHighlight</code> (الرقم المهم كبير وتحته سطر صغير)، و<code>AppInfoCard</code> + <code>AppInfoRow</code> (الـ label رمادي في أول السطر، والقيمة بولد في آخره، وبينهم divider). كله على <code>AppCard</code> و<code>AppColors.statusTones</code>، ومن غير أي أرقام جديدة برا الـ tokens.</span></div></li>
+        <li><div><b>زراير الشيت</b>
+          <span><code>AppSheetActions(primary, secondary)</code> فيه زرارين pill بمقاس <code>AppButtonSize</code>. الأساسي navy، والإلغاء (حاجة خطيرة) outlined أحمر بدل الأحمر المليان. ولو فيه زرار واحد بس، بيستخدم شكل التعديل ٢.</span></div></li>
+        <li><div><b>عنوان الشيت وطوله</b>
+          <span><code>ModalSheetHelper.showModalSheet</code> ياخد نفس عنوان الفلاتر (<code>AppFilterTitle</code>: في النص و18 w500)، وطوله يبقى على قد المحتوى (أقصى حاجة 85% من الشاشة) بدل الـ <code>height</code> الثابت. الـ parameter <code>height</code> يفضل موجود علشان مايكسرش الـ 10 أماكن اللي بتناديه، بس يبقى الحد الأقصى بدل ما يبقى الطول نفسه.</span></div></li>
+        <li><div><b>الشاشات اللي هتتنقل للشكل ده</b>
+          <span><code>rewards_and_penalties_details_modal.dart</code> (والمبلغ يتكتب بالعملة بدل كلمة "Amount"، والمرفقات تبقى <code>AppCard</code>)، و<code>commission_details_modal.dart</code> (يتشال <code>_CommissionRowTile</code>). وبعدها أراجع باقي اللي بيستخدموا <code>ModalSheetHelper</code>: Statistics، وSummary Reports، وManagement Response، وطلبات الرصيد في بروفايل الموظف. دول هياخدوا العنوان الجديد تلقائي، ولو فيهم سطور "Label: Value" هنقلها لـ <code>AppInfoRow</code>.</span></div></li>
+        <li><div><b>الترجمة</b>
+          <span>أي نص جديد (زي "From {name}") يتضاف في en.json وar.json. والـ RTL شغال لوحده، من غير أي قلب يدوي.</span></div></li>
+      </ol>
+    </div>
+    <div class="done"><h3>نعتبره خلص لما</h3><ul>
+      <li>شيت الجزاء والمكافأة والعمولة نفس الشكل بالظبط، والفرق بينهم اللون والأيقونة بس.</li>
+      <li>مفيش فراغ أبيض تحت الزراير، والعنوان نفس عنوان شيتات الفلاتر.</li>
+      <li>مفيش <code>RowTile</code> متكرر في أي feature.</li>
+    </ul></div>
+  </section>
+
+  <section class="plan" id="submit">
+    <h2>٢ · زرار الشيت الواحد <span class="tag">Edit Overtime Duration وأخواتها</span></h2>
+    <div class="why">
+      <span class="label">السبب</span>
+      <p><code>CustomElevatedButton</code> عرضه الافتراضي 200، ومش متحط جوه <code>Center</code>، فبيقف على أول السطر. ولونه <code>AppColors.buttons</code> (الأزرق الفاتح). وكمان أثناء الحفظ مفيش أي loading، الزرار بيبقى ميت بس.</p>
+    </div>
+    <div class="mocks">
+      <figure>
+        <div class="phone"><div class="ph-body"><div class="sheet" style="min-height:220px">
+          <div class="handle"></div>
+          <div class="s-head">Edit Overtime Duration <span>✕</span></div>
+          <div class="cur">Current duration: 80 mins</div>
+          <div class="inp">80 <small>mins</small></div>
+          <div class="pill blue btn-left">Save Changes</div>
+        </div></div></div>
+        <figcaption><span class="dot before"></span>دلوقتي</figcaption>
+      </figure>
+      <figure>
+        <div class="phone"><div class="ph-body"><div class="sheet" style="min-height:220px">
+          <div class="handle"></div>
+          <div class="s-head">Edit Overtime Duration <span>✕</span></div>
+          <div class="cur">Current duration: 80 mins</div>
+          <div class="inp">80 <small>mins</small></div>
+          <div class="pill navy btn-mid">Save Changes</div>
+        </div></div></div>
+        <figcaption><span class="dot after"></span>المقترح</figcaption>
+      </figure>
+    </div>
+    <div class="block">
+      <h3>الخطوات</h3>
+      <ol class="steps">
+        <li><div><b>widget واحد</b>
+          <span><code>AppSheetSubmitButton</code> في <code>core/widgets/</code>: في النص، ولونه <code>AppColors.secondaryButton</code> (الأزرق الغامق)، وبمقاس <code>AppButtonSize</code>، وبيعرض loading أثناء الحفظ (<code>isFuture</code>). العرض: 60% من الشيت، وأقصى حاجة 320 علشان مايبقاش شريط طويل على الويب.</span></div></li>
+        <li><div><b>الأماكن اللي لقيتها</b>
+          <span>
+          <code>approvables_details/.../overtime_update_dialog.dart</code> (تعديل مدة الأوفر تايم)،
+          و<code>expense_claim_update_amount_dialog.dart</code> (تعديل مبلغ المصروفات، نفس التصميم بالظبط)،
+          و<code>cv_hub_interview_details_screen.dart</code> (شيت التقييم، زرار Submit).
+          </span></div></li>
+        <li><div><b>السلفة (Salary Advance)</b>
+          <span>تعديل السلفة بيفتح شاشة كاملة مش شيت (<code>UpdateSalaryAdvanceScreen</code>)، وده هيتراجع في التعديل ده كمان علشان زرار الحفظ يبقى نفس الشكل. وفي شاشة إنشاء السلفة فيه شيت لاختيار التاريخ، زراير Cancel / Submit فيه text عادي. ده هيتظبط على <code>AppFilterActions</code> علشان يبقى زي باقي الشيتات.</span></div></li>
+        <li><div><b>هيدر الشيتين</b>
+          <span>شيت الأوفر تايم والمصروفات ليهم هيدر خاص (عنوان على الشمال، و✕، وخط). هيتنقلوا لنفس الـ handle والمسافات بتاعة <code>AppFilterSheetFrame</code>، علشان كل الشيتات تبقى عيلة واحدة.</span></div></li>
+      </ol>
+    </div>
+    <div class="done"><h3>نعتبره خلص لما</h3><ul>
+      <li>أي شيت فيه زرار واحد: الزرار navy وفي النص وبيعرض loading.</li>
+      <li><code>grep</code> على <code>showModalBottomSheet</code> مايطلعش أي زرار واحد على الشمال.</li>
+    </ul></div>
+  </section>
+
+  <section class="plan" id="hover">
+    <h2>٣ · الـ hover على الفيلدز <span class="tag">ويب · على مستوى الأبلكيشن كله</span></h2>
+    <div class="why">
+      <span class="label">السبب في الكود</span>
+      <p>فيلد Status معمول بـ <code>defaultDropdownField</code>، وده بيحط <code>DropdownButton</code> جوه <code>AppFieldShell</code>. الـ shell فيه padding أفقي 16 حوالين الـ dropdown. والـ dropdown بيرسم الـ hover والـ focus بتوعه على مساحته هو بس، فبيطلع مستطيل رمادي بعيد عن الحواف من اليمين والشمال. وبعد ما تختار حاجة، الـ dropdown بيفضل focused، فالرمادي بيفضل ظاهر.</p>
+      <p>أما Request Type فهو <code>SearchableDropdownSheet</code>، ومبني على <code>InputDecoration</code>، فالـ hover بتاعه بيملا الفيلد كله.</p>
+    </div>
+    <div class="mocks">
+      <figure>
+        <div class="phone" style="padding:12px;display:flex;flex-direction:column;gap:8px">
+          <span class="lbl">Request Type (hover)</span>
+          <div class="field"><div class="hl"></div><span>Request Type</span><i>⌄</i></div>
+          <span class="lbl">Status (hover) · دلوقتي</span>
+          <div class="field"><div class="hl inset"></div><span>Status</span><i>⌄</i></div>
+        </div>
+        <figcaption><span class="dot before"></span>دلوقتي: نوعين مختلفين من الـ hover</figcaption>
+      </figure>
+      <figure>
+        <div class="phone" style="padding:12px;display:flex;flex-direction:column;gap:8px">
+          <span class="lbl">Request Type (hover)</span>
+          <div class="field"><div class="hl"></div><span>Request Type</span><i>⌄</i></div>
+          <span class="lbl">Status (hover)</span>
+          <div class="field"><div class="hl"></div><span>Status</span><i>⌄</i></div>
+        </div>
+        <figcaption><span class="dot after"></span>المقترح: نفس اللون ومالي الفيلد كله</figcaption>
+      </figure>
+    </div>
+    <div class="block">
+      <h3>الخطوات</h3>
+      <ol class="steps">
+        <li><div><b>الـ dropdown ياخد الفيلد كله</b>
+          <span><code>AppFieldShell</code> ياخد parameter <code>contentPadding</code> (الافتراضي زي ما هو). و<code>defaultDropdownField</code> يبعتله صفر، ويحط الـ padding جوه الـ <code>DropdownButton</code> نفسه (<code>padding: EdgeInsetsDirectional.symmetric(horizontal: AppField.horizontalPadding)</code>). كده الـ hover يغطي الفيلد لحد الحواف، والـ shell بيقصه على الـ radius بتاعه (<code>Clip.antiAlias</code> موجود أصلاً).</span></div></li>
+        <li><div><b>لون واحد للـ hover في الثيم</b>
+          <span>في <code>AppThemeService</code>: يتحدد <code>hoverColor</code> مرة واحدة (ولـ <code>InputDecorationTheme</code> كمان)، علشان الـ text field والـ searchable sheet والـ dropdown والـ date field يبقوا نفس اللون. والـ dropdown يبقى <code>focusColor: transparent</code> علشان الرمادي مايفضلش بعد الاختيار. ولأن ده بيشيل علامة الـ focus بتاعة الكيبورد، الفيلد اللي عليه focus هياخد border بلون <code>AppColors.buttons</code> بدل الرمادي.</span></div></li>
+        <li><div><b>الـ dropdowns اللي مش ماشية على الـ helper</b>
+          <span>فيه 15 <code>DropdownButton</code> / <code>DropdownButtonFormField</code> مكتوبين لوحدهم، في: reports filters (5)، وcreate/update expense claim، وadd complaint، وapprover employee dropdown، وmanagement response، وCV personal/job tabs، وvacation calc، و<code>all_text_field.dart</code>. هيتنقلوا لـ <code>defaultDropdownField</code>، أو ياخدوا نفس الإصلاح لو محتاجين validation (<code>FormField</code>).</span></div></li>
+        <li><div><b>حاجة لاحظتها في نفس الصورة</b>
+          <span>كلمة "Request Time" (فيلد التاريخ) داخلة 8px زيادة عن باقي الفيلدز، ولونها أغمق من الـ hints. وكمان hint بتاع Request Type خطه 12 (<code>greyContent</code>) والباقي <code>AppField.hintStyle</code>. هيتوحدوا كلهم على <code>AppField</code>.</span></div></li>
+      </ol>
+    </div>
+    <div class="done"><h3>نعتبره خلص لما</h3><ul>
+      <li>على الويب: الـ hover على أي فيلد (text، dropdown، searchable، تاريخ) يملا الفيلد كله بنفس اللون.</li>
+      <li>بعد اختيار قيمة من dropdown، مفيش رمادي فاضل في الفيلد.</li>
+      <li>الموبايل مفيهوش أي تغيير، لأن الـ hover ويب بس.</li>
+    </ul></div>
+  </section>
+
+  <section class="plan" id="check">
+    <h2>٤ · المراجعة</h2>
+    <ul class="plain">
+      <li>الترتيب: ٣ الأول (أصغر وبيأثر على الأبلكيشن كله)، بعده ٢، وبعده ١.</li>
+      <li><code>flutter analyze lib</code>، و<code>tool/check_design_tokens.sh</code>، و<code>tool/check_translations.py</code>.</li>
+      <li>أفتح بنفسي على الويب (عرض كبير وعرض موبايل) وعلى الـ simulator: شيت الجزاء، وشيت العمولة، وتعديل الأوفر تايم، وفلتر الطلبات بالـ hover. وأقول بوضوح أي حاجة ماقدرتش أجربها، زي الحسابات اللي مفيهاش بيانات جزاءات.</li>
+      <li>تحديث الـ README بتاع <code>core/widgets</code> و<code>rewards_and_penalties</code> و<code>commissions</code>.</li>
+    </ul>
+  </section>
+
+  <footer>Team Mind · الجولة السابعة · خطة بس، لسه مفيش تعديل في الكود.</footer>
+</div>
