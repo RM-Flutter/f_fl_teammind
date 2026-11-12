@@ -7,6 +7,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'offline_overlay_service.dart';
+import 'package:app_test/core/constants/app_constants.dart';
 import 'package:app_test/core/routing/app_router.dart';
 
 class ConnectionService extends ChangeNotifier {
@@ -62,19 +63,38 @@ class ConnectionService extends ChangeNotifier {
     });
   }
 
-  /// Performs a real DNS lookup to verify actual internet access (mobile/desktop only).
+  /// Real internet check (mobile / desktop): resolves google.com and the company's own server at
+  /// the same time; online as soon as one of them answers. Fails fast when there is no network.
   static Future<bool> _hasRealInternet() async {
+    final hosts = <String>{'google.com'};
     try {
-      final result = await InternetAddress.lookup('google.com')
-          .timeout(const Duration(seconds: 3));
-      return result.isNotEmpty && result.first.rawAddress.isNotEmpty;
-    } on SocketException catch (_) {
-      return false;
-    } on TimeoutException catch (_) {
-      return false;
-    } catch (_) {
-      return false;
+      final host = Uri.parse(AppConstants.baseUrl).host;
+      if (host.isNotEmpty) hosts.add(host);
+    } catch (_) {}
+
+    Future<bool> resolves(String host) async {
+      try {
+        final result = await InternetAddress.lookup(host).timeout(const Duration(seconds: 3));
+        return result.isNotEmpty && result.first.rawAddress.isNotEmpty;
+      } catch (_) {
+        return false;
+      }
     }
+
+    final completer = Completer<bool>();
+    var pending = hosts.length;
+    for (final host in hosts) {
+      resolves(host).then((ok) {
+        pending--;
+        if (completer.isCompleted) return;
+        if (ok) {
+          completer.complete(true);
+        } else if (pending == 0) {
+          completer.complete(false);
+        }
+      });
+    }
+    return completer.future;
   }
 
   Future<void> _checkConnectionStatus({bool debounce = true}) async {
@@ -88,13 +108,9 @@ class ConnectionService extends ChangeNotifier {
         return;
       }
 
-      // على الموبايل: إذا مفيش شبكة خالص → أوفلاين مباشرة
-      if (!hasNetworkCard) {
-        _applyConnectionChange(false, debounce: debounce);
-        return;
-      }
-
-      // إذا في شبكة → نتأكد بـ DNS ping فعلي
+      // On mobile the real check always decides. connectivity_plus can keep saying "none" for
+      // a while after the network is back (iOS, the simulator especially), so trusting it kept
+      // the offline screen up even after Retry. With no network at all the lookup fails at once.
       final realInternet = await _hasRealInternet();
       _applyConnectionChange(realInternet, debounce: debounce);
     } catch (e) {
@@ -183,15 +199,10 @@ class ConnectionService extends ChangeNotifier {
       return;
     }
 
-    if (!hasNetworkConnection) {
-      // مفيش شبكة خالص — أوفلاين بعد delay
-      _applyConnectionChange(false, debounce: true);
-    } else {
-      // في شبكة — نتأكد بـ DNS ping ثم نطبّق مع delay
-      _hasRealInternet().then((realInternet) {
-        _applyConnectionChange(realInternet, debounce: true);
-      });
-    }
+    // Same as above: the real check decides, never the reported network type alone.
+    _hasRealInternet().then((realInternet) {
+      _applyConnectionChange(realInternet, debounce: true);
+    });
   }
 
   Future<void> _handleConnectionRestored() async {
