@@ -60,6 +60,7 @@ class CustomTabbarViewApprovableDetails extends StatelessWidget {
         child: Column(
           children: [
             Container(
+              width: double.infinity, // full-width bar, even when the tabs are fewer
               decoration: BoxDecoration(
                 color: Color(AppColors.secondaryButton),
                 borderRadius: BorderRadius.circular(AppRadius.xl),
@@ -69,7 +70,12 @@ class CustomTabbarViewApprovableDetails extends StatelessWidget {
               child: TabBar(
                 dividerColor: Colors.transparent,
                 indicatorPadding: const EdgeInsets.symmetric(horizontal: 4),
-                labelPadding: EdgeInsets.zero,
+                // Scrollable like the profile details tabs: each tab takes the width its
+                // label needs (no "Manager Resp..."), starting from the start side, and the
+                // bar scrolls sideways when the tabs do not fit.
+                isScrollable: true,
+                tabAlignment: TabAlignment.start,
+                labelPadding: const EdgeInsets.symmetric(horizontal: 16),
                 indicator: BoxDecoration(
                   color: Color(AppColors.buttons),
                   borderRadius: BorderRadius.circular(AppRadius.xl),
@@ -86,7 +92,6 @@ class CustomTabbarViewApprovableDetails extends StatelessWidget {
                       child: Text(
                         AppStrings.reason.tr(),
                         textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                       ),
                     ),
@@ -97,7 +102,6 @@ class CustomTabbarViewApprovableDetails extends StatelessWidget {
                       child: Text(
                         AppStrings.managerResponse.tr(),
                         textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                       ),
                     ),
@@ -108,7 +112,6 @@ class CustomTabbarViewApprovableDetails extends StatelessWidget {
                       child: Text(
                         AppStrings.information.tr(),
                         textAlign: TextAlign.center,
-                        overflow: TextOverflow.ellipsis,
                         maxLines: 1,
                       ),
                     ),
@@ -120,7 +123,6 @@ class CustomTabbarViewApprovableDetails extends StatelessWidget {
                         child: Text(
                           'tracking'.tr(),
                           textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                         ),
                       ),

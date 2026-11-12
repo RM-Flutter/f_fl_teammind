@@ -1,23 +1,23 @@
-import 'package:app_test/features/cv_hub/views/widgets/interview_details_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:go_router/go_router.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/routing/app_router.dart';
+import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/widgets/app_bar_with_bookmark.widget.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:app_test/core/widgets/details_loading/details_loading.widget.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:app_test/features/requests/shared/ui/widgets/custom_request_details_button.widget.dart';
 
 import '../controllers/cv_hub_interview_details_controller.dart';
-import '../models/cv_hub_models.dart';
+import 'widgets/interview_details_header_widget.dart';
+import 'widgets/interview_details_tabs_widget.dart';
 import 'package:app_test/core/constants/app_design.dart';
-import 'package:app_test/core/widgets/app_card.widget.dart';
-import 'package:app_test/core/widgets/app_content_width.widget.dart';
-import 'package:app_test/core/widgets/app_status_badge.widget.dart';
 
+/// Interview details, laid out like the approvals details screen: the navy header with the
+/// status box and info tiles, the navy tab bar (candidate / skills / my evaluation) and the
+/// action button at the bottom.
 class CvHubInterviewDetailsScreen extends StatefulWidget {
   final String id;
   const CvHubInterviewDetailsScreen({super.key, required this.id});
@@ -46,13 +46,15 @@ class _CvHubInterviewDetailsScreenState extends State<CvHubInterviewDetailsScree
 
   @override
   Widget build(BuildContext context) {
-    final mainColor = Color(AppColors.buttons);
     return Scaffold(
       backgroundColor: Color(AppColors.background),
       body: Consumer<CvHubInterviewDetailsController>(
         builder: (context, controller, child) {
           if (controller.isLoading) {
-            // Same app bar as the loaded page, then the skeleton of its content.
+            // Same skeleton as the approvals details: navy header, tabs, cards.
+            return const DetailsLoadingWidget(headerHeight: 260);
+          }
+          if (controller.error != null || controller.interview == null) {
             return Column(
               children: [
                 AppBarWithBookmark(
@@ -62,155 +64,92 @@ class _CvHubInterviewDetailsScreenState extends State<CvHubInterviewDetailsScree
                   routeName: AppRoutes.cvHubInterviewDetails.name,
                   title: 'Interview Details'.tr(),
                 ),
-                const Expanded(child: InterviewDetailsLoading()),
+                Expanded(
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          controller.error != null ? Icons.error_outline : Icons.info_outline,
+                          size: 64,
+                          color: Color(controller.error != null
+                              ? AppColors.failureRed
+                              : AppColors.iconSecondary),
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          controller.error ?? 'No details found.'.tr(),
+                          style: TextStyle(fontSize: 16, color: Color(AppColors.titleText)),
+                        ),
+                        if (controller.error != null) ...[
+                          const SizedBox(height: 16),
+                          ElevatedButton(
+                            onPressed: () => controller.fetchInterviewDetails(context, widget.id),
+                            style: ElevatedButton.styleFrom(backgroundColor: Color(AppColors.c1)),
+                            child: Text('Retry'.tr(), style: const TextStyle(color: Colors.white)),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
               ],
-            );
-          }
-          if (controller.error != null) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.error_outline, size: 64, color: Color(AppColors.failureRed)),
-                  const SizedBox(height: 16),
-                  Text(
-                    controller.error!,
-                    style: TextStyle(fontSize: 16, color: Color(AppColors.titleText)),
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () => controller.fetchInterviewDetails(context, widget.id),
-                    style: ElevatedButton.styleFrom(backgroundColor: Color(AppColors.c1)),
-                    child: Text('Retry'.tr(), style: const TextStyle(color: Colors.white)),
-                  )
-                ],
-              ),
-            );
-          }
-          if (controller.interview == null) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.info_outline, size: 64, color: Color(AppColors.iconSecondary)),
-                  const SizedBox(height: 16),
-                  Text(
-                    "No details found.".tr(),
-                    style: TextStyle(fontSize: 16, color: Color(AppColors.subTitleText)),
-                  ),
-                ],
-              ),
             );
           }
 
           final interview = controller.interview!;
           final candidate = interview.candidate;
+          final skills = candidate?.skills ?? const [];
+          final canEvaluate =
+              interview.myEvaluation == null || interview.myEvaluation!.canEdit == true;
+
+          final tabTitles = <String>[
+            'Candidate Info'.tr(),
+            if (skills.isNotEmpty) 'Skills'.tr(),
+            'My Evaluation'.tr(),
+          ];
+          final sections = <Widget>[
+            CandidateInfoTab(candidate: candidate),
+            if (skills.isNotEmpty) SkillsTab(skills: skills),
+            MyEvaluationTab(evaluation: interview.myEvaluation),
+          ];
 
           return Column(
             children: [
-              _buildHeader(context, mainColor, interview),
+              InterviewDetailsHeaderWidget(interview: interview),
               Expanded(
-                child: AppContentWidth(
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page, vertical: AppSpacing.xl),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        _buildSectionHeader('Candidate Info'.tr(), Icons.person_outline),
-                        const SizedBox(height: 12),
-                        _buildInfoBox([
-                          _buildInfoRow('Email', candidate?.email),
-                          _buildInfoRow('Phone', candidate?.phone),
-                          _buildInfoRow('Job Title', candidate?.job?.title),
-                          _buildInfoRow('Expected Salary', candidate?.expectedSalary?.toString()),
-                          _buildInfoRow('Years of Experience', candidate?.yearsExperience?.toString()),
-                          _buildInfoRow('Education', candidate?.educationLevel),
-                          _buildInfoRow('Employment Type', candidate?.employmentType),
-                        ]),
-                        const SizedBox(height: 24),
-                        
-                        if (candidate?.skills != null && candidate!.skills!.isNotEmpty) ...[
-                          _buildSectionHeader('Skills'.tr(), Icons.star_border),
-                          const SizedBox(height: 12),
-                          Wrap(
-                            spacing: 8.0,
-                            runSpacing: 8.0,
-                            children: candidate.skills!.map((s) => Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                              decoration: BoxDecoration(
-                                color: mainColor.withOpacity(0.08),
-                                borderRadius: BorderRadius.circular(AppRadius.lg),
-                              ),
-                              child: Text(s.name ?? '', style: TextStyle(color: mainColor, fontSize: 12, fontWeight: FontWeight.w600)),
-                            )).toList(),
-                          ),
-                          const SizedBox(height: 24),
-                        ],
-
-                        if (candidate?.attachments != null && candidate!.attachments!.isNotEmpty) ...[
-                          _buildSectionHeader('Attachments'.tr(), Icons.attach_file),
-                          const SizedBox(height: 12),
-                          ...candidate.attachments!.map((a) => Padding(
-                            padding: const EdgeInsets.only(bottom: AppSpacing.cardGap),
-                            child: AppCard(
-                              onTap: () {
-                                if (a.fileUrl != null) launchUrl(Uri.parse(a.fileUrl!), mode: LaunchMode.externalApplication);
-                              },
-                              child: Row(
-                                children: [
-                                  AppCardLeadingAvatar(
-                                    icon: Icons.picture_as_pdf_rounded,
-                                    borderColor: Color(AppColors.failureRed),
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Expanded(
-                                    child: Text(
-                                      a.fileType ?? 'Attachment'.tr(),
-                                      style: AppStyles.heading(context),
-                                    ),
-                                  ),
-                                  Icon(Icons.download_rounded, color: mainColor, size: 20),
-                                ],
-                              ),
-                            ),
-                          )).toList(),
-                          const SizedBox(height: 24),
-                        ],
-
-                        _buildSectionHeader('My Evaluation'.tr(), Icons.fact_check_outlined),
-                        const SizedBox(height: 12),
-                        if (interview.myEvaluation != null) ...[
-                          _buildInfoBox([
-                            _buildInfoRow('Technical Score', interview.myEvaluation!.technicalScore.toString()),
-                            _buildInfoRow('Soft Skills Score', interview.myEvaluation!.softSkillsScore.toString()),
-                            _buildInfoRow('Overall Score', interview.myEvaluation!.overallScore.toString()),
-                            _buildInfoRow('Recommendation', interview.myEvaluation!.recommendation),
-                            _buildInfoRow('Notes', interview.myEvaluation!.notes),
-                          ]),
-                        ] else ...[
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 16.0),
-                            child: Text('No evaluation submitted yet.'.tr(), style: AppStyles.greyContent(context)),
-                          ),
-                        ],
-
-                        const SizedBox(height: 24),
-                        if (interview.myEvaluation == null || interview.myEvaluation!.canEdit == true)
-                          CustomElevatedButton(
-                            backgroundColor: mainColor,
-                            title: interview.myEvaluation == null ? 'Submit Evaluation'.tr() : 'Edit Evaluation'.tr(),
-                            onPressed: () async {
-                              _showEvaluationSheet(context, controller);
-                            },
-                          ),
-                          
-                        const SizedBox(height: 30),
-                      ],
-                    ),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: LayoutService.contentConstraints(context),
+                    child: _buildTabs(context, tabTitles, sections),
                   ),
                 ),
               ),
+              if (canEvaluate)
+                Center(
+                  child: ConstrainedBox(
+                    constraints: LayoutService.contentConstraints(context),
+                    child: Padding(
+                      // Same place and size as the approvals bottom action bar.
+                      padding: EdgeInsets.fromLTRB(
+                          34, 8, 34, 12 + MediaQuery.paddingOf(context).bottom),
+                      child: SizedBox(
+                        height: 44,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            CustomRequestDetailsButton(
+                              title: interview.myEvaluation == null
+                                  ? 'Submit Evaluation'.tr()
+                                  : 'Edit Evaluation'.tr(),
+                              onPressed: () async => _showEvaluationSheet(context, controller),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
             ],
           );
         },
@@ -218,195 +157,69 @@ class _CvHubInterviewDetailsScreenState extends State<CvHubInterviewDetailsScree
     );
   }
 
-  Widget _buildSectionHeader(String title, IconData icon) {
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(6),
-          decoration: BoxDecoration(
-            color: Color(AppColors.buttons).withOpacity(0.1),
-            borderRadius: BorderRadius.circular(AppRadius.sm),
-          ),
-          child: Icon(icon, color: Color(AppColors.buttons), size: 18),
-        ),
-        const SizedBox(width: 10),
-        Text(
-          title,
-          style: AppStyles.primaryContent(context).copyWith(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-            color: Color(AppColors.secondaryButton),
-          ),
-        ),
-      ],
+  /// The navy pill tab bar of the approvals details (CustomTabbarViewApprovableDetails),
+  /// with the tabs sharing the bar equally.
+  Widget _buildTabs(BuildContext context, List<String> titles, List<Widget> views) {
+    final labelStyle = AppStyles.heading(context).copyWith(
+      fontSize: 10.5,
+      fontWeight: FontWeight.bold,
     );
-  }
-
-  Widget _buildInfoBox(List<Widget> children) {
-    return Container(
-      padding: AppSpacing.cardPadding,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        border: AppBorders.card,
-        boxShadow: AppShadows.card,
-      ),
-      child: Column(
-        children: children,
-      ),
-    );
-  }
-
-  Widget _buildInfoRow(String label, String? value, {bool isLink = false}) {
-    if (value == null || value.isEmpty) return const SizedBox.shrink();
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 2, 
-            child: Text(
-              label.tr(), 
-              style: AppStyles.greyContent(context).copyWith(fontSize: 13, fontWeight: FontWeight.w600),
-            ),
-          ),
-          Expanded(
-            flex: 3, 
-            child: isLink 
-              ? InkWell(
-                  onTap: () => launchUrl(Uri.parse(value), mode: LaunchMode.externalApplication),
-                  child: Text(
-                    value,
-                    style: AppStyles.primaryContent(context).copyWith(
-                      decoration: TextDecoration.underline,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                )
-              : Text(
-                  value,
-                  style: AppStyles.primaryContent(context).copyWith(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Color(AppColors.titleText),
-                  ),
+      padding: const EdgeInsets.only(
+          left: AppSpacing.page, right: AppSpacing.page, top: AppSpacing.md),
+      child: DefaultTabController(
+        length: titles.length,
+        child: Column(
+          children: [
+            Container(
+              width: double.infinity, // full-width bar, even when the tabs are fewer
+              height: 52,
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+              decoration: BoxDecoration(
+                color: Color(AppColors.secondaryButton),
+                borderRadius: BorderRadius.circular(AppRadius.xl),
+              ),
+              child: TabBar(
+                dividerColor: Colors.transparent,
+                // Few tabs: they share the bar equally, from edge to edge.
+                indicatorPadding: const EdgeInsets.symmetric(horizontal: 4),
+                labelPadding: EdgeInsets.zero,
+                indicator: BoxDecoration(
+                  color: Color(AppColors.buttons),
+                  borderRadius: BorderRadius.circular(AppRadius.xl),
                 ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildHeader(BuildContext context, Color mainColor, InterviewModel interview) {
-    final candidate = interview.candidate;
-    final String? displayName = candidate?.fullName;
-    final subtitleParts = <String>[
-      if (candidate?.job?.title != null && candidate!.job!.title!.isNotEmpty)
-        candidate.job!.title!,
-      if (interview.interviewType != null && interview.interviewType!.isNotEmpty)
-        interview.interviewType!,
-      if (interview.scheduledAt != null && interview.scheduledAt!.isNotEmpty)
-        interview.scheduledAt!,
-    ];
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        AppBarWithBookmark(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          centerTitle: true,
-          routeName: AppRoutes.cvHubInterviewDetails.name,
-          title: 'Interview Details'.tr(),
-        ),
-        AppContentWidth(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
-            child: AppCard(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      AppCardLeadingAvatar(
-                        name: displayName,
-                        icon: Icons.video_camera_front_outlined,
-                        borderColor: mainColor,
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              displayName ??
-                                  (interview.interviewType ?? 'Interview'),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: AppStyles.heading(context),
-                            ),
-                            if (subtitleParts.isNotEmpty) ...[
-                              const SizedBox(height: 2),
-                              Text(
-                                subtitleParts.join(' · '),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: AppStyles.subtitleContent(context),
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      AppStatusBadge.fromStatus(
-                        status: interview.status ?? 'Pending',
-                      ),
-                    ],
-                  ),
-                  if (interview.location != null &&
-                      interview.location!.isNotEmpty) ...[
-                    const SizedBox(height: 8),
-                    InkWell(
-                      onTap: () {
-                        if (interview.location!.startsWith('http')) {
-                          launchUrl(Uri.parse(interview.location!),
-                              mode: LaunchMode.externalApplication);
-                        }
-                      },
-                      child: Row(
-                        children: [
-                          Icon(Icons.location_on_outlined,
-                              size: 14, color: mainColor),
-                          const SizedBox(width: 4),
-                          Expanded(
-                            child: Text(
-                              interview.location!.startsWith('http')
-                                  ? 'Meeting Link'.tr()
-                                  : interview.location!,
-                              style: AppStyles.subtitleContent(context).copyWith(
-                                color: interview.location!.startsWith('http')
-                                    ? mainColor
-                                    : null,
-                                decoration: interview.location!.startsWith('http')
-                                    ? TextDecoration.underline
-                                    : null,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                indicatorSize: TabBarIndicatorSize.tab,
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.white,
+                labelStyle: labelStyle,
+                unselectedLabelStyle: labelStyle,
+                tabs: [
+                  for (final t in titles)
+                    Tab(child: Text(t, maxLines: 1, overflow: TextOverflow.ellipsis)),
                 ],
               ),
             ),
-          ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(top: AppSpacing.md),
+                child: TabBarView(
+                  children: [
+                    for (final v in views)
+                      SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        padding: const EdgeInsets.only(bottom: AppSpacing.md),
+                        child: v,
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
-      ],
+      ),
     );
   }
+
 }
 
 class _EvaluationForm extends StatefulWidget {
