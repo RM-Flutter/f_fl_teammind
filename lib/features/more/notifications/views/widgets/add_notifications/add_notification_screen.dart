@@ -62,7 +62,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                       builder: (context, viewModel, child) => Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: 14),
+                          SizedBox(height: AppSizes.s14),
                           TextFormField(
                             controller: viewModel.titleArController,
                             validator: (String? value) {
@@ -80,7 +80,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 14),
+                          SizedBox(height: AppSizes.s14),
                           TextFormField(
                             controller: viewModel.titleEnController,
                             validator: (String? value) {
@@ -98,7 +98,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                               ),
                             ),
                           ),
-                      SizedBox(height: 14),
+                      SizedBox(height: AppSizes.s14),
                       defaultDropdownField(
                           textStyle: AppStyles.darkContent(context).copyWith(
                             fontSize: 12,
@@ -130,7 +130,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                           ),
                           if (viewModel.selectNotificationType == "some_employees" &&
                               viewModel.employees.isNotEmpty)
-                            SizedBox(height: 14),
+                            SizedBox(height: AppSizes.s14),
                           if (viewModel.selectNotificationType == "some_employees" &&
                               viewModel.employees.isNotEmpty)
                             GestureDetector(
@@ -147,7 +147,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                         return ConstrainedBox(
                                           constraints: BoxConstraints(maxHeight: maxHeight),
                                           child: Padding(
-                                            padding: EdgeInsets.all(16.0),
+                                            padding: EdgeInsets.all(AppSizes.s16),
                                             child: Column(
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
@@ -157,7 +157,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                                       fontWeight: FontWeight.w700,
                                                       fontSize: 18),
                                                 ),
-                                                SizedBox(height: 10),
+                                                SizedBox(height: AppSizes.s10),
                                                 TextFormField(
                                                   decoration: InputDecoration(
                                                     hintText: AppStrings.searchByName.tr(),
@@ -178,7 +178,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                                     });
                                                   },
                                                 ),
-                                                SizedBox(height: 10),
+                                                SizedBox(height: AppSizes.s10),
                                                 ConstrainedBox(
                                                   constraints:
                                                       BoxConstraints(maxHeight: maxHeight * 0.6),
@@ -205,7 +205,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                                     ),
                                                   ),
                                                 ),
-                                                SizedBox(height: 12),
+                                                SizedBox(height: AppSizes.s12),
                                                 ElevatedButton(
                                                   onPressed: () {
                                                     Navigator.pop(
@@ -239,7 +239,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                               },
                               child: Container(
                                 alignment: Alignment.center,
-                                padding: EdgeInsets.symmetric(horizontal: 16),
+                                padding: EdgeInsets.symmetric(horizontal: AppSizes.s16),
                                 decoration: ShapeDecoration(
                                   color: Colors.white,
                                   shape: RoundedRectangleBorder(
@@ -268,7 +268,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                             ),
                           if (viewModel.selectNotificationType == "departments" &&
                               viewModel.departments.isNotEmpty)
-                            SizedBox(height: 14),
+                            SizedBox(height: AppSizes.s14),
                           if (viewModel.selectNotificationType == "departments" &&
                               viewModel.departments.isNotEmpty)
                             GestureDetector(
@@ -283,7 +283,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                         return ConstrainedBox(
                                           constraints: BoxConstraints(maxHeight: maxHeight),
                                           child: Padding(
-                                            padding: EdgeInsets.all(16.0),
+                                            padding: EdgeInsets.all(AppSizes.s16),
                                             child: Column(
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
@@ -293,7 +293,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                                       fontWeight: FontWeight.w700,
                                                       fontSize: 18),
                                                 ),
-                                                SizedBox(height: 12),
+                                                SizedBox(height: AppSizes.s12),
                                                 ConstrainedBox(
                                                   constraints:
                                                       BoxConstraints(maxHeight: maxHeight * 0.6),
@@ -323,7 +323,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                                     ),
                                                   ),
                                                 ),
-                                                SizedBox(height: 12),
+                                                SizedBox(height: AppSizes.s12),
                                                 ElevatedButton(
                                                   onPressed: () {
                                                     Navigator.pop(
@@ -357,7 +357,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                               },
                               child: Container(
                                 alignment: Alignment.center,
-                                padding: EdgeInsets.symmetric(horizontal: 16),
+                                padding: EdgeInsets.symmetric(horizontal: AppSizes.s16),
                                 decoration: ShapeDecoration(
                                   color: Colors.white,
                                   shape: RoundedRectangleBorder(
@@ -384,7 +384,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                 ),
                               ),
                             ),
-                          SizedBox(height: 14),
+                          SizedBox(height: AppSizes.s14),
                           TextFormField(
                             maxLines: 8,
                             validator: (String? value) {
@@ -403,7 +403,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 14),
+                          SizedBox(height: AppSizes.s14),
                           TextFormField(
                             maxLines: 8,
                             validator: (String? value) {
@@ -422,7 +422,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                               ),
                           ),
                         ),
-                        SizedBox(height: 14),
+                        SizedBox(height: AppSizes.s14),
                           GestureDetector(
                             onTap: () async {
                               await viewModel.getImage(context,
@@ -434,7 +434,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                             },
                             child: Container(
                               alignment: Alignment.center,
-                              padding: EdgeInsets.symmetric(horizontal: 16),
+                              padding: EdgeInsets.symmetric(horizontal: AppSizes.s16),
                               decoration: ShapeDecoration(
                                 color: Colors.white,
                                 shape: RoundedRectangleBorder(
@@ -467,7 +467,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                           ),
                           if (viewModel.listAttachmentPersonalImage.isNotEmpty)
                             Padding(
-                              padding: EdgeInsets.symmetric(vertical: 10),
+                              padding: EdgeInsets.symmetric(vertical: AppSizes.s10),
                               child: GridView.builder(
                                 physics: const ClampingScrollPhysics(),
                                 shrinkWrap: true,
@@ -492,10 +492,10 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                 },
                               ),
                             ),
-                          SizedBox(height: 14),
+                          SizedBox(height: AppSizes.s14),
                           Container(
                             alignment: Alignment.center,
-                            padding: EdgeInsets.symmetric(horizontal: 16),
+                            padding: EdgeInsets.symmetric(horizontal: AppSizes.s16),
                             decoration: ShapeDecoration(
                               color: Colors.white,
                               shape: RoundedRectangleBorder(
@@ -532,7 +532,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                                         width: 2,
                                       ),
                                     ),
-                                    padding: EdgeInsets.all(3),
+                                    padding: EdgeInsets.all(AppSizes.s3),
                                     child: viewModel.allowComment
                                         ? Container(
                                             decoration: const BoxDecoration(
@@ -546,7 +546,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
                               ],
                             ),
                           ),
-                          SizedBox(height: 30),
+                          SizedBox(height: AppSizes.s30),
                           if (viewModel.isLoading)
                             const Center(child: CircularProgressIndicator())
                           else
@@ -592,7 +592,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
 
   Widget buildCustomContainer({dynamic file, dynamic xFile, required VoidCallback onTap}) {
     return Padding(
-      padding: EdgeInsets.only(left: 10, bottom: 10),
+      padding: EdgeInsets.only(left: AppSizes.s10, bottom: AppSizes.s10),
       child: Stack(
         alignment: Alignment.topRight,
         children: [
@@ -630,7 +630,7 @@ class _AddNotificationScreenState extends State<AddNotificationScreen> {
           GestureDetector(
             onTap: onTap,
             child: Padding(
-              padding: EdgeInsets.all(5.0),
+              padding: EdgeInsets.all(AppSizes.s5),
               child: const Icon(Icons.delete, color: Colors.red,),
             ),
           )

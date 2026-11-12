@@ -87,7 +87,7 @@ class RewardAndPenaltyCardWidget extends StatelessWidget {
                   : Icons.warning_amber_rounded,
               borderColor: accentColor,
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppSizes.s12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,7 +100,7 @@ class RewardAndPenaltyCardWidget extends StatelessWidget {
                     style: AppStyles.heading(context),
                   ),
                   if (subtitleText.isNotEmpty) ...[
-                    const SizedBox(height: 2),
+                    const SizedBox(height: AppSizes.s2),
                     Text(
                       subtitleText,
                       maxLines: 1,
@@ -111,7 +111,7 @@ class RewardAndPenaltyCardWidget extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppSizes.s8),
             AppStatusBadge(
               label: isReward
                   ? AppStrings.rewardInfo.tr()

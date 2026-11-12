@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_colors.dart';
@@ -26,7 +27,7 @@ class ActionReplyField extends StatelessWidget {
             color: Color(AppColors.secondaryButton),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSizes.s8),
         TextFormField(
           controller: controller,
           maxLines: 3,
@@ -44,10 +45,10 @@ class ActionReplyField extends StatelessWidget {
               borderRadius: BorderRadius.circular(AppRadius.sm),
               borderSide: BorderSide.none,
             ),
-            contentPadding: const EdgeInsets.all(12),
+            contentPadding: const EdgeInsets.all(AppSizes.s12),
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSizes.s16),
       ],
     );
   }

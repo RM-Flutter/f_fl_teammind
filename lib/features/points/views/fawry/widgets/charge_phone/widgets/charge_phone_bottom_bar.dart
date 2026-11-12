@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/features/points/controllers/fawry_controller/fawry_controller.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +23,7 @@ class ChargePhoneBottomBar extends StatelessWidget {
             borderRadius: BorderRadius.circular(AppRadius.xl),
             boxShadow: AppShadows.raised,
           ),
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(AppSizes.s16),
           child: (value.isPostPayLoading == false)?ButtonWidget(
             title:
             "${AppStrings.pay.tr()} ${value.numberOfPointsController.text.isNotEmpty? value.numberOfPointsController.text : "0"  } ${AppStrings.point.tr()}",

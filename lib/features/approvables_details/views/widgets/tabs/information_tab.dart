@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import '../../../data/models/approvable_details_model.dart';
@@ -72,7 +73,7 @@ class InformationTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const SizedBox(height: 25),
+          const SizedBox(height: AppSizes.s25),
           if (createdAt != null && createdAt!.isNotEmpty)
             _buildInfoCard(
               context,
@@ -80,7 +81,7 @@ class InformationTab extends StatelessWidget {
               _formatInfoDate(createdAt, context),
             ),
           if (seenAt != null && seenAt!.isNotEmpty) ...[
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSizes.s12),
             _buildInfoCard(
               context,
               AppStrings.seenOn.tr(),
@@ -88,7 +89,7 @@ class InformationTab extends StatelessWidget {
             ),
           ],
           if (updatedAt != null && updatedAt!.isNotEmpty) ...[
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSizes.s12),
             _buildInfoCard(
               context,
               AppStrings.statusUpdate.tr(),
@@ -96,14 +97,14 @@ class InformationTab extends StatelessWidget {
             ),
           ],
           if (seenBy != null && seenBy!.isNotEmpty) ...[
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSizes.s24),
             Text('seen_by'.tr(),
               style: AppStyles.darkContent(context).copyWith(
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSizes.s12),
             ...seenBy!.map((person) {
               return Container(
                 margin: const EdgeInsets.symmetric(
@@ -122,7 +123,7 @@ class InformationTab extends StatelessWidget {
                       name: person.name,
                       borderColor: Color(AppColors.buttons),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: AppSizes.s12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,7 +133,7 @@ class InformationTab extends StatelessWidget {
                             style: AppStyles.heading(context),
                           ),
                           if (person.date != null && person.date!.isNotEmpty) ...[
-                            const SizedBox(height: 2),
+                            const SizedBox(height: AppSizes.s2),
                             Text(
                               _formatInfoDate(person.date, context),
                               style: AppStyles.subtitleContent(context),
@@ -147,7 +148,7 @@ class InformationTab extends StatelessWidget {
             }).toList(),
           ],
           if (employeeActions != null && employeeActions!.isNotEmpty) ...[
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSizes.s24),
             Text(
               AppStrings.history.tr(),
               style: AppStyles.darkContent(context).copyWith(
@@ -155,7 +156,7 @@ class InformationTab extends StatelessWidget {
                 fontSize: 14,
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSizes.s12),
             ...employeeActions!.map((action) => _buildActionCard(context, action)).toList(),
           ],
         ],
@@ -218,7 +219,7 @@ class InformationTab extends StatelessWidget {
     Widget actionWidget;
     if (action.action == 'update-duration' || action.action == 'update-amount') {
       actionWidget = Container(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(AppSizes.s12),
         decoration: BoxDecoration(
           color: actionColor.withOpacity(0.05),
           borderRadius: BorderRadius.circular(AppRadius.md),
@@ -227,18 +228,18 @@ class InformationTab extends StatelessWidget {
         child: Row(
           children: [
             Icon(actionIcon, color: actionColor, size: 24),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppSizes.s12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(actionLabel, style: TextStyle(fontWeight: FontWeight.bold, color: actionColor.withOpacity(0.8), fontSize: 12)),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: AppSizes.s4),
                   Row(
                     children: [
                       Text(action.valueFrom ?? "", style: TextStyle(decoration: TextDecoration.lineThrough, color: Colors.grey.shade500, fontSize: 13)),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: AppSizes.s8),
                         child: Icon(Icons.arrow_forward_rounded, size: 14, color: Colors.grey.shade400),
                       ),
                       Text(action.valueTo ?? "", style: TextStyle(fontWeight: FontWeight.bold, color: actionColor, fontSize: 14)),
@@ -252,7 +253,7 @@ class InformationTab extends StatelessWidget {
       );
     } else {
       actionWidget = Container(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(AppSizes.s12),
         decoration: BoxDecoration(
           color: actionColor.withOpacity(0.05),
           borderRadius: BorderRadius.circular(AppRadius.md),
@@ -262,14 +263,14 @@ class InformationTab extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Icon(actionIcon, color: actionColor, size: 24),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppSizes.s12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(actionLabel, style: TextStyle(fontWeight: FontWeight.bold, color: actionColor, fontSize: 14)),
                   if (action.message != null && action.message!.isNotEmpty) ...[
-                    const SizedBox(height: 4),
+                    const SizedBox(height: AppSizes.s4),
                     Text(action.message!, style: TextStyle(color: Colors.grey.shade800, fontSize: 13, height: 1.4)),
                   ]
                 ],
@@ -309,7 +310,7 @@ class InformationTab extends StatelessWidget {
           ),
           const Divider(height: 16, color: Colors.transparent),
           actionWidget,
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSizes.s8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -317,7 +318,7 @@ class InformationTab extends StatelessWidget {
                 Row(
                   children: [
                     Icon(Icons.access_time, size: 10, color: Colors.grey.shade400),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: AppSizes.s4),
                     Text(time, style: AppStyles.greyContent(context).copyWith(fontSize: 10)),
                   ],
                 ),

@@ -185,7 +185,7 @@ class _RewardsAndPenaltiesScreenState extends State<RewardsAndPenaltiesScreen> {
                                   ),
                                 if (viewModel.isLoadingMorePersonal)
                                   const Center(child: Padding(
-                                    padding: EdgeInsets.all(8.0),
+                                    padding: EdgeInsets.all(AppSizes.s8),
                                     child: CircularProgressIndicator(),
                                   )),
                               ] else ...[
@@ -204,11 +204,11 @@ class _RewardsAndPenaltiesScreenState extends State<RewardsAndPenaltiesScreen> {
                                   ),
                                 if (viewModel.isLoadingMoreTeam)
                                   const Center(child: Padding(
-                                    padding: EdgeInsets.all(8.0),
+                                    padding: EdgeInsets.all(AppSizes.s8),
                                     child: CircularProgressIndicator(),
                                   )),
                               ],
-                              const SizedBox(height: 50),
+                              const SizedBox(height: AppSizes.s50),
                             ],
                           );
                         }),

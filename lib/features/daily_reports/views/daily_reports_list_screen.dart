@@ -102,7 +102,7 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    padding: EdgeInsets.all(16),
+                    padding: EdgeInsets.all(AppSizes.s16),
                     decoration: BoxDecoration(
                       color: Colors.red.shade50,
                       shape: BoxShape.circle,
@@ -110,7 +110,7 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
                     child: Icon(Icons.delete_outline_rounded,
                         color: Colors.red.shade400, size: 36),
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: AppSizes.s20),
                   Text(
                     AppStrings.deleteReport.tr(),
                     style: AppStyles.heading(context).copyWith(
@@ -120,7 +120,7 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 12),
+                  SizedBox(height: AppSizes.s12),
                   Text(
                     AppStrings.confirmDeleteReport.tr(),
                     style: AppStyles.content(context).copyWith(
@@ -130,14 +130,14 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: 28),
+                  SizedBox(height: AppSizes.s28),
                   Row(
                     children: [
                       Expanded(
                         child: TextButton(
                           onPressed: () => Navigator.pop(context, false),
                           style: TextButton.styleFrom(
-                            padding: EdgeInsets.symmetric(vertical: 14),
+                            padding: EdgeInsets.symmetric(vertical: AppSizes.s14),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(AppRadius.md),
                             ),
@@ -152,13 +152,13 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(width: 12),
+                      SizedBox(width: AppSizes.s12),
                       Expanded(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.red.shade500,
                             elevation: 0,
-                            padding: EdgeInsets.symmetric(vertical: 14),
+                            padding: EdgeInsets.symmetric(vertical: AppSizes.s14),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(AppRadius.md),
                             ),
@@ -303,7 +303,7 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
         itemBuilder: (context, index) {
           if (index == list.length) {
             return const Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(AppSizes.s16),
               child: Center(child: CircularProgressIndicator()),
             );
           }
@@ -354,7 +354,7 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
             icon: isIncoming ? null : Icons.calendar_month_rounded,
             borderColor: Color(AppColors.buttons),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSizes.s12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -371,7 +371,7 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 3),
+                const SizedBox(height: AppSizes.s3),
                 Text(
                   isIncoming
                       ? [
@@ -393,7 +393,7 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
               ],
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSizes.s8),
           if (canEdit)
             Row(
               mainAxisSize: MainAxisSize.min,
@@ -417,7 +417,7 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
                     });
                   },
                   child: Container(
-                    padding: const EdgeInsets.all(6),
+                    padding: const EdgeInsets.all(AppSizes.s6),
                     decoration: BoxDecoration(
                       color: Color(AppColors.buttons).withOpacity(0.1),
                       shape: BoxShape.circle,
@@ -426,12 +426,12 @@ class _DailyReportsListScreenState extends State<DailyReportsListScreen> {
                         color: Color(AppColors.buttons), size: 16),
                   ),
                 ),
-                const SizedBox(width: 6),
+                const SizedBox(width: AppSizes.s6),
                 InkWell(
                   customBorder: const CircleBorder(),
                   onTap: () => _deleteReport(context, report, provider),
                   child: Container(
-                    padding: const EdgeInsets.all(6),
+                    padding: const EdgeInsets.all(AppSizes.s6),
                     decoration: BoxDecoration(
                       color: Color(AppColors.failureRed).withOpacity(0.1),
                       shape: BoxShape.circle,

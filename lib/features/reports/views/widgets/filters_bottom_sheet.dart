@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/widgets/app_filter_actions.widget.dart';
@@ -127,7 +128,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
       enabledBorder: border(isLocked ? Colors.grey.shade300 : Color(AppColors.border)),
       disabledBorder: border(Colors.grey.shade300),
       focusedBorder: border(Color(AppColors.border)),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s12),
     );
   }
 
@@ -211,7 +212,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const SizedBox(height: 10),
+            const SizedBox(height: AppSizes.s10),
             Container(
               width: 63,
               height: 5,
@@ -220,9 +221,9 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                 borderRadius: BorderRadius.circular(AppRadius.pill),
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: AppSizes.s10),
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(AppSizes.s20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -243,7 +244,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                 hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
                 borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
                 borderRadius: BorderRadius.circular(AppRadius.sm),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s12),
                 onChanged: (vals) {
                   setState(() {
                     _filters['department_ids'] = vals.map((v) => v['id'] as int).toList();
@@ -268,7 +269,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                 hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
                 borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
                 borderRadius: BorderRadius.circular(AppRadius.sm),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s12),
                 onChanged: (vals) {
                   setState(() {
                     _filters['employee_ids'] = vals.map((v) => v['id'] as int).toList();
@@ -328,7 +329,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                 hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
                 borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
                 borderRadius: BorderRadius.circular(AppRadius.sm),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s12),
                 onChanged: (val) {
                   setState(() {
                     _filters['request_type_id'] = val['id'] as int;
@@ -347,9 +348,9 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                     children: [
                       Text('time_period'.tr(), style: _valueStyle),
                       if (isLocked) ...[
-                        const SizedBox(width: 8),
+                        const SizedBox(width: AppSizes.s8),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          padding: const EdgeInsets.symmetric(horizontal: AppSizes.s8, vertical: AppSizes.s3),
                           decoration: BoxDecoration(
                             color: Colors.grey.shade200,
                             borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -359,7 +360,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(Icons.lock_outline, size: 12, color: Colors.grey.shade700),
-                              const SizedBox(width: 4),
+                              const SizedBox(width: AppSizes.s4),
                               Text(
                                 'locked_period'.tr(),
                                 style: TextStyle(
@@ -465,12 +466,12 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
 
                 if (isLocked) ...[
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
+                    padding: const EdgeInsets.symmetric(horizontal: AppSizes.s4),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Icon(Icons.info_outline, size: 15, color: Colors.grey.shade600),
-                        const SizedBox(width: 6),
+                        const SizedBox(width: AppSizes.s6),
                         Expanded(
                           child: Text(
                             'period_locked_info'.tr(),
@@ -556,7 +557,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
 
             if (_errorMessage != null) ...[
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(AppSizes.s12),
                 decoration: BoxDecoration(
                   color: Colors.red.shade50,
                   borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -565,7 +566,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                 child: Row(
                   children: [
                     const Icon(Icons.error_outline, color: Colors.red, size: 20),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: AppSizes.s8),
                     Expanded(
                       child: Text(
                         _errorMessage!,
@@ -577,7 +578,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
               ),
               const SizedBox(height: AppSpacing.md),
             ],
-            const SizedBox(height: 30),
+            const SizedBox(height: AppSizes.s30),
             AppFilterActions(
               onApply: () {
                 if (widget.filtersConfig.requestTypesRequired) {
@@ -628,7 +629,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
                 Navigator.pop(context);
               },
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: AppSizes.s30),
                 ],
               ),
             ),

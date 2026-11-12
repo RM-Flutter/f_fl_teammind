@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -91,18 +92,18 @@ class _ConnectedAppsViewState extends State<_ConnectedAppsView> {
   Widget _body(AiConnectController c) {
     if (c.isConnectionsLoading && c.connections.isEmpty) {
       return ListView(children: const [
-        SizedBox(height: 120),
+        SizedBox(height: AppSizes.s120),
         Center(child: CircularProgressIndicator()),
       ]);
     }
 
     if (c.connections.isEmpty) {
       return ListView(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(AppSizes.s24),
         children: [
-          const SizedBox(height: 60),
+          const SizedBox(height: AppSizes.s60),
           Icon(Icons.link_off_rounded, size: 48, color: Colors.grey.shade400),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSizes.s12),
           Text(
             c.errorMessage ?? AppStrings.aiNoConnections.tr(),
             textAlign: TextAlign.center,
@@ -113,14 +114,14 @@ class _ConnectedAppsViewState extends State<_ConnectedAppsView> {
     }
 
     return ListView.separated(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+      padding: const EdgeInsets.fromLTRB(AppSizes.s16, AppSizes.s8, AppSizes.s16, AppSizes.s24),
       itemCount: c.connections.length,
-      separatorBuilder: (_, __) => const SizedBox(height: 12),
+      separatorBuilder: (_, __) => const SizedBox(height: AppSizes.s12),
       itemBuilder: (context, i) {
         final connection = c.connections[i];
         final busy = c.disconnectingId == connection.id;
         return Container(
-          padding: const EdgeInsetsDirectional.fromSTEB(14, 12, 8, 12),
+          padding: const EdgeInsetsDirectional.fromSTEB(AppSizes.s14, AppSizes.s12, AppSizes.s8, AppSizes.s12),
           decoration: BoxDecoration(
             color: Colors.white,
             border: Border.all(color: Color(AppColors.border)),
@@ -133,16 +134,16 @@ class _ConnectedAppsViewState extends State<_ConnectedAppsView> {
                 backgroundColor: Color(AppColors.buttons).withValues(alpha: 0.1),
                 child: Icon(Icons.smart_toy_outlined, color: Color(AppColors.buttons)),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppSizes.s12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(connection.clientName,
                         style: AppStyles.darkContent(context).copyWith(fontSize: 14, fontWeight: FontWeight.w700)),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: AppSizes.s4),
                     _AccessBadge(canAct: connection.canAct),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: AppSizes.s6),
                     if (connection.connectedAt != null)
                       Text('${AppStrings.aiConnectedOn.tr()} ${connection.connectedAt}',
                           style: AppStyles.darkContent(context).copyWith(fontSize: 11, color: Colors.grey.shade600)),
@@ -155,8 +156,8 @@ class _ConnectedAppsViewState extends State<_ConnectedAppsView> {
               ),
               busy
                   ? const Padding(
-                      padding: EdgeInsets.all(12),
-                      child: SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+                      padding: EdgeInsets.all(AppSizes.s12),
+                      child: SizedBox(width: AppSizes.s20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
                     )
                   : TextButton(
                       onPressed: c.disconnectingId == null ? () => _confirmDisconnect(c, connection) : null,
@@ -179,7 +180,7 @@ class _AccessBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = canAct ? Color(AppColors.warningYellow) : Color(AppColors.successGreen);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s8, vertical: AppSizes.s2),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(AppRadius.pill),

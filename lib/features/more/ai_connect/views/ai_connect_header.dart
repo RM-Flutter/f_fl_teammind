@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/widgets/app_content_width.widget.dart';
@@ -12,7 +13,7 @@ class AiConnectHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppContentWidth(
       child: SizedBox(
-        height: 64,
+        height: AppSizes.s64,
         child: Row(
           children: [
             IconButton(
@@ -28,7 +29,7 @@ class AiConnectHeader extends StatelessWidget {
                 style: AppStyles.heading(context).copyWith(fontWeight: FontWeight.bold, fontSize: 16),
               ),
             ),
-            const SizedBox(width: 48),
+            const SizedBox(width: AppSizes.s48),
           ],
         ),
       ),

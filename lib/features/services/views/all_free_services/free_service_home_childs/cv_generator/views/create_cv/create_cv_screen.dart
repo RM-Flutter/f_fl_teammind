@@ -101,7 +101,7 @@ class _CreateCVScreenState extends State<CreateCVScreen> {
               child: Column(
                 children: [
                   // Tab Bar
-                  const SizedBox(height: 20),
+                  const SizedBox(height: AppSizes.s20),
                   _buildTabBar(),
 
                   // Tab Content
@@ -132,7 +132,7 @@ class _CreateCVScreenState extends State<CreateCVScreen> {
                       ),
                       child: viewModel.isSubmitting
                           ? const SizedBox(
-                              height: 20,
+                              height: AppSizes.s20,
                               width: 20,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,

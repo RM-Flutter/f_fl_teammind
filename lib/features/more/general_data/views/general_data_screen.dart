@@ -59,7 +59,7 @@ class GeneralDataScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                      SizedBox(height: 16),
+                      SizedBox(height: AppSizes.s16),
                       if(value.dataimage != null) ClipRRect(
                         borderRadius: BorderRadius.circular(AppRadius.xl),
                         child: CachedNetworkImage(
@@ -76,7 +76,7 @@ class GeneralDataScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      if(value.dataimage != null)  SizedBox(height: 24),
+                      if(value.dataimage != null)  SizedBox(height: AppSizes.s24),
                       Html(
                           data: value.dataContent,
                           style: TextsStyles.htmlStyle),
@@ -94,7 +94,7 @@ class GeneralDataScreen extends StatelessWidget {
                     height: 150,
                     color: Colors.white,
                   ),
-                  SizedBox(height: 16),
+                  SizedBox(height: AppSizes.s16),
                   Container(
                     width: 200,
                     height: 20,

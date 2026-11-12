@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -22,44 +23,44 @@ class SkippedEmployeesDialog extends StatelessWidget {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.xl)),
       backgroundColor: Colors.white,
-      insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+      insetPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s24, vertical: AppSizes.s24),
       child: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: 420, maxHeight: MediaQuery.sizeOf(context).height * 0.8),
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
+          padding: const EdgeInsets.fromLTRB(AppSizes.s24, AppSizes.s28, AppSizes.s24, AppSizes.s20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Container(
-                padding: const EdgeInsets.all(14),
+                padding: const EdgeInsets.all(AppSizes.s14),
                 decoration: const BoxDecoration(color: Color(0xFFFFF7ED), shape: BoxShape.circle),
                 child: const Icon(Icons.warning_amber_rounded, color: Color(0xFFF59E0B), size: 30),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSizes.s16),
               Text(
                 'skipped_employees_title'.tr(),
                 style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: Color(0xFF111827)),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSizes.s8),
               Text(
                 'skipped_employees_message'.tr(args: [createdCount.toString(), skipped.length.toString()]),
                 style: const TextStyle(fontSize: 14, color: Color(0xFF4B5563), height: 1.5),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSizes.s16),
               Flexible(
                 child: ListView.separated(
                   shrinkWrap: true,
  padding: EdgeInsets.zero,
                   itemCount: skipped.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: 8),
+                  separatorBuilder: (_, __) => const SizedBox(height: AppSizes.s8),
                   itemBuilder: (_, index) {
                     final item = skipped[index];
                     final name = item['name']?.toString() ?? '#${item['profile_id'] ?? ''}';
                     return Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.all(12),
+                      padding: const EdgeInsets.all(AppSizes.s12),
                       decoration: BoxDecoration(
                         color: const Color(0xFFF9FAFB),
                         borderRadius: BorderRadius.circular(AppRadius.md),
@@ -69,7 +70,7 @@ class SkippedEmployeesDialog extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(name, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Color(0xFF111827))),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: AppSizes.s4),
                           Text(item['reason']?.toString() ?? '', style: const TextStyle(fontSize: 13, color: Color(0xFF6B7280), height: 1.4)),
                         ],
                       ),
@@ -77,7 +78,7 @@ class SkippedEmployeesDialog extends StatelessWidget {
                   },
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: AppSizes.s20),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -87,7 +88,7 @@ class SkippedEmployeesDialog extends StatelessWidget {
                     foregroundColor: Colors.white,
                     elevation: 0,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    padding: const EdgeInsets.symmetric(vertical: AppSizes.s14),
                   ),
                   child: Text('got_it'.tr(), style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
                 ),

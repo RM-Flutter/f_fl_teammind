@@ -240,7 +240,7 @@ class _UpdateExpenseClaimScreenState extends State<UpdateExpenseClaimScreen> {
         gapH14,
         for (int idx = 0; idx < controller.newAttachments.length; idx++) ...[
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12, vertical: AppSizes.s4),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(AppRadius.md),
@@ -250,7 +250,7 @@ class _UpdateExpenseClaimScreenState extends State<UpdateExpenseClaimScreen> {
               children: [
                 Icon(Icons.insert_drive_file_rounded,
                     color: Colors.grey.shade600, size: 20),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSizes.s12),
                 Expanded(
                   child: Text(
                     controller.newAttachments[idx].files.first.name,

@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -76,13 +77,13 @@ class _CvHubInterviewDetailsScreenState extends State<CvHubInterviewDetailsScree
                               ? AppColors.failureRed
                               : AppColors.iconSecondary),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: AppSizes.s16),
                         Text(
                           controller.error ?? 'No details found.'.tr(),
                           style: TextStyle(fontSize: 16, color: Color(AppColors.titleText)),
                         ),
                         if (controller.error != null) ...[
-                          const SizedBox(height: 16),
+                          const SizedBox(height: AppSizes.s16),
                           ElevatedButton(
                             onPressed: () => controller.fetchInterviewDetails(context, widget.id),
                             style: ElevatedButton.styleFrom(backgroundColor: Color(AppColors.c1)),
@@ -132,7 +133,7 @@ class _CvHubInterviewDetailsScreenState extends State<CvHubInterviewDetailsScree
                     child: Padding(
                       // Same place and size as the approvals bottom action bar.
                       padding: EdgeInsets.fromLTRB(
-                          34, 8, 34, 12 + MediaQuery.paddingOf(context).bottom),
+                          34, AppSizes.s8, 34, 12 + MediaQuery.paddingOf(context).bottom),
                       child: SizedBox(
                         height: 44,
                         child: Row(
@@ -174,7 +175,7 @@ class _CvHubInterviewDetailsScreenState extends State<CvHubInterviewDetailsScree
             Container(
               width: double.infinity, // full-width bar, even when the tabs are fewer
               height: 52,
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s8, vertical: AppSizes.s6),
               decoration: BoxDecoration(
                 color: Color(AppColors.secondaryButton),
                 borderRadius: BorderRadius.circular(AppRadius.xl),
@@ -182,7 +183,7 @@ class _CvHubInterviewDetailsScreenState extends State<CvHubInterviewDetailsScree
               child: TabBar(
                 dividerColor: Colors.transparent,
                 // Few tabs: they share the bar equally, from edge to edge.
-                indicatorPadding: const EdgeInsets.symmetric(horizontal: 4),
+                indicatorPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s4),
                 labelPadding: EdgeInsets.zero,
                 indicator: BoxDecoration(
                   color: Color(AppColors.buttons),
@@ -256,9 +257,9 @@ class _EvaluationFormState extends State<_EvaluationForm> {
     return Container(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
-        top: 24,
-        left: 20,
-        right: 20,
+        top: AppSizes.s24,
+        left: AppSizes.s20,
+        right: AppSizes.s20,
       ),
       decoration: BoxDecoration(
         color: Color(AppColors.scaffoldBackGround),
@@ -276,19 +277,19 @@ class _EvaluationFormState extends State<_EvaluationForm> {
                   'Evaluation Form'.tr(),
                   style: AppStyles.primaryContent(context).copyWith(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: AppSizes.s20),
                 _buildFormField(
                   controller: _techScoreController,
                   label: 'Technical Score (0-100)'.tr(),
                   keyboardType: TextInputType.number,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSizes.s16),
                 _buildFormField(
                   controller: _softScoreController,
                   label: 'Soft Skills Score (0-100)'.tr(),
                   keyboardType: TextInputType.number,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSizes.s16),
                 FormField<String>(
                   initialValue: _recommendation,
                   validator: (val) => (_recommendation == null || _recommendation!.isEmpty) ? 'Required'.tr() : null,
@@ -373,13 +374,13 @@ class _EvaluationFormState extends State<_EvaluationForm> {
                     );
                   },
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSizes.s16),
                 _buildFormField(
                   controller: _notesController,
                   label: 'Notes'.tr(),
                   maxLines: 4,
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: AppSizes.s24),
                 SizedBox(
                   width: double.infinity,
                   height: 50,
@@ -417,7 +418,7 @@ class _EvaluationFormState extends State<_EvaluationForm> {
                     },
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: AppSizes.s24),
               ],
             ),
           ),

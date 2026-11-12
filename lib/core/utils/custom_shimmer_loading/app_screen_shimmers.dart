@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/widgets/app_responsive_grid.widget.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
@@ -114,7 +115,7 @@ class AppPagerShimmer extends StatelessWidget {
             children: List.generate(
               3,
               (_) => const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 4),
+                padding: EdgeInsets.symmetric(horizontal: AppSizes.s4),
                 child: ShimmerAnimatedLoading(
                     width: 8, height: 8, circularRaduis: AppRadius.pill),
               ),

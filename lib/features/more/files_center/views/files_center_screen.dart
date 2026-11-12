@@ -291,7 +291,7 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
                 icon: _getFileTypeIconData(fileType),
                 borderColor: statusColor,
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppSizes.s12),
 
               // ── Info ────────────────────────────────────────────────────
               Expanded(
@@ -312,7 +312,7 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
                     ),
                     if (file.description != null &&
                         file.description!.isNotEmpty) ...[
-                      const SizedBox(height: 3),
+                      const SizedBox(height: AppSizes.s3),
                       Text(
                         file.description!,
                         style: AppStyles.subtitleContent(context).copyWith(
@@ -327,12 +327,12 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
                 ),
               ),
 
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
 
               // ── Status Badge + Download action ──────────────────────────
               if (file.status != null && file.status!.isNotEmpty) ...[
                 AppStatusBadge.fromStatus(status: file.status),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppSizes.s8),
               ],
               Container(
                 padding: const EdgeInsets.all(7),
@@ -362,7 +362,7 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     SizedBox(
-                      width: 20,
+                      width: AppSizes.s20,
                       height: 20,
                       child: CircularProgressIndicator(
                         value: progress > 0 ? progress : null,
@@ -371,7 +371,7 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
                             Color(AppColors.buttons)),
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: AppSizes.s8),
                     Text(
                       '${(progress * 100).toInt()}%',
                       style: TextStyle(
@@ -407,7 +407,7 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(AppSizes.s16),
                 child: Row(
                   children: [
                     Expanded(
@@ -429,12 +429,12 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
                             contentPadding: const EdgeInsets.all(AppSizes.s8)),
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: AppSizes.s8),
                     InkWell(
                       borderRadius: BorderRadius.circular(AppRadius.sm),
                       onTap: _showFilterBottomSheet,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                        padding: const EdgeInsets.symmetric(horizontal: AppSizes.s8, vertical: AppSizes.s8),
                         child: Image.asset(
                           AppImages.profileFilter,
                           width: AppSizes.s22,
@@ -460,13 +460,13 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(Icons.error_outline, size: 48, color: Colors.grey[400]),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: AppSizes.s16),
                             Text(
                               vm.errorMessage!,
                               style: TextStyle(color: Colors.grey[600], fontSize: 14),
                               textAlign: TextAlign.center,
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: AppSizes.s16),
                             ElevatedButton(
                               onPressed: () => vm.refresh(context),
                               child: Text('try_again'.tr()),
@@ -489,12 +489,12 @@ class _FilesCenterScreenState extends State<FilesCenterScreen> {
                       onRefresh: () => vm.refresh(context),
                       child: ListView.builder(
                         controller: _scrollController,
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16),
                         itemCount: vm.displayedFiles.length + (vm.isLoadingMore ? 1 : 0),
                         itemBuilder: (context, index) {
                           if (index == vm.displayedFiles.length) {
                             return const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 16),
+                              padding: EdgeInsets.symmetric(vertical: AppSizes.s16),
                               child: Center(child: CircularProgressIndicator()),
                             );
                           }

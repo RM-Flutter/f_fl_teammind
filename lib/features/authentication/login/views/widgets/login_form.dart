@@ -122,7 +122,7 @@ class _LoginFormState extends State<LoginForm> {
               style: compact
                   ? TextButton.styleFrom(
                       padding:
-                          const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                          const EdgeInsets.symmetric(horizontal: AppSizes.s4, vertical: AppSizes.s2),
                       minimumSize: Size.zero,
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     )

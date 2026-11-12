@@ -186,7 +186,7 @@ class _MultiSelectionSheetContentState
           child: Column(
             children: [
               // Handle Bar
-              const SizedBox(height: 10),
+              const SizedBox(height: AppSizes.s10),
               Container(
                 width: 40,
                 height: 5,
@@ -195,16 +195,16 @@ class _MultiSelectionSheetContentState
                   borderRadius: BorderRadius.circular(AppRadius.sm),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSizes.s16),
               // Search Field
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16),
                 child: TextField(
                   controller: _searchController,
                   decoration: InputDecoration(
                     hintText: AppStrings.search.tr(),
                     prefixIcon: const Icon(Icons.search, color: Colors.grey),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s16),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(AppRadius.xl),
                       borderSide: BorderSide(color: Colors.grey.shade300),
@@ -223,17 +223,17 @@ class _MultiSelectionSheetContentState
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: AppSizes.s10),
               // Selected Chips (Preview)
               if (_selected.isNotEmpty)
                 Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16),
                   height: 40,
                   child: ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemCount: _selected.length,
-                    separatorBuilder: (_, __) => const SizedBox(width: 8),
+                    separatorBuilder: (_, __) => const SizedBox(width: AppSizes.s8),
                     itemBuilder: (context, index) {
                       final item = _selected[index];
                       return Chip(
@@ -250,7 +250,7 @@ class _MultiSelectionSheetContentState
                     },
                   ),
                 ),
-              if (_selected.isNotEmpty) const SizedBox(height: 10),
+              if (_selected.isNotEmpty) const SizedBox(height: AppSizes.s10),
               const Divider(height: 1),
               // List
               Expanded(
@@ -264,7 +264,7 @@ class _MultiSelectionSheetContentState
                     : ListView.builder(
                         controller: controller,
                         itemCount: _filtered.length,
-                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        padding: const EdgeInsets.symmetric(vertical: AppSizes.s8),
                         itemBuilder: (context, index) {
                           final item = _filtered[index];
                           final isChecked =
@@ -280,20 +280,20 @@ class _MultiSelectionSheetContentState
                             activeColor: Color(AppColors.buttons),
                             controlAffinity: ListTileControlAffinity.trailing,
                             contentPadding:
-                                const EdgeInsets.symmetric(horizontal: 20),
+                                const EdgeInsets.symmetric(horizontal: AppSizes.s20),
                           );
                         },
                       ),
               ),
               // Confirm Button
               Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(AppSizes.s16),
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(AppColors.buttons),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      padding: const EdgeInsets.symmetric(vertical: AppSizes.s14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(AppRadius.sm),
                       ),

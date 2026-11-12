@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/widgets/app_responsive_grid.widget.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
@@ -80,13 +81,13 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.error_outline, size: 48, color: Colors.grey[400]),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSizes.s16),
                     Text(
                       vm.errorMessage!,
                       style: TextStyle(color: Colors.grey[600], fontSize: 14),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSizes.s16),
                     ElevatedButton(
                       onPressed: () => vm.fetchTemplates(context, itemsCount: 200),
                       child: Text(AppStrings.retry.tr()),
@@ -104,7 +105,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.folder_open, size: 48, color: Colors.grey[400]),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSizes.s16),
                     Text(
                       AppStrings.noDataFounded.tr(),
                       style: TextStyle(color: Colors.grey[600], fontSize: 14),
@@ -117,7 +118,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
             return AppContentWidth(
               child: Column(
                 children: [
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSizes.s16),
                   Expanded(
                     child: LayoutService.isExpanded(context)
                         // Wide windows: all the templates at once, tap one to select it.
@@ -144,9 +145,9 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                   ),
                   if (!LayoutService.isExpanded(context))
                     AppPageDots(count: templates.length, index: selectedTemplateIndex),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: AppSizes.s24),
                   Container(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(AppSizes.s16),
                     child: ElevatedButton(
                       onPressed: vm.isLoadingTemplate
                           ? null
@@ -160,7 +161,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                       ),
                       child: vm.isLoadingTemplate
                           ? const SizedBox(
-                              height: 20,
+                              height: AppSizes.s20,
                               width: 20,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
@@ -199,7 +200,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
       child: AspectRatio(
         aspectRatio: 1 / 1.35,
         child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          margin: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s8),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.lg),
@@ -260,7 +261,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
               ),
               if (template.slug != null && template.slug!.isNotEmpty)
                 Padding(
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(AppSizes.s12),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -294,7 +295,7 @@ class _SelectTemplateScreenState extends State<SelectTemplateScreen> {
                         valueColor: AlwaysStoppedAnimation<Color>(Color(AppColors.buttons)),
                         strokeWidth: 4,
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: AppSizes.s12),
                       Text(
                         '${((vm.downloadProgress[template.id] ?? 0) * 100).toStringAsFixed(0)}%',
                         style: const TextStyle(

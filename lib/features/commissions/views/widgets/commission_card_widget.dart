@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/utils/app_styles.dart';
@@ -58,7 +59,7 @@ class CommissionCardWidget extends StatelessWidget {
             icon: Icons.attach_money_rounded,
             borderColor: statusColor,
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSizes.s12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,7 +75,7 @@ class CommissionCardWidget extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 if (subtitleParts.isNotEmpty) ...[
-                  const SizedBox(height: 3),
+                  const SizedBox(height: AppSizes.s3),
                   Text(
                     subtitleParts.join(' · '),
                     style: AppStyles.subtitleContent(context).copyWith(
@@ -88,7 +89,7 @@ class CommissionCardWidget extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSizes.s8),
           AppStatusBadge(
             label: commission.statusLabel ?? commission.status ?? '-',
             color: statusColor,

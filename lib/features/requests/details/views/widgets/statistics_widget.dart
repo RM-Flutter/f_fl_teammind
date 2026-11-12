@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/models/requests_model.dart';
 import 'package:app_test/core/models/settings/user_settings_2.model.dart';
@@ -33,7 +34,7 @@ class StatisticsModal extends StatelessWidget {
             type: type,
             employeeId: employeeId,
           ),
-          SizedBox(height: 14),
+          SizedBox(height: AppSizes.s14),
           ...requests!
               .map(
                 (req) => ApprovableCardWidget(
@@ -80,7 +81,7 @@ class StatisticsBalanceList extends StatelessWidget {
     return vacationBalance == null || vacationBalance?.isEmpty == true
         ? const SizedBox.shrink()
         : Padding(
-      padding: EdgeInsets.only(bottom: 32),
+      padding: EdgeInsets.only(bottom: AppSizes.s32),
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(

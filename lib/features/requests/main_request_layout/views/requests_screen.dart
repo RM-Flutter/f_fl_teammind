@@ -265,7 +265,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                       return const SizedBox.shrink();
                     }
                     return Padding(
-                      padding: const EdgeInsets.only(top: 10),
+                      padding: const EdgeInsets.only(top: AppSizes.s10),
                       child: _buildFilterFab(context),
                     );
                   },
@@ -387,7 +387,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                 child: ListView(
                                   controller: _scrollController,
                                   clipBehavior: Clip.none,
-                                  padding: const EdgeInsets.fromLTRB(AppSpacing.page, AppSpacing.md, AppSpacing.page, 140), // keep last card clear of the FABs
+                                  padding: const EdgeInsets.fromLTRB(AppSpacing.page, AppSpacing.md, AppSpacing.page, AppSizes.s140), // keep last card clear of the FABs
                                   children: [
                                     /// calendar button
                                     if (widget.requestsType == GetRequestsTypes.myTeam ||
@@ -716,7 +716,7 @@ class _RequestsScreenState extends State<RequestsScreen> {
                                       ),
                                     if (viewModel.isLoadingMore)
                                       const Padding(
-                                        padding: EdgeInsets.symmetric(vertical: 16),
+                                        padding: EdgeInsets.symmetric(vertical: AppSizes.s16),
                                         child: Center(child: CircularProgressIndicator()),
                                       ),
                                   ],

@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_design.dart';
@@ -13,7 +14,7 @@ class ReportDetailsShimmer extends StatelessWidget {
         children: [
           // Summary card shimmer
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(AppSizes.s16),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -23,10 +24,10 @@ class ReportDetailsShimmer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ShimmerAnimatedLoading(height: 16, width: 200, circularRaduis: 4),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSizes.s12),
                 const Divider(),
                 ...List.generate(5, (i) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  padding: const EdgeInsets.symmetric(vertical: AppSizes.s6),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -38,13 +39,13 @@ class ReportDetailsShimmer extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSizes.s24),
           // Employees list shimmer
           ShimmerAnimatedLoading(height: 20, width: 140, circularRaduis: 4),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSizes.s12),
           ...List.generate(5, (i) => Container(
-            margin: const EdgeInsets.only(bottom: 12),
-            padding: const EdgeInsets.all(16),
+            margin: const EdgeInsets.only(bottom: AppSizes.s12),
+            padding: const EdgeInsets.all(AppSizes.s16),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -53,13 +54,13 @@ class ReportDetailsShimmer extends StatelessWidget {
             child: Row(
               children: [
                 ShimmerAnimatedLoading(height: 40, width: 40, circularRaduis: 50),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSizes.s12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ShimmerAnimatedLoading(height: 16, width: 150, circularRaduis: 4),
-                      const SizedBox(height: 6),
+                      const SizedBox(height: AppSizes.s6),
                       ShimmerAnimatedLoading(height: 12, width: 100, circularRaduis: 4),
                     ],
                   ),

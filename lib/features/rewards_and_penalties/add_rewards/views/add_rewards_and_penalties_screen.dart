@@ -301,7 +301,7 @@ class _AddRewardAndPenaltyScreenState extends State<AddRewardAndPenaltyScreen> {
                               ),
                             ),
                             //TODO:ADDING EMPLOYEE THAT MANAGED BY ME IN DROPDOWN
-                            SizedBox(height: 30,),
+                            SizedBox(height: AppSizes.s30,),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [

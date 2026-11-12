@@ -165,7 +165,7 @@ class OvertimeCalendarScreen extends StatelessWidget {
                                               shrinkWrap: true,
  padding: EdgeInsets.zero,
                                               itemCount: details.appointments.length,
-                                              separatorBuilder: (_, __) => const SizedBox(height: 8),
+                                              separatorBuilder: (_, __) => const SizedBox(height: AppSizes.s8),
                                               itemBuilder: (ctx, index) {
                                                 final ot = details.appointments.elementAt(index) as OvertimeRequestModel;
                                                 return _buildAppointmentTile(context, ot, isArabic);
@@ -214,7 +214,7 @@ class OvertimeCalendarScreen extends StatelessWidget {
                                   _navigateToDetails(context, ot);
                                 },
                                 child: Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                                  padding: const EdgeInsets.symmetric(horizontal: AppSizes.s4, vertical: AppSizes.s2),
                                   decoration: BoxDecoration(
                                     color: bgColor,
                                     borderRadius: BorderRadius.circular(AppRadius.xs),

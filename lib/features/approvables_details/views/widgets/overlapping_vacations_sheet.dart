@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -79,7 +80,7 @@ class _OverlappingVacationsSheetState
         child: Column(
           children: [
             // Handle bar
-            const SizedBox(height: 10),
+            const SizedBox(height: AppSizes.s10),
             Center(
               child: Container(
                 width: 40,
@@ -90,15 +91,15 @@ class _OverlappingVacationsSheetState
                 ),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
 
             // Title row
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s20),
               child: Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(AppSizes.s8),
                     decoration: BoxDecoration(
                       color: AppColors.statusTones(Color(AppColors.warningYellow)).tint,
                       borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -109,7 +110,7 @@ class _OverlappingVacationsSheetState
                       size: 20,
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: AppSizes.s12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -133,9 +134,9 @@ class _OverlappingVacationsSheetState
                 ],
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSizes.s12),
             const Divider(height: 1),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSizes.s8),
 
             // Body
             Expanded(
@@ -148,15 +149,15 @@ class _OverlappingVacationsSheetState
                           : ListView.separated(
                               controller: controller,
                               padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 8),
+                                  horizontal: AppSizes.s16, vertical: AppSizes.s8),
                               itemCount: _items.length,
                               separatorBuilder: (_, __) =>
-                                  const SizedBox(height: 12),
+                                  const SizedBox(height: AppSizes.s12),
                               itemBuilder: (_, i) =>
                                   _VacationCard(item: _items[i]),
                             ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
           ],
         ),
       ),
@@ -211,7 +212,7 @@ class _VacationCard extends StatelessWidget {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(
-                    vertical: 12, horizontal: 14),
+                    vertical: AppSizes.s12, horizontal: AppSizes.s14),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
@@ -233,7 +234,7 @@ class _VacationCard extends StatelessWidget {
                                 )
                               : _AvatarPlaceholder(name: item.employeeName),
                         ),
-                        const SizedBox(width: 10),
+                        const SizedBox(width: AppSizes.s10),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -257,7 +258,7 @@ class _VacationCard extends StatelessWidget {
                         // Status badge
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 4),
+                              horizontal: AppSizes.s10, vertical: AppSizes.s4),
                           decoration: BoxDecoration(
                             color: _statusColor.withOpacity(0.10),
                             borderRadius: BorderRadius.circular(AppRadius.lg),
@@ -274,9 +275,9 @@ class _VacationCard extends StatelessWidget {
                       ],
                     ),
 
-                    const SizedBox(height: 10),
+                    const SizedBox(height: AppSizes.s10),
                     const Divider(height: 1, color: Color(0xFFF0F0F0)),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: AppSizes.s10),
 
                     // Details row
                     Wrap(
@@ -304,7 +305,7 @@ class _VacationCard extends StatelessWidget {
                       ],
                     ),
 
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppSizes.s8),
 
                     // Date range
                     if (item.dateFrom?.isNotEmpty == true)
@@ -312,7 +313,7 @@ class _VacationCard extends StatelessWidget {
                         children: [
                           Icon(Icons.date_range_rounded,
                               size: 14, color: Colors.grey.shade500),
-                          const SizedBox(width: 6),
+                          const SizedBox(width: AppSizes.s6),
                           Text(
                             '${_fmt(item.dateFrom)}  →  ${_fmt(item.dateTo)}',
                             style: AppStyles.greyContent(context)
@@ -323,13 +324,13 @@ class _VacationCard extends StatelessWidget {
 
                     // Reason
                     if (item.reason?.isNotEmpty == true) ...[
-                      const SizedBox(height: 6),
+                      const SizedBox(height: AppSizes.s6),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Icon(Icons.notes_rounded,
                               size: 14, color: Colors.grey.shade500),
-                          const SizedBox(width: 6),
+                          const SizedBox(width: AppSizes.s6),
                           Expanded(
                             child: Text(
                               item.reason!,
@@ -372,7 +373,7 @@ class _InfoChip extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(icon, size: 13, color: Colors.grey.shade500),
-        const SizedBox(width: 4),
+        const SizedBox(width: AppSizes.s4),
         Text(
           label,
           style: AppStyles.greyContent(context)
@@ -422,7 +423,7 @@ class _EmptyState extends StatelessWidget {
         children: [
           Icon(Icons.event_available_rounded,
               size: 52, color: Colors.grey.shade300),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSizes.s12),
           Text(
             'no_overlapping_vacations'.tr(),
             style: AppStyles.greyContent(context).copyWith(fontSize: 14),
@@ -442,12 +443,12 @@ class _ErrorState extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(AppSizes.s24),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(Icons.error_outline, size: 48, color: Colors.red),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSizes.s12),
             Text(error,
                 textAlign: TextAlign.center,
                 style: AppStyles.greyContent(context).copyWith(fontSize: 14)),

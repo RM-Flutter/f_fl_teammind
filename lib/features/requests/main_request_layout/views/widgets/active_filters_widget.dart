@@ -56,7 +56,7 @@ class ActiveFiltersWidget extends StatelessWidget {
     }
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: AppSizes.s12, vertical: AppSizes.s8),
       color: Colors.grey.shade50,
       child: Wrap(
         spacing: 8,
@@ -266,7 +266,7 @@ class _FilterChip extends StatelessWidget {
         onTap: onRemove,
         borderRadius: BorderRadius.circular(AppRadius.lg),
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          padding: EdgeInsets.symmetric(horizontal: AppSizes.s12, vertical: AppSizes.s8),
           decoration: BoxDecoration(
             color: Color(AppColors.buttons).withOpacity(0.1),
             borderRadius: BorderRadius.circular(AppRadius.lg),
@@ -288,9 +288,9 @@ class _FilterChip extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              SizedBox(width: 6),
+              SizedBox(width: AppSizes.s6),
               Container(
-                padding: EdgeInsets.all(2),
+                padding: EdgeInsets.all(AppSizes.s2),
                 decoration: BoxDecoration(
                   color: Color(AppColors.secondaryButton),
                   shape: BoxShape.circle,

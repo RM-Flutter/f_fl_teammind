@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/services/app_toast.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -326,7 +327,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                       titleStyle: AppStyles.whiteHeading(context).copyWith(fontSize: 20),
                       bookmarkIconColor: Colors.white,
                       leading: Padding(
-                        padding: EdgeInsets.all(10),
+                        padding: EdgeInsets.all(AppSizes.s10),
                         child: InkWell(
                           onTap: () {
                             if (context.canPop()) {
@@ -353,9 +354,9 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                       ),
                     );
                   }),
-                  SizedBox(height: 18),
+                  SizedBox(height: AppSizes.s18),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    padding: EdgeInsets.symmetric(horizontal: AppSizes.s12),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -412,7 +413,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                               )
                             ],
                           ),
-                          SizedBox(width: 8),
+                          SizedBox(width: AppSizes.s8),
 
                           // Info tiles
                           Expanded(
@@ -511,7 +512,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                                           children: [
                                             Expanded(child: start),
                                             Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 4),
+                                              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s4),
                                               child: Icon(icon, size: 18, color: Color(AppColors.background)),
                                             ),
                                             Expanded(child: end),
@@ -701,11 +702,11 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
               color: Colors.black87,
               child: Container(
                 padding:
-                EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s12),
                 child: Row(
                   children: [
                     Icon(Icons.file_download, color: Colors.white, size: 24),
-                    SizedBox(width: 12),
+                    SizedBox(width: AppSizes.s12),
                     Expanded(
                       child: Text(
                         _downloadingFileName!,
@@ -715,7 +716,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    SizedBox(width: 12),
+                    SizedBox(width: AppSizes.s12),
                     Expanded(
                       flex: 2,
                       child: LinearProgressIndicator(
@@ -724,7 +725,7 @@ class _RequestDetailsHeaderWidgetState extends State<RequestDetailsHeaderWidget>
                         backgroundColor: Colors.white24,
                       ),
                     ),
-                    SizedBox(width: 12),
+                    SizedBox(width: AppSizes.s12),
                     Text(
                       "${(_downloadProgress * 100).toStringAsFixed(0)}%",
                       style: AppStyles.whiteContent(context).copyWith(fontSize: 12),
@@ -770,11 +771,11 @@ class _DownloadProgressDialog extends StatelessWidget {
         title: Row(
           children: [
             SizedBox(
-              width: 24,
+              width: AppSizes.s24,
               height: 24,
               child: CircularProgressIndicator(strokeWidth: 2, color: Color(AppColors.buttons)),
             ),
-            SizedBox(width: 16),
+            SizedBox(width: AppSizes.s16),
             Expanded(
               child: Text(
                 AppStrings.downloadFile.tr(),
@@ -800,7 +801,7 @@ class _DownloadProgressDialog extends StatelessWidget {
                   maxLines: 1,
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 16),
+                SizedBox(height: AppSizes.s16),
                 LinearProgressIndicator(
                   value: value > 0 ? value : null,
                   backgroundColor: Colors.grey.shade200,
@@ -808,7 +809,7 @@ class _DownloadProgressDialog extends StatelessWidget {
                   minHeight: 8,
                   borderRadius: BorderRadius.circular(AppRadius.xs),
                 ),
-                SizedBox(height: 8),
+                SizedBox(height: AppSizes.s8),
                 Text(
                   value > 0 ? '${(value * 100).toStringAsFixed(0)}%' : '0%',
                   style: AppStyles.blackContent(context).copyWith(
@@ -872,7 +873,7 @@ class InfoTileWidget extends StatelessWidget {
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: 6, vertical: 6),
+                    horizontal: AppSizes.s6, vertical: AppSizes.s6),
                 child: Row(
                   children: [
                     if (imagePath != null)
@@ -888,7 +889,7 @@ class InfoTileWidget extends StatelessWidget {
                         size: 20,
                         color: isHighLight == true ? Color(AppColors.background) : _imgColor,
                       ),
-                    SizedBox(width: 12),
+                    SizedBox(width: AppSizes.s12),
                     Expanded(
                       child: AutoSizeText(
                         title,

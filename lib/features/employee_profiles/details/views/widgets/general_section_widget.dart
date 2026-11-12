@@ -91,7 +91,7 @@ class GeneralSectionWidget extends StatelessWidget {
                 style: textStyle,
               ),
             ),
-            SizedBox(height: 12),
+            SizedBox(height: AppSizes.s12),
             Padding(
               padding: AppSpacing.pagePadding,
               child: ExpandableTextWidget(
@@ -105,7 +105,7 @@ class GeneralSectionWidget extends StatelessWidget {
               ),
 
             ),
-            SizedBox(height: 24),
+            SizedBox(height: AppSizes.s24),
           ],
           if ((employee?.hireDate != null &&
                   employee?.hireDate?.isNotEmpty == true) ||
@@ -132,7 +132,7 @@ class GeneralSectionWidget extends StatelessWidget {
                 style: textStyle,
               ),
             ),
-            SizedBox(height: 12),
+            SizedBox(height: AppSizes.s12),
             // MAIN STATUS
             if (employee?.mainStatus != null && employee?.mainStatus?.isNotEmpty == true)
               ProfileTile(
@@ -314,7 +314,7 @@ class WeekendDisplayWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     if (!weekendModel.hasWeekends) {
       return Container(
-        margin: const EdgeInsets.only(bottom: AppSpacing.cardGap, left: 8, right: 8),
+        margin: const EdgeInsets.only(bottom: AppSpacing.cardGap, left: AppSizes.s8, right: AppSizes.s8),
         padding: AppSpacing.cardPadding,
         decoration: BoxDecoration(
             color: Colors.white,
@@ -324,7 +324,7 @@ class WeekendDisplayWidget extends StatelessWidget {
         child: Row(
           children: [
             Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: Color(AppColors.buttons)),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppSizes.s12),
             Expanded(
               child: Text(
                 AppStrings.weekends.tr(),
@@ -341,7 +341,7 @@ class WeekendDisplayWidget extends StatelessWidget {
     }
 
     return Container(
-      margin: const EdgeInsets.only(bottom: AppSpacing.cardGap, left: 8, right: 8),
+      margin: const EdgeInsets.only(bottom: AppSpacing.cardGap, left: AppSizes.s8, right: AppSizes.s8),
       padding: AppSpacing.cardPadding,
       decoration: BoxDecoration(
           color: Colors.white,
@@ -354,7 +354,7 @@ class WeekendDisplayWidget extends StatelessWidget {
           Row(
             children: [
               Image.asset("assets/images/new-cale.png", width: 20, height: 20, color: Color(AppColors.buttons)),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppSizes.s12),
               Expanded(
                 child: Text(
                   AppStrings.weekends.tr(),
@@ -364,22 +364,22 @@ class WeekendDisplayWidget extends StatelessWidget {
             ],
           ),
           if (weekendModel.days.isNotEmpty) ...[
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSizes.s12),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32.0),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s32),
               child: Text(
                 "regular_days".tr(),
                 style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w600, fontSize: 12, color: Color(AppColors.buttons)),
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: AppSizes.s4),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32.0),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s32),
               child: Wrap(
                 spacing: 6,
                 runSpacing: 6,
                 children: weekendModel.days.map((day) => Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSizes.s10, vertical: AppSizes.s4),
                   decoration: BoxDecoration(
                     color: Color(AppColors.cardBackground),
                     borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -391,22 +391,22 @@ class WeekendDisplayWidget extends StatelessWidget {
             ),
           ],
           if (weekendModel.specificDates.isNotEmpty) ...[
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSizes.s12),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32.0),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s32),
               child: Text(
                 "specific_dates".tr(),
                 style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w600, fontSize: 12, color: Color(AppColors.buttons)),
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: AppSizes.s4),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32.0),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s32),
               child: Wrap(
                 spacing: 6,
                 runSpacing: 6,
                 children: weekendModel.specificDates.map((date) => Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSizes.s10, vertical: AppSizes.s4),
                   decoration: BoxDecoration(
                     color: Colors.orange.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -416,7 +416,7 @@ class WeekendDisplayWidget extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Icon(Icons.event, size: 12, color: Colors.orange),
-                      const SizedBox(width: 4),
+                      const SizedBox(width: AppSizes.s4),
                       Text(date, style: AppStyles.blackContent(context).copyWith(fontSize: 11)),
                     ],
                   ),
@@ -425,22 +425,22 @@ class WeekendDisplayWidget extends StatelessWidget {
             ),
           ],
           if (weekendModel.recurringRules.isNotEmpty) ...[
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSizes.s12),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32.0),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s32),
               child: Text(
                 "recurring_rules".tr(),
                 style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.w600, fontSize: 12, color: Color(AppColors.buttons)),
               ),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: AppSizes.s4),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32.0),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s32),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: weekendModel.recurringRules.map((rule) => Container(
-                  margin: const EdgeInsets.only(bottom: 6),
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                  margin: const EdgeInsets.only(bottom: AppSizes.s6),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSizes.s10, vertical: AppSizes.s6),
                   decoration: BoxDecoration(
                     color: Colors.purple.withOpacity(0.05),
                     borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -449,7 +449,7 @@ class WeekendDisplayWidget extends StatelessWidget {
                   child: Row(
                     children: [
                       const Icon(Icons.repeat, size: 14, color: Colors.purple),
-                      const SizedBox(width: 6),
+                      const SizedBox(width: AppSizes.s6),
                       Expanded(
                         child: Text(_formatRecurringRule(rule), style: AppStyles.blackContent(context).copyWith(fontSize: 11)),
                       ),
@@ -506,7 +506,7 @@ class ThisWeekShiftsDisplayWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(bottom: AppSpacing.cardGap, left: 8, right: 8),
+      margin: const EdgeInsets.only(bottom: AppSpacing.cardGap, left: AppSizes.s8, right: AppSizes.s8),
       padding: AppSpacing.cardPadding,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -525,7 +525,7 @@ class ThisWeekShiftsDisplayWidget extends StatelessWidget {
                 height: 20,
                 color: Color(AppColors.buttons),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppSizes.s12),
               Expanded(
                 child: Text(
                   AppStrings.thisWeekShifts.tr(),
@@ -537,10 +537,10 @@ class ThisWeekShiftsDisplayWidget extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSizes.s12),
           if (shifts.isEmpty)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32.0),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s32),
               child: Text(
                 AppStrings.noShiftsThisWeek.tr(),
                 style: AppStyles.blackContent(context).copyWith(
@@ -552,7 +552,7 @@ class ThisWeekShiftsDisplayWidget extends StatelessWidget {
             )
           else
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16),
               child: Column(
                 children: shifts.map((shift) {
                   final startStr = _formatTime(context, shift.startTime);
@@ -565,8 +565,8 @@ class ThisWeekShiftsDisplayWidget extends StatelessWidget {
                       shift.financialModifier != 1;
 
                   return Container(
-                    margin: const EdgeInsets.only(bottom: 8),
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                    margin: const EdgeInsets.only(bottom: AppSizes.s8),
+                    padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12, vertical: AppSizes.s10),
                     decoration: BoxDecoration(
                       color: Color(AppColors.cardBackground),
                       borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -591,9 +591,9 @@ class ThisWeekShiftsDisplayWidget extends StatelessWidget {
                             ),
                             if (hasModifier)
                               Container(
-                                margin: const EdgeInsets.symmetric(horizontal: 4),
+                                margin: const EdgeInsets.symmetric(horizontal: AppSizes.s4),
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 6, vertical: 2),
+                                    horizontal: AppSizes.s6, vertical: AppSizes.s2),
                                 decoration: BoxDecoration(
                                   color: Colors.orange.withOpacity(0.15),
                                   borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -610,7 +610,7 @@ class ThisWeekShiftsDisplayWidget extends StatelessWidget {
                             if (shift.status != null && shift.status!.isNotEmpty)
                               Container(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 2),
+                                    horizontal: AppSizes.s8, vertical: AppSizes.s2),
                                 decoration: BoxDecoration(
                                   color: Color(AppColors.buttons).withOpacity(0.1),
                                   borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -626,12 +626,12 @@ class ThisWeekShiftsDisplayWidget extends StatelessWidget {
                               ),
                           ],
                         ),
-                        const SizedBox(height: 6),
+                        const SizedBox(height: AppSizes.s6),
                         Row(
                           children: [
                             const Icon(Icons.calendar_today_outlined,
                                 size: 13, color: Colors.grey),
-                            const SizedBox(width: 6),
+                            const SizedBox(width: AppSizes.s6),
                             Text(
                               dateStr,
                               style: AppStyles.blackContent(context)
@@ -641,7 +641,7 @@ class ThisWeekShiftsDisplayWidget extends StatelessWidget {
                             if (startStr.isNotEmpty || endStr.isNotEmpty) ...[
                               const Icon(Icons.access_time,
                                   size: 14, color: Colors.grey),
-                              const SizedBox(width: 4),
+                              const SizedBox(width: AppSizes.s4),
                               Text(
                                 "$startStr - $endStr",
                                 style: AppStyles.blackContent(context).copyWith(
@@ -653,12 +653,12 @@ class ThisWeekShiftsDisplayWidget extends StatelessWidget {
                           ],
                         ),
                         if (hasBreak || (shift.breakDuration != null && shift.breakDuration! > 0)) ...[
-                          const SizedBox(height: 4),
+                          const SizedBox(height: AppSizes.s4),
                           Row(
                             children: [
                               const Icon(Icons.free_breakfast_outlined,
                                   size: 13, color: Colors.grey),
-                              const SizedBox(width: 6),
+                              const SizedBox(width: AppSizes.s6),
                               Text(
                                 hasBreak
                                     ? "${AppStrings.breakTime.tr()}: $breakStart - $breakEnd"

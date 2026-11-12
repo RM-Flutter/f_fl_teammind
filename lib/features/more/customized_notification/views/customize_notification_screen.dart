@@ -37,7 +37,7 @@ class _CustomizeNotificationScreenState extends State<CustomizeNotificationScree
               borderRadius: BorderRadius.circular(AppRadius.lg),
             ),
             child: Padding(
-              padding: EdgeInsets.all(20.0),
+              padding: EdgeInsets.all(AppSizes.s20),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -46,7 +46,7 @@ class _CustomizeNotificationScreenState extends State<CustomizeNotificationScree
                       fontWeight: FontWeight.w600,
                       color: const Color(0xff0D3B6F)
                   ),),
-                  SizedBox(height: 20),
+                  SizedBox(height: AppSizes.s20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -61,7 +61,7 @@ class _CustomizeNotificationScreenState extends State<CustomizeNotificationScree
                       ),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  SizedBox(height: AppSizes.s20),
                   if(value.isLoading2)const Center(child: CircularProgressIndicator(),),
                   if(!value.isLoading2)SizedBox(
                     width: 0.6.sw,
@@ -79,7 +79,7 @@ class _CustomizeNotificationScreenState extends State<CustomizeNotificationScree
                           color: const Color(0xff0D3B6F),
                           borderRadius: BorderRadius.circular(AppRadius.pill),
                         ),
-                        padding: EdgeInsets.symmetric(horizontal: 40),
+                        padding: EdgeInsets.symmetric(horizontal: AppSizes.s40),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

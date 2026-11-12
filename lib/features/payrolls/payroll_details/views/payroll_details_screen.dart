@@ -54,9 +54,9 @@ class _PayrollDetailsScreenState extends State<PayrollDetailsScreen> {
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: AppSizes.s20),
               Padding(
-                padding: EdgeInsets.only(bottom: 20),
+                padding: EdgeInsets.only(bottom: AppSizes.s20),
                 child: Center(
                   child: CustomElevatedButton(
                     backgroundColor: Color(AppColors.secondaryButton),

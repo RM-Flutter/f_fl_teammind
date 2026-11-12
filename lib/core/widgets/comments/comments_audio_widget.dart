@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'dart:math' as math;
 
 import 'package:app_test/core/constants/app_colors.dart';
@@ -111,8 +112,8 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
         : _format(_duration);
 
     return Container(
-      margin: const EdgeInsets.only(top: 6),
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      margin: const EdgeInsets.only(top: AppSizes.s6),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s8, vertical: AppSizes.s6),
       constraints: const BoxConstraints(maxWidth: 280),
       decoration: BoxDecoration(
         color: accent.withOpacity(0.10),
@@ -129,7 +130,7 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
               decoration: BoxDecoration(color: accent, shape: BoxShape.circle),
               child: _isLoading && !_hasError
                   ? const Padding(
-                      padding: EdgeInsets.all(10),
+                      padding: EdgeInsets.all(AppSizes.s10),
                       child: CircularProgressIndicator(
                           strokeWidth: 2, color: Colors.white),
                     )
@@ -142,7 +143,7 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
                     ),
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSizes.s8),
           Expanded(
             child: LayoutBuilder(
               builder: (context, constraints) {
@@ -157,7 +158,7 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
                     setState(() => _dragFraction = null);
                   },
                   child: SizedBox(
-                    height: 32,
+                    height: AppSizes.s32,
                     child: CustomPaint(
                       size: Size(width, 32),
                       painter: _WaveformPainter(
@@ -172,12 +173,12 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
               },
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSizes.s8),
           GestureDetector(
             onTap: _cycleSpeed,
             child: _isPlaying || _speedIndex != 0
                 ? Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                    padding: const EdgeInsets.symmetric(horizontal: AppSizes.s6, vertical: AppSizes.s3),
                     decoration: BoxDecoration(
                       color: accent.withOpacity(0.18),
                       borderRadius: BorderRadius.circular(12),
@@ -197,7 +198,7 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
                   ),
           ),
           if (_isPlaying || _speedIndex != 0) ...[
-            const SizedBox(width: 6),
+            const SizedBox(width: AppSizes.s6),
             Text(
               label,
               style: const TextStyle(

@@ -253,7 +253,7 @@ abstract class AlertsService {
               child: SizedBox(
                 width: width,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 28, 24, 20),
+                  padding: const EdgeInsets.fromLTRB(AppSizes.s24, AppSizes.s28, AppSizes.s24, AppSizes.s20),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
@@ -277,7 +277,7 @@ abstract class AlertsService {
                                 size: 30,
                               ),
                         ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: AppSizes.s16),
                       Text(
                         title,
                         textAlign: TextAlign.center,
@@ -288,7 +288,7 @@ abstract class AlertsService {
                         ),
                       ),
                       if (message != null) ...[
-                        const SizedBox(height: 8),
+                        const SizedBox(height: AppSizes.s8),
                         Text(
                           message,
                           textAlign: TextAlign.center,
@@ -302,7 +302,7 @@ abstract class AlertsService {
                         ),
                       ],
                       if (viewPassword == true) ...[
-                        const SizedBox(height: 16),
+                        const SizedBox(height: AppSizes.s16),
                         Form(
                           key: form3Key,
                           child: TextFormField(
@@ -319,7 +319,7 @@ abstract class AlertsService {
                           ),
                         ),
                       ],
-                      const SizedBox(height: 24),
+                      const SizedBox(height: AppSizes.s24),
                       Row(
                         children: <Widget>[
                           Expanded(
@@ -341,7 +341,7 @@ abstract class AlertsService {
                               ),
                             ),
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: AppSizes.s12),
                           Expanded(
                             child: SizedBox(
                               height: 46,
@@ -429,17 +429,17 @@ abstract class AlertsService {
         ),
         elevation: AppElevation.overlay,
         backgroundColor: Colors.white,
-        insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+        insetPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s24, vertical: AppSizes.s24),
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 380),
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
+            padding: const EdgeInsets.fromLTRB(AppSizes.s24, AppSizes.s32, AppSizes.s24, AppSizes.s24),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 // Top Warning / Delete Icon
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(AppSizes.s16),
                   decoration: BoxDecoration(
                     color: const Color(0xFFFFF1F2), // Soft pink/rose background
                     shape: BoxShape.circle,
@@ -451,7 +451,7 @@ abstract class AlertsService {
                     size: 32,
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: AppSizes.s24),
                 Text(
                   title,
                   style: const TextStyle(
@@ -462,7 +462,7 @@ abstract class AlertsService {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSizes.s12),
                 Text(
                   message,
                   style: const TextStyle(
@@ -473,7 +473,7 @@ abstract class AlertsService {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: AppSizes.s32),
                 Row(
                   children: [
                     Expanded(
@@ -499,7 +499,7 @@ abstract class AlertsService {
                         ),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: AppSizes.s12),
                     Expanded(
                       child: SizedBox(
                         height: AppButtonSize.height,

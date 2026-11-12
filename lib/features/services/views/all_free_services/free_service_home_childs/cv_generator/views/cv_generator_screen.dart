@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/routing/app_router.dart';
@@ -52,10 +53,10 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
         children: [
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.all(AppSizes.s24),
               child: Column(
                 children: [
-                  const SizedBox(height: 60),
+                  const SizedBox(height: AppSizes.s60),
                   
                   // Description Text
                   Text(
@@ -68,7 +69,7 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
                     ),
                   ),
                   
-                  const SizedBox(height: 24),
+                  const SizedBox(height: AppSizes.s24),
                   
                   // UPDATE INFO Button
                   ElevatedButton(
@@ -76,7 +77,7 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.grey.shade300,
                       foregroundColor: Color(AppColors.secondaryButton),
-                      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+                      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s32, vertical: AppSizes.s14),
                       shape: RoundedRectangleBorder(
                         borderRadius: AppRadius.button,
                       ),
@@ -97,13 +98,13 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
           
           // Bottom Buttons
           Padding(
-            padding: const EdgeInsets.only(bottom: 20, right: 10, left: 10),
+            padding: const EdgeInsets.only(bottom: AppSizes.s20, right: AppSizes.s10, left: AppSizes.s10),
             child: Container(
               decoration: BoxDecoration(
                 color: Color(AppColors.secondaryButton),
                 borderRadius: BorderRadius.circular(AppRadius.xl)
               ),
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(AppSizes.s16),
               child: Row(
                 children: [
                   // NEXT Text
@@ -120,7 +121,7 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
                     ),
                   ),
 
-                  const SizedBox(width: 12),
+                  const SizedBox(width: AppSizes.s12),
 
                   // SELECT CV TEMPLATE Button
                   Expanded(
@@ -132,7 +133,7 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(AppColors.buttons),
                         foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        padding: const EdgeInsets.symmetric(vertical: AppSizes.s16),
                         shape: RoundedRectangleBorder(
                           borderRadius: AppRadius.button,
                         ),

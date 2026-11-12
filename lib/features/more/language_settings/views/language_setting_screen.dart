@@ -168,7 +168,7 @@ class _LanguageTile extends StatelessWidget {
                   end: -4,
                   bottom: -4,
                   child: Container(
-                    padding: const EdgeInsets.all(2),
+                    padding: const EdgeInsets.all(AppSizes.s2),
                     decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
                     child: Icon(Icons.check_circle_rounded, size: 22, color: accent),
                   ),

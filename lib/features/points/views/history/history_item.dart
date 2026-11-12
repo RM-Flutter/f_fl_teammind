@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -27,7 +28,7 @@ class HistoryItem extends StatelessWidget {
           return provider.historyModel!.history != null &&
                   provider.historyModel!.history!.isNotEmpty
               ? Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16),
                   child: Column(
                       children: provider.historyModel!.history!.map(
                     (e) {
@@ -70,7 +71,7 @@ class HistoryItem extends StatelessWidget {
                                 icon: Icons.card_giftcard_rounded,
                                 borderColor: accentColor,
                               ),
-                              const SizedBox(width: 12),
+                              const SizedBox(width: AppSizes.s12),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,7 +83,7 @@ class HistoryItem extends StatelessWidget {
                                       overflow: TextOverflow.ellipsis,
                                       style: AppStyles.heading(context),
                                     ),
-                                    const SizedBox(height: 2),
+                                    const SizedBox(height: AppSizes.s2),
                                     Text(
                                       formattedDate,
                                       maxLines: 1,
@@ -92,7 +93,7 @@ class HistoryItem extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              const SizedBox(width: 8),
+                              const SizedBox(width: AppSizes.s8),
                               AppStatusBadge(
                                 label: pointsLabel,
                                 color: accentColor,
@@ -108,7 +109,7 @@ class HistoryItem extends StatelessWidget {
                   ).toList()),
                 ) : Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 40),
+              padding: const EdgeInsets.symmetric(vertical: AppSizes.s40),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -117,7 +118,7 @@ class HistoryItem extends StatelessWidget {
                     height: 80,
                     width: 80,
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSizes.s16),
                   Text(
                     AppStrings.noHistoryFound.tr(),
                     style: const TextStyle(

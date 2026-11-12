@@ -80,7 +80,7 @@ class _RewardsAndPenaltiesSectionWidgetState
                 color: Color(AppColors.buttons),
                 onTap: () => setState(() => _filter = 0),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               _SummaryChip(
                 label: 'rewards'.tr(),
                 count: rewards,
@@ -88,7 +88,7 @@ class _RewardsAndPenaltiesSectionWidgetState
                 color: Color(AppColors.successGreen),
                 onTap: () => setState(() => _filter = 1),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               _SummaryChip(
                 label: 'penalties'.tr(),
                 count: penalties,
@@ -164,7 +164,7 @@ class _SummaryChip extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: AppSizes.s14, vertical: AppSizes.s8),
         decoration: BoxDecoration(
           color: isSelected ? color : color.withOpacity(0.08),
           borderRadius: BorderRadius.circular(AppRadius.lg),
@@ -182,9 +182,9 @@ class _SummaryChip extends StatelessWidget {
                 color: isSelected ? Colors.white : color,
               ),
             ),
-            const SizedBox(width: 6),
+            const SizedBox(width: AppSizes.s6),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s6, vertical: AppSizes.s2),
               decoration: BoxDecoration(
                 color: isSelected
                     ? Colors.white.withOpacity(0.25)

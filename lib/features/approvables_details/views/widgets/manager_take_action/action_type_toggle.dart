@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_colors.dart';
@@ -28,14 +29,14 @@ class ActionTypeToggle extends StatelessWidget {
             color: Color(AppColors.secondaryButton),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSizes.s8),
         Row(
           children: [
             Expanded(
               child: GestureDetector(
                 onTap: () => onActionChanged('approve'),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  padding: const EdgeInsets.symmetric(vertical: AppSizes.s12),
                   decoration: BoxDecoration(
                     color: selectedAction == 'approve'
                         ?  Color(AppColors.successGreen)
@@ -57,7 +58,7 @@ class ActionTypeToggle extends StatelessWidget {
                             : Color(AppColors.secondaryButton),
                         size: 18,
                       ),
-                      const SizedBox(width: 6),
+                      const SizedBox(width: AppSizes.s6),
                       Text('approve'.tr(),
                         style: AppStyles.whiteContent(context).copyWith(
                           fontSize: 12,
@@ -72,12 +73,12 @@ class ActionTypeToggle extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppSizes.s12),
             Expanded(
               child: GestureDetector(
                 onTap: () => onActionChanged('refuse'),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  padding: const EdgeInsets.symmetric(vertical: AppSizes.s12),
                   decoration: BoxDecoration(
                     color: selectedAction == 'refuse'
                         ?  Color(AppColors.failureRed)
@@ -99,7 +100,7 @@ class ActionTypeToggle extends StatelessWidget {
                             : Color(AppColors.secondaryButton),
                         size: 18,
                       ),
-                      const SizedBox(width: 6),
+                      const SizedBox(width: AppSizes.s6),
                       Text('refuse'.tr(),
                         style: AppStyles.whiteContent(context).copyWith(
                           fontSize: 12,
@@ -116,7 +117,7 @@ class ActionTypeToggle extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSizes.s16),
       ],
     );
   }

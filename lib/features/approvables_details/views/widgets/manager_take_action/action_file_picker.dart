@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -31,12 +32,12 @@ class ActionFilePicker extends StatelessWidget {
             color: Color(AppColors.secondaryButton),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSizes.s8),
         GestureDetector(
           onTap: onTapPick,
           child: Container(
             width: double.infinity,
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(AppSizes.s12),
             decoration: BoxDecoration(
               color: const Color(0xFFF3F3F3),
               borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -44,7 +45,7 @@ class ActionFilePicker extends StatelessWidget {
             child: Row(
               children: [
                 Icon(Icons.attach_file, color: Color(AppColors.buttons)),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppSizes.s8),
                 Expanded(
                   child: Text(
                     selectedFile != null

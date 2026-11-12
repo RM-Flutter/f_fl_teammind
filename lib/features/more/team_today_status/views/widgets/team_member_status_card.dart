@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/utils/app_styles.dart';
@@ -37,7 +38,7 @@ class TeamMemberStatusCard extends StatelessWidget {
             nameForInitials: member.name,
             borderColor: statusColor,
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSizes.s12),
 
           // ── Name + meta ─────────────────────────────────────────────────
           Expanded(
@@ -53,7 +54,7 @@ class TeamMemberStatusCard extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 3),
+                const SizedBox(height: AppSizes.s3),
                 Text(
                   _subtitle(),
                   style: AppStyles.subtitleContent(context).copyWith(
@@ -64,14 +65,14 @@ class TeamMemberStatusCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 if (_hasTimes()) ...[
-                  const SizedBox(height: 5),
+                  const SizedBox(height: AppSizes.s5),
                   _buildTimesRow(context),
                 ],
               ],
             ),
           ),
 
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSizes.s8),
 
           // ── Status badge ─────────────────────────────────────────────────
           AppStatusBadge(
@@ -93,7 +94,7 @@ class TeamMemberStatusCard extends StatelessWidget {
           _timeChip(
               Icons.login_rounded, member.clockInTime!, Colors.green.shade700),
         if (member.clockInTime != null && member.clockOutTime != null)
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSizes.s8),
         if (member.clockOutTime != null)
           _timeChip(
               Icons.logout_rounded, member.clockOutTime!, Colors.red.shade700),
@@ -106,7 +107,7 @@ class TeamMemberStatusCard extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(icon, size: 11, color: color),
-        const SizedBox(width: 3),
+        const SizedBox(width: AppSizes.s3),
         Text(time,
             style: TextStyle(
                 fontSize: 10, color: color, fontWeight: FontWeight.w500)),

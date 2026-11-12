@@ -117,7 +117,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
             height: MediaQuery.sizeOf(context).height * 1,
             alignment: Alignment.topCenter,
             child: SingleChildScrollView(
-             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+             padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s12),
              child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -153,7 +153,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
                ),
                // "Other Requests" Text
                if(value.requestsTeam.isNotEmpty && (gCache['is_hr'] == true || gCache['top_management'] == true)) Padding(
-                padding: const EdgeInsets.only(bottom: 8, top: 8),
+                padding: const EdgeInsets.only(bottom: AppSizes.s8, top: AppSizes.s8),
                 child: Text(
                  AppStrings.otherRequests.tr(),
                  style: AppStyles.blackContent(context).copyWith(fontSize: 16,
@@ -290,7 +290,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
               icon: leadingIcon,
               borderColor: iconColor,
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppSizes.s12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -303,7 +303,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   if (subtitleParts.isNotEmpty) ...[
-                    const SizedBox(height: 2),
+                    const SizedBox(height: AppSizes.s2),
                     Text(
                       subtitleParts.join(' · '),
                       style: AppStyles.subtitleContent(context),
@@ -314,7 +314,7 @@ class _ComplainScreenState extends State<ComplainScreen> {
                 ],
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppSizes.s8),
             AppStatusBadge(
               label: status,
               color: iconColor,

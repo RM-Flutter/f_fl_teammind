@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -98,7 +99,7 @@ class TaskListTileWidget extends StatelessWidget {
               colorFilter: ColorFilter.mode(statusColor, BlendMode.srcIn),
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSizes.s12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -114,7 +115,7 @@ class TaskListTileWidget extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 if (subtitle.isNotEmpty) ...[
-                  const SizedBox(height: 3),
+                  const SizedBox(height: AppSizes.s3),
                   Text(
                     subtitle,
                     style: AppStyles.subtitleContent(context).copyWith(
@@ -128,7 +129,7 @@ class TaskListTileWidget extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSizes.s8),
           AppStatusBadge(
             label: normalizedStatus.isNotEmpty
                 ? normalizedStatus.tr()

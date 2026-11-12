@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/widgets/all_text_field.dart';
 import 'package:app_test/features/authentication/shared/widgets/phone_number_field.dart';
@@ -65,7 +66,7 @@ class SendPointFriendBottomSheet extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(30.0),
+                      padding: const EdgeInsets.all(AppSizes.s30),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -93,7 +94,7 @@ class SendPointFriendBottomSheet extends StatelessWidget {
                               keyboardType: TextInputType.number,
                               hintText: AppStrings.enterTheNumberOfPoints.tr(),
                               controller: value.pointsController),
-                          const SizedBox(height: 30),
+                          const SizedBox(height: AppSizes.s30),
                           if(value.isRedeemLoading) const Center(child: CircularProgressIndicator(),),
                           if(!value.isRedeemLoading) GestureDetector(
                             onTap: ()async{

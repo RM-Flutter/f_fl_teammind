@@ -102,7 +102,7 @@ class _PersonalProfileHeaderWidgetState
       children: [
         if (showVerificationBanner) ...[
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.s14, vertical: AppSizes.s10),
             decoration: BoxDecoration(
               color: AppColors.statusTones(Color(AppColors.warningYellow)).tint,
               borderRadius: BorderRadius.circular(AppRadius.md),
@@ -117,7 +117,7 @@ class _PersonalProfileHeaderWidgetState
                   color: Color(AppColors.failureRed),
                   size: 20,
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppSizes.s8),
                 Expanded(
                   child: Text(
                     _getVerificationStatus(us1Cache),
@@ -128,7 +128,7 @@ class _PersonalProfileHeaderWidgetState
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppSizes.s8),
                 Text(
                   AppStrings.activeNow.tr(),
                   style: TextStyle(
@@ -140,10 +140,10 @@ class _PersonalProfileHeaderWidgetState
               ],
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSizes.s12),
         ],
         AppCard(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -260,7 +260,7 @@ class _PersonalProfileHeaderWidgetState
                   ],
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSizes.s12),
               if (widget.title.trim().isNotEmpty)
                 AutoSizeText(
                   widget.title,
@@ -272,7 +272,7 @@ class _PersonalProfileHeaderWidgetState
                   maxLines: 1,
                 ),
               if (widget.subtitle.trim().isNotEmpty) ...[
-                const SizedBox(height: 4),
+                const SizedBox(height: AppSizes.s4),
                 AutoSizeText(
                   widget.subtitle,
                   textAlign: TextAlign.center,

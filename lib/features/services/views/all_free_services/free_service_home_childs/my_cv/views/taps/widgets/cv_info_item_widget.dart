@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:flutter/material.dart';
 import '../../../../../../../../../core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_design.dart';
@@ -36,7 +37,7 @@ class CVInfoItem extends StatelessWidget {
             children: [
               if (icon != null) ...[
                 Icon(icon, size: 16, color: Colors.grey.shade600),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppSizes.s8),
               ],
               Expanded(
                 child: RichText(
@@ -62,7 +63,7 @@ class CVInfoItem extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSizes.s8),
           if (value != null && value!.isNotEmpty)
             Text(
               value!,

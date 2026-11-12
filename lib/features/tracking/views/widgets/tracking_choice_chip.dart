@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app_test/core/constants/app_colors.dart';
@@ -35,7 +36,7 @@ class TrackingChoiceChip extends StatelessWidget {
         child: AnimatedContainer(
           duration: AppMotion.fast,
           height: 34,
-          padding: const EdgeInsets.symmetric(horizontal: 14),
+          padding: const EdgeInsets.symmetric(horizontal: AppSizes.s14),
           alignment: Alignment.center,
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -49,7 +50,7 @@ class TrackingChoiceChip extends StatelessWidget {
                 const SizedBox(width: AppSpacing.sm),
               ] else if (icon != null) ...[
                 Icon(icon, size: 16, color: selected ? tones.text : AppField.iconColor),
-                const SizedBox(width: 6),
+                const SizedBox(width: AppSizes.s6),
               ],
               Text(
                 label,

@@ -75,7 +75,7 @@ abstract class ModalSheetHelper {
                           : AppFilterTitle(title!),
                     ),
                     if(viewProfile == true) ...[
-                      const SizedBox(width: 8),
+                      const SizedBox(width: AppSizes.s8),
                       CustomElevatedButton(
                         width: 130,
                         onPressed: () async{

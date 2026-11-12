@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/services/app_error_reporter.dart';
 import 'package:app_test/core/services/app_toast.dart';
 import 'dart:async';
@@ -168,7 +169,7 @@ class _FaceVerificationProgressDialog extends StatelessWidget {
       onWillPop: () async => false,
       child: Center(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: AppSizes.s24, vertical: AppSizes.s20),
           decoration: BoxDecoration(
             color: Color(AppColors.buttons),
             borderRadius: BorderRadius.circular(AppRadius.lg),
@@ -181,14 +182,14 @@ class _FaceVerificationProgressDialog extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const SizedBox(
-                  height: 48,
+                  height: AppSizes.s48,
                   width: 48,
                   child: CircularProgressIndicator(
                     strokeWidth: 4,
                     color: Colors.white,
                   ),
                 ),
-                if (message != null)  const SizedBox(height: 16),
+                if (message != null)  const SizedBox(height: AppSizes.s16),
                 if (message != null)
                   Text(
                     message,
@@ -904,9 +905,9 @@ abstract class MainFabServices {
 
           return Padding(
             padding: EdgeInsets.only(
-              left: 24,
-              right: 24,
-              top: 24,
+              left: AppSizes.s24,
+              right: AppSizes.s24,
+              top: AppSizes.s24,
               bottom: bottomInset + 24,
             ),
             child: Column(
@@ -918,12 +919,12 @@ abstract class MainFabServices {
                   style: theme.textTheme.titleMedium
                       ?.copyWith(fontWeight: FontWeight.w700, color: Color(AppColors.secondaryButton), fontSize: 18),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSizes.s12),
                 Text(
                   message,
                   style: theme.textTheme.bodyMedium?.copyWith( color: Color(AppColors.black)),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: AppSizes.s24),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -938,7 +939,7 @@ abstract class MainFabServices {
                   ),
                 ),
                 if (cancelLabel != null) ...[
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppSizes.s8),
                   SizedBox(
                     width: double.infinity,
                     child: TextButton(
@@ -1335,20 +1336,20 @@ abstract class MainFabServices {
       useRootNavigator: true,
       builder: (dialogContext) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg)),
-        titlePadding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        actionsPadding: const EdgeInsets.all(16),
+        titlePadding: const EdgeInsets.fromLTRB(AppSizes.s20, AppSizes.s20, AppSizes.s20, AppSizes.s10),
+        contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s20, vertical: AppSizes.s10),
+        actionsPadding: const EdgeInsets.all(AppSizes.s16),
         title: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(AppSizes.s8),
               decoration: BoxDecoration(
                 color: Colors.green.withOpacity(0.12),
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.check_circle, color: Colors.green, size: 28),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppSizes.s12),
             Expanded(
               child: Text('scan_steps_report'.tr(),
                 style: TextStyle(
@@ -1366,12 +1367,12 @@ abstract class MainFabServices {
             mainAxisSize: MainAxisSize.min,
             children: steps.map((step) {
               return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 6.0),
+                padding: const EdgeInsets.symmetric(vertical: AppSizes.s6),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Icon(step['icon'] as IconData, size: 20, color: const Color(0xFF007AFF)),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: AppSizes.s10),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1380,7 +1381,7 @@ abstract class MainFabServices {
                             step['title'] as String,
                             style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
                           ),
-                          const SizedBox(height: 2),
+                          const SizedBox(height: AppSizes.s2),
                           Text(
                             step['detail'] as String,
                             style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
@@ -1403,7 +1404,7 @@ abstract class MainFabServices {
               minimumSize: const Size.fromHeight(45),
               backgroundColor: Color(AppColors.secondaryButton),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.sm)),
-              padding: const EdgeInsets.symmetric(vertical: 12),
+              padding: const EdgeInsets.symmetric(vertical: AppSizes.s12),
             ),
             onPressed: () => Navigator.of(dialogContext).pop(),
             child: Text('ok'.tr(),
@@ -2507,11 +2508,11 @@ abstract class MainFabServices {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+                  padding: const EdgeInsets.fromLTRB(AppSizes.s16, AppSizes.s16, AppSizes.s16, AppSizes.s4),
                   child: Row(
                     children: [
                       const Icon(Icons.info_outline, size: 18, color: Colors.grey),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: AppSizes.s8),
                       Expanded(
                         child: Text('bluetooth_scan_hint'.tr(),
                             style: TextStyle(color: Colors.grey.shade700, fontSize: 12.5)),
@@ -2523,7 +2524,7 @@ abstract class MainFabServices {
                   animation: Listenable.merge([bleScanning, classicScanning]),
                   builder: (context, _) => bleScanning.value || classicScanning.value
                       ? const LinearProgressIndicator(minHeight: 2)
-                      : const SizedBox(height: 2),
+                      : const SizedBox(height: AppSizes.s2),
                 ),
                 Expanded(
                   child: AnimatedBuilder(
@@ -2541,14 +2542,14 @@ abstract class MainFabServices {
                         if (scanning) return Center(child: Text(AppStrings.scanningForDevices.tr()));
                         return Center(
                           child: Padding(
-                            padding: const EdgeInsets.all(24),
+                            padding: const EdgeInsets.all(AppSizes.s24),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 const Icon(Icons.bluetooth_disabled, size: 40, color: Colors.grey),
-                                const SizedBox(height: 8),
+                                const SizedBox(height: AppSizes.s8),
                                 Text('bluetooth_no_devices_found'.tr(), textAlign: TextAlign.center),
-                                const SizedBox(height: 12),
+                                const SizedBox(height: AppSizes.s12),
                                 OutlinedButton.icon(
                                   onPressed: startScans,
                                   icon: const Icon(Icons.refresh),
@@ -2990,14 +2991,14 @@ abstract class MainFabServices {
             color: Colors.black54,
             child: Center(
               child: Card(
-                margin: const EdgeInsets.symmetric(horizontal: 32),
+                margin: const EdgeInsets.symmetric(horizontal: AppSizes.s32),
                 child: Padding(
-                  padding: const EdgeInsets.all(24),
+                  padding: const EdgeInsets.all(AppSizes.s24),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const CircularProgressIndicator(),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: AppSizes.s16),
                       Text(
                         AppStrings.gettingCurrentLocationPleaseWait.tr(),
                         textAlign: TextAlign.center,

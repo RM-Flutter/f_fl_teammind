@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -373,7 +374,7 @@ class ApprovableBottomActionBar extends StatelessWidget {
       List<Widget> rowChildren = [];
       rowChildren.add(rawButtons[i]);
       if (i + 1 < rawButtons.length) {
-        rowChildren.add(const SizedBox(width: 8));
+        rowChildren.add(const SizedBox(width: AppSizes.s8));
         rowChildren.add(rawButtons[i + 1]);
       }
 
@@ -388,7 +389,7 @@ class ApprovableBottomActionBar extends StatelessWidget {
         ),
       );
       if (i + 2 < rawButtons.length) {
-        rows.add(const SizedBox(height: 8));
+        rows.add(const SizedBox(height: AppSizes.s8));
       }
     }
 
@@ -397,14 +398,14 @@ class ApprovableBottomActionBar extends StatelessWidget {
         constraints: LayoutService.contentConstraints(context),
         child: Container(
           padding: const EdgeInsets.symmetric(
-            vertical: 4,
-            horizontal: 10,
+            vertical: AppSizes.s4,
+            horizontal: AppSizes.s10,
           ),
           margin: const EdgeInsets.only(
-            left: 24,
-            right: 24,
-            bottom: 8,
-            top: 4,
+            left: AppSizes.s24,
+            right: AppSizes.s24,
+            bottom: AppSizes.s8,
+            top: AppSizes.s4,
           ),
           width: 1.sw,
           child: Column(

@@ -36,7 +36,7 @@ class _FawryProviderScreenState extends State<FawryProviderScreen> {
             body: Container(
               height: MediaQuery.sizeOf(context).height * 1,
               child: GradientBgImage(
-                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: AppSizes.s20),
                   child: GridView.count(
                       crossAxisCount: 2,
                       mainAxisSpacing: 15,
@@ -87,7 +87,7 @@ class _FawryProviderScreenState extends State<FawryProviderScreen> {
           alignment: Alignment.topCenter,
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 30),
+              padding: const EdgeInsets.only(top: AppSizes.s30),
               child: Container(
                 width: MediaQuery.sizeOf(context).width * 0.4,
                 alignment: Alignment.center,
@@ -97,7 +97,7 @@ class _FawryProviderScreenState extends State<FawryProviderScreen> {
                   boxShadow: AppShadows.card,
                 ),
                 child: Padding(
-                  padding: EdgeInsets.only(bottom: LocalizationService.isArabic(context: context) ?20 : 30,top: 50, left: 5, right: 5),
+                  padding: EdgeInsets.only(bottom: LocalizationService.isArabic(context: context) ?20 : 30,top: AppSizes.s50, left: AppSizes.s5, right: AppSizes.s5),
                   child: Text(
                     title,
                     textAlign: TextAlign.center,
@@ -111,7 +111,7 @@ class _FawryProviderScreenState extends State<FawryProviderScreen> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(bottom: 20),
+              padding: EdgeInsets.only(bottom: AppSizes.s20),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(AppRadius.md),
                 child: CachedNetworkImage(

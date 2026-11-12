@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:html' if (dart.library.io) '../../../../../core/services/dart_html_stub.dart' as html;
@@ -129,7 +130,7 @@ class SingleApprovalRow extends StatelessWidget {
                     size: 16,
                     color: Colors.grey.shade700,
                   ),
-                  const SizedBox(width: 6),
+                  const SizedBox(width: AppSizes.s6),
                   Expanded(
                     child: Text(
                       approverName,
@@ -145,13 +146,13 @@ class SingleApprovalRow extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: 6),
+            const SizedBox(width: AppSizes.s6),
             if (item.isAuto == true) ...[
               const Icon(Icons.bolt, size: 16, color: Colors.amber),
-              const SizedBox(width: 4),
+              const SizedBox(width: AppSizes.s4),
             ],
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s8, vertical: AppSizes.s3),
               decoration: BoxDecoration(
                 color: statusColor.withOpacity(0.12),
                 borderRadius: BorderRadius.circular(AppRadius.md),
@@ -170,7 +171,7 @@ class SingleApprovalRow extends StatelessWidget {
         ),
 
         if (item.role != null || item.department?.title != null) ...[
-          const SizedBox(height: 6),
+          const SizedBox(height: AppSizes.s6),
           Text(
             '${item.role?.tr() ?? ''} ${item.department?.title != null ? '(${item.department!.title!.tr()})' : ''}'
                 .trim(),
@@ -182,7 +183,7 @@ class SingleApprovalRow extends StatelessWidget {
         ],
 
         if (item.actor?.name != null && item.actor!.name!.isNotEmpty) ...[
-          const SizedBox(height: 4),
+          const SizedBox(height: AppSizes.s4),
           Row(
             children: [
               Text(
@@ -206,10 +207,10 @@ class SingleApprovalRow extends StatelessWidget {
         ],
 
         if (item.replay != null && item.replay!.trim().isNotEmpty) ...[
-          const SizedBox(height: 6),
+          const SizedBox(height: AppSizes.s6),
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(AppSizes.s8),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -226,7 +227,7 @@ class SingleApprovalRow extends StatelessWidget {
         ],
 
         if (_attachmentUrls.isNotEmpty) ...[
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSizes.s8),
           Material(
             color: Colors.blue.withOpacity(0.08),
             borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -241,13 +242,13 @@ class SingleApprovalRow extends StatelessWidget {
                 constraints: const BoxConstraints(minHeight: 48),
                 child: Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                      const EdgeInsets.symmetric(horizontal: AppSizes.s14, vertical: AppSizes.s10),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Icon(Icons.attach_file_rounded,
                           size: 20, color: Colors.blue),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: AppSizes.s8),
                       Text(
                         _attachmentUrls.length == 1
                             ? ('view_attachment'.tr())
@@ -267,7 +268,7 @@ class SingleApprovalRow extends StatelessWidget {
         ],
 
         if (item.approvedAutoTime != null || item.startedTime != null) ...[
-          const SizedBox(height: 6),
+          const SizedBox(height: AppSizes.s6),
           Text(
             _formatDate(item.approvedAutoTime ?? item.startedTime, context),
             style: TextStyle(

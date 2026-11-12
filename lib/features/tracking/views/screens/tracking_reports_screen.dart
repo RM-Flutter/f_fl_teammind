@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -304,7 +305,7 @@ class _RowHeader extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppStyles.heading(context).copyWith(fontSize: 14, fontWeight: FontWeight.w600)),
-              const SizedBox(height: 2),
+              const SizedBox(height: AppSizes.s2),
               Text(subtitle,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -493,7 +494,7 @@ class _KeyValue extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(label, style: AppStyles.greyContent(context).copyWith(fontSize: 11)),
-        const SizedBox(height: 2),
+        const SizedBox(height: AppSizes.s2),
         Text(value,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

@@ -28,7 +28,7 @@ Widget defaultTextFormField({
     alignment: Alignment.center,
     margin: const EdgeInsets.symmetric(vertical: AppSizes.s10),
     padding: EdgeInsets.symmetric(
-        horizontal: 16, vertical: (maxLines > 1) ? 16 : 0),
+        horizontal: AppSizes.s16, vertical: (maxLines > 1) ? 16 : 0),
     decoration: ShapeDecoration(
       color: AppThemeService.colorPalette.tertiaryColorBackground.color,
       shape: RoundedRectangleBorder(
@@ -132,7 +132,7 @@ Widget defaultTextFormFieldPoints( {
     alignment: Alignment.center,
     margin: const EdgeInsets.symmetric(vertical: AppSizes.s10),
     padding: EdgeInsets.symmetric(
-        horizontal: 16, vertical: (maxLines! > 1) ? 16 : 0),
+        horizontal: AppSizes.s16, vertical: (maxLines! > 1) ? 16 : 0),
     decoration: ShapeDecoration(
       color: AppThemeService.colorPalette.tertiaryColorBackground.color,
       shape: RoundedRectangleBorder(

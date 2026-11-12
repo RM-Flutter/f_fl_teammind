@@ -92,7 +92,7 @@ class _UpdateMyInfoScreenState extends State<UpdateMyInfoScreen> with SingleTick
               child: Column(
                 children: [
                   // Tab Bar
-                  SizedBox(height: 20,),
+                  SizedBox(height: AppSizes.s20,),
                   _buildTabBar(),
 
                   // Tab Content
@@ -141,7 +141,7 @@ class _UpdateMyInfoScreenState extends State<UpdateMyInfoScreen> with SingleTick
                       ),
                       child: viewModel.isSubmitting
                           ? const SizedBox(
-                              height: 20,
+                              height: AppSizes.s20,
                               width: 20,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,

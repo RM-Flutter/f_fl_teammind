@@ -53,7 +53,7 @@ class FingerprintCardOffline extends StatelessWidget {
                 icon: _getFingerprintTypeIcon(type),
                 borderColor: accentColor,
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppSizes.s12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,7 +66,7 @@ class FingerprintCardOffline extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: AppSizes.s2),
                     Text(
                       _getFingerprintTypeLabel(type),
                       style: AppStyles.subtitleContent(context),
@@ -77,15 +77,15 @@ class FingerprintCardOffline extends StatelessWidget {
                 ),
               ),
               if (onDelete != null) ...[
-                const SizedBox(width: 8),
+                const SizedBox(width: AppSizes.s8),
                 SizedBox(
-                  width: 36,
+                  width: AppSizes.s36,
                   height: 36,
                   child: (deletingIndexes != null &&
                           deletingIndexes!.contains(index))
                       ? const Center(
                           child: SizedBox(
-                            width: 18,
+                            width: AppSizes.s18,
                             height: 18,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,

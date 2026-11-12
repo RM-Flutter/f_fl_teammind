@@ -545,7 +545,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
 
   Widget _sectionTitle(String text) {
     return Padding(
-      padding: const EdgeInsets.only(top: 20, bottom: 12),
+      padding: const EdgeInsets.only(top: AppSizes.s20, bottom: AppSizes.s12),
       child: Text(text, style: TextStyle(color: Color(AppColors.secondaryButton), fontSize: 16, fontWeight: FontWeight.w600)),
     );
   }
@@ -558,12 +558,12 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
     int maxLines = 1,
   }) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.only(bottom: AppSizes.s16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(label, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(AppColors.secondaryButton))),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSizes.s8),
           TextField(
             controller: controller,
             keyboardType: keyboardType,
@@ -572,7 +572,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
             decoration: InputDecoration(
               hintText: hint,
               border: OutlineInputBorder(borderRadius: AppField.borderRadius, borderSide: const BorderSide(color: AppField.borderColor)),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s16),
             ),
           ),
         ],
@@ -588,12 +588,12 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
           )
         : null;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.only(bottom: AppSizes.s16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(AppStrings.country.tr(), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(AppColors.secondaryButton))),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSizes.s8),
           CustomDropdown.search(
             items: _countries,
             selectedValue: selected,
@@ -602,7 +602,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
             hintStyle: AppField.hintStyle,
             borderRadius: AppField.borderRadius,
             borderSide: const BorderSide(color: AppField.borderColor),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s16),
             onChanged: (value) {
               if (value.isNotEmpty && value['id'] != null) {
                 final id = value['id'] is int ? value['id'] as int : int.tryParse(value['id'].toString());
@@ -633,12 +633,12 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
           )
         : null;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.only(bottom: AppSizes.s16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(AppStrings.stateProvince.tr(), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(AppColors.secondaryButton))),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSizes.s8),
           CustomDropdown.search(
             isLoading: _isStatesLoading,
             items: _states,
@@ -648,7 +648,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
             hintStyle: AppField.hintStyle,
             borderRadius: AppField.borderRadius,
             borderSide: const BorderSide(color: AppField.borderColor),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s16),
             onChanged: (value) {
               if (value.isNotEmpty && value['id'] != null && value['id'] != -1) {
                 final id = value['id'] is int ? value['id'] as int : int.tryParse(value['id'].toString());
@@ -696,12 +696,12 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
           )
         : null;
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.only(bottom: AppSizes.s16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(AppStrings.city.tr(), style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Color(AppColors.secondaryButton))),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSizes.s8),
           CustomDropdown.search(
             isLoading: _isCitiesLoading,
             items: _cities,
@@ -711,7 +711,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
             hintStyle: AppField.hintStyle,
             borderRadius: AppField.borderRadius,
             borderSide: const BorderSide(color: AppField.borderColor),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s16),
             onChanged: (value) {
               if (value.isNotEmpty && value['id'] != null && value['id'] != -1) {
                 final id = value['id'] is int ? value['id'] as int : int.tryParse(value['id'].toString());
@@ -727,9 +727,9 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
   Widget _buildPortfolioItem(int index) {
     if (index >= _portfolioNames.length) return const SizedBox.shrink();
     return Card(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: AppSizes.s12),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(AppSizes.s12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -741,7 +741,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                   IconButton(icon: const Icon(Icons.delete, color: Colors.red), onPressed: () => _removePortfolio(index)),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSizes.s8),
             TextField(
               controller: _portfolioNames[index],
               readOnly: !_isPremium,
@@ -751,7 +751,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                 border: OutlineInputBorder(borderRadius: AppField.borderRadius, borderSide: const BorderSide(color: AppField.borderColor)),
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSizes.s12),
             TextField(
               controller: _portfolioDescs[index],
               readOnly: !_isPremium,
@@ -762,7 +762,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
               ),
               maxLines: 2,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSizes.s12),
             TextField(
               controller: _portfolioLinks[index],
               readOnly: !_isPremium,
@@ -798,9 +798,9 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppSizes.s12),
                   _buildTabBar(),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSizes.s16),
                   if (_selectedTabIndex == 0) ...[
                     // Logo avatar at top (similar style to PersonalProfileScreen header)
                     Center(
@@ -847,7 +847,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSizes.s16),
                     _buildField(controller: _nameController, label: AppStrings.companyName.tr(), hint: AppStrings.companyName.tr()),
                     _buildCountryDropdown(),
                     _buildStateDropdown(),
@@ -857,7 +857,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                   if (_selectedTabIndex == 1) ...[
                     _buildField(controller: _phoneController, label: AppStrings.phone.tr(), hint: AppStrings.phoneNumber.tr(), keyboardType: TextInputType.phone),
                     ...List.generate(_morePhonesControllers.length, (i) => Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
+                      padding: const EdgeInsets.only(bottom: AppSizes.s8),
                       child: Row(
                         children: [
                           Expanded(
@@ -874,21 +874,21 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                         ],
                       ),
                     )),
-                    if (_morePhonesControllers.isNotEmpty) const SizedBox(height: 8),
+                    if (_morePhonesControllers.isNotEmpty) const SizedBox(height: AppSizes.s8),
                     OutlinedButton.icon(
                       onPressed: _addMorePhone,
                       icon: const Icon(Icons.add),
                       label: Text('${AppStrings.phone.tr()} (${AppStrings.addOne.tr()})', style: const TextStyle(fontSize: 16)),
                       style: OutlinedButton.styleFrom(side: const BorderSide(color: AppField.borderColor)),
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppSizes.s8),
                     _buildField(controller: _emailController, label: AppStrings.email.tr(), hint: AppStrings.email.tr(), keyboardType: TextInputType.emailAddress),
                     _buildField(controller: _whatsappController, label: AppStrings.whatsapp.tr(), hint: AppStrings.whatsapp.tr(), keyboardType: TextInputType.phone),
                     _buildField(controller: _linkedinController, label: AppStrings.linkedin.tr(), hint: 'https://linkedin.com/company/...', keyboardType: TextInputType.url),
                     _buildField(controller: _behanceController, label: AppStrings.behance.tr(), hint: 'https://behance.net/...', keyboardType: TextInputType.url),
                     _buildField(controller: _websiteController, label: AppStrings.website.tr(), hint: 'https://...', keyboardType: TextInputType.url),
                     ...List.generate(_otherLinksControllers.length, (i) => Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
+                      padding: const EdgeInsets.only(bottom: AppSizes.s8),
                       child: Row(
                         children: [
                           Expanded(
@@ -908,7 +908,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                         ],
                       ),
                     )),
-                    if (_otherLinksControllers.isNotEmpty) const SizedBox(height: 8),
+                    if (_otherLinksControllers.isNotEmpty) const SizedBox(height: AppSizes.s8),
                     OutlinedButton.icon(
                       onPressed: _isPremium ? _addOtherLink : _showPremiumAlert,
                       icon: const Icon(Icons.add),
@@ -978,14 +978,14 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                           );
                         }),
                       ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppSizes.s8),
                     OutlinedButton.icon(
                       onPressed: _isPremium ? _pickWorksImages : _showPremiumAlert,
                       icon: const Icon(Icons.photo_library),
                       label: Text(AppStrings.gallery.tr(), style: const TextStyle(fontSize: 16)),
                       style: OutlinedButton.styleFrom(side: const BorderSide(color: AppField.borderColor)),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSizes.s16),
                     _sectionTitle(AppStrings.videos.tr()),
                     if (_videoGallery.isNotEmpty)
                       Wrap(
@@ -1024,7 +1024,7 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                           );
                         }),
                       ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppSizes.s8),
                     OutlinedButton.icon(
                       onPressed: _isPremium ? _pickVideos : _showPremiumAlert,
                       icon: const Icon(Icons.video_library),
@@ -1033,19 +1033,19 @@ class _UpdateCompanyInfoScreenState extends State<UpdateCompanyInfoScreen> {
                     ),
                   ],
                   if (_errorMessage != null) ...[
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppSizes.s8),
                     Text(_errorMessage!, style: const TextStyle(color: Colors.red, fontSize: 12)),
                   ],
-                  const SizedBox(height: 24),
+                  const SizedBox(height: AppSizes.s24),
                   FilledButton(
                     onPressed: _isSubmitting ? null : _save,
                     style: FilledButton.styleFrom(
                       backgroundColor: Color(AppColors.secondaryButton),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      padding: const EdgeInsets.symmetric(vertical: AppSizes.s14),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.xl)),
                     ),
                     child: _isSubmitting
-                        ? const SizedBox(height: 22, width: 22, child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(Colors.white)))
+                        ? const SizedBox(height: AppSizes.s22, width: 22, child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(Colors.white)))
                         : Text(AppStrings.update.tr(), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                   ),
                 ],

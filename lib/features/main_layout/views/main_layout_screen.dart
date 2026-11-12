@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/widgets/app_content_width.widget.dart';
@@ -97,7 +98,7 @@ class MainLayoutScreen extends StatelessWidget {
             items: items.map((element) {
               return BottomNavigationBarItem(
                 icon: Padding(
-                  padding: const EdgeInsets.only(top: 8, bottom: 12),
+                  padding: const EdgeInsets.only(top: AppSizes.s8, bottom: AppSizes.s12),
                   child: SvgPicture.asset(
                     element.icon,
                     height: 24,
@@ -109,7 +110,7 @@ class MainLayoutScreen extends StatelessWidget {
                   ),
                 ),
                 activeIcon: Padding(
-                  padding: const EdgeInsets.only(top: 8, bottom: 12),
+                  padding: const EdgeInsets.only(top: AppSizes.s8, bottom: AppSizes.s12),
                   child: ColorFiltered(
                     colorFilter: ColorFilter.mode(
                       Color(AppColors.secondaryButton),

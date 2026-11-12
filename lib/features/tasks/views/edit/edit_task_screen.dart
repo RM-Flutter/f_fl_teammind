@@ -117,7 +117,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
                                           Padding(
-                                            padding: EdgeInsets.all(16.0),
+                                            padding: EdgeInsets.all(AppSizes.s16),
                                             child: Text(
                                               AppStrings.employeeName.tr(),
                                               style: AppStyles.heading(context).copyWith(fontSize: 18, fontWeight: FontWeight.bold),
@@ -147,7 +147,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                                             ),
                                           ),
                                           Padding(
-                                            padding: EdgeInsets.all(16.0),
+                                            padding: EdgeInsets.all(AppSizes.s16),
                                             child: ElevatedButton(
                                               onPressed: () {
                                                 Navigator.pop(context);
@@ -183,7 +183,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     SvgPicture.asset(e['value']!, fit: BoxFit.scaleDown, width: 27, height: 24,),
-                                    SizedBox(width: 10,),
+                                    SizedBox(width: AppSizes.s10,),
                                     Text(
                                       e['name'].toString(),
                                       style: AppStyles.greyContent(context).copyWith(
@@ -232,7 +232,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                             subTasks: viewModel.subTasks,
                           ),
                           gapH14,
-                          SizedBox(height: 30,),
+                          SizedBox(height: AppSizes.s30,),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [

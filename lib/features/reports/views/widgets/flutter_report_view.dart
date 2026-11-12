@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/routing/app_router.dart';
 import 'package:app_test/core/utils/app_styles.dart';
@@ -45,7 +46,7 @@ class _FlutterReportViewState extends State<FlutterReportView> {
         : widget.reportData;
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.only(bottom: 24),
+      padding: const EdgeInsets.only(bottom: AppSizes.s24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -64,20 +65,20 @@ class _FlutterReportViewState extends State<FlutterReportView> {
                       ? '${widget.reportData.compare!.period.from} → ${widget.reportData.compare!.period.to}'
                       : null),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
           ],
           _buildSummaryCard(context, activeData),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSizes.s16),
           _buildAttendanceChart(context, activeData),
-          const SizedBox(height: 20),
+          const SizedBox(height: AppSizes.s20),
           Text(
             'employees_list'.tr(),
             style: AppStyles.blackContent(context).copyWith(fontWeight: FontWeight.bold, fontSize: 15),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSizes.s12),
           if (activeData.employees.isEmpty)
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 32),
+              padding: const EdgeInsets.symmetric(vertical: AppSizes.s32),
               alignment: Alignment.center,
               child: Text(
                 'noDataFounded'.tr(),
@@ -96,7 +97,7 @@ class _FlutterReportViewState extends State<FlutterReportView> {
     final s = data.summary;
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSizes.s16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.lg),
@@ -109,7 +110,7 @@ class _FlutterReportViewState extends State<FlutterReportView> {
           Row(
             children: [
               Icon(Icons.calendar_month_outlined, size: 16, color: Color(AppColors.buttons)),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               Text(
                 '${data.period.from}  →  ${data.period.to}',
                 style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black87),
@@ -117,18 +118,18 @@ class _FlutterReportViewState extends State<FlutterReportView> {
             ],
           ),
           const Padding(
-            padding: EdgeInsets.symmetric(vertical: 12),
+            padding: EdgeInsets.symmetric(vertical: AppSizes.s12),
             child: Divider(height: 1),
           ),
           _buildInfoRow(context, icon: Icons.people_outline, label: 'total_employees'.tr(), value: '${s.totalEmployees}'),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSizes.s8),
           _buildInfoRow(context, icon: Icons.check_circle_outline, label: 'attendance_days'.tr(), value: '${s.totalAttendanceDays}', valueColor: Color(AppColors.successGreen)),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSizes.s8),
           _buildInfoRow(context, icon: Icons.cancel_outlined, label: 'absence_days'.tr(), value: '${s.totalAbsenceDays}', valueColor: Color(AppColors.failureRed)),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSizes.s8),
           if (s.totalDelayReadable.isNotEmpty && s.totalDelayReadable != '0') ...[
             _buildInfoRow(context, icon: Icons.timer_outlined, label: 'total_delay'.tr(), value: s.totalDelayReadable, valueColor: const Color(0xFFE65100)),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSizes.s8),
           ],
           if (s.totalOvertimeReadable.isNotEmpty && s.totalOvertimeReadable != '0')
             _buildInfoRow(context, icon: Icons.more_time_outlined, label: 'total_overtime'.tr(), value: s.totalOvertimeReadable, valueColor: Color(AppColors.buttons)),
@@ -148,7 +149,7 @@ class _FlutterReportViewState extends State<FlutterReportView> {
     final attPct = (att / total * 100).toStringAsFixed(0);
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSizes.s16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.lg),
@@ -160,7 +161,7 @@ class _FlutterReportViewState extends State<FlutterReportView> {
           Row(
             children: [
               Icon(Icons.pie_chart_outline, size: 20, color: Color(AppColors.buttons)),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               Text(
                 'attendance_summary_chart'.tr(),
                 style: AppStyles.blackContent(context).copyWith(
@@ -170,9 +171,9 @@ class _FlutterReportViewState extends State<FlutterReportView> {
               ),
             ],
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: AppSizes.s18),
           SizedBox(
-            height: 180,
+            height: AppSizes.s180,
             child: Stack(
               alignment: Alignment.center,
               children: [
@@ -229,7 +230,7 @@ class _FlutterReportViewState extends State<FlutterReportView> {
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSizes.s16),
           // Wrap: the two legend items overflowed the card on phones.
           Wrap(
             alignment: WrapAlignment.center,
@@ -255,7 +256,7 @@ class _FlutterReportViewState extends State<FlutterReportView> {
           height: 10,
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
-        const SizedBox(width: 6),
+        const SizedBox(width: AppSizes.s6),
         Text(
           '$label: $count ($pct%)',
           style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.black87),
@@ -267,7 +268,7 @@ class _FlutterReportViewState extends State<FlutterReportView> {
   /// ─── Employee Card ────────────────────────────────────────────────────────
   Widget _buildEmployeeCard(BuildContext context, ReportEmployeeData emp) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: AppSizes.s12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.md),
@@ -276,7 +277,7 @@ class _FlutterReportViewState extends State<FlutterReportView> {
       child: Theme(
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
-          tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          tilePadding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s4),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
           collapsedShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
           iconColor: Color(AppColors.buttons),
@@ -329,28 +330,28 @@ class _FlutterReportViewState extends State<FlutterReportView> {
           ),
           children: [
             Container(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              padding: const EdgeInsets.fromLTRB(AppSizes.s16, 0, AppSizes.s16, AppSizes.s16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Divider(),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppSizes.s8),
                   // Stats row
                   Row(
                     children: [
                       _buildStatBadge(context, label: 'attendance'.tr(), value: '${emp.attendanceCount}', color: Color(AppColors.successGreen)),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: AppSizes.s8),
                       _buildStatBadge(context, label: 'absence'.tr(), value: '${emp.absenceCount}', color: Color(AppColors.failureRed)),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: AppSizes.s8),
                       if (emp.totalDelayReadable.isNotEmpty && emp.totalDelayReadable != '0')
                         _buildStatBadge(context, label: 'delay'.tr(), value: emp.totalDelayReadable, color: const Color(0xFFE65100)),
                     ],
                   ),
                   // Timeline
                   if (emp.timeline.isNotEmpty) ...[
-                    const SizedBox(height: 14),
+                    const SizedBox(height: AppSizes.s14),
                     Text('timeline'.tr(), style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.black87)),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppSizes.s8),
                     ...emp.timeline.map((item) => _buildTimelineRow(context, item)),
                   ],
                 ],
@@ -364,8 +365,8 @@ class _FlutterReportViewState extends State<FlutterReportView> {
 
   Widget _buildTimelineRow(BuildContext context, ReportTimeline item) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      margin: const EdgeInsets.only(bottom: AppSizes.s8),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12, vertical: AppSizes.s10),
       decoration: BoxDecoration(
         color: Colors.grey.shade50,
         borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -379,7 +380,7 @@ class _FlutterReportViewState extends State<FlutterReportView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(item.date, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Colors.black87)),
-                const SizedBox(height: 2),
+                const SizedBox(height: AppSizes.s2),
                 Text(item.statusLabel, style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
               ],
             ),
@@ -391,12 +392,12 @@ class _FlutterReportViewState extends State<FlutterReportView> {
                 _buildTimeBadge(item.delayReadable, const Color(0xFFE65100)),
               if (item.overtimeReadable.isNotEmpty && item.overtimeReadable != '0')
                 Padding(
-                  padding: const EdgeInsets.only(top: 4),
+                  padding: const EdgeInsets.only(top: AppSizes.s4),
                   child: _buildTimeBadge(item.overtimeReadable, Color(AppColors.buttons)),
                 ),
               if (item.checkIn != null && item.checkIn!.isNotEmpty)
                 Padding(
-                  padding: const EdgeInsets.only(top: 4),
+                  padding: const EdgeInsets.only(top: AppSizes.s4),
                   child: Text('${item.checkIn} → ${item.checkOut ?? ''}', style: TextStyle(fontSize: 11, color: Colors.grey.shade500)),
                 ),
             ],
@@ -408,7 +409,7 @@ class _FlutterReportViewState extends State<FlutterReportView> {
 
   Widget _buildTimeBadge(String text, Color color) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s8, vertical: AppSizes.s3),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(AppRadius.md),
@@ -421,7 +422,7 @@ class _FlutterReportViewState extends State<FlutterReportView> {
   Widget _buildStatBadge(BuildContext context, {required String label, required String value, required Color color}) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+        padding: const EdgeInsets.symmetric(vertical: AppSizes.s8, horizontal: AppSizes.s4),
         decoration: BoxDecoration(
           color: color.withOpacity(0.08),
           borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -430,7 +431,7 @@ class _FlutterReportViewState extends State<FlutterReportView> {
         child: Column(
           children: [
             Text(value, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: color)),
-            const SizedBox(height: 2),
+            const SizedBox(height: AppSizes.s2),
             Text(label, style: TextStyle(fontSize: 11, color: Colors.grey.shade600)),
           ],
         ),
@@ -443,7 +444,7 @@ class _FlutterReportViewState extends State<FlutterReportView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Icon(icon, size: 16, color: Color(AppColors.buttons)),
-        const SizedBox(width: 8),
+        const SizedBox(width: AppSizes.s8),
         Text('$label: ', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.grey.shade700)),
         Expanded(
           child: Text(

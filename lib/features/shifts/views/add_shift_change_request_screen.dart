@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
@@ -222,7 +223,7 @@ class _AddShiftChangeRequestScreenState
                 if (provider.calendarErrorMessage != null &&
                     provider.calendarErrorMessage!.isNotEmpty) ...[
                   _buildErrorBanner(provider.calendarErrorMessage!),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSizes.s16),
                 ],
 
                 // Step 1: Select My Shift Assignment
@@ -232,7 +233,7 @@ class _AddShiftChangeRequestScreenState
                   title: 'select_your_shift_assignment'.tr(),
                   icon: Icons.event_available_rounded,
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: AppSizes.s10),
                 if (myAssignments.isEmpty)
                   _buildEmptyNotice('no_selectable_shift_assignments_found_for_you'.tr(),
                   )
@@ -249,7 +250,7 @@ class _AddShiftChangeRequestScreenState
                     },
                   ),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: AppSizes.s24),
 
                 // Step 2: Select Colleague
                 _buildSectionHeader(
@@ -258,7 +259,7 @@ class _AddShiftChangeRequestScreenState
                   title: 'select_colleague_same_department'.tr(),
                   icon: Icons.people_alt_outlined,
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: AppSizes.s10),
                 if (colleagues.isEmpty)
                   _buildEmptyNotice('no_colleagues_found_in_your_department_schedule'.tr(),
                   )
@@ -269,7 +270,7 @@ class _AddShiftChangeRequestScreenState
                     isArabic: isArabic,
                   ),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: AppSizes.s24),
 
                 // Step 3: Colleague Shift to Swap (Always Two-Way Swap)
                 _buildSectionHeader(
@@ -278,7 +279,7 @@ class _AddShiftChangeRequestScreenState
                   title: 'colleague_shift_to_swap'.tr(),
                   icon: Icons.swap_horiz_rounded,
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: AppSizes.s10),
                 if (_selectedColleague == null)
                   _buildEmptyNotice('select_a_colleague_first_to_view_their'.tr(),
                   )
@@ -298,7 +299,7 @@ class _AddShiftChangeRequestScreenState
                     },
                   ),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: AppSizes.s24),
 
                 // Step 4: Reason
                 _buildSectionHeader(
@@ -307,10 +308,10 @@ class _AddShiftChangeRequestScreenState
                   title: AppStrings.reason.tr(),
                   icon: Icons.notes_rounded,
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: AppSizes.s10),
                 Container(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s10),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(AppRadius.md),
@@ -334,11 +335,11 @@ class _AddShiftChangeRequestScreenState
 
                 if (_selectedMyAssignment != null &&
                     _selectedColleague != null) ...[
-                  const SizedBox(height: 20),
+                  const SizedBox(height: AppSizes.s20),
                   _buildSwapSummaryBanner(context, isArabic),
                 ],
 
-                const SizedBox(height: 28),
+                const SizedBox(height: AppSizes.s28),
 
                 // Submit Button
                 SizedBox(
@@ -367,7 +368,7 @@ class _AddShiftChangeRequestScreenState
                           ),
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: AppSizes.s24),
               ],
             ),
           );
@@ -401,9 +402,9 @@ class _AddShiftChangeRequestScreenState
             ),
           ),
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: AppSizes.s8),
         Icon(icon, size: 18, color: Color(AppColors.secondaryButton)),
-        const SizedBox(width: 6),
+        const SizedBox(width: AppSizes.s6),
         Expanded(
           child: Text(
             title,
@@ -421,7 +422,7 @@ class _AddShiftChangeRequestScreenState
   Widget _buildEmptyNotice(String text) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(AppSizes.s14),
       decoration: BoxDecoration(
         color: Colors.grey.shade100,
         borderRadius: BorderRadius.circular(AppRadius.md),
@@ -481,7 +482,7 @@ class _AddShiftChangeRequestScreenState
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: assignments.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 10),
+        separatorBuilder: (_, __) => const SizedBox(width: AppSizes.s10),
         itemBuilder: (context, index) {
           final item = assignments[index];
           final bool isSelected = selected?.id == item.id;
@@ -494,7 +495,7 @@ class _AddShiftChangeRequestScreenState
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 180),
               width: 185,
-              padding: const EdgeInsets.all(12),
+              padding: const EdgeInsets.all(AppSizes.s12),
               decoration: BoxDecoration(
                 color: isSelected
                     ? Color(AppColors.buttons).withOpacity(0.1)
@@ -540,7 +541,7 @@ class _AddShiftChangeRequestScreenState
                     children: [
                       Icon(Icons.calendar_today_rounded,
                           size: 12, color: Colors.grey.shade600),
-                      const SizedBox(width: 4),
+                      const SizedBox(width: AppSizes.s4),
                       Expanded(
                         child: Text(
                           dateLabel,
@@ -559,7 +560,7 @@ class _AddShiftChangeRequestScreenState
                     children: [
                       Icon(Icons.access_time_rounded,
                           size: 12, color: Colors.grey.shade600),
-                      const SizedBox(width: 4),
+                      const SizedBox(width: AppSizes.s4),
                       Text(
                         timeRange,
                         style: TextStyle(
@@ -586,7 +587,7 @@ class _AddShiftChangeRequestScreenState
         : '';
 
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(AppSizes.s12),
       decoration: BoxDecoration(
         color: Color(AppColors.buttons).withOpacity(0.06),
         borderRadius: BorderRadius.circular(AppRadius.md),
@@ -602,12 +603,12 @@ class _AddShiftChangeRequestScreenState
               color: Color(AppColors.buttons),
             ),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: AppSizes.s6),
           Text(
             '• ${'your_shift'.tr()}: ${_selectedMyAssignment?.shiftName ?? ''} ($myDate)',
             style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: AppSizes.s4),
           Text(
             '• ${'with'.tr()} (${_selectedColleague?.name ?? ''}): ${_selectedColleagueAssignment != null ? '${_selectedColleagueAssignment!.shiftName ?? ''} ($colDate)' : ('not_selected_yet'.tr())}',
             style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
@@ -620,7 +621,7 @@ class _AddShiftChangeRequestScreenState
   Widget _buildErrorBanner(String message) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(AppSizes.s12),
       decoration: BoxDecoration(
         color: const Color(0xFFFFEBEE),
         borderRadius: BorderRadius.circular(AppRadius.md),
@@ -629,7 +630,7 @@ class _AddShiftChangeRequestScreenState
       child: Row(
         children: [
           Icon(Icons.error_outline, color: Colors.red.shade700, size: 18),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSizes.s8),
           Expanded(
             child: Text(
               message,

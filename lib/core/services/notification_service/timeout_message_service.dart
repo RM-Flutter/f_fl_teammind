@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app_test/main.dart';
@@ -188,7 +189,7 @@ class TimeoutMessageDialogState extends State<TimeoutMessageDialog>
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Padding(
-                        padding: const EdgeInsetsDirectional.fromSTEB(14, 14, 6, 14),
+                        padding: const EdgeInsetsDirectional.fromSTEB(AppSizes.s14, AppSizes.s14, AppSizes.s6, AppSizes.s14),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -196,7 +197,7 @@ class TimeoutMessageDialogState extends State<TimeoutMessageDialog>
                             Container(
                               width: 44,
                               height: 44,
-                              padding: const EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(AppSizes.s8),
                               decoration: BoxDecoration(
                                 color: accent.withOpacity(0.08),
                                 borderRadius: BorderRadius.circular(AppRadius.md),
@@ -207,7 +208,7 @@ class TimeoutMessageDialogState extends State<TimeoutMessageDialog>
                                       Icons.notifications_active_rounded,
                                       color: accent)),
                             ),
-                            const SizedBox(width: 12),
+                            const SizedBox(width: AppSizes.s12),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -224,7 +225,7 @@ class TimeoutMessageDialogState extends State<TimeoutMessageDialog>
                                     ),
                                   ),
                                   if (hasMessage) ...[
-                                    const SizedBox(height: 4),
+                                    const SizedBox(height: AppSizes.s4),
                                     Text(
                                       widget.message!,
                                       maxLines: 3,

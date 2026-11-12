@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,7 @@ class SmartCardLoadingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSizes.s16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -22,24 +23,24 @@ class SmartCardLoadingWidget extends StatelessWidget {
               circularRaduis: 4,
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSizes.s24),
           // Action cards - first row
           Row(
             children: [
               Expanded(child: _buildActionCardShimmer()),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppSizes.s12),
               Expanded(child: _buildActionCardShimmer()),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSizes.s12),
           Row(
             children: [
               Expanded(child: _buildActionCardShimmer()),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppSizes.s12),
               Expanded(child: _buildActionCardShimmer()),
             ],
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: AppSizes.s32),
           // Section title placeholder
           Center(
             child: ShimmerAnimatedLoading(
@@ -48,7 +49,7 @@ class SmartCardLoadingWidget extends StatelessWidget {
               circularRaduis: 4,
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSizes.s16),
           // Employee cards placeholders
           ...List.generate(4, (_) => _buildEmployeeCardShimmer()),
         ],
@@ -58,7 +59,7 @@ class SmartCardLoadingWidget extends StatelessWidget {
 
   Widget _buildActionCardShimmer() {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.s20, horizontal: AppSizes.s30),
       decoration: BoxDecoration(
         color: Color(AppColors.secondaryButton).withValues(alpha: 0.06),
         borderRadius: BorderRadius.circular(AppRadius.md),
@@ -70,7 +71,7 @@ class SmartCardLoadingWidget extends StatelessWidget {
             width: 28,
             circularRaduis: 8,
           ),
-          SizedBox(height: 8),
+          SizedBox(height: AppSizes.s8),
           ShimmerAnimatedLoading(
             height: 14,
             width: double.infinity,
@@ -84,8 +85,8 @@ class SmartCardLoadingWidget extends StatelessWidget {
   Widget _buildEmployeeCardShimmer() {
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      margin: const EdgeInsets.only(bottom: AppSizes.s12),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.md),

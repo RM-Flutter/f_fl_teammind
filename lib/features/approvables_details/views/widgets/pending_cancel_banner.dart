@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -98,7 +99,7 @@ class PendingCancelBanner extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(title, style: titleStyle),
-              const SizedBox(height: 2),
+              const SizedBox(height: AppSizes.s2),
               Text(subtitle, style: subtitleStyle),
             ],
           );
@@ -109,11 +110,11 @@ class PendingCancelBanner extends StatelessWidget {
         child: Container(
           // Web: same side inset as the tab bar (8) so the edges line up
           margin: compact
-              ? const EdgeInsets.fromLTRB(8, 10, 8, 0)
-              : const EdgeInsets.fromLTRB(16, 12, 16, 4),
+              ? const EdgeInsets.fromLTRB(AppSizes.s8, AppSizes.s10, AppSizes.s8, 0)
+              : const EdgeInsets.fromLTRB(AppSizes.s16, AppSizes.s12, AppSizes.s16, AppSizes.s4),
           padding: compact
-              ? const EdgeInsets.symmetric(horizontal: 12, vertical: 7)
-              : const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              ? const EdgeInsets.symmetric(horizontal: AppSizes.s12, vertical: 7)
+              : const EdgeInsets.symmetric(horizontal: AppSizes.s14, vertical: AppSizes.s12),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: AlignmentDirectional.centerStart,

@@ -81,7 +81,7 @@ class _RewardsAndPenaltiesDetailsModalState
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   LinearProgressIndicator(value: _downloadProgress),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: AppSizes.s10),
                   Text('${(_downloadProgress * 100).toStringAsFixed(0)}%'),
                 ],
               ),
@@ -304,8 +304,8 @@ class _RewardsAndPenaltiesDetailsModalState
                 gapH8,
                 ...rewardAndPenalty.files!.map<Widget>((file) {
                   return Container(
-                    margin: const EdgeInsets.only(bottom: 8),
-                    padding: const EdgeInsets.all(8),
+                    margin: const EdgeInsets.only(bottom: AppSizes.s8),
+                    padding: const EdgeInsets.all(AppSizes.s8),
                     decoration: BoxDecoration(
                       color: Colors.grey.shade100,
                       borderRadius: BorderRadius.circular(AppRadius.sm),

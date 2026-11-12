@@ -132,7 +132,7 @@ class _PrizeScreenState extends State<PrizeScreen> {
                               title: AppStrings.noPrizesAvailable.tr()),
                         ),
                       ListView.separated(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16),
                         clipBehavior: Clip.none,
                         shrinkWrap: true,
                         reverse: false,

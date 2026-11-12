@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -59,14 +60,14 @@ class _AiConnectViewState extends State<_AiConnectView> {
                 child: RefreshIndicator(
                   onRefresh: () => c.loadInfo(context),
                   child: ListView(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+                    padding: const EdgeInsets.fromLTRB(AppSizes.s16, AppSizes.s8, AppSizes.s16, AppSizes.s24),
                     children: [
                       Text(AppStrings.aiConnectIntro.tr(),
                           style: AppStyles.darkContent(context).copyWith(fontSize: 13, height: 1.5)),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: AppSizes.s16),
                       if (c.isInfoLoading)
                         const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 40),
+                          padding: EdgeInsets.symmetric(vertical: AppSizes.s40),
                           child: Center(child: CircularProgressIndicator()),
                         )
                       else if (!c.enabled || c.mcpUrl == null)
@@ -77,29 +78,29 @@ class _AiConnectViewState extends State<_AiConnectView> {
                         )
                       else ...[
                         _LinkCard(url: c.mcpUrl!),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: AppSizes.s20),
                         Text(AppStrings.aiConnectHowTo.tr(),
                             style: AppStyles.heading(context).copyWith(fontSize: 14, fontWeight: FontWeight.w700)),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: AppSizes.s10),
                         _Step(number: 1, text: AppStrings.aiConnectStep1.tr()),
                         _Step(number: 2, text: AppStrings.aiConnectStep2.tr()),
                         _Step(number: 3, text: AppStrings.aiConnectStep3.tr()),
                         _Step(number: 4, text: AppStrings.aiConnectStep4.tr()),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: AppSizes.s12),
                         _Notice(
                           icon: Icons.lock_outline,
                           color: Color(AppColors.successGreen),
                           text: AppStrings.aiConnectPrivacy.tr(),
                         ),
                       ],
-                      const SizedBox(height: 20),
+                      const SizedBox(height: AppSizes.s20),
                       OutlinedButton.icon(
                         icon: const Icon(Icons.link_rounded),
                         label: Text(AppStrings.aiConnectedApps.tr()),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: Color(AppColors.buttons),
                           side: BorderSide(color: Color(AppColors.buttons)),
-                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          padding: const EdgeInsets.symmetric(vertical: AppSizes.s14),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
                         ),
                         onPressed: () => context.pushNamed(
@@ -126,7 +127,7 @@ class _LinkCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsetsDirectional.fromSTEB(14, 12, 6, 12),
+      padding: const EdgeInsetsDirectional.fromSTEB(AppSizes.s14, AppSizes.s12, AppSizes.s6, AppSizes.s12),
       decoration: BoxDecoration(
         color: Color(AppColors.buttons).withValues(alpha: 0.06),
         border: Border.all(color: Color(AppColors.buttons).withValues(alpha: 0.3)),
@@ -140,7 +141,7 @@ class _LinkCard extends StatelessWidget {
               children: [
                 Text(AppStrings.aiConnectLinkLabel.tr(),
                     style: AppStyles.darkContent(context).copyWith(fontSize: 11, color: Colors.grey.shade600)),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppSizes.s4),
                 // URLs are always left-to-right, also in Arabic.
                 Directionality(
                   textDirection: ui.TextDirection.ltr,
@@ -172,7 +173,7 @@ class _Step extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.only(bottom: AppSizes.s10),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -181,7 +182,7 @@ class _Step extends StatelessWidget {
             backgroundColor: Color(AppColors.buttons),
             child: Text('$number', style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w700)),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: AppSizes.s10),
           Expanded(
             child: Text(text, style: AppStyles.darkContent(context).copyWith(fontSize: 13, height: 1.45)),
           ),
@@ -200,7 +201,7 @@ class _Notice extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(AppSizes.s12),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(AppRadius.md),
@@ -209,7 +210,7 @@ class _Notice extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(icon, size: 18, color: color),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSizes.s8),
           Expanded(child: Text(text, style: AppStyles.darkContent(context).copyWith(fontSize: 12, height: 1.45))),
         ],
       ),

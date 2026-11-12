@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/services/app_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -32,9 +33,9 @@ class OvertimeUpdateDialog {
           builder: (stContext, setState) {
             return Container(
               padding: EdgeInsets.only(
-                left: 20,
-                right: 20,
-                top: 16,
+                left: AppSizes.s20,
+                right: AppSizes.s20,
+                top: AppSizes.s16,
                 bottom: MediaQuery.of(bottomSheetContext).viewInsets.bottom + 20,
               ),
               decoration: const BoxDecoration(
@@ -53,7 +54,7 @@ class OvertimeUpdateDialog {
                     child: Container(
                       width: 40,
                       height: 4,
-                      margin: const EdgeInsets.only(bottom: 12),
+                      margin: const EdgeInsets.only(bottom: AppSizes.s12),
                       decoration: BoxDecoration(
                         color: Colors.grey[300],
                         borderRadius: BorderRadius.circular(AppRadius.xs),
@@ -80,12 +81,12 @@ class OvertimeUpdateDialog {
                     ],
                   ),
                   const Divider(),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppSizes.s12),
 
                   // Old Value Badge
                   if (currentOvertime != null) ...[
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12, vertical: AppSizes.s8),
                       decoration: BoxDecoration(
                         color: Color(AppColors.cardBackground),
                         borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -93,7 +94,7 @@ class OvertimeUpdateDialog {
                       child: Row(
                         children: [
                           const Icon(Icons.access_time, size: 18, color: Colors.blueGrey),
-                          const SizedBox(width: 8),
+                          const SizedBox(width: AppSizes.s8),
                           Text('current_duration_mins'.tr(namedArgs: {'current_overtime': '$currentOvertime'}),
                             style: TextStyle(
                               fontSize: 13,
@@ -104,7 +105,7 @@ class OvertimeUpdateDialog {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSizes.s16),
                   ],
 
                   // Label
@@ -115,7 +116,7 @@ class OvertimeUpdateDialog {
                       color: Colors.grey[700],
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppSizes.s8),
 
                   // Input Field
                   TextField(
@@ -136,7 +137,7 @@ class OvertimeUpdateDialog {
                         fontWeight: FontWeight.w600,
                       ),
                       contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                          const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s14),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(AppRadius.md),
                         borderSide: BorderSide(color: Colors.grey.shade300),
@@ -147,7 +148,7 @@ class OvertimeUpdateDialog {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: AppSizes.s24),
 
                   // Submit Button
                   AppSheetSubmitButton(
@@ -220,7 +221,7 @@ class OvertimeUpdateDialog {
                             }
                           },
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: AppSizes.s10),
                 ],
               ),
             );

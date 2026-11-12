@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -41,8 +42,8 @@ class ProfileTile extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(
         bottom: marginBottom?.h ?? AppSpacing.cardGap,
-        left: 8,
-        right: 8,
+        left: AppSizes.s8,
+        right: AppSizes.s8,
       ),
       child: AppCard(
         padding: AppSpacing.cardPadding,
@@ -63,7 +64,7 @@ class ProfileTile extends StatelessWidget {
                     icon: Icons.info_outline_rounded,
                     borderColor: accentColor,
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: AppSizes.s12),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,7 +81,7 @@ class ProfileTile extends StatelessWidget {
                         ),
                         if (subtitleText != null &&
                             subtitleText.trim().isNotEmpty) ...[
-                          const SizedBox(height: 3),
+                          const SizedBox(height: AppSizes.s3),
                           Text(
                             subtitleText,
                             maxLines: 2,
@@ -97,7 +98,7 @@ class ProfileTile extends StatelessWidget {
                   if (subtitleText != null &&
                       subtitleText.trim().isNotEmpty &&
                       subtitleText.length <= 24) ...[
-                    const SizedBox(width: 8),
+                    const SizedBox(width: AppSizes.s8),
                     AppStatusBadge(
                       label: subtitleText,
                       color: accentColor,
@@ -211,7 +212,7 @@ class ProfileTileEva extends StatelessWidget {
               icon: Icons.assignment_turned_in_outlined,
               borderColor: statusColor,
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppSizes.s12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -227,7 +228,7 @@ class ProfileTileEva extends StatelessWidget {
                     ),
                   ),
                   if (subtitleParts.isNotEmpty) ...[
-                    const SizedBox(height: 3),
+                    const SizedBox(height: AppSizes.s3),
                     Text(
                       subtitleParts.join(' · '),
                       maxLines: 1,
@@ -241,7 +242,7 @@ class ProfileTileEva extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppSizes.s8),
             AppStatusBadge(
               label: statusLabel,
               color: statusColor,
@@ -268,7 +269,7 @@ class ProfileTileEva extends StatelessWidget {
         return SafeArea(
           child: Container(
             padding: const EdgeInsets.symmetric(
-              vertical: 20,
+              vertical: AppSizes.s20,
               horizontal: AppSpacing.page,
             ),
             constraints: BoxConstraints(
@@ -287,7 +288,7 @@ class ProfileTileEva extends StatelessWidget {
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSizes.s16),
                 Text(
                   AppStrings.evaluationsInfo.tr(),
                   style: AppStyles.heading(context).copyWith(
@@ -297,19 +298,19 @@ class ProfileTileEva extends StatelessWidget {
                   ),
                 ),
                 if (headerDate.isNotEmpty) ...[
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppSizes.s8),
                   AppStatusBadge(
                     label: headerDate,
                     color: Color(AppColors.buttons),
                     icon: Icons.calendar_today_rounded,
                   ),
                 ],
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSizes.s16),
                 Flexible(
                   child: resultsList.isEmpty
                       ? Center(
                           child: Padding(
-                            padding: const EdgeInsets.all(24),
+                            padding: const EdgeInsets.all(AppSizes.s24),
                             child: Text(
                               AppStrings.noExistingEvaluation.tr(),
                               style: AppStyles.subtitleContent(context),
@@ -345,7 +346,7 @@ class ProfileTileEva extends StatelessWidget {
                                     nameForInitials: evaluatorName,
                                     borderColor: badgeColor,
                                   ),
-                                  const SizedBox(width: 12),
+                                  const SizedBox(width: AppSizes.s12),
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
@@ -362,7 +363,7 @@ class ProfileTileEva extends StatelessWidget {
                                           ),
                                         ),
                                         if (evalDate.isNotEmpty) ...[
-                                          const SizedBox(height: 3),
+                                          const SizedBox(height: AppSizes.s3),
                                           Text(
                                             evalDate,
                                             maxLines: 1,
@@ -378,7 +379,7 @@ class ProfileTileEva extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  const SizedBox(width: 8),
+                                  const SizedBox(width: AppSizes.s8),
                                   AppStatusBadge(
                                     label: scoreText,
                                     color: badgeColor,
@@ -442,7 +443,7 @@ class ProfileTileNotTap extends StatelessWidget {
               icon: Icons.info_outline_rounded,
               borderColor: accentColor,
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppSizes.s12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -459,7 +460,7 @@ class ProfileTileNotTap extends StatelessWidget {
                   ),
                   if (trailingTitle != null &&
                       trailingTitle!.trim().isNotEmpty) ...[
-                    const SizedBox(height: 3),
+                    const SizedBox(height: AppSizes.s3),
                     Text(
                       trailingTitle!,
                       maxLines: 1,
@@ -564,7 +565,7 @@ class ProfileTileEvaReq extends StatelessWidget {
                       : title,
               borderColor: statusColor,
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppSizes.s12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -580,7 +581,7 @@ class ProfileTileEvaReq extends StatelessWidget {
                     ),
                   ),
                   if (subtitleParts.isNotEmpty) ...[
-                    const SizedBox(height: 3),
+                    const SizedBox(height: AppSizes.s3),
                     Text(
                       subtitleParts.join(' · '),
                       maxLines: 1,
@@ -592,7 +593,7 @@ class ProfileTileEvaReq extends StatelessWidget {
                     ),
                   ],
                   if (dateStr.isNotEmpty) ...[
-                    const SizedBox(height: 2),
+                    const SizedBox(height: AppSizes.s2),
                     Text(
                       dateStr,
                       maxLines: 1,
@@ -606,7 +607,7 @@ class ProfileTileEvaReq extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppSizes.s8),
             AppStatusBadge(
               label: statusLabel,
               color: statusColor,
@@ -671,7 +672,7 @@ class ProfileTilePay extends StatelessWidget {
                       : title,
               borderColor: accentColor,
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppSizes.s12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -687,7 +688,7 @@ class ProfileTilePay extends StatelessWidget {
                     ),
                   ),
                   if (subtitleParts.isNotEmpty) ...[
-                    const SizedBox(height: 3),
+                    const SizedBox(height: AppSizes.s3),
                     Text(
                       subtitleParts.join(' · '),
                       maxLines: 1,

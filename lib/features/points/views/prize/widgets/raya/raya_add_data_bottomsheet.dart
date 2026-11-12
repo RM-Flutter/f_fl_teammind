@@ -1,4 +1,5 @@
 
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -76,7 +77,7 @@ class RayaAddDataBottomsheet extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(30.0),
+                        padding: const EdgeInsets.all(AppSizes.s30),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -107,7 +108,7 @@ class RayaAddDataBottomsheet extends StatelessWidget {
                                 keyboardType: TextInputType.number,
                                 hintText: AppStrings.nationalId.tr(),
                                 controller: value.dataIdController),
-                            const SizedBox(height: 30),
+                            const SizedBox(height: AppSizes.s30),
                             if(value.isRedeemLoading) const Center(child: CircularProgressIndicator(),),
                             if(!value.isRedeemLoading) GestureDetector(
                               onTap: ()async{

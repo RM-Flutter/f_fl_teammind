@@ -52,7 +52,7 @@ class ApprovableHeaderWidget extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.all(16),
+      margin: const EdgeInsets.all(AppSizes.s16),
       padding: AppSpacing.cardPadding,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -72,7 +72,7 @@ class ApprovableHeaderWidget extends StatelessWidget {
                 name: profile?.name,
                 borderColor: statusColor,
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppSizes.s12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,7 +83,7 @@ class ApprovableHeaderWidget extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: AppSizes.s2),
                     Text(
                       '${profile?.jobTitle ?? ''}${details.department?.title != null ? ' · ${details.department!.title}' : ''}',
                       style: AppStyles.subtitleContent(context),
@@ -93,7 +93,7 @@ class ApprovableHeaderWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               AppStatusBadge.fromStatus(
                 status: details.status ?? '',
               ),
@@ -101,7 +101,7 @@ class ApprovableHeaderWidget extends StatelessWidget {
           ),
 
           const Padding(
-            padding: EdgeInsets.symmetric(vertical: 12),
+            padding: EdgeInsets.symmetric(vertical: AppSizes.s12),
             child: Divider(height: 1),
           ),
 
@@ -113,7 +113,7 @@ class ApprovableHeaderWidget extends StatelessWidget {
               value: details.typeName!,
               context: context,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSizes.s8),
           ],
 
           if (details.dateFrom != null && details.dateFrom!.isNotEmpty) ...[
@@ -125,7 +125,7 @@ class ApprovableHeaderWidget extends StatelessWidget {
                   : _formatDate(details.dateFrom, context),
               context: context,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSizes.s8),
           ],
 
           if (details.duration != null) ...[
@@ -135,7 +135,7 @@ class ApprovableHeaderWidget extends StatelessWidget {
               value: '${details.duration} ${(details.unit ?? '').tr()}',
               context: context,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSizes.s8),
           ],
 
           if (details.moneyValue != null &&
@@ -147,7 +147,7 @@ class ApprovableHeaderWidget extends StatelessWidget {
               value: '${details.moneyValue} ${'egp'.tr()}',
               context: context,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSizes.s8),
           ],
 
           if (details.reason != null && details.reason!.trim().isNotEmpty) ...[
@@ -157,7 +157,7 @@ class ApprovableHeaderWidget extends StatelessWidget {
               value: details.reason!.trim(),
               context: context,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSizes.s8),
           ],
 
           if (details.notes != null && details.notes!.trim().isNotEmpty) ...[
@@ -183,7 +183,7 @@ class ApprovableHeaderWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Icon(icon, size: 16, color: Color(AppColors.buttons)),
-        const SizedBox(width: 8),
+        const SizedBox(width: AppSizes.s8),
         Text(
           '$label: ',
           style: TextStyle(

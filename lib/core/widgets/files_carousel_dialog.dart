@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/utils/app_styles.dart';
@@ -22,16 +23,16 @@ void showFilesCarouselDialog({
     context: context,
     builder: (ctx) => Dialog(
       backgroundColor: Colors.white,
-      insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      insetPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s24),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.xl)),
       child: StatefulBuilder(
         builder: (ctx, setDialogState) => Padding(
-          padding: const EdgeInsets.fromLTRB(0, 8, 0, 20),
+          padding: const EdgeInsets.fromLTRB(0, AppSizes.s8, 0, AppSizes.s20),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
-                padding: const EdgeInsetsDirectional.only(start: 20, end: 4),
+                padding: const EdgeInsetsDirectional.only(start: AppSizes.s20, end: AppSizes.s4),
                 child: Row(
                   children: [
                     Expanded(
@@ -71,8 +72,8 @@ void showFilesCarouselDialog({
                         duration: const Duration(milliseconds: 200),
                         child: Container(
                           margin: const EdgeInsets.symmetric(
-                              horizontal: 6, vertical: 8),
-                          padding: const EdgeInsets.all(14),
+                              horizontal: AppSizes.s6, vertical: AppSizes.s8),
+                          padding: const EdgeInsets.all(AppSizes.s14),
                           decoration: BoxDecoration(
                             color: Colors.grey.shade50,
                             borderRadius: BorderRadius.circular(AppRadius.lg),
@@ -115,7 +116,7 @@ void showFilesCarouselDialog({
                                         ),
                                 ),
                               ),
-                              const SizedBox(height: 12),
+                              const SizedBox(height: AppSizes.s12),
                               Text(
                                 fileName,
                                 maxLines: 2,
@@ -127,7 +128,7 @@ void showFilesCarouselDialog({
                                   color: Colors.black87,
                                 ),
                               ),
-                              const SizedBox(height: 12),
+                              const SizedBox(height: AppSizes.s12),
                               SizedBox(
                                 width: double.infinity,
                                 height: 44,
@@ -159,14 +160,14 @@ void showFilesCarouselDialog({
                 ),
               ),
               if (urls.length > 1) ...[
-                const SizedBox(height: 8),
+                const SizedBox(height: AppSizes.s8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(
                     urls.length,
                     (i) => AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
-                      margin: const EdgeInsets.symmetric(horizontal: 3),
+                      margin: const EdgeInsets.symmetric(horizontal: AppSizes.s3),
                       width: i == current ? 18 : 7,
                       height: 7,
                       decoration: BoxDecoration(

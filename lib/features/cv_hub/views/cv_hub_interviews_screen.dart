@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/app_shimmer_list.dart';
 import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:flutter/material.dart';
@@ -47,12 +48,12 @@ if (controller.error != null) {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(Icons.error_outline, size: 64, color: Color(AppColors.failureRed)),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSizes.s16),
                   Text(
                     controller.error!,
                     style: TextStyle(fontSize: 16, color: Color(AppColors.titleText)),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSizes.s16),
                   ElevatedButton(
                     onPressed: () => controller.fetchInterviews(context),
                     style: ElevatedButton.styleFrom(backgroundColor: Color(AppColors.buttons)),
@@ -72,7 +73,7 @@ if (controller.error != null) {
           return RefreshIndicator(
             onRefresh: () => controller.fetchInterviews(context),
             child: ListView.separated(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s16),
               clipBehavior: Clip.none,
               itemCount: controller.interviews.length,
               separatorBuilder: (context, index) => const SizedBox.shrink(),

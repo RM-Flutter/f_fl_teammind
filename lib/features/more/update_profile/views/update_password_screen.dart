@@ -95,7 +95,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                                         ValidationService.validatePassword(value, login: true),
                                     obscureText: hidePassword,
                                   ),
-                                  SizedBox(height: 30),
+                                  SizedBox(height: AppSizes.s30),
                                   if(value.isLoading) const Center(child: CircularProgressIndicator(),),
                                   if(!value.isLoading) GestureDetector(
                                     onTap: (){
@@ -113,7 +113,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
                                           color: Color(AppColors.buttons),
                                           borderRadius: BorderRadius.circular(AppRadius.pill),
                                         ),
-                                        padding: EdgeInsets.symmetric(horizontal: 40),
+                                        padding: EdgeInsets.symmetric(horizontal: AppSizes.s40),
                                         child: Row(
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           crossAxisAlignment: CrossAxisAlignment.center,

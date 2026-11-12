@@ -234,7 +234,7 @@ class _ExpenseClaimListScreenState extends State<ExpenseClaimListScreen> {
             itemBuilder: (context, index) {
               if (index == requests.length) {
                 return const Padding(
-                  padding: EdgeInsets.all(16.0),
+                  padding: EdgeInsets.all(AppSizes.s16),
                   child: Center(child: CircularProgressIndicator()),
                 );
               }
@@ -322,9 +322,9 @@ class _ScopeSelectorRow extends StatelessWidget {
                 onTap: () => onSelected(s['value']!),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  margin: const EdgeInsets.symmetric(horizontal: AppSizes.s4),
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s8),
                   decoration: BoxDecoration(
                     color: isSelected
                         ? Color(AppColors.buttons)

@@ -98,7 +98,7 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                   notificationSingleModel:
                                       value.notificationModel,
                                 ),
-                                SizedBox(height: 20),
+                                SizedBox(height: AppSizes.s20),
                                 Center(
                                   child: ConstrainedBox(
                                     constraints: LayoutService.contentConstraints(context),
@@ -135,7 +135,7 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                                   textAlign: TextAlign.center,
                                                 ),
                                               }),
-                                          SizedBox(height: 10),
+                                          SizedBox(height: AppSizes.s10),
                                           if (value.notificationModel!
                                                       .mainThumbnail !=
                                                   null &&
@@ -153,7 +153,7 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                                         Alignment.bottomCenter,
                                                     children: [
                                                       SizedBox(
-                                                        height: 300,
+                                                        height: AppSizes.s300,
                                                         child: PageView.builder(
                                                           controller:
                                                               _controller,
@@ -215,11 +215,11 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                                       Padding(
                                                           padding:
                                                               EdgeInsets.only(
-                                                                  bottom: 25,
-                                                                  right: 40,
-                                                                  left: 40),
+                                                                  bottom: AppSizes.s25,
+                                                                  right: AppSizes.s40,
+                                                                  left: AppSizes.s40),
                                                           child: SizedBox(
-                                                            height: 20,
+                                                            height: AppSizes.s20,
                                                             child: ListView
                                                                 .separated(
                                                                     shrinkWrap:
@@ -238,7 +238,7 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                                                         (context, index) =>
                                                                             AnimatedContainer(
                                                                               duration: const Duration(milliseconds: 300),
-                                                                              margin: EdgeInsets.symmetric(horizontal: 4),
+                                                                              margin: EdgeInsets.symmetric(horizontal: AppSizes.s4),
                                                                               width: _currentIndex == index ? 12 : 8,
                                                                               height: _currentIndex == index ? 12 : 8,
                                                                               decoration: BoxDecoration(
@@ -250,7 +250,7 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                                                             index) =>
                                                                         SizedBox(
                                                                             width:
-                                                                                5),
+                                                                                AppSizes.s5),
                                                                     itemCount: value
                                                                         .notificationModel!
                                                                         .mainThumbnail!
@@ -308,18 +308,18 @@ class _NotificationDetailsScreenState extends State<NotificationDetailsScreen> {
                                               ],
                                             ),
                                           // ── Reactions ─────────────────────
-                                          SizedBox(height: 20),
+                                          SizedBox(height: AppSizes.s20),
                                           NotificationReactionsWidget(
                                             notificationId: widget.id,
                                           ),
-                                          SizedBox(height: 10),
+                                          SizedBox(height: AppSizes.s10),
                                           // ──────────────────────────────────
                                           if (value.notificationModel
                                                   ?.commentStatus !=
                                               null) ...[
-                                            SizedBox(height: 20),
+                                            SizedBox(height: AppSizes.s20),
                                             const CommentsTitle(),
-                                            SizedBox(height: 10),
+                                            SizedBox(height: AppSizes.s10),
                                             CommentsWidget(
                                               "rmnotifications",
                                               id: widget.id,

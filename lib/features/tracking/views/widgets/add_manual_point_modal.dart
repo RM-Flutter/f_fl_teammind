@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -65,7 +66,7 @@ class _AddManualPointModalState extends State<AddManualPointModal> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const SizedBox(height: 10),
+              const SizedBox(height: AppSizes.s10),
               Container(
                 width: 63,
                 height: 5,
@@ -74,9 +75,9 @@ class _AddManualPointModalState extends State<AddManualPointModal> {
                   borderRadius: BorderRadius.circular(AppRadius.pill),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: AppSizes.s10),
               Padding(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.all(AppSizes.s20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -124,7 +125,7 @@ class _AddManualPointModalState extends State<AddManualPointModal> {
                           ),
                       ],
                     ),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: AppSizes.s30),
                     SizedBox(
                       height: AppButtonSize.height,
                       child: ElevatedButton.icon(

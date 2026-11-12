@@ -34,7 +34,7 @@ class RequestsSectionWidget extends StatelessWidget {
         children: [
           gapH12,
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8),
+            padding: EdgeInsets.symmetric(horizontal: AppSizes.s8),
             child: ProfileBalanceWidget(
               balance: employee?.balance,
               empDepartmentId: employee?.departmentId?.toString(),

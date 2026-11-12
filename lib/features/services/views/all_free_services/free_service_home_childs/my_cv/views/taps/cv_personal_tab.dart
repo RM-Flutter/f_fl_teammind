@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/widgets/app_columns_flow.widget.dart';
 import 'dart:io';
 import 'package:app_test/core/constants/app_colors.dart';
@@ -25,14 +26,14 @@ class CVPersonalTab extends StatelessWidget {
     debugPrint('CVPersonalTab - cvData: ${viewModel.cvData != null}');
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16),
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.s16),
       child: AppColumnsFlow(fullWidthCount: 2, 
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           // Profile Image Section
           _buildProfileImageSection(context, viewModel),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSizes.s24),
           
           CVInfoItem(
             label: AppStrings.name.tr(),
@@ -52,7 +53,7 @@ class CVPersonalTab extends StatelessWidget {
                   icon: Icons.cake_outlined,
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               Expanded(
                 child: CVInfoItem(
                   label: AppStrings.gender.tr(),
@@ -72,7 +73,7 @@ class CVPersonalTab extends StatelessWidget {
                   icon: Icons.family_restroom,
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               Expanded(
                 child: CVInfoItem(
                   label: AppStrings.nationality.tr(),
@@ -93,7 +94,7 @@ class CVPersonalTab extends StatelessWidget {
                   icon: Icons.public,
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               Expanded(
                 child: CVInfoItem(
                   label: AppStrings.stateProvince.tr(),
@@ -113,7 +114,7 @@ class CVPersonalTab extends StatelessWidget {
                   icon: Icons.location_city_outlined,
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               Expanded(
                 child: CVInfoItem(
                   label: AppStrings.address.tr(),
@@ -140,7 +141,7 @@ class CVPersonalTab extends StatelessWidget {
             color: Color(AppColors.secondaryButton),
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSizes.s12),
         
         // Image Preview
         Center(
@@ -162,7 +163,7 @@ class CVPersonalTab extends StatelessWidget {
                   bottom: 0,
                   right: 0,
                   child: Container(
-                    padding: const EdgeInsets.all(4),
+                    padding: const EdgeInsets.all(AppSizes.s4),
                     decoration: BoxDecoration(
                       color: Colors.green,
                       shape: BoxShape.circle,
@@ -174,7 +175,7 @@ class CVPersonalTab extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSizes.s16),
         
         // Image Source Options
         _buildImageSourceOptions(context, viewModel),
@@ -266,7 +267,7 @@ class CVPersonalTab extends StatelessWidget {
         
         // Show picker button if new image is selected
         if (viewModel.imageSourceType == ImageSourceType.newImage) ...[
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSizes.s8),
           Row(
             children: [
               Expanded(
@@ -276,7 +277,7 @@ class CVPersonalTab extends StatelessWidget {
                   label: Text(AppStrings.camera.tr()),
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               Expanded(
                 child: OutlinedButton.icon(
                   onPressed: () => viewModel.pickImageFromGallery(),

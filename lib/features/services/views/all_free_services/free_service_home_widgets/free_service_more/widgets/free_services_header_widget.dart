@@ -286,7 +286,7 @@ class FreeServicesHeaderWidget extends StatelessWidget {
                                         backgroundColor:
                                             Colors.white.withValues(alpha: 0.2),
                                         padding: const EdgeInsets.symmetric(
-                                            horizontal: 12, vertical: 6),
+                                            horizontal: AppSizes.s12, vertical: AppSizes.s6),
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(
                                               AppRadius.lg),

@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:app_test/core/constants/app_colors.dart';
@@ -31,7 +32,7 @@ class ApprovalLevelCard extends StatelessWidget {
         children: [
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12, vertical: AppSizes.s8),
             decoration: BoxDecoration(
               color: Color(AppColors.buttons).withOpacity(0.08),
               borderRadius: const BorderRadius.only(
@@ -43,7 +44,7 @@ class ApprovalLevelCard extends StatelessWidget {
               children: [
                 Container(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      const EdgeInsets.symmetric(horizontal: AppSizes.s8, vertical: AppSizes.s4),
                   decoration: BoxDecoration(
                     color: Color(AppColors.buttons),
                     borderRadius: BorderRadius.circular(AppRadius.md),
@@ -58,7 +59,7 @@ class ApprovalLevelCard extends StatelessWidget {
                   ),
                 ),
                 if (items.length > 1) ...[
-                  const SizedBox(width: 8),
+                  const SizedBox(width: AppSizes.s8),
                   Text(
                     '(${items.length} ${'approvers'.tr()})',
                     style: TextStyle(
@@ -72,7 +73,7 @@ class ApprovalLevelCard extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.s8, vertical: AppSizes.s8),
             child: Column(
               children: items.asMap().entries.map((entry) {
                 final idx = entry.key;
@@ -81,7 +82,7 @@ class ApprovalLevelCard extends StatelessWidget {
                   children: [
                     if (idx > 0)
                       Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        padding: const EdgeInsets.symmetric(vertical: AppSizes.s8),
                         child: Divider(height: 1, color: Colors.grey.shade300),
                       ),
                     SingleApprovalRow(item: item, isArabic: isArabic),

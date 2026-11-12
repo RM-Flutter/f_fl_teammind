@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/widgets/app_field_shell.widget.dart';
 import 'package:app_test/core/widgets/app_columns_flow.widget.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/cv_generator/controllers/create_cv_view_model.dart';
@@ -26,7 +27,7 @@ class CreateCVContactTab extends StatelessWidget {
             hint: AppStrings.enterYourPhoneNumber.tr(),
             keyboardType: TextInputType.phone,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSizes.s16),
           _buildTextField(
             controller: viewModel.emailController,
             label: AppStrings.email.tr(),
@@ -34,7 +35,7 @@ class CreateCVContactTab extends StatelessWidget {
             hint: AppStrings.enterYourEmail.tr(),
             keyboardType: TextInputType.emailAddress,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSizes.s16),
           
           _buildTextField(
             controller: viewModel.linkedinController,
@@ -42,7 +43,7 @@ class CreateCVContactTab extends StatelessWidget {
             hint: AppStrings.enterYourLinkedInProfileURL.tr(),
             keyboardType: TextInputType.url,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSizes.s16),
           
           _buildTextField(
             controller: viewModel.behanceController,
@@ -50,7 +51,7 @@ class CreateCVContactTab extends StatelessWidget {
             hint: AppStrings.enterYourBehanceProfileURL.tr(),
             keyboardType: TextInputType.url,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSizes.s16),
           
           _buildTextField(
             controller: viewModel.whatsappController,
@@ -90,7 +91,7 @@ class CreateCVContactTab extends StatelessWidget {
               ),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSizes.s8),
         TextFormField(
           controller: controller,
           keyboardType: keyboardType,
@@ -100,7 +101,7 @@ class CreateCVContactTab extends StatelessWidget {
               borderRadius: AppField.borderRadius,
               borderSide: const BorderSide(color: AppField.borderColor),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s16),
           ),
         ),
       ],

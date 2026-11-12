@@ -386,7 +386,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   });
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12, vertical: AppSizes.s6),
                   decoration: BoxDecoration(
                     color: _isEditMode ? Colors.red.withValues(alpha: 0.1) : Color(AppColors.secondaryButton).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(AppRadius.lg),
@@ -520,7 +520,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Row(
           children: [
             _editCircleButton(widgetType, isHidden: true),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppSizes.s12),
             Expanded(
               child: Text(
                 _sectionTitle(widgetType),
@@ -733,18 +733,18 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
 
     return SizedBox(
-      height: 120,
+      height: AppSizes.s120,
       child: ListView.separated(
         padding: AppSpacing.pagePadding,
         scrollDirection: Axis.horizontal,
         itemCount: items.length,
-        separatorBuilder: (context, index) => SizedBox(width: 12),
+        separatorBuilder: (context, index) => SizedBox(width: AppSizes.s12),
         itemBuilder: (context, index) {
           return InkWell(
             onTap: items[index]['onTap'],
             child: Container(
               width: 105,
-              padding: EdgeInsets.all(8),
+              padding: EdgeInsets.all(AppSizes.s8),
               decoration: BoxDecoration(
                 // color: Color(AppColors.cardBackground),
                 color: Color(AppColors.secondaryButton), // Dark Blue from Figma
@@ -760,7 +760,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     // color: Color(AppColors.icon,),
                     color: Colors.white,
                   ),
-                  SizedBox(height: 12),
+                  SizedBox(height: AppSizes.s12),
                   Text(
                     items[index]['title'],
                     textAlign: TextAlign.center,

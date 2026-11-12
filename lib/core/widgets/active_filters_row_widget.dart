@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:app_test/core/constants/app_colors.dart';
@@ -52,8 +53,8 @@ class ActiveFiltersRowWidget extends StatelessWidget {
 
   Widget _buildChip(BuildContext context, String label, Function() onClear) {
     return Container(
-      margin: const EdgeInsets.only(right: 8.0),
-      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+      margin: const EdgeInsets.only(right: AppSizes.s8),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12, vertical: AppSizes.s6),
       decoration: BoxDecoration(
         color: Color(AppColors.secondaryButton).withOpacity(0.1),
         borderRadius: BorderRadius.circular(AppRadius.lg),
@@ -69,7 +70,7 @@ class ActiveFiltersRowWidget extends StatelessWidget {
               color: Color(AppColors.secondaryButton),
             ),
           ),
-          const SizedBox(width: 6),
+          const SizedBox(width: AppSizes.s6),
           InkWell(
             onTap: onClear,
             child: Icon(

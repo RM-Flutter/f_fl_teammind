@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -101,7 +102,7 @@ class _TrackingMapViewDialogState extends State<TrackingMapViewDialog> {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: AppStyles.heading(context).copyWith(fontSize: 16, fontWeight: FontWeight.w700)),
-                        const SizedBox(height: 2),
+                        const SizedBox(height: AppSizes.s2),
                         Text(
                           'legs_points_recorded'.tr(namedArgs: {
                             'length': '${widget.sessions.length}',
@@ -221,7 +222,7 @@ class _SelectedPointCard extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: AppStyles.heading(context).copyWith(fontSize: 13.5, fontWeight: FontWeight.w600)),
-                const SizedBox(height: 2),
+                const SizedBox(height: AppSizes.s2),
                 Text(
                   '$time · ${'tracking_accuracy_m'.tr(namedArgs: {'m': point.accuracy.toStringAsFixed(0)})}',
                   style: AppStyles.greyContent(context).copyWith(fontSize: 11.5),
@@ -265,7 +266,7 @@ class _Legend extends StatelessWidget {
             border: Border.all(color: color, width: 3),
           ),
         ),
-        const SizedBox(width: 6),
+        const SizedBox(width: AppSizes.s6),
         Text(label, style: AppStyles.greyContent(context).copyWith(fontSize: 12)),
       ],
     );

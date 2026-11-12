@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:app_test/core/constants/app_colors.dart';
@@ -66,16 +67,16 @@ class CustomTabbarViewApprovableDetails extends StatelessWidget {
                 borderRadius: BorderRadius.circular(AppRadius.xl),
               ),
               height: 52,
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s8, vertical: AppSizes.s6),
               child: TabBar(
                 dividerColor: Colors.transparent,
-                indicatorPadding: const EdgeInsets.symmetric(horizontal: 4),
+                indicatorPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s4),
                 // Scrollable like the profile details tabs: each tab takes the width its
                 // label needs (no "Manager Resp..."), starting from the start side, and the
                 // bar scrolls sideways when the tabs do not fit.
                 isScrollable: true,
                 tabAlignment: TabAlignment.start,
-                labelPadding: const EdgeInsets.symmetric(horizontal: 16),
+                labelPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s16),
                 indicator: BoxDecoration(
                   color: Color(AppColors.buttons),
                   borderRadius: BorderRadius.circular(AppRadius.xl),

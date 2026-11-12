@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
@@ -13,7 +14,7 @@ class TrackingHomePreviewBanner extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+      margin: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s8),
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -36,7 +37,7 @@ class TrackingHomePreviewBanner extends StatelessWidget {
             );
           },
           child: Padding(
-            padding: const EdgeInsets.all(14.0),
+            padding: const EdgeInsets.all(AppSizes.s14),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -44,7 +45,7 @@ class TrackingHomePreviewBanner extends StatelessWidget {
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s8, vertical: AppSizes.s3),
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.18),
                         borderRadius: BorderRadius.circular(AppRadius.lg),
@@ -54,7 +55,7 @@ class TrackingHomePreviewBanner extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           const Icon(Icons.location_on, size: 12, color: Colors.amberAccent),
-                          const SizedBox(width: 4),
+                          const SizedBox(width: AppSizes.s4),
                           Text('new_feature_design_preview'.tr(),
                             style: const TextStyle(
                               color: Colors.white,
@@ -67,7 +68,7 @@ class TrackingHomePreviewBanner extends StatelessWidget {
                     ),
                     const Spacer(),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s8, vertical: AppSizes.s3),
                       decoration: BoxDecoration(
                         color: const Color(0xff2D6A4F).withOpacity(0.85),
                         borderRadius: BorderRadius.circular(AppRadius.lg),
@@ -76,7 +77,7 @@ class TrackingHomePreviewBanner extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           const Icon(Icons.circle, size: 7, color: Colors.lightGreenAccent),
-                          const SizedBox(width: 4),
+                          const SizedBox(width: AppSizes.s4),
                           Text('live_data_10_staff'.tr(),
                             style: const TextStyle(
                               color: Colors.white,
@@ -89,7 +90,7 @@ class TrackingHomePreviewBanner extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: AppSizes.s10),
 
                 // Title & Description
                 Text('request_linked_employee_tracking'.tr(),
@@ -98,14 +99,14 @@ class TrackingHomePreviewBanner extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 3),
+                const SizedBox(height: AppSizes.s3),
                 Text('real_time_route_tracking_milestone_logging_and'.tr(),
                   style: AppStyles.whiteContent(context).copyWith(
                     fontSize: 11,
                     color: Colors.white70,
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSizes.s12),
 
                 // Quick Navigation Action Buttons
                 Row(
@@ -122,7 +123,7 @@ class TrackingHomePreviewBanner extends StatelessWidget {
                         },
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: AppSizes.s8),
                     Expanded(
                       child: _BannerQuickButton(
                         icon: Icons.person_pin_circle_outlined,
@@ -135,7 +136,7 @@ class TrackingHomePreviewBanner extends StatelessWidget {
                         },
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: AppSizes.s8),
                     Expanded(
                       child: _BannerQuickButton(
                         icon: Icons.admin_panel_settings_outlined,
@@ -178,7 +179,7 @@ class _BannerQuickButton extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(AppRadius.sm),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+        padding: const EdgeInsets.symmetric(vertical: AppSizes.s8, horizontal: AppSizes.s6),
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -188,7 +189,7 @@ class _BannerQuickButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(icon, size: 14, color: Colors.white),
-            const SizedBox(width: 4),
+            const SizedBox(width: AppSizes.s4),
             Flexible(
               child: Text(
                 label,

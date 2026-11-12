@@ -75,7 +75,7 @@ class CopounSection extends StatelessWidget {
                                   height: 40,
                                   width: 40,
                                 ),
-                                const SizedBox(width: 10,),
+                                const SizedBox(width: AppSizes.s10,),
                                 Text(AppStrings.couponCode.tr(),
                                 style: const TextStyle(fontSize: 17,
                                 color: Color(0xffE6007E),
@@ -96,7 +96,7 @@ class CopounSection extends StatelessWidget {
                       Column(
                         children: [
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                            padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: 0),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               color: const Color(0xffFFFFFF),
@@ -130,7 +130,7 @@ class CopounSection extends StatelessWidget {
                                 focusedErrorBorder: InputBorder.none,
                                 floatingLabelBehavior: FloatingLabelBehavior.never, // Keeps hint visible
                                 disabledBorder: InputBorder.none,
-                                contentPadding: const EdgeInsets.only(top: 12),
+                                contentPadding: const EdgeInsets.only(top: AppSizes.s12),
                                 hintText: AppStrings.enterTheCode.tr(),
                                 suffixIcon:  GestureDetector(
                                   onTap: (){
@@ -148,7 +148,7 @@ class CopounSection extends StatelessWidget {
                               ],
                             ),
                           ),
-                          const SizedBox(height: 20,),
+                          const SizedBox(height: AppSizes.s20,),
                           if(provider.isLoading)const Center(
                             child: CircularProgressIndicator(),
                           ),

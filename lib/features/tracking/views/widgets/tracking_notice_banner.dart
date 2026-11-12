@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -63,7 +64,7 @@ class TrackingNoticeBanner extends StatelessWidget {
                     style: AppStyles.heading(context)
                         .copyWith(fontSize: 13, fontWeight: FontWeight.w700, color: tones.text)),
                 if (message != null && message!.isNotEmpty) ...[
-                  const SizedBox(height: 2),
+                  const SizedBox(height: AppSizes.s2),
                   Text(message!,
                       style: AppStyles.greyContent(context).copyWith(fontSize: 12, height: 1.4)),
                 ],

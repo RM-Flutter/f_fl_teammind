@@ -168,7 +168,7 @@ class CustomElevatedButtonState extends State<CustomElevatedButton>
                 child: widget.isFuture == true && _isLoading
                     ? Center(
                         child: SizedBox(
-                          width: 20,
+                          width: AppSizes.s20,
                           height: 20,
                           child: CircularProgressIndicator.adaptive(
                             strokeWidth: 2,
@@ -192,7 +192,7 @@ class CustomElevatedButtonState extends State<CustomElevatedButton>
                                       size: 18,
                                       color: effectiveTextColor,
                                     ),
-                                    const SizedBox(width: 8),
+                                    const SizedBox(width: AppSizes.s8),
                                   ],
                                   Text(
                                     widget.title,

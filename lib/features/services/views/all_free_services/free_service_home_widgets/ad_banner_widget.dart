@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -22,8 +23,8 @@ class AdBannerWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        padding: const EdgeInsets.all(16),
+        margin: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s12),
+        padding: const EdgeInsets.all(AppSizes.s16),
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
@@ -48,7 +49,7 @@ class AdBannerWidget extends StatelessWidget {
                 letterSpacing: 1.2,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSizes.s8),
             Text(
               subtitle ?? AppStrings.adSubtitle.tr(),
               textAlign: TextAlign.center,

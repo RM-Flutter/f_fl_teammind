@@ -54,7 +54,7 @@ class AssetsSectionWidget extends StatelessWidget {
               itemBuilder: (context, index) =>
                   _AssetCard(asset: employee!.assets![index]),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSizes.s24),
           ],
           if (hasCustomData) ...[
             _SectionLabel(AppStrings.customData.tr()),
@@ -71,7 +71,7 @@ class AssetsSectionWidget extends StatelessWidget {
                 item: employee!.empCustomData![index].item ?? '',
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
           ],
         ],
       ),
@@ -86,7 +86,7 @@ class _SectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4),
+        padding: const EdgeInsets.symmetric(horizontal: AppSizes.s4),
         child: Text(
           text,
           style: AppStyles.subtitleContent(context).copyWith(
@@ -125,7 +125,7 @@ class _AssetCardState extends State<_AssetCard> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   LinearProgressIndicator(value: _downloadProgress),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: AppSizes.s10),
                   Text('${(_downloadProgress * 100).toStringAsFixed(0)}%'),
                 ],
               ),
@@ -200,7 +200,7 @@ class _AssetCardState extends State<_AssetCard> {
                 icon: Icons.devices_other_rounded,
                 borderColor: accent,
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppSizes.s12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -213,10 +213,10 @@ class _AssetCardState extends State<_AssetCard> {
                           .copyWith(fontWeight: FontWeight.w700, fontSize: 15),
                     ),
                     if (asset.serialNumber?.isNotEmpty == true) ...[
-                      const SizedBox(height: 6),
+                      const SizedBox(height: AppSizes.s6),
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 3),
+                            horizontal: AppSizes.s8, vertical: AppSizes.s3),
                         decoration: BoxDecoration(
                           color: Colors.grey.withOpacity(0.10),
                           borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -226,7 +226,7 @@ class _AssetCardState extends State<_AssetCard> {
                           children: [
                             Icon(Icons.tag_rounded,
                                 size: 12, color: Colors.grey.shade600),
-                            const SizedBox(width: 3),
+                            const SizedBox(width: AppSizes.s3),
                             Flexible(
                               child: Text(asset.serialNumber!,
                                   maxLines: 1,
@@ -246,7 +246,7 @@ class _AssetCardState extends State<_AssetCard> {
             ],
           ),
           if (asset.description?.isNotEmpty == true) ...[
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSizes.s12),
             ExpandableTextWidget(
               text: asset.description!,
               maxLines: 2,
@@ -255,10 +255,10 @@ class _AssetCardState extends State<_AssetCard> {
             ),
           ],
           if (hasPeriod) ...[
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSizes.s12),
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12, vertical: AppSizes.s10),
               decoration: BoxDecoration(
                 color: accent.withOpacity(0.05),
                 borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -266,7 +266,7 @@ class _AssetCardState extends State<_AssetCard> {
               child: Row(
                 children: [
                   Icon(Icons.calendar_today_rounded, size: 14, color: accent),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: AppSizes.s8),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -276,7 +276,7 @@ class _AssetCardState extends State<_AssetCard> {
                           'asset_received_on'.tr(),
                           style: AppStyles.greyContent(context).copyWith(fontSize: 11),
                         ),
-                        const SizedBox(height: 2),
+                        const SizedBox(height: AppSizes.s2),
                         Text(
                           asset.endsAt?.isNotEmpty == true
                               ? '${_fmt(asset.startAt)}  →  ${_fmt(asset.endsAt)}'
@@ -293,7 +293,7 @@ class _AssetCardState extends State<_AssetCard> {
           ],
           if (asset.assetStatus?.isNotEmpty == true ||
               asset.assignmentStatus?.isNotEmpty == true) ...[
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSizes.s12),
             Wrap(
               spacing: 8,
               runSpacing: 8,
@@ -316,13 +316,13 @@ class _AssetCardState extends State<_AssetCard> {
             ),
           ],
           if (files.isNotEmpty) ...[
-            const SizedBox(height: 14),
+            const SizedBox(height: AppSizes.s14),
             Divider(height: 1, color: Colors.grey.withOpacity(0.15)),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSizes.s12),
             Row(
               children: [
                 Icon(Icons.attach_file_rounded, size: 16, color: accent),
-                const SizedBox(width: 6),
+                const SizedBox(width: AppSizes.s6),
                 Text(
                   '${'attachments'.tr()} (${files.length})',
                   style: AppStyles.primaryContent(context).copyWith(
@@ -330,7 +330,7 @@ class _AssetCardState extends State<_AssetCard> {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSizes.s8),
             ...files.map<Widget>((file) => _AttachmentTile(
                   file: file,
                   onView: file.file == null
@@ -387,7 +387,7 @@ class _Badge extends StatelessWidget {
         isSecondary ? Color(AppColors.buttons).withOpacity(0.08) : bg;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s10, vertical: AppSizes.s6),
       decoration: BoxDecoration(
         color: badgeBg,
         borderRadius: BorderRadius.circular(AppRadius.lg),
@@ -401,7 +401,7 @@ class _Badge extends StatelessWidget {
             height: 6,
             decoration: BoxDecoration(color: badgeColor, shape: BoxShape.circle),
           ),
-          const SizedBox(width: 6),
+          const SizedBox(width: AppSizes.s6),
           if (prefixLabel != null) ...[
             Text(
               '${prefixLabel!}: ',
@@ -438,8 +438,8 @@ class _AttachmentTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final accent = Color(AppColors.buttons);
     return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+      margin: const EdgeInsets.only(bottom: AppSizes.s8),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s10, vertical: AppSizes.s8),
       decoration: BoxDecoration(
         color: Colors.grey.withOpacity(0.06),
         borderRadius: BorderRadius.circular(AppRadius.md),
@@ -459,7 +459,7 @@ class _AttachmentTile extends StatelessWidget {
                   )
                 : _fileIcon(accent),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: AppSizes.s10),
           Expanded(
             child: Text(
               file.title ?? file.type ?? 'File',
@@ -471,7 +471,7 @@ class _AttachmentTile extends StatelessWidget {
           if (onView != null)
             _RoundAction(icon: Icons.visibility_rounded, color: accent, onTap: onView!),
           if (onDownload != null) ...[
-            const SizedBox(width: 6),
+            const SizedBox(width: AppSizes.s6),
             _RoundAction(icon: Icons.download_rounded, color: accent, onTap: onDownload!),
           ],
         ],
@@ -529,7 +529,7 @@ class _CustomDataCard extends StatelessWidget {
         children: [
           Icon(Icons.check_circle_outline_rounded,
               color: Color(AppColors.buttons), size: 20),
-          const SizedBox(width: 10),
+          const SizedBox(width: AppSizes.s10),
           Expanded(
             child: ExpandableTextWidget(
               text: item,

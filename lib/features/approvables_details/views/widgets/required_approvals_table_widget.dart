@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:app_test/core/constants/app_colors.dart';
@@ -34,7 +35,7 @@ class RequiredApprovalsTableWidget extends StatelessWidget {
     final isArabic = LocalizationService.isArabic(context: context);
 
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4),
+      margin: const EdgeInsets.symmetric(vertical: AppSizes.s4),
       padding: AppSpacing.cardPadding,
       decoration: BoxDecoration(
         color: Colors.white,
@@ -49,7 +50,7 @@ class RequiredApprovalsTableWidget extends StatelessWidget {
             children: [
               Icon(Icons.format_list_bulleted_rounded,
                   size: 20, color: Color(AppColors.buttons)),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               Text(
                 'approvals'.tr(),
                 style: const TextStyle(
@@ -60,13 +61,13 @@ class RequiredApprovalsTableWidget extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: AppSizes.s14),
           ListView.separated(
             shrinkWrap: true,
  padding: EdgeInsets.zero,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: sortedLevels.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 12),
+            separatorBuilder: (_, __) => const SizedBox(height: AppSizes.s12),
             itemBuilder: (context, index) {
               final levelNum = sortedLevels[index];
               final items = groupedMap[levelNum]!;

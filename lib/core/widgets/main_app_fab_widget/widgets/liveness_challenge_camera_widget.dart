@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'dart:async';
 import 'dart:io';
@@ -1076,8 +1077,8 @@ class _LivenessChallengeCameraScreenState
                     right: 20,
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
+                        horizontal: AppSizes.s16,
+                        vertical: AppSizes.s8,
                       ),
                       decoration: BoxDecoration(
                         color: _timeRemaining <= 3

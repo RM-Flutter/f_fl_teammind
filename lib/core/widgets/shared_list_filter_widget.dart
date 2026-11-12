@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/widgets/app_filter_actions.widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -155,7 +156,7 @@ class _SharedListFilterWidgetState extends State<SharedListFilterWidget> {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        SizedBox(height: 10),
+                        SizedBox(height: AppSizes.s10),
                         Center(
                           child: Container(
                             width: 63,
@@ -165,9 +166,9 @@ class _SharedListFilterWidgetState extends State<SharedListFilterWidget> {
                                 borderRadius: BorderRadius.circular(AppRadius.pill)),
                           ),
                         ),
-                        SizedBox(height: 10),
+                        SizedBox(height: AppSizes.s10),
                         Padding(
-                          padding: EdgeInsets.all(20),
+                          padding: EdgeInsets.all(AppSizes.s20),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -193,7 +194,7 @@ class _SharedListFilterWidgetState extends State<SharedListFilterWidget> {
                                   hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
                                   borderRadius: BorderRadius.circular(AppRadius.sm),
                                   borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
-                                  contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                  contentPadding: EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s12),
                                   fieldSuffixIcon: InkWell(
                                     onTap: () {
                                       setState(() {
@@ -222,7 +223,7 @@ class _SharedListFilterWidgetState extends State<SharedListFilterWidget> {
                                   hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
                                   borderRadius: BorderRadius.circular(AppRadius.sm),
                                   borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
-                                  contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                  contentPadding: EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s12),
                                   fieldSuffixIcon: InkWell(
                                     onTap: () {
                                       setState(() {
@@ -251,7 +252,7 @@ class _SharedListFilterWidgetState extends State<SharedListFilterWidget> {
                                   hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
                                   borderRadius: BorderRadius.circular(AppRadius.sm),
                                   borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
-                                  contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                  contentPadding: EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s12),
                                   fieldSuffixIcon: InkWell(
                                     onTap: () {
                                       setState(() {
@@ -308,7 +309,7 @@ class _SharedListFilterWidgetState extends State<SharedListFilterWidget> {
                                   readOnly: true,
                                   onTap: () => _selectDateRange(context),
                                 ),
-                                SizedBox(height: 30),
+                                SizedBox(height: AppSizes.s30),
                               ],
 
                               AppFilterActions(
@@ -321,7 +322,7 @@ class _SharedListFilterWidgetState extends State<SharedListFilterWidget> {
                                   'to': null,
                                 }),
                               ),
-                              const SizedBox(height: 30),
+                              const SizedBox(height: AppSizes.s30),
                             ],
                           ),
                         ),

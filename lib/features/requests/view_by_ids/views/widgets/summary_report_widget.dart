@@ -21,7 +21,7 @@ class SummaryReportsModal extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        SizedBox(height: 16),
+        SizedBox(height: AppSizes.s16),
         Container(
           height: 0.4.sh,
           child: ListView.builder(
@@ -29,7 +29,7 @@ class SummaryReportsModal extends StatelessWidget {
             itemBuilder: (context, index) {
               final report = summaryReports[index];
               return Padding(
-                padding: EdgeInsets.symmetric(vertical: 8),
+                padding: EdgeInsets.symmetric(vertical: AppSizes.s8),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Color(AppColors.lightGreyEF),
@@ -54,7 +54,7 @@ class SummaryReportsModal extends StatelessWidget {
             },
           ),
         ),
-        SizedBox(height: 16)
+        SizedBox(height: AppSizes.s16)
       ],
     );
   }

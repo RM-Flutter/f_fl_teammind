@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/features/tasks/controllers/tasks_controller.dart';
@@ -85,14 +86,14 @@ class _EditNewTaskListWidgetState extends State<EditNewTaskListWidget> {
                 fontSize: 14,
               ),
             ),
-            SizedBox(height: 16),
+            SizedBox(height: AppSizes.s16),
 
             ...tasksController.tasksList2.asMap().entries.map((entry) {
               final index = entry.key;
               final task = entry.value['name'];
 
               return Padding(
-                padding: EdgeInsets.only(bottom: 12.0),
+                padding: EdgeInsets.only(bottom: AppSizes.s12),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -164,12 +165,12 @@ class _EditNewTaskListWidgetState extends State<EditNewTaskListWidget> {
               );
             }),
 
-            SizedBox(height: 20),
+            SizedBox(height: AppSizes.s20),
 
             ElevatedButton.icon(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(AppColors.secondaryButton),
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding: EdgeInsets.symmetric(horizontal: AppSizes.s20, vertical: AppSizes.s12),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(AppRadius.xl),
                 ),

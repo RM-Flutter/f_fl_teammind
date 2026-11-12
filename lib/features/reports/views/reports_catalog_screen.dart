@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/widgets/app_adaptive_wrap.widget.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/services/layout_service.dart';
@@ -32,7 +33,7 @@ class ReportsCatalogScreen extends StatelessWidget {
               child: ConstrainedBox(
                 constraints: LayoutService.contentConstraints(context),
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(AppSizes.s16),
                   child: _buildBody(context, viewModel),
                 ),
               ),
@@ -54,9 +55,9 @@ class ReportsCatalogScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.error_outline, color: Color(AppColors.failureRed), size: 48),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSizes.s12),
             Text(viewModel.catalogError!, style: AppStyles.redContent(context), textAlign: TextAlign.center),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Color(AppColors.buttons)),
               onPressed: () => viewModel.fetchCatalog(context),
@@ -96,7 +97,7 @@ class ReportsCatalogScreen extends StatelessWidget {
     return Row(
       children: [
         Icon(icon, size: 18, color: Color(AppColors.buttons)),
-        const SizedBox(width: 8),
+        const SizedBox(width: AppSizes.s8),
         Text(
           label,
           style: AppStyles.blackContent(context).copyWith(
@@ -128,7 +129,7 @@ class ReportsCatalogScreen extends StatelessWidget {
                   : Icons.open_in_browser_outlined,
               borderColor: accentColor,
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppSizes.s12),
             Expanded(
               child: Text(
                 report.name,
@@ -137,7 +138,7 @@ class ReportsCatalogScreen extends StatelessWidget {
                 style: AppStyles.heading(context),
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppSizes.s8),
             AppStatusBadge(
               label: isFlutter ? 'mobile_reports'.tr() : 'browser_reports'.tr(),
               color: accentColor,

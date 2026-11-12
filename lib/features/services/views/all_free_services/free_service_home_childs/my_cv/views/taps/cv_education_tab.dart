@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/widgets/app_responsive_grid.widget.dart';
 import 'package:app_test/core/widgets/app_columns_flow.widget.dart';
 import 'package:app_test/features/services/data/models/cv_data_model.dart';
@@ -20,7 +21,7 @@ class CVEducationTab extends StatelessWidget {
     final educationList = viewModel.cvData?.education ?? cvData?.education;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16),
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.s16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
@@ -41,8 +42,8 @@ class CVEducationTab extends StatelessWidget {
 
   Widget _buildSectionTitle(String title) {
     return Container(
-      margin: const EdgeInsets.only(top: 16, bottom: 12),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      margin: const EdgeInsets.only(top: AppSizes.s16, bottom: AppSizes.s12),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12, vertical: AppSizes.s6),
       decoration: BoxDecoration(
         color: Color(AppColors.secondaryButton).withOpacity(0.1),
         borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -50,7 +51,7 @@ class CVEducationTab extends StatelessWidget {
       child: Row(
         children: [
           Icon(Icons.school_outlined, size: 18, color: Color(AppColors.secondaryButton)),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSizes.s8),
           Text(
             title,
             style: TextStyle(
@@ -66,7 +67,7 @@ class CVEducationTab extends StatelessWidget {
 
   Widget _buildAddNewItem(String label) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.only(bottom: AppSizes.s8),
       child: Text(
         '• $label',
         style: TextStyle(
@@ -79,7 +80,7 @@ class CVEducationTab extends StatelessWidget {
 
   Widget _buildEducationItem(CVEducation edu) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: AppSizes.s16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -101,7 +102,7 @@ class CVEducationTab extends StatelessWidget {
                   value: edu.countryTitle ?? edu.countryId?.toString(),
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               Expanded(
                 child: CVInfoItem(
                   label: 'GOVERNORATE/STATE',
@@ -119,7 +120,7 @@ class CVEducationTab extends StatelessWidget {
                   value: edu.dateFrom,
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               Expanded(
                 child: CVInfoItem(
                   label: 'DATE TO (OR PRESENT)',
@@ -157,7 +158,7 @@ class CVEducationTab extends StatelessWidget {
                   value: null,
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               Expanded(
                 child: const CVInfoItem(
                   label: 'GOVERNORATE/STATE',
@@ -175,7 +176,7 @@ class CVEducationTab extends StatelessWidget {
                   value: null,
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               Expanded(
                 child: const CVInfoItem(
                   label: 'DATE TO (OR PRESENT)',

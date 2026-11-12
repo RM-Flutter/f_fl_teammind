@@ -77,7 +77,7 @@ class _WithdrawMoneyScreenState extends State<WithdrawMoneyScreen> {
                   key: formKey,
                   child: GradientBgImage(
                     padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: AppSizes.s20),
                     child: Column(
                       children: [
                        if(us1Cache['phone'] != null) TextFormField(
@@ -104,11 +104,11 @@ class _WithdrawMoneyScreenState extends State<WithdrawMoneyScreen> {
                             hintText: AppStrings.nationalId.tr(),
                           ),
                         ),
-                          const SizedBox(height: 20,),
+                          const SizedBox(height: AppSizes.s20,),
                           Container(
                             alignment: Alignment.center,
                             padding: const EdgeInsets.symmetric(
-                                vertical: 25, horizontal: 15),
+                                vertical: AppSizes.s25, horizontal: 15),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(AppRadius.xl),
                               color: Color(0xffFFFFFF),
@@ -217,7 +217,7 @@ class _WithdrawMoneyScreenState extends State<WithdrawMoneyScreen> {
                                   ),
                                 ),
                                 const SizedBox(
-                                  height: 10,
+                                  height: AppSizes.s10,
                                 ),
                                 defaultTransferDetailsTexts(
                                     AppStrings.yourAvailablePoints.tr(),
@@ -247,7 +247,7 @@ class _WithdrawMoneyScreenState extends State<WithdrawMoneyScreen> {
                 borderRadius: BorderRadius.circular(AppRadius.xl),
                 boxShadow: AppShadows.card,
               ),
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(AppSizes.s16),
               child: (value.isPostPayLoading == false)?ButtonWidget(
                 title:
                 "${AppStrings.pay.tr()} ${value.numberOfPointsController.text.isNotEmpty? value.numberOfPointsController.text : "0"  } ${AppStrings.point.tr()}",
@@ -270,7 +270,7 @@ class _WithdrawMoneyScreenState extends State<WithdrawMoneyScreen> {
 
   }
   Widget defaultTransferDetailsTexts(t1, t2) => Container(
-    margin: const EdgeInsets.only(bottom: 10),
+    margin: const EdgeInsets.only(bottom: AppSizes.s10),
     child: Row(
       children: [
         Text(

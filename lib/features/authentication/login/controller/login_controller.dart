@@ -1102,7 +1102,7 @@ class AuthenticationController extends ChangeNotifier {
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                     children: [
-                      const SizedBox(height: 10),
+                      const SizedBox(height: AppSizes.s10),
                       TextFormField(
                         controller: passwordController,
                         obscureText: hidePassword,
@@ -1124,7 +1124,7 @@ class AuthenticationController extends ChangeNotifier {
                         validator: (value) =>
                             ValidationService.validatePassword(value, login: true),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: AppSizes.s20),
                       if (isLoading)
                         const Center(child: CircularProgressIndicator())
                       else

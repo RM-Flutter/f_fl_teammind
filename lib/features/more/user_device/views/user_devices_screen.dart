@@ -80,7 +80,7 @@ class _UserDeviceScreenState extends State<UserDeviceScreen> {
           body: AppContentWidth(
             child: SingleChildScrollView(
               controller: _scrollController,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s16),
               child: Column(
                 children: [
                   ListView.separated(
@@ -117,7 +117,7 @@ class _UserDeviceScreenState extends State<UserDeviceScreen> {
                                   : Icons.phone_iphone_rounded,
                               borderColor: accentColor,
                             ),
-                            const SizedBox(width: 12),
+                            const SizedBox(width: AppSizes.s12),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -129,7 +129,7 @@ class _UserDeviceScreenState extends State<UserDeviceScreen> {
                                     style: AppStyles.heading(context),
                                   ),
                                   if (subtitle.isNotEmpty) ...[
-                                    const SizedBox(height: 2),
+                                    const SizedBox(height: AppSizes.s2),
                                     Text(
                                       subtitle,
                                       maxLines: 1,
@@ -140,7 +140,7 @@ class _UserDeviceScreenState extends State<UserDeviceScreen> {
                                 ],
                               ),
                             ),
-                            const SizedBox(width: 8),
+                            const SizedBox(width: AppSizes.s8),
                             if (isCurrent)
                               AppStatusBadge(
                                 label: AppStrings.currentDevice.tr(),
@@ -159,7 +159,7 @@ class _UserDeviceScreenState extends State<UserDeviceScreen> {
                                 child: (value.isDeleteLoading == true &&
                                         selectIndex == index)
                                     ? const SizedBox(
-                                        width: 20,
+                                        width: AppSizes.s20,
                                         height: 20,
                                         child: CircularProgressIndicator(
                                             strokeWidth: 2),

@@ -521,7 +521,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page),
               child: Column(
                 children: [
-                  const SizedBox(height: 20),
+                  const SizedBox(height: AppSizes.s20),
                   _buildTabBar(),
                   Expanded(
                     child: SingleChildScrollView(
@@ -589,7 +589,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
                                 ),
                               ),
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: AppSizes.s16),
                             CreateCVPersonalTab(
                               viewModel: vm,
                               showCvDemographics: false,
@@ -611,7 +611,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
                   ),
                   if (vm.errorMessage != null && vm.errorMessage!.isNotEmpty)
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16),
                       child: Text(
                         vm.errorMessage!,
                         style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
@@ -631,7 +631,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
                       ),
                       child: vm.isSubmitting
                           ? const SizedBox(
-                        height: 20,
+                        height: AppSizes.s20,
                         width: 20,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
@@ -698,10 +698,10 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
             hint: AppStrings.enterYourPhoneNumber.tr(),
             keyboardType: TextInputType.phone,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSizes.s16),
           ...List.generate(_morePhonesControllers.length, (i) {
             return Padding(
-              padding: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.only(bottom: AppSizes.s8),
               child: Row(
                 children: [
                   Expanded(
@@ -734,7 +734,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
               ),
             );
           }),
-          if (_morePhonesControllers.isNotEmpty) const SizedBox(height: 8),
+          if (_morePhonesControllers.isNotEmpty) const SizedBox(height: AppSizes.s8),
           SizedBox(
             width: double.infinity,
             child: OutlinedButton.icon(
@@ -753,7 +753,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSizes.s16),
           _buildContactField(
             controller: vm.emailController,
             label: AppStrings.email.tr(),
@@ -761,37 +761,37 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
             hint: AppStrings.enterYourEmail.tr(),
             keyboardType: TextInputType.emailAddress,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSizes.s16),
           _buildContactField(
             controller: vm.linkedinController,
             label: AppStrings.linkedin.tr(),
             hint: AppStrings.enterYourLinkedInProfileURL.tr(),
             keyboardType: TextInputType.url,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSizes.s16),
           _buildContactField(
             controller: vm.behanceController,
             label: AppStrings.behance.tr(),
             hint: AppStrings.enterYourBehanceProfileURL.tr(),
             keyboardType: TextInputType.url,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSizes.s16),
           _buildContactField(
             controller: vm.websiteController,
             label: AppStrings.website.tr(),
             hint: 'https://...',
             keyboardType: TextInputType.url,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSizes.s16),
           _buildContactField(
             controller: vm.whatsappController,
             label: AppStrings.whatsapp.tr(),
             hint: AppStrings.enterYourWhatsAppNumber.tr(),
             keyboardType: TextInputType.phone,
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSizes.s16),
           const Divider(),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSizes.s16),
           Text('other_links_premium'.tr(),
             style: TextStyle(
               fontSize: 16,
@@ -799,10 +799,10 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
               color: Color(AppColors.secondaryButton),
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSizes.s8),
           ...List.generate(_otherLinksControllers.length, (i) {
             return Padding(
-              padding: const EdgeInsets.only(bottom: 8),
+              padding: const EdgeInsets.only(bottom: AppSizes.s8),
               child: Row(
                 children: [
                   Expanded(
@@ -849,7 +849,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
               ),
             );
           }),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSizes.s8),
           SizedBox(
             width: double.infinity,
             child: OutlinedButton.icon(
@@ -903,7 +903,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
               ),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSizes.s8),
         TextField(
           controller: controller,
           keyboardType: keyboardType,
@@ -914,7 +914,7 @@ class _UpdateEmployeeInfoScreenState extends State<UpdateEmployeeInfoScreen>
               borderSide: const BorderSide(color: AppField.borderColor),
             ),
             contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s12),
           ),
         ),
       ],

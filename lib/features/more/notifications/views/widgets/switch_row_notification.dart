@@ -45,7 +45,7 @@ class SwitchRowNotification extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          SizedBox(width: 8),
+          SizedBox(width: AppSizes.s8),
           CustomSwitchButton(
             width: 60,
             height: 30,
@@ -56,7 +56,7 @@ class SwitchRowNotification extends StatelessWidget {
             inactiveColor: const Color(AppColors.navyBlue),
             onChanged: onChanged,
           ),
-          SizedBox(width: 8),
+          SizedBox(width: AppSizes.s8),
           Expanded(
             child: Text(
               rightText ?? AppStrings.myDepartment.tr(),

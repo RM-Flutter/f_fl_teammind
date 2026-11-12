@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -43,12 +44,12 @@ class QRScannerViewState extends State<QRScannerView> with SingleTickerProviderS
       color: Colors.black,
       child: Center(
         child: Padding(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(AppSizes.s24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               const Icon(Icons.no_photography_outlined, color: Colors.white, size: 48),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSizes.s16),
               Text(
                 messageKey.tr(),
                 textAlign: TextAlign.center,
@@ -143,7 +144,7 @@ class QRScannerViewState extends State<QRScannerView> with SingleTickerProviderS
               child: Column(
                 children: [
                   _InfoRow(icon: Icons.info_outline, text: 'qr_scan_reason'.tr(), color: Colors.white),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppSizes.s8),
                   _InfoRow(icon: Icons.lightbulb_outline, text: 'qr_scan_tip'.tr(), color: Colors.white70),
                 ],
               ),
@@ -167,8 +168,8 @@ class _InfoRow extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(padding: const EdgeInsets.only(top: 2), child: Icon(icon, color: color, size: 18)),
-        const SizedBox(width: 8),
+        Padding(padding: const EdgeInsets.only(top: AppSizes.s2), child: Icon(icon, color: color, size: 18)),
+        const SizedBox(width: AppSizes.s8),
         Expanded(child: Text(text, style: TextStyle(color: color, fontSize: 13.5, height: 1.4))),
       ],
     );

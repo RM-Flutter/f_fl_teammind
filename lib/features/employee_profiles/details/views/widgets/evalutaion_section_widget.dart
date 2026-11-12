@@ -44,7 +44,7 @@ class EvalutaionSectionWidget extends StatelessWidget {
                  ),
                  separatorBuilder: (context, index) => const SizedBox.shrink(),
                  itemCount:evaluations!.length <= 6 ? evaluations!.length : 6),
-          if(evaluations!.isNotEmpty) SizedBox(height: 24),
+          if(evaluations!.isNotEmpty) SizedBox(height: AppSizes.s24),
           if(evaluations!.isNotEmpty) Center(
               child: CustomElevatedButton(
                   backgroundColor: Color(AppColors.secondaryButton),

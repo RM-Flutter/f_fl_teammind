@@ -180,7 +180,7 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                     borderRadius: BorderRadius.circular(AppRadius.xl),
                                   ),
                                   height: 60,
-                                  padding: EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+                                  padding: EdgeInsets.symmetric(horizontal: AppSizes.s6, vertical: AppSizes.s6),
                                   child: defaultTapBarItem(
                                     isVertical: false,
                                     items: availableTabs.map((e) => e.title).toList(),

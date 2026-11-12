@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/routing/app_router.dart';
@@ -71,7 +72,7 @@ class SalaryAdvanceListItemWidget extends StatelessWidget {
             icon: employeeName.isNotEmpty ? null : Icons.payments_outlined,
             borderColor: statusColor,
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSizes.s12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,11 +84,11 @@ class SalaryAdvanceListItemWidget extends StatelessWidget {
                     color: Color(AppColors.failureRed),
                     label: 'take_action'.tr(),
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        const EdgeInsets.symmetric(horizontal: AppSizes.s8, vertical: AppSizes.s3),
                     fontSize: 10,
                     iconSize: 11,
                   ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: AppSizes.s5),
                 ],
                 Text(
                   title,
@@ -99,7 +100,7 @@ class SalaryAdvanceListItemWidget extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 if (subtitle.isNotEmpty) ...[
-                  const SizedBox(height: 3),
+                  const SizedBox(height: AppSizes.s3),
                   Text(
                     subtitle,
                     style: AppStyles.subtitleContent(context).copyWith(
@@ -111,7 +112,7 @@ class SalaryAdvanceListItemWidget extends StatelessWidget {
                   ),
                 ],
                 if (employeeName.isNotEmpty) ...[
-                  const SizedBox(height: 3),
+                  const SizedBox(height: AppSizes.s3),
                   Text(
                     employeeName,
                     style: AppStyles.subtitleContent(context).copyWith(
@@ -126,7 +127,7 @@ class SalaryAdvanceListItemWidget extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSizes.s8),
           Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -136,7 +137,7 @@ class SalaryAdvanceListItemWidget extends StatelessWidget {
                   status != 'approved' &&
                   status != 'cancelled' &&
                   status != 'canceled') ...[
-                const SizedBox(height: 6),
+                const SizedBox(height: AppSizes.s6),
                 InkWell(
                   borderRadius: BorderRadius.circular(AppRadius.pill),
                   onTap: () async {
@@ -151,7 +152,7 @@ class SalaryAdvanceListItemWidget extends StatelessWidget {
                     color: Color(AppColors.buttons),
                     icon: Icons.edit_rounded,
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        const EdgeInsets.symmetric(horizontal: AppSizes.s8, vertical: AppSizes.s4),
                     fontSize: 10,
                     iconSize: 11,
                   ),

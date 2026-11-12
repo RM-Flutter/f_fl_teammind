@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:flutter/material.dart';
 
 import 'package:app_test/core/constants/app_colors.dart';
@@ -89,7 +90,7 @@ class AppDetailsHighlight extends StatelessWidget {
               .copyWith(fontSize: 26, fontWeight: FontWeight.w700, color: AppColors.statusTones(color).text),
         ),
         if (caption != null && caption!.isNotEmpty) ...[
-          const SizedBox(height: 2),
+          const SizedBox(height: AppSizes.s2),
           Text(caption!, textAlign: TextAlign.center, style: AppStyles.greyContent(context).copyWith(fontSize: 12)),
         ],
       ],
@@ -105,7 +106,7 @@ class AppInfoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppCard(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.page, vertical: AppSizes.s4),
       child: Column(
         children: [
           for (var i = 0; i < rows.length; i++) ...[
@@ -134,7 +135,7 @@ class AppInfoRow extends StatelessWidget {
       child: value.length > 32
           ? Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [Text(label, style: labelStyle), const SizedBox(height: 4), Text(value, style: valueStyle)],
+              children: [Text(label, style: labelStyle), const SizedBox(height: AppSizes.s4), Text(value, style: valueStyle)],
             )
           : Row(
               crossAxisAlignment: CrossAxisAlignment.start,

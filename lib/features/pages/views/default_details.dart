@@ -89,9 +89,9 @@ class DefaultDetails extends StatelessWidget {
               ),
             ),
             if (item.category?.title != null) ...[
-              const SizedBox(width: 20),
+              const SizedBox(width: AppSizes.s20),
               Icon(Icons.category, color: Colors.black, size: 16),
-              const SizedBox(width: 5),
+              const SizedBox(width: AppSizes.s5),
               Flexible(
                 child: Text(
                   item.category!.title!,

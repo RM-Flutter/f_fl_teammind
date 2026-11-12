@@ -51,7 +51,7 @@ class HomeAppbarLoading extends StatelessWidget {
                           _block(width: AppSizes.s40, height: AppSizes.s40, radius: AppSizes.s40),
                         ],
                       ),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: AppSizes.s32),
                       Row(
                         children: [
                           for (var i = 0; i < columns; i++) ...[

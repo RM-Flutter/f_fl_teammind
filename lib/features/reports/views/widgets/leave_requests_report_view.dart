@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/features/reports/data/models/leave_requests_report_model.dart';
@@ -42,7 +43,7 @@ class _LeaveRequestsReportViewState extends State<LeaveRequestsReportView> {
         : widget.data;
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.only(bottom: 24),
+      padding: const EdgeInsets.only(bottom: AppSizes.s24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -53,12 +54,12 @@ class _LeaveRequestsReportViewState extends State<LeaveRequestsReportView> {
               currentSubtitle: widget.currentSubtitle,
               compareSubtitle: widget.compareSubtitle,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
           ],
           _buildStatCards(context, activeData),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSizes.s16),
           _buildStatusDonutChartCard(context, activeData),
-          const SizedBox(height: 20),
+          const SizedBox(height: AppSizes.s20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -70,7 +71,7 @@ class _LeaveRequestsReportViewState extends State<LeaveRequestsReportView> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: AppSizes.s10, vertical: AppSizes.s4),
                 decoration: BoxDecoration(
                   color: Color(AppColors.buttons).withOpacity(0.1),
                   borderRadius: BorderRadius.circular(AppRadius.md),
@@ -86,11 +87,11 @@ class _LeaveRequestsReportViewState extends State<LeaveRequestsReportView> {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSizes.s12),
           if (activeData.requests.isEmpty)
             Center(
               child: Padding(
-                padding: const EdgeInsets.all(32.0),
+                padding: const EdgeInsets.all(AppSizes.s32),
                 child: Text('no_data'.tr(), style: TextStyle(color: Colors.grey.shade500)),
               ),
             )
@@ -112,7 +113,7 @@ class _LeaveRequestsReportViewState extends State<LeaveRequestsReportView> {
           color: Color(AppColors.buttons),
           bgColor: Color(AppColors.buttons).withOpacity(0.08),
         ),
-        const SizedBox(width: 10),
+        const SizedBox(width: AppSizes.s10),
         _buildStatCard(
           context,
           title: 'waiting'.tr(),
@@ -121,7 +122,7 @@ class _LeaveRequestsReportViewState extends State<LeaveRequestsReportView> {
           color: const Color(0xFFF59E0B),
           bgColor: const Color(0xFFF59E0B).withOpacity(0.08),
         ),
-        const SizedBox(width: 10),
+        const SizedBox(width: AppSizes.s10),
         _buildStatCard(
           context,
           title: 'approved'.tr(),
@@ -144,7 +145,7 @@ class _LeaveRequestsReportViewState extends State<LeaveRequestsReportView> {
   }) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+        padding: const EdgeInsets.symmetric(vertical: AppSizes.s12, horizontal: AppSizes.s10),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(AppRadius.md),
@@ -153,14 +154,14 @@ class _LeaveRequestsReportViewState extends State<LeaveRequestsReportView> {
         child: Column(
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(AppSizes.s8),
               decoration: BoxDecoration(
                 color: bgColor,
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: color, size: 20),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSizes.s8),
             Text(
               value,
               style: TextStyle(
@@ -169,7 +170,7 @@ class _LeaveRequestsReportViewState extends State<LeaveRequestsReportView> {
                 color: color,
               ),
             ),
-            const SizedBox(height: 2),
+            const SizedBox(height: AppSizes.s2),
             Text(
               title,
               maxLines: 1,
@@ -195,7 +196,7 @@ class _LeaveRequestsReportViewState extends State<LeaveRequestsReportView> {
     final hasData = total > 0;
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSizes.s16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.lg),
@@ -207,7 +208,7 @@ class _LeaveRequestsReportViewState extends State<LeaveRequestsReportView> {
           Row(
             children: [
               Icon(Icons.donut_large_outlined, size: 20, color: Color(AppColors.buttons)),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               Text(
                 'status_distribution'.tr(),
                 style: AppStyles.blackContent(context).copyWith(
@@ -217,17 +218,17 @@ class _LeaveRequestsReportViewState extends State<LeaveRequestsReportView> {
               ),
             ],
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: AppSizes.s18),
           if (!hasData)
             Center(
               child: Padding(
-                padding: const EdgeInsets.all(24.0),
+                padding: const EdgeInsets.all(AppSizes.s24),
                 child: Text('no_data'.tr(), style: TextStyle(color: Colors.grey.shade500)),
               ),
             )
           else ...[
             SizedBox(
-              height: 180,
+              height: AppSizes.s180,
               child: Stack(
                 alignment: Alignment.center,
                 children: [
@@ -296,7 +297,7 @@ class _LeaveRequestsReportViewState extends State<LeaveRequestsReportView> {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
             Wrap(
               spacing: 16,
               runSpacing: 8,
@@ -324,7 +325,7 @@ class _LeaveRequestsReportViewState extends State<LeaveRequestsReportView> {
           height: 10,
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
-        const SizedBox(width: 6),
+        const SizedBox(width: AppSizes.s6),
         Text(
           '$label: $count ($pct%)',
           style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.black87),
@@ -347,8 +348,8 @@ class _LeaveRequestsReportViewState extends State<LeaveRequestsReportView> {
         : (req.statusLabel.isNotEmpty ? req.statusLabel : req.status);
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(14),
+      margin: const EdgeInsets.only(bottom: AppSizes.s12),
+      padding: const EdgeInsets.all(AppSizes.s14),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.md),
@@ -364,7 +365,7 @@ class _LeaveRequestsReportViewState extends State<LeaveRequestsReportView> {
                 backgroundColor: Color(AppColors.buttons).withOpacity(0.1),
                 child: Icon(Icons.person_outline, size: 20, color: Color(AppColors.buttons)),
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: AppSizes.s10),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -378,7 +379,7 @@ class _LeaveRequestsReportViewState extends State<LeaveRequestsReportView> {
                       ),
                     ),
                     if (req.departmentName.isNotEmpty) ...[
-                      const SizedBox(height: 2),
+                      const SizedBox(height: AppSizes.s2),
                       Text(
                         req.departmentName,
                         style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
@@ -388,7 +389,7 @@ class _LeaveRequestsReportViewState extends State<LeaveRequestsReportView> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: AppSizes.s10, vertical: AppSizes.s4),
                 decoration: BoxDecoration(
                   color: statusColor.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(AppRadius.md),
@@ -405,13 +406,13 @@ class _LeaveRequestsReportViewState extends State<LeaveRequestsReportView> {
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSizes.s12),
           const Divider(height: 1, thickness: 0.8),
-          const SizedBox(height: 10),
+          const SizedBox(height: AppSizes.s10),
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                padding: const EdgeInsets.symmetric(horizontal: AppSizes.s8, vertical: AppSizes.s3),
                 decoration: BoxDecoration(
                   color: Colors.blueGrey.withOpacity(0.08),
                   borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -420,7 +421,7 @@ class _LeaveRequestsReportViewState extends State<LeaveRequestsReportView> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(Icons.category_outlined, size: 13, color: Colors.blueGrey.shade700),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: AppSizes.s4),
                     Text(
                       req.requestType,
                       style: TextStyle(
@@ -434,7 +435,7 @@ class _LeaveRequestsReportViewState extends State<LeaveRequestsReportView> {
               ),
               const Spacer(),
               Icon(Icons.calendar_today_outlined, size: 13, color: Colors.grey.shade600),
-              const SizedBox(width: 4),
+              const SizedBox(width: AppSizes.s4),
               Text(
                 '${req.startDate.split(' ').first} → ${req.endDate.split(' ').first}',
                 style: TextStyle(

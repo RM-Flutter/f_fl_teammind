@@ -131,7 +131,7 @@ class _CommissionListScreenState extends State<CommissionListScreen> {
             itemBuilder: (context, index) {
               if (index == controller.commissions!.length) {
                 return const Padding(
-                  padding: EdgeInsets.all(16),
+                  padding: EdgeInsets.all(AppSizes.s16),
                   child: Center(child: CircularProgressIndicator()),
                 );
               }
@@ -241,7 +241,7 @@ class _ActiveFiltersBar extends StatelessWidget {
                     onTap: () => controller.clearFilters(context),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
+                        horizontal: AppSizes.s12,
                         vertical: 7,
                       ),
                       decoration: BoxDecoration(
@@ -259,7 +259,7 @@ class _ActiveFiltersBar extends StatelessWidget {
                             size: 15,
                             color: Colors.redAccent,
                           ),
-                          const SizedBox(width: 4),
+                          const SizedBox(width: AppSizes.s4),
                           Text(
                             'clear_filters'.tr(),
                             style: const TextStyle(
@@ -297,8 +297,8 @@ class _FilterChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final primaryColor = Color(AppColors.buttons);
     return Container(
-      margin: const EdgeInsetsDirectional.only(end: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+      margin: const EdgeInsetsDirectional.only(end: AppSizes.s8),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12, vertical: 7),
       decoration: BoxDecoration(
         color: primaryColor.withOpacity(0.08),
         borderRadius: BorderRadius.circular(AppRadius.lg),
@@ -310,7 +310,7 @@ class _FilterChip extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: 14, color: primaryColor),
-          const SizedBox(width: 6),
+          const SizedBox(width: AppSizes.s6),
           Text(
             label,
             style: TextStyle(
@@ -319,7 +319,7 @@ class _FilterChip extends StatelessWidget {
               color: Color(AppColors.secondaryButton),
             ),
           ),
-          const SizedBox(width: 6),
+          const SizedBox(width: AppSizes.s6),
           InkWell(
             onTap: onRemove,
             borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -403,7 +403,7 @@ class _CommissionFilterSheetState extends State<_CommissionFilterSheet> {
           hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
           borderRadius: BorderRadius.circular(AppRadius.sm),
           borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s12),
           fieldSuffixIcon: InkWell(
             onTap: () => setState(() => _status = null),
             child: const Icon(Icons.close, color: Colors.red, size: 20),

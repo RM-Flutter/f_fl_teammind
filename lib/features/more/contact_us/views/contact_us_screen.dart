@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'dart:convert';
 import 'dart:ui' as ui;
 
@@ -175,7 +176,7 @@ class _ContactScreenState extends State<ContactScreen> {
                                 child: Container(
                                   width: 40,
                                   height: 40,
-                                  padding: const EdgeInsets.all(10),
+                                  padding: const EdgeInsets.all(AppSizes.s10),
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: Color(AppColors.buttons),
@@ -221,7 +222,7 @@ class _ContactCard extends StatelessWidget {
               Container(
                 width: 36,
                 height: 36,
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(AppSizes.s8),
                 decoration: BoxDecoration(
                   color: accent.withValues(alpha: 0.10),
                   borderRadius: BorderRadius.circular(AppRadius.sm),

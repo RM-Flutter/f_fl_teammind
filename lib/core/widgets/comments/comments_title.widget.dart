@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +15,7 @@ class CommentsTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget line() => Expanded(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.s10),
             child: Container(
               decoration: BoxDecoration(
                 border: Border.all(strokeAlign: 1, color: Color(AppColors.divider)),

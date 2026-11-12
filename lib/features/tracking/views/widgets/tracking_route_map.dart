@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'dart:math' as math;
 
 import 'package:easy_localization/easy_localization.dart' hide TextDirection;
@@ -83,7 +84,7 @@ class TrackingRouteMap extends StatelessWidget {
         child: InteractiveViewer(
           minScale: 0.8,
           maxScale: 5,
-          boundaryMargin: const EdgeInsets.all(80),
+          boundaryMargin: const EdgeInsets.all(AppSizes.s80),
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTapUp: onPointTap == null || projection == null

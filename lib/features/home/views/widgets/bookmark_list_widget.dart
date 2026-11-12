@@ -158,10 +158,10 @@ class _BookmarkListWidgetState extends State<BookmarkListWidget> {
           ),
           const SizedBox(height: AppSizes.s12),
           SizedBox(
-            height: 120,
+            height: AppSizes.s120,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 4),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s4),
               itemCount: _bookmarks.length,
               itemBuilder: (context, index) {
                 final bookmark = _bookmarks[index];

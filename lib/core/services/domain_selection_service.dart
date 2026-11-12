@@ -211,6 +211,7 @@
 //   }
 // }
 
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -440,7 +441,7 @@ class DomainSelectionService {
     return Row(
       children: [
         Expanded(child: secondary),
-        const SizedBox(width: 12),
+        const SizedBox(width: AppSizes.s12),
         Expanded(child: primary),
       ],
     );
@@ -536,7 +537,7 @@ class DomainSelectionService {
                       keyboardType: TextInputType.url,
                     ),
 
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSizes.s16),
 
                     // Saved domains list
                     if (savedDomains.isNotEmpty) ...[
@@ -548,7 +549,7 @@ class DomainSelectionService {
                           color: Color(AppColors.secondaryButton),
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: AppSizes.s8),
                       Container(
                         constraints: const BoxConstraints(maxHeight: 200),
                         decoration: BoxDecoration(
@@ -593,7 +594,7 @@ class DomainSelectionService {
                 ),
               ),
             ),
-            actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 20),
+            actionsPadding: const EdgeInsets.fromLTRB(AppSizes.s24, 0, AppSizes.s24, AppSizes.s20),
             actions: [
               _dialogActions(
                 secondary: _dialogButton(
@@ -682,7 +683,7 @@ class DomainSelectionService {
         content: Text(
           AppStrings.domainNotFound.tr(),
         ),
-        actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 20),
+        actionsPadding: const EdgeInsets.fromLTRB(AppSizes.s24, 0, AppSizes.s24, AppSizes.s20),
         actions: [
           _dialogActions(
             secondary: _dialogButton(

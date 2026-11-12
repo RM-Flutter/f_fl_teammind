@@ -55,7 +55,7 @@ class AppShortcutCard extends StatelessWidget {
                   ),
                 ),
                 if (subtitle != null && subtitle!.isNotEmpty) ...[
-                  const SizedBox(height: 2),
+                  const SizedBox(height: AppSizes.s2),
                   Text(
                     subtitle!,
                     maxLines: 1,

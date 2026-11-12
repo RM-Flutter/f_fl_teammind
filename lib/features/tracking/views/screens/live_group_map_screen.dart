@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -256,7 +257,7 @@ class _MapTag extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = live ? Color(AppColors.successGreen) : Color(AppColors.secondaryButton);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s10, vertical: AppSizes.s5),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.pill),
@@ -266,7 +267,7 @@ class _MapTag extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(width: 8, height: 8, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
-          const SizedBox(width: 6),
+          const SizedBox(width: AppSizes.s6),
           Text(text, style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w600, color: AppColors.statusTones(color).text)),
         ],
       ),
@@ -358,7 +359,7 @@ class _EmployeeStatusCard extends StatelessWidget {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: AppStyles.heading(context).copyWith(fontSize: 14, fontWeight: FontWeight.w600)),
-                        const SizedBox(height: 2),
+                        const SizedBox(height: AppSizes.s2),
                         Text(employee.getDepartment(isArabic: isAr),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,

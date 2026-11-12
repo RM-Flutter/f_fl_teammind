@@ -58,7 +58,7 @@ class _PayBillScreenState extends State<PayBillScreen> {
               ),
               body: Container(
                 height: MediaQuery.sizeOf(context).height * 1,
-                child: GradientBgImage(padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+                child: GradientBgImage(padding: const EdgeInsets.symmetric(horizontal: 15, vertical: AppSizes.s20),
                   child: SingleChildScrollView(keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
 
                     child: Column(
@@ -76,7 +76,7 @@ class _PayBillScreenState extends State<PayBillScreen> {
                             });
                           },
                         ),
-                        if(widget.phone != "" || widget.phone.toString().isNotEmpty) const SizedBox(height: 20,),
+                        if(widget.phone != "" || widget.phone.toString().isNotEmpty) const SizedBox(height: AppSizes.s20,),
                         if(widget.fawryInqury!.isEmpty)Container(
                           height: MediaQuery.sizeOf(context).height * 0.8,
                           alignment: Alignment.center,
@@ -129,7 +129,7 @@ class _PayBillScreenState extends State<PayBillScreen> {
                                         child: Container(
                                           width: 20,
                                           height: 20,
-                                          padding: const EdgeInsets.all(2),
+                                          padding: const EdgeInsets.all(AppSizes.s2),
                                           decoration: BoxDecoration(
                                             shape: BoxShape.circle,
                                             border: Border.all(color: const Color(AppColors.oc1)),
@@ -142,7 +142,7 @@ class _PayBillScreenState extends State<PayBillScreen> {
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(width: 10,),
+                                      const SizedBox(width: AppSizes.s10,),
                                       Text(widget.title ?? "", style: const TextStyle(color: Color(AppColors.oc1),fontSize: 14, fontWeight: FontWeight.w700),),
                                     ],
                                   ),
@@ -158,7 +158,7 @@ class _PayBillScreenState extends State<PayBillScreen> {
                         if(widget.fawryInqury!.isNotEmpty)const SizedBox(height: 15,),
                         if(widget.fawryInqury!.isNotEmpty)Container(
                           alignment: Alignment.center,
-                          padding: const EdgeInsets.symmetric(vertical: 25,horizontal: 15),
+                          padding: const EdgeInsets.symmetric(vertical: AppSizes.s25,horizontal: 15),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(AppRadius.xl),
                             color: Color(0xffFFFFFF),
@@ -220,7 +220,7 @@ class _PayBillScreenState extends State<PayBillScreen> {
                               SizedBox(width: MediaQuery.sizeOf(context).width * 0.6,
                                 child: const Divider(color: Color(AppColors.oc1),),
                               ),
-                              const SizedBox(height: 10,),
+                              const SizedBox(height: AppSizes.s10,),
                               defaultTransferDetailsTexts(AppStrings.yourAvailablePoints.tr(), "${widget.us2Cache['points']['available']} ج.م"),
                               defaultTransferDetailsTexts(
                                 AppStrings.availablePointsAfterWithdrawal.tr(),
@@ -258,7 +258,7 @@ class _PayBillScreenState extends State<PayBillScreen> {
                   borderRadius: BorderRadius.circular(AppRadius.xl),
                   boxShadow: AppShadows.card,
                 ),
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(AppSizes.s16),
                 child: value.isPostPayLoading == false ?ButtonWidget(
                   title: "${AppStrings.pay.tr()} ${double.parse((payAmount != null)?payAmount.toStringAsFixed(0) : "0") * double.parse((widget.pointsPerOne != null)?widget.pointsPerOne : "0")} ${AppStrings.point.tr()}",
                   svgIcon: "assets/images/svg/wallet.svg",
@@ -282,7 +282,7 @@ class _PayBillScreenState extends State<PayBillScreen> {
   }
 
   Widget defaultTransferDetailsTexts(t1, t2)=>Container(
-    margin: const EdgeInsets.only(bottom: 10),
+    margin: const EdgeInsets.only(bottom: AppSizes.s10),
     child: Row(
       children: [
         Text(t1, style: const TextStyle(color: Color(AppColors.oc1),fontSize: 12, fontWeight: FontWeight.w600),),

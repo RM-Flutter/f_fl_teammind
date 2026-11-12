@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/services/app_toast.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -211,9 +212,9 @@ class _QuickActionSheetState extends State<_QuickActionSheet> {
 
     return Container(
       padding: EdgeInsets.only(
-        top: 20,
-        left: 20,
-        right: 20,
+        top: AppSizes.s20,
+        left: AppSizes.s20,
+        right: AppSizes.s20,
         bottom: MediaQuery.of(context).viewInsets.bottom + 24,
       ),
       decoration: const BoxDecoration(
@@ -232,7 +233,7 @@ class _QuickActionSheetState extends State<_QuickActionSheet> {
             child: Container(
               width: 40,
               height: 4,
-              margin: const EdgeInsets.only(bottom: 16),
+              margin: const EdgeInsets.only(bottom: AppSizes.s16),
               decoration: BoxDecoration(
                 color: Colors.grey.shade300,
                 borderRadius: BorderRadius.circular(AppRadius.xs),
@@ -247,7 +248,7 @@ class _QuickActionSheetState extends State<_QuickActionSheet> {
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(AppSizes.s8),
                     decoration: BoxDecoration(
                       color: widget.isAsSomeoneElse
                           ? const Color(0xFFBF360C).withOpacity(0.1)
@@ -264,7 +265,7 @@ class _QuickActionSheetState extends State<_QuickActionSheet> {
                       size: 20,
                     ),
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: AppSizes.s10),
                   Text(
                     widget.isAsSomeoneElse
                         ? ('act_as_someone_else'.tr())
@@ -289,22 +290,22 @@ class _QuickActionSheetState extends State<_QuickActionSheet> {
           // Body
           if (_loadingDetails)
             const Padding(
-              padding: EdgeInsets.symmetric(vertical: 40),
+              padding: EdgeInsets.symmetric(vertical: AppSizes.s40),
               child: Center(child: CircularProgressIndicator()),
             )
           else if (_loadError != null)
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 24),
+              padding: const EdgeInsets.symmetric(vertical: AppSizes.s24),
               child: Column(
                 children: [
                   const Icon(Icons.error_outline, color: Colors.red, size: 40),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppSizes.s8),
                   Text(
                     _loadError!,
                     textAlign: TextAlign.center,
                     style: const TextStyle(color: Colors.red, fontSize: 13),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppSizes.s12),
                   TextButton(
                     onPressed: () {
                       setState(() {
@@ -325,12 +326,12 @@ class _QuickActionSheetState extends State<_QuickActionSheet> {
                       ? _details!.canTakeActionAsSomeoneElse != true
                       : _details!.takeAction != true)))
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
+              padding: const EdgeInsets.symmetric(vertical: AppSizes.s16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(14),
+                    padding: const EdgeInsets.all(AppSizes.s14),
                     decoration: BoxDecoration(
                       color: const Color(0xFFFFEBEE),
                       borderRadius: BorderRadius.circular(AppRadius.md),
@@ -343,7 +344,7 @@ class _QuickActionSheetState extends State<_QuickActionSheet> {
                           children: [
                             Icon(Icons.warning_amber_rounded,
                                 color: Colors.red.shade700, size: 22),
-                            const SizedBox(width: 8),
+                            const SizedBox(width: AppSizes.s8),
                             Expanded(
                               child: Text(
                                 (_details!.hasProblem == true ||
@@ -361,7 +362,7 @@ class _QuickActionSheetState extends State<_QuickActionSheet> {
                         ),
                         if (_details!.problemMessage != null &&
                             _details!.problemMessage!.trim().isNotEmpty) ...[
-                          const SizedBox(height: 8),
+                          const SizedBox(height: AppSizes.s8),
                           Text(
                             _details!.problemMessage!.trim(),
                             style: TextStyle(
@@ -372,7 +373,7 @@ class _QuickActionSheetState extends State<_QuickActionSheet> {
                         ],
                         if (_details!.problems != null &&
                             _details!.problems!.isNotEmpty) ...[
-                          const SizedBox(height: 6),
+                          const SizedBox(height: AppSizes.s6),
                           ..._details!.problems!
                               .map((p) => p is Map
                                   ? (p['message'] ??
@@ -386,7 +387,7 @@ class _QuickActionSheetState extends State<_QuickActionSheet> {
                                   s != (_details!.problemMessage?.trim() ?? ''))
                               .map(
                                 (s) => Padding(
-                                  padding: const EdgeInsets.only(bottom: 4),
+                                  padding: const EdgeInsets.only(bottom: AppSizes.s4),
                                   child: Text(
                                     '• $s',
                                     style: TextStyle(
@@ -403,7 +404,7 @@ class _QuickActionSheetState extends State<_QuickActionSheet> {
                   if (_details!.hasProblem == true ||
                       _details!.isValid == false ||
                       _details!.isShiftChangeRequest) ...[
-                    const SizedBox(height: 12),
+                    const SizedBox(height: AppSizes.s12),
                     OutlinedButton.icon(
                       style: OutlinedButton.styleFrom(
                         foregroundColor: Color(AppColors.buttons),
@@ -465,7 +466,7 @@ class _QuickActionSheetState extends State<_QuickActionSheet> {
                   ),
                   if (_errorMessage != null)
                     ActionErrorBanner(errorMessage: _errorMessage!),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: AppSizes.s20),
                   Center(
                     child: _submitting
                         ? const CircularProgressIndicator()

@@ -94,7 +94,7 @@ class FingerprintCard extends StatelessWidget {
                 ],
               ),
             ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSizes.s12),
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -111,7 +111,7 @@ class FingerprintCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 if (timeSubtitle != null) ...[
-                  const SizedBox(height: 3),
+                  const SizedBox(height: AppSizes.s3),
                   Text(
                     timeSubtitle,
                     style: AppStyles.subtitleContent(context).copyWith(

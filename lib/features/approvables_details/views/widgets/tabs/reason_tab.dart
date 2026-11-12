@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_colors.dart';
@@ -42,17 +43,17 @@ class ReasonTab extends StatelessWidget {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12, vertical: AppSizes.s16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             if (hasProblem) ...[
               _buildProblemBanner(context, isArabic),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSizes.s16),
             ],
             if (isShiftChange && details != null) ...[
               _buildShiftSwapSummaryCard(context, details!, isArabic),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSizes.s16),
             ],
             Container(
               padding: AppSpacing.cardPadding,
@@ -71,7 +72,7 @@ class ReasonTab extends StatelessWidget {
               ),
             ),
             if (notes.isNotEmpty) ...[
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSizes.s16),
               _buildNotesCard(context, notes),
             ],
           ],
@@ -95,7 +96,7 @@ class ReasonTab extends StatelessWidget {
           Row(
             children: [
               Icon(Icons.note_outlined, size: 18, color: Color(AppColors.buttons)),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               Text(
                 'notes'.tr(),
                 style: AppStyles.darkContent(context).copyWith(
@@ -105,7 +106,7 @@ class ReasonTab extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSizes.s8),
           Text(
             notes,
             style: AppStyles.darkContent(context).copyWith(fontSize: 14),
@@ -143,7 +144,7 @@ class ReasonTab extends StatelessWidget {
             : '');
 
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(AppSizes.s14),
       decoration: BoxDecoration(
         color: const Color(0xFFFFEBEE),
         borderRadius: BorderRadius.circular(AppRadius.md),
@@ -156,7 +157,7 @@ class ReasonTab extends StatelessWidget {
             children: [
               Icon(Icons.warning_amber_rounded,
                   color: Colors.red.shade700, size: 22),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               Expanded(
                 child: Text('shift_conflict_warning'.tr(),
                   style: TextStyle(
@@ -169,7 +170,7 @@ class ReasonTab extends StatelessWidget {
             ],
           ),
           if (headerMsg.isNotEmpty) ...[
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSizes.s8),
             Text(
               headerMsg,
               style: TextStyle(
@@ -182,10 +183,10 @@ class ReasonTab extends StatelessWidget {
             ),
           ],
           if (problemItems.isNotEmpty) ...[
-            const SizedBox(height: 6),
+            const SizedBox(height: AppSizes.s6),
             ...problemItems.map(
               (p) => Padding(
-                padding: const EdgeInsets.only(bottom: 4),
+                padding: const EdgeInsets.only(bottom: AppSizes.s4),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -250,7 +251,7 @@ class ReasonTab extends StatelessWidget {
             icon: Icons.person_outline_rounded,
             color: const Color(0xFF1565C0),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSizes.s12),
           // Party 2: Receiver
           _buildPartyRow(
             context: context,
@@ -278,7 +279,7 @@ class ReasonTab extends StatelessWidget {
     required Color color,
   }) {
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(AppSizes.s10),
       decoration: BoxDecoration(
         color: color.withOpacity(0.05),
         borderRadius: BorderRadius.circular(AppRadius.md),
@@ -288,14 +289,14 @@ class ReasonTab extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(AppSizes.s8),
             decoration: BoxDecoration(
               color: color.withOpacity(0.12),
               shape: BoxShape.circle,
             ),
             child: Icon(icon, color: color, size: 18),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: AppSizes.s10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -308,7 +309,7 @@ class ReasonTab extends StatelessWidget {
                     color: color,
                   ),
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: AppSizes.s2),
                 Text(
                   employeeName,
                   style: const TextStyle(
@@ -318,7 +319,7 @@ class ReasonTab extends StatelessWidget {
                   ),
                 ),
                 if (shiftName.isNotEmpty || dateText.isNotEmpty) ...[
-                  const SizedBox(height: 4),
+                  const SizedBox(height: AppSizes.s4),
                   Wrap(
                     spacing: 8,
                     runSpacing: 4,
@@ -328,7 +329,7 @@ class ReasonTab extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.schedule, size: 13, color: Colors.grey.shade700),
-                            const SizedBox(width: 4),
+                            const SizedBox(width: AppSizes.s4),
                             Text(
                               shiftName,
                               style: TextStyle(
@@ -344,7 +345,7 @@ class ReasonTab extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Icon(Icons.calendar_today, size: 12, color: Colors.grey.shade700),
-                            const SizedBox(width: 4),
+                            const SizedBox(width: AppSizes.s4),
                             Text(
                               dateText,
                               style: TextStyle(

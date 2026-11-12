@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/services/localization_service.dart';
@@ -40,7 +41,7 @@ class CustomRequestDetailsButton extends StatelessWidget {
           shadowColor: Colors.transparent,
           backgroundColor: effectiveColor,
           foregroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(horizontal: 12),
+          padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12),
           shape: RoundedRectangleBorder(
             borderRadius: AppRadius.button,
           ),

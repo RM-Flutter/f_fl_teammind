@@ -24,7 +24,7 @@ class PointsSuccessSheet{
         return Padding(
           padding: EdgeInsets.only(bottom: context.viewInsets.bottom),
           child: Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(AppSizes.s20),
             child: SingleChildScrollView(keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
 
               child: Column(
@@ -35,7 +35,7 @@ class PointsSuccessSheet{
                     style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: AppSizes.s20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -51,7 +51,7 @@ class PointsSuccessSheet{
                             border: Border.all(color: const Color(0xff0D3B6F)),
                             borderRadius: BorderRadius.circular(AppRadius.pill),
                           ),
-                          padding:const EdgeInsets.symmetric(horizontal: 40),
+                          padding:const EdgeInsets.symmetric(horizontal: AppSizes.s40),
                           child: Text(
                             AppStrings.no.tr(),
                             style:const TextStyle(
@@ -71,7 +71,7 @@ class PointsSuccessSheet{
                             color: const Color(0xff0D3B6F),
                             borderRadius: BorderRadius.circular(AppRadius.pill),
                           ),
-                          padding: const EdgeInsets.symmetric(horizontal: 40),
+                          padding: const EdgeInsets.symmetric(horizontal: AppSizes.s40),
                           child: Text(
                             AppStrings.yes.tr(),
                             style:const TextStyle(

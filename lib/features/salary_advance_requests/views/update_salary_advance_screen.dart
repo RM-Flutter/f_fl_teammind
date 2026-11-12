@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:provider/provider.dart';
@@ -48,9 +49,9 @@ class _UpdateSalaryAdvanceScreenState extends State<UpdateSalaryAdvanceScreen> {
         builder: (context, controller, child) {
           return Container(
             padding: EdgeInsets.only(
-              left: 20,
-              right: 20,
-              top: 16,
+              left: AppSizes.s20,
+              right: AppSizes.s20,
+              top: AppSizes.s16,
               bottom: MediaQuery.of(context).viewInsets.bottom + 20,
             ),
             decoration: const BoxDecoration(
@@ -68,7 +69,7 @@ class _UpdateSalaryAdvanceScreenState extends State<UpdateSalaryAdvanceScreen> {
                       child: Container(
                         width: 40,
                         height: 4,
-                        margin: const EdgeInsets.only(bottom: 12),
+                        margin: const EdgeInsets.only(bottom: AppSizes.s12),
                         decoration: BoxDecoration(
                           color: Colors.grey[300],
                           borderRadius: BorderRadius.circular(AppRadius.xs),
@@ -100,7 +101,7 @@ class _UpdateSalaryAdvanceScreenState extends State<UpdateSalaryAdvanceScreen> {
                       controller: controller.howLongToPayController,
                       label: 'how_long_to_pay_months'.tr(),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: AppSizes.s24),
                     AppSheetSubmitButton(
                       title: 'save_changes'.tr(),
                       onPressed: () async {
@@ -110,7 +111,7 @@ class _UpdateSalaryAdvanceScreenState extends State<UpdateSalaryAdvanceScreen> {
                         }
                       },
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: AppSizes.s10),
                   ],
                 ),
               ),

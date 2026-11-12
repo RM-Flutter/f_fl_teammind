@@ -66,13 +66,13 @@ class _FingerPrintOfflineContent extends StatelessWidget {
                           },
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: AppSizes.s20),
                     ],
 
                     // ── Fingerprints List ─────────────────────────────────
                     if (!hasFingerprints)
                       Padding(
-                        padding: const EdgeInsets.only(top: 60),
+                        padding: const EdgeInsets.only(top: AppSizes.s60),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -81,7 +81,7 @@ class _FingerPrintOfflineContent extends StatelessWidget {
                               size: 64,
                               color: Color(AppColors.buttons).withOpacity(0.3),
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: AppSizes.s16),
                             Text(
                               AppStrings.noFingerprintsYet.tr(),
                               style: AppStyles.greyContent(context).copyWith(
@@ -102,7 +102,7 @@ class _FingerPrintOfflineContent extends StatelessWidget {
                         deletingIndexes: viewModel.deletingOfflineIndexes,
                       ),
 
-                    const SizedBox(height: 20),
+                    const SizedBox(height: AppSizes.s20),
                   ],
                 ),
               ),

@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/features/points/core/points_api/api_services_implementation.dart';
 import 'package:app_test/features/points/views/conditions/condition_section.dart';
@@ -39,7 +40,7 @@ class SliverListPoints extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const SizedBox(height: 22,),
+                      const SizedBox(height: AppSizes.s22,),
                       defaultTap2BarItem(items: [
                         AppStrings.coupon.tr(),AppStrings.referral.tr(),
                         AppStrings.conditions.tr(),AppStrings.history.tr()]),
@@ -88,7 +89,7 @@ Widget defaultTap2BarItem({
 
           return Center(
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7.5),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s10, vertical: 7.5),
               height: 45.0,
               width: containerWidth,
               decoration: BoxDecoration(

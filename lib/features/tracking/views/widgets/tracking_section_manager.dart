@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -83,7 +84,7 @@ class TrackingSectionManager extends StatelessWidget {
                         children: [
                           Text('tracking_summary'.tr(),
                               style: AppStyles.heading(context).copyWith(fontSize: 14, fontWeight: FontWeight.w600)),
-                          const SizedBox(height: 2),
+                          const SizedBox(height: AppSizes.s2),
                           Text('tracking_summary_hint'.tr(),
                               style: AppStyles.greyContent(context).copyWith(fontSize: 12)),
                         ],

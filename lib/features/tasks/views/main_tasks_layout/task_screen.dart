@@ -153,7 +153,7 @@ class _TaskScreenState extends State<TaskScreen> {
                             children: [
                               HorizontalCalendar(),
                               SizedBox(
-                                height: 20,
+                                height: AppSizes.s20,
                               ),
                               if (viewModel.tasks.isEmpty)
                                 NoExistingPlaceholderScreen(
@@ -203,11 +203,11 @@ class _TaskScreenState extends State<TaskScreen> {
                                   separatorBuilder: (context, index) =>
                                       const SizedBox(height: AppSpacing.cardGap),
                                 ),
-                              SizedBox(height: 20),
+                              SizedBox(height: AppSizes.s20),
                               if (viewModel.hasMore && !viewModel.isLoadingMore)
                                 Center(
                                   child: Padding(
-                                    padding: EdgeInsets.only(bottom: 30),
+                                    padding: EdgeInsets.only(bottom: AppSizes.s30),
                                     child: ElevatedButton(
                                       onPressed: () {
                                         viewModel.getTask(context, loadMore: true);
@@ -216,7 +216,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                         backgroundColor: Color(AppColors.buttons),
                                         foregroundColor: Colors.white,
                                         padding: EdgeInsets.symmetric(
-                                            horizontal: 40, vertical: 12),
+                                            horizontal: AppSizes.s40, vertical: AppSizes.s12),
                                         shape: RoundedRectangleBorder(
                                           borderRadius: AppRadius.button,
                                         ),
@@ -230,10 +230,10 @@ class _TaskScreenState extends State<TaskScreen> {
                                 ),
                               if (viewModel.isLoadingMore)
                                 Padding(
-                                  padding: EdgeInsets.only(bottom: 30),
+                                  padding: EdgeInsets.only(bottom: AppSizes.s30),
                                   child: const Center(child: CircularProgressIndicator()),
                                 ),
-                              SizedBox(height: 20),
+                              SizedBox(height: AppSizes.s20),
                             ],
                           ),
                         )),

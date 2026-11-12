@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_colors.dart';
@@ -33,18 +34,18 @@ class ApproverEmployeeDropdown extends StatelessWidget {
             color: Color(AppColors.secondaryButton),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSizes.s8),
         if (isLoadingApprovers)
           const Center(
             child: Padding(
-              padding: EdgeInsets.all(12),
+              padding: EdgeInsets.all(AppSizes.s12),
               child: CircularProgressIndicator.adaptive(),
             ),
           )
         else if (activeApprovers.isEmpty)
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(AppSizes.s12),
             decoration: BoxDecoration(
               color: Colors.amber.shade50,
               borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -57,7 +58,7 @@ class ApproverEmployeeDropdown extends StatelessWidget {
         else
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 14),
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.s14),
             decoration: BoxDecoration(
               color: const Color(0xFFF3F3F3),
               borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -95,7 +96,7 @@ class ApproverEmployeeDropdown extends StatelessWidget {
               ),
             ),
           ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSizes.s16),
       ],
     );
   }

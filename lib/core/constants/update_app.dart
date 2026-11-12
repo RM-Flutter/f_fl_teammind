@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
@@ -126,7 +127,7 @@ class UpdateApp{
                           },
                           isPrimaryBackground: false,
                         ),
-                        const SizedBox(width: 10,),
+                        const SizedBox(width: AppSizes.s10,),
                         CustomElevatedButton(
                           width: 120,
                           title: AppStrings.cancel.tr(),

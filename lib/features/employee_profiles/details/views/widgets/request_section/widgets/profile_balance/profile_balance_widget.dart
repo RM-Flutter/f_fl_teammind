@@ -167,7 +167,7 @@ class BalanceCard extends StatelessWidget {
       child: Container(
         width: cardWidth ?? getResponsiveItemWidth(context, paddingBetweenVocations: paddingBetweenVocations),
         constraints: const BoxConstraints(minHeight: 140),
-        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+        padding: EdgeInsets.symmetric(vertical: AppSizes.s16, horizontal: AppSizes.s12),
         decoration: BoxDecoration(
           color:  Color(AppColors.secondaryButton),
           borderRadius: BorderRadius.circular(AppRadius.md),
@@ -206,7 +206,7 @@ class BalanceCard extends StatelessWidget {
                     // fontWeight: FontWeight.w400,
                   ),
                 ),
-                SizedBox(height: 4),
+                SizedBox(height: AppSizes.s4),
                 // FittedBox (not AutoSizeText): the row above uses IntrinsicHeight, which can't measure a LayoutBuilder
                 FittedBox(
                   fit: BoxFit.scaleDown,
@@ -221,7 +221,7 @@ class BalanceCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 4),
+                SizedBox(height: AppSizes.s4),
                 // Ensure the "FROM" line always takes space for alignment
                 Text(
                   (balance.max != -1 && balance.available != -1)

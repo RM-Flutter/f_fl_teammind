@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/services/app_toast.dart';
 import 'dart:io';
 import 'package:dio/dio.dart';
@@ -532,7 +533,7 @@ class ComplaintsController extends ChangeNotifier {
      context: context,
      builder: (BuildContext context) {
       return SizedBox(
-       height: 200,
+       height: AppSizes.s200,
        child: Center(
         child: Column(
          mainAxisAlignment: MainAxisAlignment.center,
@@ -542,7 +543,7 @@ class ComplaintsController extends ChangeNotifier {
            AppStrings.selectPhoto.tr(),
            style: AppStyles.blackContent(context).copyWith(fontSize: 20)),
           SizedBox(
-           height: 10),
+           height: AppSizes.s10),
           Row(
            mainAxisAlignment: MainAxisAlignment.spaceAround,
            children: [

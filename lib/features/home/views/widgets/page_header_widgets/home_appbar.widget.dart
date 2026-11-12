@@ -163,7 +163,7 @@ class HomeAppbarWidget extends StatelessWidget {
                         child: Row(
                           children: [
                             Icon(Icons.warning, color: Colors.red, size: 24),
-                            SizedBox(width: 8),
+                            SizedBox(width: AppSizes.s8),
                             Expanded(
                               child: Text(
                                 getVerificationStatus(us1Cache),
@@ -171,7 +171,7 @@ class HomeAppbarWidget extends StatelessWidget {
                                     .copyWith(fontSize: 14),
                               ),
                             ),
-                            SizedBox(width: 8),
+                            SizedBox(width: AppSizes.s8),
                             Text(AppStrings.activeNow.tr(),
                                 style: AppStyles.greenContent(context)
                                     .copyWith(fontSize: 12)),
@@ -253,7 +253,7 @@ class HomeAppbarWidget extends StatelessWidget {
                                           ),
                                         ),
                                 ),
-                              SizedBox(width: 12),
+                              SizedBox(width: AppSizes.s12),
                               us1Cache == null
                                   ? ShimmerAnimatedLoading(
                                       height: AppSizes.s32,
@@ -288,7 +288,7 @@ class HomeAppbarWidget extends StatelessWidget {
                                         ],
                                       ),
                                     ),
-                              SizedBox(width: 10),
+                              SizedBox(width: AppSizes.s10),
                               if (us1Cache != null)
                                 Stack(
                                   children: [
@@ -346,7 +346,7 @@ class HomeAppbarWidget extends StatelessWidget {
                             ],
                           ),
                         ),
-                        SizedBox(height: 32),
+                        SizedBox(height: AppSizes.s32),
                         if (isExpanded == true)
                           if (PackageHelper.hasPackage('emp-requests'))
                             Center(

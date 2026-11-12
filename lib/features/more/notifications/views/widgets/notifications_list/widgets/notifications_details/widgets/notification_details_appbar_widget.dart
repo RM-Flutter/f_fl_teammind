@@ -57,7 +57,7 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
             child: SafeArea(
               child: AppContentWidth(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  padding: EdgeInsets.symmetric(horizontal: AppSizes.s20, vertical: AppSizes.s10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -72,7 +72,7 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
                                   Navigator.pop(context);
                                 },
                                 child: Container(
-                                  padding: EdgeInsets.all(8),
+                                  padding: EdgeInsets.all(AppSizes.s8),
                                   decoration: BoxDecoration(
                                     color: Colors.white.withOpacity(0.15),
                                     shape: BoxShape.circle,
@@ -102,7 +102,7 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
                       ),
                       const Spacer(),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        padding: EdgeInsets.symmetric(horizontal: AppSizes.s20),
                         child: Text(
                           (notificationSingleModel?.title?.toString() ?? ""),
                           style: AppStyles.whiteHeading(context).copyWith(
@@ -113,9 +113,9 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      SizedBox(height: 25),
+                      SizedBox(height: AppSizes.s25),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16),
                         child: Wrap(
                         alignment: WrapAlignment.center,
                         crossAxisAlignment: WrapCrossAlignment.center,
@@ -170,7 +170,7 @@ class NotificationDetailsAppbarWidget extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(icon, color: (Color(AppColors.buttons)), size: 16),
-        SizedBox(width: 6),
+        SizedBox(width: AppSizes.s6),
         Text(
           text,
           style: AppStyles.whiteContent(context).copyWith(

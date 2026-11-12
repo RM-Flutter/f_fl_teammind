@@ -142,13 +142,13 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                   key: formKey,
                   child: GradientBgImage(
                     padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: AppSizes.s20),
                     child: Column(
                       children: [
                         Container(
                             alignment: Alignment.center,
                             padding: const EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 15),
+                                vertical: AppSizes.s10, horizontal: 15),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(AppRadius.xl),
                               color: Color(0xffFFFFFF),
@@ -167,10 +167,10 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                                       color: Color(0XFF224982)),
                                 ),
                                 const SizedBox(
-                                  height: 10,
+                                  height: AppSizes.s10,
                                 ),
                                 SizedBox(
-                                  height: 120,
+                                  height: AppSizes.s120,
                                   child: ListView.separated(
                                       padding: EdgeInsets.zero,
                                       scrollDirection: Axis.horizontal,
@@ -268,7 +268,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                                                   ),
                                                 ),
                                                 const SizedBox(
-                                                  height: 13,
+                                                  height: AppSizes.s13,
                                                 ),
                                                 Text(
                                                   widget.service['services']
@@ -293,7 +293,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                             )),
                         if (inputs.isNotEmpty) Column(
                           children: inputs.map<Widget>((input) => Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            padding: const EdgeInsets.symmetric(vertical: AppSizes.s8),
                             child: buildInputWidget(input, value),
                           ))
                               .toList(),
@@ -341,13 +341,13 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                         ),
                         if (inquiry == false)
                           const SizedBox(
-                            height: 25,
+                            height: AppSizes.s25,
                           ),
                         if (inquiry == false)
                           Container(
                             alignment: Alignment.center,
                             padding: const EdgeInsets.symmetric(
-                                vertical: 25, horizontal: 15),
+                                vertical: AppSizes.s25, horizontal: 15),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(AppRadius.xl),
                               color: Color(0xffFFFFFF),
@@ -481,7 +481,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
                                   ),
                                 ),
                                 const SizedBox(
-                                  height: 10,
+                                  height: AppSizes.s10,
                                 ),
                                 defaultTransferDetailsTexts(
                                     AppStrings.yourAvailablePoints.tr(),
@@ -513,7 +513,7 @@ class _ChargePhoneScreenState extends State<ChargePhoneScreen> {
 
   }
   Widget defaultTransferDetailsTexts(t1, t2) => Container(
-    margin: const EdgeInsets.only(bottom: 10),
+    margin: const EdgeInsets.only(bottom: AppSizes.s10),
     child: Row(
       children: [
         Text(

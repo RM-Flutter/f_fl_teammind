@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,7 +22,7 @@ class SuccessfulSendRequestBottomsheet extends StatelessWidget {
    ),
    child: Column(
     children: [
-     SizedBox(height: 30),
+     SizedBox(height: AppSizes.s30),
      SvgPicture.asset("assets/images/svg/success_meeting.svg"),
      SizedBox(height: 15,),
      Text(AppStrings.successful.tr(), style: AppStyles.primaryContent(context).copyWith(fontSize: 24,
@@ -44,7 +45,7 @@ class SuccessfulSendRequestBottomsheet extends StatelessWidget {
        title: AppStrings.backToMyRequests.tr(),
        isPrimaryBackground: true,
        isFuture: false),
-     SizedBox(height: 20),
+     SizedBox(height: AppSizes.s20),
     ],
    ),
   );

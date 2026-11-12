@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/constants/app_colors.dart';
@@ -33,7 +34,7 @@ class _ManagementResponseModalState extends State<ManagementResponseModal> {
               // Blue info banner
               Container(
                 width: double.infinity,
-                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                padding: EdgeInsets.symmetric(vertical: AppSizes.s12, horizontal: AppSizes.s16),
                 decoration: BoxDecoration(
                   color: const Color(AppColors.buttons),
                   borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -47,7 +48,7 @@ class _ManagementResponseModalState extends State<ManagementResponseModal> {
                   ),
                 ),
               ),
-              SizedBox(height: 12),
+              SizedBox(height: AppSizes.s12),
               // Hint message
               Text(
                 "A Message In Case Of Waiting For Approval From The Other Party\n(Another Level Of Management)",
@@ -61,7 +62,7 @@ class _ManagementResponseModalState extends State<ManagementResponseModal> {
               // request statuses options
               Container(
                 width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: EdgeInsets.symmetric(horizontal: AppSizes.s8, vertical: AppSizes.s4),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF3F3F3),
                   borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -96,7 +97,7 @@ class _ManagementResponseModalState extends State<ManagementResponseModal> {
                   ),
                 ),
               ),
-              SizedBox(height: 18),
+              SizedBox(height: AppSizes.s18),
               TextFormField(
                 controller: viewModel.reasonController,
                 maxLines: 5,
@@ -114,7 +115,7 @@ class _ManagementResponseModalState extends State<ManagementResponseModal> {
                   ),
                   filled: true,
                   fillColor: const Color(0xFFF3F3F3),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                  contentPadding: EdgeInsets.symmetric(horizontal: AppSizes.s12, vertical: AppSizes.s16),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(AppRadius.sm),
                     borderSide: BorderSide.none,
@@ -129,7 +130,7 @@ class _ManagementResponseModalState extends State<ManagementResponseModal> {
                   ),
                 ),
               ),
-              SizedBox(height: 28),
+              SizedBox(height: AppSizes.s28),
               Center(
                 child: CustomElevatedButton(
                   buttonStyle: ElevatedButton.styleFrom(

@@ -92,7 +92,7 @@ class _SearchableDropdownSheetState extends State<SearchableDropdownSheet> {
                 return Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppSizes.s8),
                     Container(
                       width: 40,
                       height: 4,
@@ -102,7 +102,7 @@ class _SearchableDropdownSheetState extends State<SearchableDropdownSheet> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+                      padding: const EdgeInsets.fromLTRB(AppSizes.s16, AppSizes.s12, AppSizes.s16, AppSizes.s8),
                       child: TextField(
                         controller: _searchController,
                         focusNode: _searchFocusNode,
@@ -114,8 +114,8 @@ class _SearchableDropdownSheetState extends State<SearchableDropdownSheet> {
                             borderRadius: BorderRadius.circular(AppRadius.md),
                           ),
                           contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 12,
+                            horizontal: AppSizes.s16,
+                            vertical: AppSizes.s12,
                           ),
                         ),
                       ),

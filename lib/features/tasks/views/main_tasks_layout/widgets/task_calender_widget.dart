@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +43,7 @@ class _HorizontalCalendarState extends State<HorizontalCalendar> {
                   scrollDirection: Axis.horizontal,
                   padding: AppSpacing.pagePadding,
                   itemCount: monthDays.length + 1,
-                  separatorBuilder: (_, __) => const SizedBox(width: 10),
+                  separatorBuilder: (_, __) => const SizedBox(width: AppSizes.s10),
                   itemBuilder: (context, listIndex) {
                     if (listIndex == 0) {
                       final selected = viewModel.selectedIndex == null;
@@ -94,9 +95,9 @@ class _HorizontalCalendarState extends State<HorizontalCalendar> {
                               fontSize: 12,
                             ),
                           ),
-                          SizedBox(height: 6),
+                          SizedBox(height: AppSizes.s6),
                           Container(
-                            padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                            padding: EdgeInsets.symmetric(vertical: AppSizes.s6, horizontal: AppSizes.s12),
                             decoration: BoxDecoration(
                               color: index == viewModel.selectedIndex ? Colors.blue : Colors.transparent,
                               borderRadius: BorderRadius.circular(AppRadius.md),

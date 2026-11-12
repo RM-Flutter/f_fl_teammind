@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:app_test/core/constants/app_colors.dart';
@@ -32,11 +33,11 @@ Future<bool?> showAppActionConfirmationDialog({
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
         ),
-        insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+        insetPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s24, vertical: AppSizes.s24),
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 400),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 26),
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.s24, vertical: AppSizes.s26),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -54,7 +55,7 @@ Future<bool?> showAppActionConfirmationDialog({
                     color: effectiveIconColor,
                   ),
                 ),
-                const SizedBox(height: 18),
+                const SizedBox(height: AppSizes.s18),
 
                 // Dialog Title (Navy - 100% visible and stylish)
                 Text(
@@ -67,11 +68,11 @@ Future<bool?> showAppActionConfirmationDialog({
                     fontFamily: isArabic ? 'Cairo' : 'Poppins',
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSizes.s12),
 
                 // Dialog Message
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                  padding: const EdgeInsets.symmetric(horizontal: AppSizes.s4),
                   child: Text(
                     message,
                     textAlign: TextAlign.center,
@@ -83,7 +84,7 @@ Future<bool?> showAppActionConfirmationDialog({
                     ),
                   ),
                 ),
-                const SizedBox(height: 26),
+                const SizedBox(height: AppSizes.s26),
 
                 // Action Buttons
                 Row(
@@ -114,7 +115,7 @@ Future<bool?> showAppActionConfirmationDialog({
                         ),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: AppSizes.s12),
 
                     // Confirm / تأكيد Button
                     Expanded(

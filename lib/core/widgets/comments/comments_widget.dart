@@ -99,9 +99,9 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                       "dd/MM/yyyy hh:mm a", context.locale.languageCode)
                       .format(utcDateTime);
                   return Container(
-                    margin: const EdgeInsets.symmetric(vertical: 8),
+                    margin: const EdgeInsets.symmetric(vertical: AppSizes.s8),
                     padding: const EdgeInsets.symmetric(
-                        vertical: 12, horizontal: 12),
+                        vertical: AppSizes.s12, horizontal: AppSizes.s12),
                     decoration: ShapeDecoration(
                       color: Colors.white,
                       shape: RoundedRectangleBorder(
@@ -117,7 +117,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          padding: const EdgeInsets.all(2),
+                          padding: const EdgeInsets.all(AppSizes.s2),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
@@ -142,14 +142,14 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                             ),
                           ),
                         ),
-                        const SizedBox(width: 12),
+                        const SizedBox(width: AppSizes.s12),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               if (comments[index]['user']?['name'] != null)
                                 Padding(
-                                  padding: const EdgeInsets.only(bottom: 4.0),
+                                  padding: const EdgeInsets.only(bottom: AppSizes.s4),
                                   child: Text(
                                     comments[index]['user']['name'] ?? "",
                                     style: const TextStyle(
@@ -170,7 +170,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                                 ),
                               if (comments[index]['images'].isNotEmpty)
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 8.0),
+                                  padding: const EdgeInsets.only(top: AppSizes.s8),
                                   child: Container(
                                     width: 150,
                                     height: 100,
@@ -223,7 +223,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                                   audioUrl: comments[index]['sounds'][0]
                                   ['file'],
                                 ),
-                              const SizedBox(height: 8),
+                              const SizedBox(height: AppSizes.s8),
                               Text(
                                 formattedDate,
                                 style: TextStyle(
@@ -238,7 +238,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                     ),
                   );
                 },
-                separatorBuilder: (context, index) => const SizedBox(height: 5),
+                separatorBuilder: (context, index) => const SizedBox(height: AppSizes.s5),
                 itemCount: comments.length > _previewCount ? _previewCount : comments.length,
               ),
           if (comments.isEmpty)
@@ -254,7 +254,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
             ),
           if (comments.length > _previewCount)
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
+              padding: const EdgeInsets.symmetric(vertical: AppSizes.s8),
               child: Center(
                 child: GestureDetector(
                   onTap: () {
@@ -275,7 +275,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                         borderRadius: BorderRadius.circular(AppRadius.pill),
                         border:
                         Border.all(color: Color(AppColors.secondaryButton))),
-                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                    padding: const EdgeInsets.symmetric(horizontal: AppSizes.s40),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -292,7 +292,7 @@ class _CommentsWidgetState extends State<CommentsWidget> {
                 ),
               ),
             ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSizes.s12),
           if (widget.enable == "enable") SendCommentWidget(widget.id, widget.slug),
           if (widget.enable != "enable")
             Text(

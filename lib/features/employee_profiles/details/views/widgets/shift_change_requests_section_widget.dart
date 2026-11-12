@@ -67,7 +67,7 @@ class ShiftChangeRequestsSectionWidget extends StatelessWidget {
             separatorBuilder: (context, index) => const SizedBox.shrink(),
             itemCount: requests!.length <= 5 ? requests!.length : 5,
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSizes.s24),
           Center(
             child: CustomElevatedButton(
               backgroundColor: Color(AppColors.secondaryButton),
@@ -94,7 +94,7 @@ class ShiftChangeRequestsSectionWidget extends StatelessWidget {
               },
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSizes.s16),
         ],
       ),
     );

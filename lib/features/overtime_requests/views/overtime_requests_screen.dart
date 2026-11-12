@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/widgets/app_empty_scroll_view.widget.dart';
 import 'package:app_test/core/widgets/app_shortcut_card.widget.dart';
 import 'dart:convert';
@@ -288,7 +289,7 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
                           clipBehavior: Clip.none,
                           physics: const AlwaysScrollableScrollPhysics(),
                           padding: const EdgeInsets.fromLTRB(
-                              AppSpacing.page, AppSpacing.md, AppSpacing.page, 80),
+                              AppSpacing.page, AppSpacing.md, AppSpacing.page, AppSizes.s80),
                           itemCount: list.length +
                               (provider.isForDepartment
                                   ? (provider.incomingIsLoadingMore ? 1 : 0)
@@ -296,7 +297,7 @@ class _OvertimeRequestsScreenState extends State<OvertimeRequestsScreen> {
                           itemBuilder: (context, index) {
                             if (index == list.length) {
                               return const Padding(
-                                padding: EdgeInsets.all(16.0),
+                                padding: EdgeInsets.all(AppSizes.s16),
                                 child:
                                     Center(child: CircularProgressIndicator()),
                               );
@@ -371,9 +372,9 @@ class _ScopeSelectorRow extends StatelessWidget {
                 onTap: () => onSelected(s['value']!),
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 200),
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  margin: const EdgeInsets.symmetric(horizontal: AppSizes.s4),
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s8),
                   decoration: BoxDecoration(
                     color: isSelected
                         ? Color(AppColors.buttons)

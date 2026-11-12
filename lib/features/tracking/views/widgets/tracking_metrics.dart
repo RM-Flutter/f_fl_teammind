@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -41,7 +42,7 @@ class TrackingMetricTile extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             style: AppStyles.heading(context).copyWith(fontSize: 15, fontWeight: FontWeight.w700),
           ),
-          const SizedBox(height: 2),
+          const SizedBox(height: AppSizes.s2),
           Text(
             label,
             maxLines: 2,

@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -93,7 +94,7 @@ class GeneralListener {
             vertical: isWeb ? 40 : 20,
           ),
           titlePadding: EdgeInsets.zero,
-          contentPadding: const EdgeInsets.all(16),
+          contentPadding: const EdgeInsets.all(AppSizes.s16),
 
           content: ConstrainedBox(
             // ✅ تحديد أقصى ارتفاع للـ dialog
@@ -122,12 +123,12 @@ class GeneralListener {
                       ),
                     ),
 
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSizes.s16),
 
                   // ✅ العنوان
                   if (popup['title']['ar'] != null || popup['title']['en'] != null)
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      padding: const EdgeInsets.symmetric(vertical: AppSizes.s8),
                       child: Text(
                         LocalizationService.isArabic(context: context)
                             ? popup['title']['ar']
@@ -144,7 +145,7 @@ class GeneralListener {
                   // ✅ المحتوى
                   if (popup['content']['ar'] != null || popup['content']['en'] != null)
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      padding: const EdgeInsets.symmetric(vertical: AppSizes.s8),
                       child: Text(
                         LocalizationService.isArabic(context: context)
                             ? popup['content']['ar']

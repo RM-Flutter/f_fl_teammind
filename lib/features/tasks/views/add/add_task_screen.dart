@@ -122,7 +122,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                           children: [
                                             Padding(
                                               padding:
-                                                  EdgeInsets.all(16.0),
+                                                  EdgeInsets.all(AppSizes.s16),
                                               child: Text(
                                                 AppStrings.employeeName.tr(),
                                                 style: AppStyles.heading(context).copyWith(
@@ -164,7 +164,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                             ),
                                             Padding(
                                               padding:
-                                                  EdgeInsets.all(16.0),
+                                                  EdgeInsets.all(AppSizes.s16),
                                               child: ElevatedButton(
                                                 onPressed: () {
                                                   Navigator.pop(context);
@@ -216,7 +216,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                               height: 24,
                                             ),
                                             SizedBox(
-                                              width: 10,
+                                              width: AppSizes.s10,
                                             ),
                                             Text(
                                               e['name'].toString(),
@@ -270,7 +270,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                             AddNewTaskListWidget(),
                             gapH14,
                             SizedBox(
-                              height: 30,
+                              height: AppSizes.s30,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,

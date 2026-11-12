@@ -85,7 +85,7 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
             RequestDetailsAppbarWidget(
              getOneRequestModel: value.getOneRequestModel,
             ),
-            SizedBox(height: 20,),
+            SizedBox(height: AppSizes.s20,),
             Padding(padding: AppSpacing.pagePadding,
              child: Center(
               child: ConstrainedBox(
@@ -149,7 +149,7 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
                      fontWeight: FontWeight.w500,
                     ),
                    }),
-                 SizedBox(height: 10,),
+                 SizedBox(height: AppSizes.s10,),
                  if(value.getOneRequestModel!.complain!.mainThumbnail != null &&value.getOneRequestModel!.complain!.mainThumbnail!.isNotEmpty)Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -157,7 +157,7 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
                     alignment: Alignment.bottomCenter,
                     children: [
                      SizedBox(
-                      height: 300,
+                      height: AppSizes.s300,
                       child: PageView.builder(
                        controller: _controller,
                        itemCount: value.getOneRequestModel!.complain!.mainThumbnail!.length,
@@ -194,9 +194,9 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
                       ),
                      ),
                      Padding(
-                       padding: EdgeInsets.only(bottom: 25, right: 40, left: 40),
+                       padding: EdgeInsets.only(bottom: AppSizes.s25, right: AppSizes.s40, left: AppSizes.s40),
                        child: SizedBox(
-                        height: 20,
+                        height: AppSizes.s20,
                         child: ListView.separated(
                           shrinkWrap: true,
                           reverse: false,
@@ -205,14 +205,14 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
                           padding: EdgeInsets.zero,
                           itemBuilder: (context, index) => AnimatedContainer(
                            duration: Duration(milliseconds: 300),
-                           margin: EdgeInsets.symmetric(horizontal: 4),
+                           margin: EdgeInsets.symmetric(horizontal: AppSizes.s4),
                            width: _currentIndex == index ? 12 : 8,
                            height: _currentIndex == index ? 12 : 8,
                            decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: _currentIndex == index ? Color(AppColors.background) : Colors.grey,
                            ),
-                          ), separatorBuilder: (context, index) => SizedBox(width: 5,),
+                          ), separatorBuilder: (context, index) => SizedBox(width: AppSizes.s5,),
                           itemCount: value.getOneRequestModel!.complain!.mainThumbnail!.length),
                        )
                      )
@@ -246,9 +246,9 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
                    ),
                   ],
                  ),
-                 SizedBox(height: 30,),
+                 SizedBox(height: AppSizes.s30,),
                  const CommentsTitle(),
-                 SizedBox(height: 10,),
+                 SizedBox(height: AppSizes.s10,),
                  CommentsWidget(
                    "emp-complains",
                    enable: value.getOneRequestModel!.complain!.commentStatus,
@@ -258,7 +258,7 @@ class _ComplainDetailsScreenState extends State<ComplainDetailsScreen> {
                    scrollController: _scrollController,
                    id : widget.id
                  ),
-                 const SizedBox(height: 20,)
+                 const SizedBox(height: AppSizes.s20,)
                 ],
                ),
               ),

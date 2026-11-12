@@ -148,7 +148,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 child: ListView(
                   controller: _scrollController,
                   children: [
-                    if((gCache != null && gCache['role'] is List && gCache['role'].isNotEmpty && gCache['role'].contains("personal"))) SizedBox(height: 5)
+                    if((gCache != null && gCache['role'] is List && gCache['role'].isNotEmpty && gCache['role'].contains("personal"))) SizedBox(height: AppSizes.s5)
                     else  SwitchRowNotification(
                       isLoginPageStyle: false,
                       value: CacheHelper.getBool("value") ??value!,
@@ -164,7 +164,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     ),
                     const SizedBox(height: AppSpacing.md),
                     ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16),
                       clipBehavior: Clip.none,
                       shrinkWrap: true,
                       reverse: false,
@@ -190,11 +190,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               0.6,
                           title: AppStrings.thereIsNoNotifications.tr()),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: AppSizes.s20),
                     if (notificationProviderModel.hasMoreNotifications && !notificationProviderModel.isGetNotificationLoading)
                       Center(
                         child: Padding(
-                          padding: EdgeInsets.only(bottom: 30),
+                          padding: EdgeInsets.only(bottom: AppSizes.s30),
                           child: ElevatedButton(
                             onPressed: () {
                               if(CacheHelper.getBool("value") != null){
@@ -210,7 +210,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Color(AppColors.buttons),
                               foregroundColor: Colors.white,
-                              padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                              padding: EdgeInsets.symmetric(horizontal: AppSizes.s40, vertical: AppSizes.s12),
                               shape: RoundedRectangleBorder(
                                 borderRadius: AppRadius.button,
                               ),
@@ -227,10 +227,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       ),
                     if (notificationProviderModel.isGetNotificationLoading && notificationProviderModel.currentPage != 1)
                       Padding(
-                        padding: EdgeInsets.only(bottom: 30),
+                        padding: EdgeInsets.only(bottom: AppSizes.s30),
                         child: const Center(child: CircularProgressIndicator()),
                       ),
-                    SizedBox(height: 20),
+                    SizedBox(height: AppSizes.s20),
                   ],
                 ),
               ),

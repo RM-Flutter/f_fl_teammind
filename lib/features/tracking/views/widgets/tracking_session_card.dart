@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -67,7 +68,7 @@ class TrackingSessionCard extends StatelessWidget {
                   children: [
                     Text('tracking_leg_n'.tr(namedArgs: {'n': '${sessionIndex + 1}'}),
                         style: AppStyles.heading(context).copyWith(fontSize: 14, fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: AppSizes.s2),
                     Text(range, style: AppStyles.greyContent(context).copyWith(fontSize: 12)),
                   ],
                 ),

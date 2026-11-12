@@ -140,7 +140,7 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
                   for (int i = 0; i < selectedFiles.length; i++) ...[
                     Container(
                       padding:
-                          const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                          const EdgeInsets.symmetric(horizontal: AppSizes.s12, vertical: AppSizes.s4),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(AppRadius.md),
@@ -150,7 +150,7 @@ class _AddEditDailyReportScreenState extends State<AddEditDailyReportScreen> {
                         children: [
                           Icon(Icons.insert_drive_file_rounded,
                               color: Colors.grey.shade600, size: 20),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: AppSizes.s12),
                           Expanded(
                             child: Text(selectedFiles[i].files.first.name,
                                 maxLines: 1,

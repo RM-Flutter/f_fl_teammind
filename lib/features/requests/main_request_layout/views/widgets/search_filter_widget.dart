@@ -230,7 +230,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   if (!isWeb) ...[
-                                    const SizedBox(height: 10,),
+                                    const SizedBox(height: AppSizes.s10,),
                                     Center(
                                       child:Container(
                                         width: 63,
@@ -241,11 +241,11 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                         ),
                                       ) ,
                                     ),
-                                    const SizedBox(height: 10,),
+                                    const SizedBox(height: AppSizes.s10,),
                                   ] else
-                                    const SizedBox(height: 20,),
+                                    const SizedBox(height: AppSizes.s20,),
                                   Padding(
-                                    padding: const EdgeInsets.all(20),
+                                    padding: const EdgeInsets.all(AppSizes.s20),
                                     child: Column(
                                       mainAxisAlignment: MainAxisAlignment.start,
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -271,7 +271,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                           hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
                                           borderRadius: BorderRadius.circular(AppRadius.sm),
                                           borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
-                                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                          contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s12),
                                           fieldSuffixIcon: InkWell(
                                             onTap: () async {
                                               viewModels.selectedRequestType = null;
@@ -325,7 +325,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                             ((gCache['is_teamleader_in'] is List && gCache['is_teamleader_in'].isNotEmpty) ||
                                                 (gCache['is_manager_in'] is List && gCache['is_manager_in'].isNotEmpty))) &&
                                             widget.requestsType != GetRequestsTypes.mine) ...[
-                                          const SizedBox(height: 12),
+                                          const SizedBox(height: AppSizes.s12),
                                           InkWell(
                                             borderRadius: BorderRadius.circular(10),
                                             onTap: () {
@@ -338,7 +338,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                               });
                                             },
                                             child: Container(
-                                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                                              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s14, vertical: AppSizes.s8),
                                               decoration: BoxDecoration(
                                                 color: viewModels.selectStatus == 'waiting_cancel'
                                                     ? Color(AppColors.buttons).withOpacity(0.08)
@@ -360,7 +360,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                                         ? Color(AppColors.buttons)
                                                         : Colors.grey.shade600,
                                                   ),
-                                                  const SizedBox(width: 10),
+                                                  const SizedBox(width: AppSizes.s10),
                                                   Expanded(
                                                     child: Text(
                                                       LocalizationService.isArabic(context: context)
@@ -415,7 +415,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                             hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
                                             borderRadius: BorderRadius.circular(AppRadius.sm),
                                             borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
-                                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                            contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s12),
                                             onChanged: (value){
                                               viewModel.selectedDepartment = value;
                                               viewModel.selectDepId = value['id']?.toString();
@@ -447,7 +447,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                             hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
                                             borderRadius: BorderRadius.circular(AppRadius.sm),
                                             borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
-                                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                            contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s12),
                                             onChanged: (value){
                                               viewModel.selectedEmployee = value;
                                               viewModel.selectedDatecontroller.clear();
@@ -466,7 +466,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                           hintStyle: AppStyles.greyContent(context).copyWith(fontSize: 12),
                                           borderRadius: BorderRadius.circular(AppRadius.sm),
                                           borderSide: BorderSide(color: Color(AppColors.border), width: 1.0),
-                                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                          contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s12),
                                           onChanged: (value) =>
                                               viewModels.selectInsteadOfHolidays(context,
                                                   startDateOrDatetime: value['from'],
@@ -498,7 +498,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                           ],
                                           onChanged: (v) => setState(() => _trackingFilter = _validTracking(v)),
                                         ),
-                                        const SizedBox(height: 30,),
+                                        const SizedBox(height: AppSizes.s30,),
                                         Row(
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
@@ -582,7 +582,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                                   color: Color(AppColors.buttons),
                                                   borderRadius: AppRadius.button,
                                                 ),
-                                                padding: const EdgeInsets.symmetric(horizontal: 40),
+                                                padding: const EdgeInsets.symmetric(horizontal: AppSizes.s40),
                                                 child: Text(
                                                   AppStrings.applyFilter.tr(),
                                                   style: AppStyles.whiteContent(context).copyWith(
@@ -613,7 +613,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                                   borderRadius: AppRadius.button,
                                                   border: Border.all(color: Color(AppColors.secondaryButton), width: 1),
                                                 ),
-                                                padding: const EdgeInsets.symmetric(horizontal: 20),
+                                                padding: const EdgeInsets.symmetric(horizontal: AppSizes.s20),
                                                 child: Text(
                                                   AppStrings.clear.tr(),
                                                   style: AppStyles.darkContent(context).copyWith(
@@ -625,7 +625,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                             ),
                                           ],
                                         ),
-                                        const SizedBox(height: 30,),
+                                        const SizedBox(height: AppSizes.s30,),
                                       ],
                                     ),
                                   ),
@@ -653,7 +653,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
       height: 48,
       width: 120,
       alignment: Alignment.center,
-      padding:const EdgeInsets.symmetric(horizontal: 10,),
+      padding:const EdgeInsets.symmetric(horizontal: AppSizes.s10,),
       decoration: BoxDecoration(
         color:Color(AppColors.background),
         borderRadius: BorderRadius.circular(AppRadius.xs),
@@ -700,7 +700,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
   );
   Widget defaultCircleColor(Color? color, Color? borderColor,  {width, height, radius, colors}){
     return (color != null && color != const Color(0xff123456))?Container(
-      margin:const EdgeInsets.symmetric(horizontal: 4),
+      margin:const EdgeInsets.symmetric(horizontal: AppSizes.s4),
       width: width,
       height: height,
       decoration: BoxDecoration(
@@ -710,7 +710,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
 
       ),
     ) :(color != null && color == const Color(0xff123456))? Container(
-      margin:const EdgeInsets.symmetric(horizontal: 4),
+      margin:const EdgeInsets.symmetric(horizontal: AppSizes.s4),
       width: width,
       height: height,
       alignment: Alignment.center,

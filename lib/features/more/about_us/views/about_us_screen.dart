@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'dart:convert';
 
 import 'package:app_test/core/constants/app_colors.dart';
@@ -119,7 +120,7 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
                                 child: Container(
                                   width: 40,
                                   height: 40,
-                                  padding: const EdgeInsets.all(10),
+                                  padding: const EdgeInsets.all(AppSizes.s10),
                                   decoration: BoxDecoration(shape: BoxShape.circle, color: accent),
                                   child: SvgPicture.asset(
                                     "assets/images/svg/${s.key}.svg",

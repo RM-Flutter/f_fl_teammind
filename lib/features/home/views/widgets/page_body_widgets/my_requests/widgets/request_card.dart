@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'dart:convert';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_design.dart';
@@ -137,7 +138,7 @@ class RequestCard extends StatelessWidget {
             icon: empLine.isNotEmpty ? null : Icons.event_note_rounded,
             borderColor: statusColor,
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSizes.s12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -149,11 +150,11 @@ class RequestCard extends StatelessWidget {
                     color: Color(AppColors.failureRed),
                     label: 'take_action'.tr(),
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        const EdgeInsets.symmetric(horizontal: AppSizes.s8, vertical: AppSizes.s3),
                     fontSize: 10,
                     iconSize: 11,
                   ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: AppSizes.s5),
                 ],
                 Text(
                   title,
@@ -164,7 +165,7 @@ class RequestCard extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 3),
+                const SizedBox(height: AppSizes.s3),
                 Text(
                   subtitle,
                   style: AppStyles.subtitleContent(context).copyWith(
@@ -175,7 +176,7 @@ class RequestCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 if (empLine.isNotEmpty) ...[
-                  const SizedBox(height: 3),
+                  const SizedBox(height: AppSizes.s3),
                   Text(
                     empLine,
                     style: AppStyles.subtitleContent(context).copyWith(
@@ -190,7 +191,7 @@ class RequestCard extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSizes.s8),
           if (isForDepartment &&
               request.id != null &&
               ((request.approvableType
@@ -222,7 +223,7 @@ class RequestCard extends StatelessWidget {
                 );
               },
               child: Container(
-                padding: const EdgeInsets.all(6),
+                padding: const EdgeInsets.all(AppSizes.s6),
                 decoration: BoxDecoration(
                   color: AppColors.statusTones(Color(AppColors.warningYellow)).tint,
                   shape: BoxShape.circle,
@@ -234,7 +235,7 @@ class RequestCard extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppSizes.s8),
           ],
           RequestsServices.getRequestsStatusIcon(
             context: context,

@@ -179,10 +179,10 @@ class _DefaultListPageState extends State<DefaultListPage> {
                 ),
               ),
               SizedBox(
-                height: 5,
+                height: AppSizes.s5,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+                padding: EdgeInsets.symmetric(horizontal: AppSizes.s8, vertical: AppSizes.s12),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

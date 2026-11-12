@@ -127,7 +127,7 @@ class _RequestsByTypeIdScreenState extends State<RequestsByTypeIdScreen> {
                           textAlign: TextAlign.center,
                           softWrap: true,
                         ),
-                        if( (rulesMessage ?? viewModel.rulesMessage) != null &&  (rulesMessage ?? viewModel.rulesMessage) != "")  SizedBox(height: 16),
+                        if( (rulesMessage ?? viewModel.rulesMessage) != null &&  (rulesMessage ?? viewModel.rulesMessage) != "")  SizedBox(height: AppSizes.s16),
                         if (viewModel.summaryReports != null && viewModel.summaryReports?.isNotEmpty == true)AppShortcutCard(
                           onTap: () async => viewModel
                               .showSummaryReports(context: context),

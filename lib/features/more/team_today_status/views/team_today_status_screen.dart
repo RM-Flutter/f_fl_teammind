@@ -100,26 +100,26 @@ class _Content extends StatelessWidget {
         // ── Summary cards ──────────────────────────────────────────────────
         if (controller.data?.summary != null)
           _SummaryRow(summary: controller.data!.summary!),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSizes.s16),
 
         // ── Search bar ─────────────────────────────────────────────────────
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16),
           child: _SearchBar(
             controller: searchController,
             onChanged: (q) => controller.setSearch(q),
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSizes.s12),
 
         // ── Filter chips ───────────────────────────────────────────────────
         SizedBox(
           height: 38,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16),
             itemCount: filters.length,
-            separatorBuilder: (_, __) => const SizedBox(width: 8),
+            separatorBuilder: (_, __) => const SizedBox(width: AppSizes.s8),
             itemBuilder: (context, i) {
               final f = filters[i];
               final selected = controller.selectedFilter == f.key;
@@ -131,7 +131,7 @@ class _Content extends StatelessWidget {
             },
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSizes.s16),
 
         // ── Member list ────────────────────────────────────────────────────
         if (members.isEmpty)
@@ -145,7 +145,7 @@ class _Content extends StatelessWidget {
             clipBehavior: Clip.none,
             physics: const NeverScrollableScrollPhysics(),
             padding: const EdgeInsets.symmetric(
-                horizontal: 16, vertical: 4),
+                horizontal: AppSizes.s16, vertical: AppSizes.s4),
             itemCount: members.length,
             separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.cardGap),
             itemBuilder: (_, i) => InkWell(
@@ -176,7 +176,7 @@ class _SummaryRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+      padding: const EdgeInsets.fromLTRB(AppSizes.s16, AppSizes.s16, AppSizes.s16, 0),
       child: Row(
         children: [
           _SummaryCard(
@@ -185,21 +185,21 @@ class _SummaryRow extends StatelessWidget {
             color: Color(AppColors.successGreen),
             icon: Icons.check_circle_outline_rounded,
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSizes.s8),
           _SummaryCard(
             label: 'absent'.tr(),
             count: summary.absent,
             color: Color(AppColors.failureRed),
             icon: Icons.cancel_outlined,
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSizes.s8),
           _SummaryCard(
             label: 'on_leave'.tr(),
             count: summary.vacation,
             color: Color(AppColors.warningYellow),
             icon: Icons.beach_access_rounded,
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSizes.s8),
           _SummaryCard(
             label: 'weekend'.tr(),
             count: summary.weekend,
@@ -229,7 +229,7 @@ class _SummaryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        padding: const EdgeInsets.symmetric(vertical: AppSizes.s12, horizontal: AppSizes.s8),
         decoration: BoxDecoration(
           color: color.withOpacity(0.08),
           borderRadius: BorderRadius.circular(AppRadius.md),
@@ -239,7 +239,7 @@ class _SummaryCard extends StatelessWidget {
         child: Column(
           children: [
             Icon(icon, color: color, size: 20),
-            const SizedBox(height: 4),
+            const SizedBox(height: AppSizes.s4),
             Text(
               count.toString(),
               style: TextStyle(
@@ -248,7 +248,7 @@ class _SummaryCard extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 2),
+            const SizedBox(height: AppSizes.s2),
             Text(
               label,
               style: TextStyle(
@@ -299,7 +299,7 @@ class _SearchBar extends StatelessWidget {
         filled: true,
         fillColor: Color(AppColors.inputFill),
         contentPadding:
-            const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+            const EdgeInsets.symmetric(vertical: AppSizes.s10, horizontal: AppSizes.s16),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(AppRadius.xl),
           borderSide: BorderSide(color: Color(AppColors.inputBorder)),
@@ -337,7 +337,7 @@ class _FilterChip extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 180),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s8),
         decoration: BoxDecoration(
           color: selected
               ? Color(AppColors.secondaryButton)
@@ -370,7 +370,7 @@ class _LoadingShimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSizes.s16),
       child: Column(
         children: [
           // summary skeleton
@@ -379,7 +379,7 @@ class _LoadingShimmer extends StatelessWidget {
               4,
               (_) => Expanded(
                 child: Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  margin: const EdgeInsets.symmetric(horizontal: AppSizes.s4),
                   height: 80,
                   decoration: BoxDecoration(
                     color: Colors.grey.shade200,
@@ -389,7 +389,7 @@ class _LoadingShimmer extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSizes.s16),
           // search skeleton
           Container(
             height: 44,
@@ -398,12 +398,12 @@ class _LoadingShimmer extends StatelessWidget {
               borderRadius: BorderRadius.circular(AppRadius.xl),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSizes.s16),
           // list skeletons
           ...List.generate(
             6,
             (_) => Container(
-              margin: const EdgeInsets.only(bottom: 10),
+              margin: const EdgeInsets.only(bottom: AppSizes.s10),
               height: 72,
               decoration: BoxDecoration(
                 color: Colors.grey.shade200,
@@ -429,17 +429,17 @@ class _ErrorView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(AppSizes.s24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(Icons.error_outline_rounded,
                 size: 56, color: Color(AppColors.failureRed)),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSizes.s12),
             Text(message,
                 textAlign: TextAlign.center,
                 style: AppStyles.subtitleContent(context)),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
             ElevatedButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh_rounded, size: 18),

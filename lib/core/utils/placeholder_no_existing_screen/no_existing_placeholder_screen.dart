@@ -133,7 +133,7 @@ class _NoExistingPlaceholderScreenState
             ),
           ),
           if (widget.message != null && widget.message!.isNotEmpty) ...[
-            const SizedBox(height: 6),
+            const SizedBox(height: AppSizes.s6),
             ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 280),
               child: Padding(

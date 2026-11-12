@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +29,7 @@ class AppStatusBadge extends StatelessWidget {
     required this.color,
     this.icon,
     this.trailingIcon,
-    this.padding = const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+    this.padding = const EdgeInsets.symmetric(horizontal: AppSizes.s10, vertical: AppSizes.s5),
     this.fontSize = 11,
     this.iconSize = 12,
   });
@@ -54,7 +55,7 @@ class AppStatusBadge extends StatelessWidget {
       color: resolvedColor,
       icon: resolvedIcon,
       padding:
-          padding ?? const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          padding ?? const EdgeInsets.symmetric(horizontal: AppSizes.s10, vertical: AppSizes.s5),
     );
   }
 
@@ -241,7 +242,7 @@ class AppStatusBadge extends StatelessWidget {
         children: [
           if (icon != null) ...[
             Icon(icon, size: iconSize, color: tones.text),
-            const SizedBox(width: 4),
+            const SizedBox(width: AppSizes.s4),
           ],
           Flexible(
             child: Text(
@@ -256,7 +257,7 @@ class AppStatusBadge extends StatelessWidget {
             ),
           ),
           if (trailingIcon != null) ...[
-            const SizedBox(width: 4),
+            const SizedBox(width: AppSizes.s4),
             Icon(trailingIcon, size: iconSize, color: tones.text),
           ],
         ],

@@ -78,7 +78,7 @@ class _RequestsByBalanceAndEmployeeIdModalState
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(height: 20),
+              SizedBox(height: AppSizes.s20),
               Consumer<RequestsByBalanceAndEmployeeIdViewModel>(
                   builder: (context, viewModel, child) => viewModel.isLoading
                       ? const LoadingPageWidget()

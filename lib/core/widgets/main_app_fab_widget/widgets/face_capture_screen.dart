@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:camera/camera.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -126,7 +127,7 @@ class _FaceCaptureScreenState extends State<FaceCaptureScreen> {
                 SafeArea(
                   top: false,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 12, 24, 16),
+                    padding: const EdgeInsets.fromLTRB(AppSizes.s24, AppSizes.s12, AppSizes.s24, AppSizes.s16),
                     child: SizedBox(
                       width: double.infinity,
                       height: 52,
@@ -139,7 +140,7 @@ class _FaceCaptureScreenState extends State<FaceCaptureScreen> {
                         onPressed: _taking ? null : _take,
                         icon: _taking
                             ? const SizedBox(
-                                width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
+                                width: AppSizes.s18, height: 18, child: CircularProgressIndicator(strokeWidth: 2))
                             : const Icon(Icons.camera_alt),
                         label: Text('take_photo'.tr(),
                             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),

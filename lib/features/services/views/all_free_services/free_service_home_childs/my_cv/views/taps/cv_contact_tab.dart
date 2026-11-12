@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/widgets/app_columns_flow.widget.dart';
 import 'package:app_test/features/services/data/models/cv_data_model.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/my_cv/controllers/my_cv_view_model.dart';
@@ -16,7 +17,7 @@ class CVContactTab extends StatelessWidget {
     final contact = viewModel.cvData?.contact ?? cvData?.contact;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16),
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.s16),
       child: AppColumnsFlow(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -31,7 +32,7 @@ class CVContactTab extends StatelessWidget {
                   icon: Icons.phone,
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               Expanded(
                 child: CVInfoItem(
                   label: 'WHATSAPP',
@@ -56,7 +57,7 @@ class CVContactTab extends StatelessWidget {
                   icon: Icons.link,
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               Expanded(
                 child: CVInfoItem(
                   label: 'BEHANCE',

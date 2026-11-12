@@ -50,7 +50,7 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
             alignment: Alignment.topCenter,
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: AppSizes.s20),
                 child: SizedBox(
                   height: AppSizes.s220,
                   child: SingleChildScrollView(
@@ -58,7 +58,7 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const SizedBox(height: 50),
+                        const SizedBox(height: AppSizes.s50),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -80,7 +80,7 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
                                 color: Color(AppColors.background),
                               ),
                             ),
-                            const SizedBox(width: 20),
+                            const SizedBox(width: AppSizes.s20),
                             const Spacer(),
                             Text(
                               AppStrings.myRequests.tr(),
@@ -98,7 +98,7 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 14),
+                        const SizedBox(height: AppSizes.s14),
                         Center(
                           child: ConstrainedBox(
                             constraints:
@@ -114,7 +114,7 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
                                     getOneRequestModel!.complain!.type,
                                     context,
                                   ),
-                                  const SizedBox(height: 8),
+                                  const SizedBox(height: AppSizes.s8),
                                 ],
                                 Text(
                                   (getOneRequestModel?.complain?.subject ?? "")
@@ -126,7 +126,7 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
                                   ),
                                   textAlign: TextAlign.center,
                                 ),
-                                const SizedBox(height: 16),
+                                const SizedBox(height: AppSizes.s16),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -171,7 +171,7 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
                                             shape: BoxShape.circle,
                                           ),
                                         ),
-                                        const SizedBox(width: 5),
+                                        const SizedBox(width: AppSizes.s5),
                                         SizedBox(
                                           width: effectiveWidth * 0.2,
                                           child: Text(
@@ -193,7 +193,7 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 16),
+                                const SizedBox(height: AppSizes.s16),
                               ],
                             ),
                           ),
@@ -237,7 +237,7 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(iconData, color: Colors.white, size: 15),
-        const SizedBox(width: 4),
+        const SizedBox(width: AppSizes.s4),
         SizedBox(
           width: effectiveWidth * 0.28,
           child: Text(
@@ -285,7 +285,7 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s10, vertical: AppSizes.s3),
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(AppRadius.md),
@@ -294,7 +294,7 @@ class RequestDetailsAppbarWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(icon, size: 12, color: textColor),
-          const SizedBox(width: 4),
+          const SizedBox(width: AppSizes.s4),
           Text(
             label,
             style: TextStyle(

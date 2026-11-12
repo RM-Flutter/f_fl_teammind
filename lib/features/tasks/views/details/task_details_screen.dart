@@ -133,7 +133,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
-                                      SizedBox(height: 20,),
+                                      SizedBox(height: AppSizes.s20,),
                                       Text(
                                         "${(value.getOneTaskModel!.task!.progress! % 1 == 0 ? value.getOneTaskModel!.task!.progress!.toInt().toString() : value.getOneTaskModel!.task!.progress!.toStringAsFixed(1))}% ${AppStrings.ofTaskHasBeenCompleted.tr()}",
                                         style: AppStyles.blackContent(context).copyWith(
@@ -142,7 +142,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                           color: Color(AppColors.darkBlueGrey),
                                         ),
                                       ),
-                                      SizedBox(height: 10,),
+                                      SizedBox(height: AppSizes.s10,),
                                       LinearProgressIndicator(
                                         color: Color(AppColors.buttons),
                                         value: (value.getOneTaskModel!.task!.progress ?? 0) / 100,
@@ -151,14 +151,14 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                       ),
                                     ],
                                   ),
-                                  SizedBox(height: 20,),
+                                  SizedBox(height: AppSizes.s20,),
                                   Text(
                                     AppStrings.description.tr(),
                                     style: AppStyles.primaryContent(context).copyWith(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 14),
                                   ),
-                                  SizedBox(height: 10,),
+                                  SizedBox(height: AppSizes.s10,),
                                   ExpandableTextWidget(
                                     text: value.getOneTaskModel!.task!.content!,
                                     maxLines: 5,
@@ -167,7 +167,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                         fontSize: 13,
                                         color: Color(0xff606060)),
                                   ),
-                                  SizedBox(height: 20,),
+                                  SizedBox(height: AppSizes.s20,),
                                   ListView.separated(
                                     padding: EdgeInsets.zero,
                                     clipBehavior: Clip.none,
@@ -219,7 +219,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                               crossAxisAlignment: CrossAxisAlignment.stretch,
                                               children: [
                                                 Padding(
-                                                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+                                                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: AppSizes.s12),
                                                   child: SvgPicture.asset(
                                                     icon['value']!,
                                                     width: 24,
@@ -241,7 +241,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                                             })
                                                         : null,
                                                   child: Padding(
-                                                    padding: EdgeInsets.symmetric(vertical: 12),
+                                                    padding: EdgeInsets.symmetric(vertical: AppSizes.s12),
                                                     child: Column(
                                                       crossAxisAlignment: CrossAxisAlignment.start,
                                                       mainAxisAlignment: MainAxisAlignment.center,
@@ -262,7 +262,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                                         // (LayoutBuilder) can't be used: decide by length instead.
                                                         if ((subTask.name?.length ?? 0) > _subTaskPreviewLength)
                                                           Padding(
-                                                            padding: EdgeInsets.only(top: 6),
+                                                            padding: EdgeInsets.only(top: AppSizes.s6),
                                                             child: Text(
                                                               (_expandedSubTasks.contains(index)
                                                                       ? AppStrings.readLess
@@ -275,7 +275,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                                               ),
                                                             ),
                                                           ),
-                                                        SizedBox(height: 4),
+                                                        SizedBox(height: AppSizes.s4),
                                                         Text(
                                                           "${value.getOneTaskModel!.task!.createAt != null ? locale.DateFormat('yyyy-MM-dd').format(DateTime.parse(value.getOneTaskModel!.task!.createAt!)) : ""} : ${value.getOneTaskModel!.task!.dueDate != null ? locale.DateFormat('yyyy-MM-dd').format(DateTime.parse(value.getOneTaskModel!.task!.dueDate!)) : ""}",
                                                           style: AppStyles.greyContent(context).copyWith(
@@ -305,10 +305,10 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                                   )
                                                 else if (indexSelect == index && value.isUpdateLoading == true)
                                                   SizedBox(
-                                                    width: 40,
+                                                    width: AppSizes.s40,
                                                     child: Center(
                                                       child: SizedBox(
-                                                        width: 20,
+                                                        width: AppSizes.s20,
                                                         height: 20,
                                                         child: const CircularProgressIndicator(strokeWidth: 2),
                                                       ),
@@ -354,7 +354,7 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                         ),
                                         icon: (value.isLoading == true)
                                             ? const SizedBox(
-                                                width: 20,
+                                                width: AppSizes.s20,
                                                 height: 20,
                                                 child: CircularProgressIndicator(
                                                   color: Colors.white,
@@ -371,9 +371,9 @@ class _TaskDetailsScreenState extends State<TaskDetailsScreen> {
                                         ),
                                       ),
                                     ),
-                                  SizedBox(height: 20,),
+                                  SizedBox(height: AppSizes.s20,),
                                   const CommentsTitle(),
-                                  SizedBox(height: 12,),
+                                  SizedBox(height: AppSizes.s12,),
                                   CommentsWidget(
                                       "tasks",
                                       enable: "enable",

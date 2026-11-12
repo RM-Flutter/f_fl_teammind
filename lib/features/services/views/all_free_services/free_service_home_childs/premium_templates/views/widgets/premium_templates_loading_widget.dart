@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_design.dart';
@@ -9,13 +10,13 @@ class PremiumTemplatesLoadingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16),
         child: Column(
           children: List.generate(
             6,
             (index) => Container(
-              margin: const EdgeInsets.only(bottom: 12),
-              padding: const EdgeInsets.all(12),
+              margin: const EdgeInsets.only(bottom: AppSizes.s12),
+              padding: const EdgeInsets.all(AppSizes.s12),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(AppRadius.md),
@@ -30,7 +31,7 @@ class PremiumTemplatesLoadingWidget extends StatelessWidget {
                     height: 80,
                     circularRaduis: 12,
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: AppSizes.s12),
                   // Info placeholders
                   Expanded(
                     child: Column(
@@ -42,13 +43,13 @@ class PremiumTemplatesLoadingWidget extends StatelessWidget {
                           height: 12,
                           width: 80,
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: AppSizes.s8),
                         // Title placeholder
                         const ShimmerAnimatedLoading(
                           height: 16,
                           width: double.infinity,
                         ),
-                        const SizedBox(height: 6),
+                        const SizedBox(height: AppSizes.s6),
                         // Description placeholder
                         const ShimmerAnimatedLoading(
                           height: 12,

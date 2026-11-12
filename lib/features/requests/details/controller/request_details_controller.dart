@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/services/app_error_reporter.dart';
 import 'dart:convert';
 import 'dart:io';
@@ -161,7 +162,7 @@ class RequestDetailsViewModel extends ChangeNotifier {
           }
           title = 'expense_claims_statistics'.tr();
           contentWidget = Padding(
-            padding: const EdgeInsets.only(top: 16.0),
+            padding: const EdgeInsets.only(top: AppSizes.s16),
             child: Column(
               children: reqs.map((req) => ApprovableCardWidget(
                 request: req,

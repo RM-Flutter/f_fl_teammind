@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -35,7 +36,7 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
         userSettings!.empId == request.employeeId;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s8, vertical: AppSizes.s12),
       child: DefaultTabController(
         length: 4,
         child: Column(
@@ -47,16 +48,16 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                 borderRadius: BorderRadius.circular(AppRadius.xl),
               ),
               height: 52,
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s6, vertical: AppSizes.s6),
               child: TabBar(
                 dividerColor: Colors.transparent,
-                indicatorPadding: const EdgeInsets.symmetric(horizontal: 2),
+                indicatorPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s2),
                 // Scrollable like the profile details tabs: each tab takes the width its
                 // label needs (no "Manager Resp..."), starting from the start side, and the
                 // bar scrolls sideways when the tabs do not fit.
                 isScrollable: true,
                 tabAlignment: TabAlignment.start,
-                labelPadding: const EdgeInsets.symmetric(horizontal: 16),
+                labelPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s16),
                 indicator: BoxDecoration(
                   color: Color(AppColors.buttons),
                   borderRadius: BorderRadius.circular(AppRadius.xl),
@@ -112,13 +113,13 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                    horizontal: 8, vertical: 8),
+                    horizontal: AppSizes.s8, vertical: AppSizes.s8),
                 child: TabBarView(
                   children: [
                     SingleChildScrollView(
                       physics: const BouncingScrollPhysics(),
                       child: Padding(
-                        padding: EdgeInsets.only(top: 20, bottom: 20),
+                        padding: EdgeInsets.only(top: AppSizes.s20, bottom: AppSizes.s20),
                         child: Text(
                           request.reason ?? '',
                           textAlign: TextAlign.center,
@@ -127,7 +128,7 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                        padding: EdgeInsets.only(top: 20),
+                        padding: EdgeInsets.only(top: AppSizes.s20),
                         child:request.managerReply.isNotEmpty ? Container(
                           height: 0.4.sh,
                           child: ListView.separated(
@@ -148,7 +149,7 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
 
                                   ),
                                 ],
-                              ), separatorBuilder: (context, index) => SizedBox(height: 20, child: const Divider(),),
+                              ), separatorBuilder: (context, index) => SizedBox(height: AppSizes.s20, child: const Divider(),),
                               itemCount: request.managerReply.length),
                         ):  Center(
                           child: Text(AppStrings.thereIsStillNoResponseFromTheManager.tr(),
@@ -163,11 +164,11 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(height: 25,),
+                          SizedBox(height: AppSizes.s25,),
                           Container(
                             width: double.infinity,
-                            margin: EdgeInsets.symmetric(horizontal: 16),
-                            padding:  EdgeInsets.symmetric(vertical: 12),
+                            margin: EdgeInsets.symmetric(horizontal: AppSizes.s16),
+                            padding:  EdgeInsets.symmetric(vertical: AppSizes.s12),
                             decoration: BoxDecoration(
                               color: const Color(0xFFF3F3F3),
                               borderRadius: BorderRadius.circular(AppRadius.xl),
@@ -188,11 +189,11 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                               ],
                             ),
                           ),
-                          SizedBox(height: 12,),
+                          SizedBox(height: AppSizes.s12,),
                           if(request.seenAt != null && request.seenAt != "") Container(
                             width: double.infinity,
-                            margin: EdgeInsets.symmetric(horizontal: 16),
-                            padding: EdgeInsets.symmetric(vertical: 12),
+                            margin: EdgeInsets.symmetric(horizontal: AppSizes.s16),
+                            padding: EdgeInsets.symmetric(vertical: AppSizes.s12),
                             decoration: BoxDecoration(
                               color: const Color(0xFFF3F3F3),
                               borderRadius: BorderRadius.circular(AppRadius.xl),
@@ -211,11 +212,11 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                               ],
                             ),
                           ),
-                          SizedBox(height: 12,),
+                          SizedBox(height: AppSizes.s12,),
                           if(request.statusUpdate != null && request.statusUpdate != "") Container(
                             width: double.infinity,
-                            margin: EdgeInsets.symmetric(horizontal: 16),
-                            padding: EdgeInsets.symmetric(vertical: 12),
+                            margin: EdgeInsets.symmetric(horizontal: AppSizes.s16),
+                            padding: EdgeInsets.symmetric(vertical: AppSizes.s12),
                             decoration: BoxDecoration(
                               color: const Color(0xFFF3F3F3),
                               borderRadius: BorderRadius.circular(AppRadius.xl),
@@ -234,7 +235,7 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                               ],
                             ),
                           ),
-                          if(request.seenBy != null && request.seenBy.isNotEmpty) SizedBox(height: 25,),
+                          if(request.seenBy != null && request.seenBy.isNotEmpty) SizedBox(height: AppSizes.s25,),
                           if(request.seenBy != null && request.seenBy.isNotEmpty)Text(AppStrings.seenBy.tr(),style: AppStyles.darkContent(context).copyWith(
                               fontWeight: FontWeight.w400, fontSize: 12
                           ),),
@@ -266,7 +267,7 @@ class CustomTabbarViewRequestDetails extends StatelessWidget {
                     SingleChildScrollView(
                       physics: const BouncingScrollPhysics(),
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 8, bottom: 20),
+                        padding: const EdgeInsets.only(top: AppSizes.s8, bottom: AppSizes.s20),
                         child: isMyRequest
                             ? TrackingSectionEmployee(request: request)
                             : TrackingSectionManager(request: request),

@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/routing/app_router.dart';
@@ -149,7 +150,7 @@ class _PersonalityTestScreenState extends State<PersonalityTestScreen> {
     final question = questions[currentQuestionIndex];
     
     return Padding(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(AppSizes.s24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -163,7 +164,7 @@ class _PersonalityTestScreenState extends State<PersonalityTestScreen> {
             ),
           ),
           
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSizes.s8),
           
           // Progress
           Text(
@@ -177,14 +178,14 @@ class _PersonalityTestScreenState extends State<PersonalityTestScreen> {
           ),
           
           // Progress Bar
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSizes.s16),
           LinearProgressIndicator(
             value: (currentQuestionIndex + 1) / questions.length,
             backgroundColor: Color(AppColors.disableButton),
             valueColor: AlwaysStoppedAnimation<Color>(Color(AppColors.buttons)),
           ),
           
-          const SizedBox(height: 40),
+          const SizedBox(height: AppSizes.s40),
           
           // Question
           Text(
@@ -197,18 +198,18 @@ class _PersonalityTestScreenState extends State<PersonalityTestScreen> {
             ),
           ),
           
-          const SizedBox(height: 32),
+          const SizedBox(height: AppSizes.s32),
           
           // Options
           ...List.generate(question['options'].length, (index) {
             return Padding(
-              padding: const EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.only(bottom: AppSizes.s12),
               child: InkWell(
                 onTap: () => _answerQuestion(index),
                 borderRadius: BorderRadius.circular(AppRadius.md),
                 child: Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(AppSizes.s16),
                   decoration: BoxDecoration(
                     color: answers[currentQuestionIndex] == index
                         ? Color(AppColors.buttons).withValues(alpha: 0.1)
@@ -241,7 +242,7 @@ class _PersonalityTestScreenState extends State<PersonalityTestScreen> {
   Widget _buildResultScreen() {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(AppSizes.s24),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -259,7 +260,7 @@ class _PersonalityTestScreenState extends State<PersonalityTestScreen> {
               ),
             ),
             
-            const SizedBox(height: 32),
+            const SizedBox(height: AppSizes.s32),
             
             Text(
               AppStrings.yourPersonalityType.tr(),
@@ -269,7 +270,7 @@ class _PersonalityTestScreenState extends State<PersonalityTestScreen> {
               ),
             ),
             
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSizes.s8),
             
             Text(
               personalityResult ?? '',
@@ -280,7 +281,7 @@ class _PersonalityTestScreenState extends State<PersonalityTestScreen> {
               ),
             ),
             
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSizes.s24),
             
             Text(
               AppStrings.personalityResultDescription.tr()
@@ -293,14 +294,14 @@ class _PersonalityTestScreenState extends State<PersonalityTestScreen> {
               ),
             ),
             
-            const SizedBox(height: 40),
+            const SizedBox(height: AppSizes.s40),
             
             ElevatedButton(
               onPressed: _restartTest,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(AppColors.buttons),
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
+                padding: const EdgeInsets.symmetric(horizontal: AppSizes.s40, vertical: AppSizes.s14),
                 shape: RoundedRectangleBorder(
                   borderRadius: AppRadius.button,
                 ),

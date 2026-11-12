@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/services/app_error_reporter.dart';
 import 'dart:async';
 import 'dart:io';
@@ -325,7 +326,7 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
           GestureDetector(
             onTap: () => _finishRecording(send: false),
             child: const Padding(
-              padding: EdgeInsets.only(right: 8),
+              padding: EdgeInsets.only(right: AppSizes.s8),
               child: Icon(Icons.delete_outline, color: Colors.red, size: 26),
             ),
           )
@@ -334,7 +335,7 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
             opacity: blinkOn ? 1 : 0.2,
             duration: const Duration(milliseconds: 250),
             child: const Padding(
-              padding: EdgeInsets.only(right: 8),
+              padding: EdgeInsets.only(right: AppSizes.s8),
               child: Icon(Icons.mic, color: Colors.red, size: 24),
             ),
           ),
@@ -343,11 +344,11 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
           style: const TextStyle(
               fontSize: 16, fontWeight: FontWeight.w600, color: Color(0xff303030)),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: AppSizes.s12),
         Expanded(
           child: _isLocked
               ? SizedBox(
-                  height: 28,
+                  height: AppSizes.s28,
                   child: CustomPaint(
                     painter: _LiveWaveformPainter(
                       levels: List.of(_levels),
@@ -410,7 +411,7 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
             Expanded(
               child: Container(
                 constraints: const BoxConstraints(minHeight: 48),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s8),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(AppRadius.xl),
@@ -444,7 +445,7 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
                               ),
                             ),
                           ),
-                          const SizedBox(width: 8),
+                          const SizedBox(width: AppSizes.s8),
                           GestureDetector(
                             onTap: () async {
                               await value.getImage(
@@ -462,7 +463,7 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
                               }
                             },
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s4),
                               child: SvgPicture.asset("assets/images/svg/image.svg",
                                   color: accent, width: 24, height: 24),
                             ),
@@ -471,7 +472,7 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
                       ),
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppSizes.s8),
             // One round button, like WhatsApp: send when there is text,
             // otherwise a hold-to-record mic.
             ValueListenableBuilder<TextEditingValue>(
@@ -495,7 +496,7 @@ class _SendCommentWidgetState extends State<SendCommentWidget> {
                   child: Center(
                     child: value.isAddCommentLoading
                         ? const Padding(
-                            padding: EdgeInsets.all(12.0),
+                            padding: EdgeInsets.all(AppSizes.s12),
                             child: CircularProgressIndicator(
                                 color: Colors.white, strokeWidth: 2),
                           )

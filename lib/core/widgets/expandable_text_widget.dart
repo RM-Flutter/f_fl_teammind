@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -48,7 +49,7 @@ class _ExpandableTextWidgetState extends State<ExpandableTextWidget> {
               GestureDetector(
                 onTap: () => setState(() => _expanded = !_expanded),
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 4),
+                  padding: const EdgeInsets.only(top: AppSizes.s4),
                   child: Text(
                     (_expanded ? AppStrings.readLess : AppStrings.readMore).tr(),
                     style: TextStyle(

@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/utils/app_styles.dart';
@@ -148,7 +149,7 @@ class CandidateInfoTab extends StatelessWidget {
       children: [
         if (contacts.isNotEmpty)
           _Card(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.s14, vertical: AppSizes.s4),
             child: Column(
               children: [
                 for (int i = 0; i < contacts.length; i++) ...[
@@ -187,18 +188,18 @@ class _ContactRow extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12),
+        padding: const EdgeInsets.symmetric(vertical: AppSizes.s12),
         child: Row(
           children: [
             _IconCircle(icon),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppSizes.s12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(label,
                       style: AppStyles.greyContent(context).copyWith(fontSize: 12)),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: AppSizes.s2),
                   Text(
                     value,
                     maxLines: 1,
@@ -209,9 +210,9 @@ class _ContactRow extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: AppSizes.s8),
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(AppSizes.s8),
               decoration: BoxDecoration(
                 color: Color(AppColors.buttons),
                 shape: BoxShape.circle,
@@ -235,17 +236,17 @@ class _StatTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _Card(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(AppSizes.s14),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _IconCircle(icon, size: 36),
-          const SizedBox(height: 10),
+          const SizedBox(height: AppSizes.s10),
           Text(label,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: AppStyles.greyContent(context).copyWith(fontSize: 12)),
-          const SizedBox(height: 2),
+          const SizedBox(height: AppSizes.s2),
           Text(
             value,
             maxLines: 2,
@@ -279,7 +280,7 @@ class SkillsTab extends StatelessWidget {
           for (final s in skills)
             if (_has(s.name))
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12, vertical: AppSizes.s8),
                 decoration: BoxDecoration(
                   color: accent.withOpacity(0.08),
                   borderRadius: BorderRadius.circular(AppRadius.pill),
@@ -289,7 +290,7 @@ class SkillsTab extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(Icons.check_circle_rounded, size: 14, color: accent),
-                    const SizedBox(width: 6),
+                    const SizedBox(width: AppSizes.s6),
                     Text(
                       s.name!,
                       style: TextStyle(
@@ -331,11 +332,11 @@ class MyEvaluationTab extends StatelessWidget {
     final e = evaluation;
     if (e == null) {
       return _Card(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
+        padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s32),
         child: Column(
           children: [
             _IconCircle(Icons.fact_check_outlined, size: 64),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSizes.s12),
             Text(
               'No evaluation submitted yet.'.tr(),
               textAlign: TextAlign.center,
@@ -383,7 +384,7 @@ class MyEvaluationTab extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(width: 16),
+              const SizedBox(width: AppSizes.s16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -392,10 +393,10 @@ class MyEvaluationTab extends StatelessWidget {
                         style: AppStyles.heading(context)
                             .copyWith(fontSize: 15, fontWeight: FontWeight.bold)),
                     if (_has(e.recommendation)) ...[
-                      const SizedBox(height: 8),
+                      const SizedBox(height: AppSizes.s8),
                       Text('Recommendation'.tr(),
                           style: AppStyles.greyContent(context).copyWith(fontSize: 12)),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: AppSizes.s4),
                       AppStatusBadge(
                         label: e.recommendation!.tr(),
                         color: _recommendationColor(e.recommendation),
@@ -414,7 +415,7 @@ class MyEvaluationTab extends StatelessWidget {
           child: Column(
             children: [
               _ScoreBar(label: 'Technical Score'.tr(), score: e.technicalScore, color: _scoreColor(e.technicalScore)),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSizes.s16),
               _ScoreBar(label: 'Soft Skills Score'.tr(), score: e.softSkillsScore, color: _scoreColor(e.softSkillsScore)),
             ],
           ),
@@ -426,14 +427,14 @@ class MyEvaluationTab extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _IconCircle(Icons.format_quote_rounded, size: 36),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSizes.s12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text('Notes'.tr(),
                           style: AppStyles.greyContent(context).copyWith(fontSize: 12)),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: AppSizes.s4),
                       Text(e.notes!,
                           style: AppStyles.heading(context)
                               .copyWith(fontSize: 14, fontWeight: FontWeight.w500, height: 1.5)),
@@ -475,7 +476,7 @@ class _ScoreBar extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSizes.s8),
         ClipRRect(
           borderRadius: BorderRadius.circular(AppRadius.pill),
           child: LinearProgressIndicator(

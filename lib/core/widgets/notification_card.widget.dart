@@ -71,7 +71,7 @@ class _NotificationCardState extends State<NotificationCard> {
                   ? Colors.grey.shade400
                   : Color(AppColors.buttons),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppSizes.s12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,7 +89,7 @@ class _NotificationCardState extends State<NotificationCard> {
                     ),
                   ),
                   if (dateText.isNotEmpty) ...[
-                    const SizedBox(height: 2),
+                    const SizedBox(height: AppSizes.s2),
                     Text(
                       dateText,
                       style: AppStyles.subtitleContent(context),
@@ -101,7 +101,7 @@ class _NotificationCardState extends State<NotificationCard> {
               ),
             ),
             if (!seen) ...[
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               Container(
                 width: 8,
                 height: 8,

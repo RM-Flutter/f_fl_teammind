@@ -223,7 +223,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
     if (value.isComplainLoadingData) {
       return Container(
         height: 56,
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(AppSizes.s12),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -231,7 +231,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
         ),
         child: const Center(
           child: SizedBox(
-            height: 20,
+            height: AppSizes.s20,
             width: 20,
             child: CircularProgressIndicator(strokeWidth: 2),
           ),
@@ -346,7 +346,7 @@ class _NewComplainScreenState extends State<NewComplainScreen> {
       children: [
         if (value.listAttachmentPersonalImage.isNotEmpty) ...[
           SizedBox(
-            height: 80,
+            height: AppSizes.s80,
             child: GridView.builder(
               physics: const ClampingScrollPhysics(),
               shrinkWrap: true,

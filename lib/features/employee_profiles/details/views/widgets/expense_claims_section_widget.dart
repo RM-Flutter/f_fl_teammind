@@ -60,7 +60,7 @@ class ExpenseClaimsSectionWidget extends StatelessWidget {
             separatorBuilder: (context, index) => const SizedBox.shrink(),
             itemCount: requests!.length <= 5 ? requests!.length : 5,
           ),
-          if (requests!.isNotEmpty) const SizedBox(height: 24),
+          if (requests!.isNotEmpty) const SizedBox(height: AppSizes.s24),
           if (requests!.isNotEmpty)
             Center(
               child: CustomElevatedButton(

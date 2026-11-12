@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
 import 'package:app_test/core/widgets/template_page.widget.dart';
@@ -257,7 +258,7 @@ class _AboutTeamMindScreenState extends State<AboutTeamMindScreen> {
     final imagesBlock = <Widget>[
           if (hasImages) ...[
             SizedBox(
-              height: 120,
+              height: AppSizes.s120,
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 clipBehavior: Clip.none,
@@ -473,7 +474,7 @@ class _AboutLoading extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.section),
           SizedBox(
-            height: 120,
+            height: AppSizes.s120,
             child: ListView(
               scrollDirection: Axis.horizontal,
               physics: const NeverScrollableScrollPhysics(),

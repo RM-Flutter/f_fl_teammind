@@ -269,7 +269,7 @@ class PersonalProfileController extends ChangeNotifier {
           context: context,
           builder: (BuildContext context) {
             return SizedBox(
-              height: 200,
+              height: AppSizes.s200,
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -281,7 +281,7 @@ class PersonalProfileController extends ChangeNotifier {
                           fontSize: 20, color: Colors.black),
                     ),
                     const SizedBox(
-                      height: 10,
+                      height: AppSizes.s10,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -409,7 +409,7 @@ class PersonalProfileController extends ChangeNotifier {
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.white,
-          insetPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+          insetPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s24),
           title: Text(
             AppStrings.fa_activated.tr(),
             style: TextStyle(color: Color(AppColors.buttons)),

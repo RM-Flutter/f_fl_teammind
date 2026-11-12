@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -349,7 +350,7 @@ class ApprovableCardWidget extends StatelessWidget {
                 child: Icon(Icons.gavel_rounded,
                     color: Color(AppColors.failureRed), size: 22),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: AppSizes.s4),
               Text(
                 'action'.tr(),
                 style: TextStyle(
@@ -394,7 +395,7 @@ class ApprovableCardWidget extends StatelessWidget {
                 child: Icon(Icons.manage_accounts_rounded,
                     color: AppColors.statusTones(Color(AppColors.warningYellow)).text, size: 22),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: AppSizes.s4),
               Text(
                 'as_someone'.tr(),
                 style: TextStyle(
@@ -463,7 +464,7 @@ class ApprovableCardWidget extends StatelessWidget {
                 child: Icon(Icons.cancel_outlined,
                     color: Color(AppColors.failureRed), size: 22),
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: AppSizes.s4),
               Text(
                 isArabic ? 'موافقة إلغاء' : 'Approve Cancel',
                 style: TextStyle(
@@ -494,7 +495,7 @@ class ApprovableCardWidget extends StatelessWidget {
       padding: AppSpacing.cardPadding,
       // No horizontal margin: slidable and normal cards must share the same edges (rule 1).
       margin: slideActions.isNotEmpty
-          ? const EdgeInsets.symmetric(vertical: 2)
+          ? const EdgeInsets.symmetric(vertical: AppSizes.s2)
           : null,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -509,7 +510,7 @@ class ApprovableCardWidget extends StatelessWidget {
                 : _iconForApprovableType(info.approvableType),
             borderColor: statusColor,
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSizes.s12),
 
           // ── Content: Action badges + Title + Subtitle + Employee ────────
           Expanded(
@@ -531,7 +532,7 @@ class ApprovableCardWidget extends StatelessWidget {
                           color: Color(AppColors.failureRed),
                           label: 'action_required'.tr(),
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 3),
+                              horizontal: AppSizes.s8, vertical: AppSizes.s3),
                           fontSize: 10,
                           iconSize: 11,
                         ),
@@ -541,7 +542,7 @@ class ApprovableCardWidget extends StatelessWidget {
                           color: Color(AppColors.warningYellow),
                           label: 'act_as_someone'.tr(),
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 3),
+                              horizontal: AppSizes.s8, vertical: AppSizes.s3),
                           fontSize: 10,
                           iconSize: 11,
                         ),
@@ -553,7 +554,7 @@ class ApprovableCardWidget extends StatelessWidget {
                               ? 'مطلوب موافقة إلغاء'
                               : 'Cancel Approval Required',
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 3),
+                              horizontal: AppSizes.s8, vertical: AppSizes.s3),
                           fontSize: 10,
                           iconSize: 11,
                         ),
@@ -565,13 +566,13 @@ class ApprovableCardWidget extends StatelessWidget {
                               ? 'طلب إلغاء معلق'
                               : 'Cancellation Pending',
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 3),
+                              horizontal: AppSizes.s8, vertical: AppSizes.s3),
                           fontSize: 10,
                           iconSize: 11,
                         ),
                     ],
                   ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: AppSizes.s5),
                 ],
                 Text(
                   info.title.isNotEmpty ? info.title : '-',
@@ -583,7 +584,7 @@ class ApprovableCardWidget extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 if (info.subtitle.isNotEmpty) ...[
-                  const SizedBox(height: 3),
+                  const SizedBox(height: AppSizes.s3),
                   Text(
                     info.subtitle,
                     style: AppStyles.subtitleContent(context).copyWith(
@@ -595,7 +596,7 @@ class ApprovableCardWidget extends StatelessWidget {
                   ),
                 ],
                 if (isForDepartment && info.employeeName.isNotEmpty) ...[
-                  const SizedBox(height: 3),
+                  const SizedBox(height: AppSizes.s3),
                   Text(
                     info.employeeName,
                     style: AppStyles.subtitleContent(context).copyWith(
@@ -627,7 +628,7 @@ class ApprovableCardWidget extends StatelessWidget {
                   return Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const SizedBox(width: 6),
+                      const SizedBox(width: AppSizes.s6),
                       InkWell(
                         customBorder: const CircleBorder(),
                         onTap: () {
@@ -637,7 +638,7 @@ class ApprovableCardWidget extends StatelessWidget {
                           );
                         },
                         child: Container(
-                          padding: const EdgeInsets.all(6),
+                          padding: const EdgeInsets.all(AppSizes.s6),
                           decoration: BoxDecoration(
                             color: AppColors.statusTones(Color(AppColors.warningYellow)).tint,
                             shape: BoxShape.circle,
@@ -658,17 +659,17 @@ class ApprovableCardWidget extends StatelessWidget {
 
           // ── Trailing Status Badge ───────────────────────────────────────
           if (customTrailing != null) ...[
-            const SizedBox(width: 8),
+            const SizedBox(width: AppSizes.s8),
             customTrailing!,
           ] else if (request is InterviewModel) ...[
-            const SizedBox(width: 8),
+            const SizedBox(width: AppSizes.s8),
             _EvaluationStatusBadge(
               isEvaluated: (request as InterviewModel).myEvaluation != null,
             ),
           ] else if (info.status != null &&
               info.status!.trim().isNotEmpty &&
               info.status!.trim().toLowerCase() != 'null') ...[
-            const SizedBox(width: 8),
+            const SizedBox(width: AppSizes.s8),
             RequestsServices.getRequestsStatusIcon(
               context: context,
               status: info.status,

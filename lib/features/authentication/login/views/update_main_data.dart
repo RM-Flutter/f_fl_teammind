@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/platform/platform_is.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -148,7 +149,7 @@ class _WebViewStackMainDataState extends State<WebViewStackMainData> {
 
     return Stack(
       children: [
-        const SizedBox(height: 30,),
+        const SizedBox(height: AppSizes.s30,),
         WebViewWidget(controller: controller),
         if (loadingPercentage < 100)
           LinearProgressIndicator(value: loadingPercentage / 100.0),

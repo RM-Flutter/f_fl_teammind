@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -121,7 +122,7 @@ class _TimelineRow extends StatelessWidget {
         children: [
           // Marker + the line down to the next point.
           SizedBox(
-            width: 28,
+            width: AppSizes.s28,
             child: Column(
               children: [
                 Container(
@@ -134,7 +135,7 @@ class _TimelineRow extends StatelessWidget {
                   Expanded(
                     child: Container(
                       width: 2,
-                      margin: const EdgeInsets.symmetric(vertical: 2),
+                      margin: const EdgeInsets.symmetric(vertical: AppSizes.s2),
                       color: Color(AppColors.border),
                     ),
                   ),
@@ -144,7 +145,7 @@ class _TimelineRow extends StatelessWidget {
           const SizedBox(width: AppSpacing.md),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.only(top: 4, bottom: AppSpacing.md),
+              padding: const EdgeInsets.only(top: AppSizes.s4, bottom: AppSpacing.md),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -157,7 +158,7 @@ class _TimelineRow extends StatelessWidget {
                       fontWeight: p.isManual ? FontWeight.w700 : FontWeight.w600,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: AppSizes.s2),
                   Wrap(
                     spacing: AppSpacing.sm,
                     crossAxisAlignment: WrapCrossAlignment.center,
@@ -168,7 +169,7 @@ class _TimelineRow extends StatelessWidget {
                             style: AppStyles.greyContent(context).copyWith(fontSize: 11.5)),
                       if (p.isManual && !p.isStartPoint && !p.isEndPoint)
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+                          padding: const EdgeInsets.symmetric(horizontal: AppSizes.s6, vertical: AppSizes.s1),
                           decoration: BoxDecoration(
                             color: tones.tint,
                             borderRadius: BorderRadius.circular(AppRadius.pill),

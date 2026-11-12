@@ -59,7 +59,7 @@ class HistoryDropDownWidget extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(30.0),
+              padding: const EdgeInsets.all(AppSizes.s30),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -104,7 +104,7 @@ class HistoryDropDownWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-                  if(notes != null && notes != "") const SizedBox(height: 30),
+                  if(notes != null && notes != "") const SizedBox(height: AppSizes.s30),
                   if(notes != null && notes != "") Text(AppStrings.notes.tr(), style: const TextStyle(color: Color(AppColors.oc2), fontWeight: FontWeight.w400, fontSize: 12),),
                   if(notes != null && notes != "")  const SizedBox(height: 15,),
                   if(notes != null && notes != "")  Text(notes.toString(), style: const TextStyle(color: Color(AppColors.gray1), fontWeight: FontWeight.w400, fontSize: 14)),

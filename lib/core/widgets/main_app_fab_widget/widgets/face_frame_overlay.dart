@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:flutter/material.dart';
 
 /// Face guide drawn over a camera preview: an oval frame (outside dimmed), what to do above it
@@ -56,7 +57,7 @@ class FaceFrameOverlay extends StatelessWidget {
             right: 20,
             bottom: size.height - oval.top + 12,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s12),
               decoration: BoxDecoration(
                 color: Colors.black.withValues(alpha: 0.65),
                 borderRadius: BorderRadius.circular(14),
@@ -69,9 +70,9 @@ class FaceFrameOverlay extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: const TextStyle(color: Colors.white, fontSize: 19, fontWeight: FontWeight.bold),
                   ),
-                  if (hint != null) ...[const SizedBox(height: 6), hint!],
+                  if (hint != null) ...[const SizedBox(height: AppSizes.s6), hint!],
                   if (status != null && status!.isNotEmpty) ...[
-                    const SizedBox(height: 6),
+                    const SizedBox(height: AppSizes.s6),
                     Text(
                       status!,
                       textAlign: TextAlign.center,
@@ -94,10 +95,10 @@ class FaceFrameOverlay extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Padding(
-                      padding: EdgeInsets.only(top: 2),
+                      padding: EdgeInsets.only(top: AppSizes.s2),
                       child: Icon(Icons.info_outline, color: Colors.white70, size: 18),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: AppSizes.s8),
                     Expanded(
                       child: Text(
                         reason,
@@ -107,15 +108,15 @@ class FaceFrameOverlay extends StatelessWidget {
                   ],
                 ),
                 if (tip != null) ...[
-                  const SizedBox(height: 6),
+                  const SizedBox(height: AppSizes.s6),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Padding(
-                        padding: EdgeInsets.only(top: 2),
+                        padding: EdgeInsets.only(top: AppSizes.s2),
                         child: Icon(Icons.lightbulb_outline, color: Colors.white70, size: 18),
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: AppSizes.s8),
                       Expanded(
                         child: Text(
                           tip!,

@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/features/more/notifications/controllers/notification_controller.dart';
@@ -68,10 +69,10 @@ class _NotificationReactionsWidgetState
           children: [
             if ((emotionData.totalCount ?? 0) > 0)
               _buildSummaryBar(emotionData),
-            if ((emotionData.totalCount ?? 0) > 0) const SizedBox(height: 10),
+            if ((emotionData.totalCount ?? 0) > 0) const SizedBox(height: AppSizes.s10),
 
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12, vertical: AppSizes.s8),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(AppRadius.xl),
@@ -98,8 +99,8 @@ class _NotificationReactionsWidgetState
                     },
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 200),
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      padding: const EdgeInsets.all(6),
+                      margin: const EdgeInsets.symmetric(horizontal: AppSizes.s4),
+                      padding: const EdgeInsets.all(AppSizes.s6),
                       decoration: BoxDecoration(
                         color: isSelected ? c.withOpacity(0.15) : Colors.transparent,
                         shape: BoxShape.circle,
@@ -115,9 +116,9 @@ class _NotificationReactionsWidgetState
               ),
             ),
             if (controller.isEmotionLoading) ...[
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSizes.s12),
               const SizedBox(
-                width: 20, height: 20,
+                width: AppSizes.s20, height: 20,
                 child: CircularProgressIndicator(strokeWidth: 2),
               ),
             ],
@@ -146,7 +147,7 @@ class _NotificationReactionsWidgetState
             return AlertDialog(
               backgroundColor: Colors.white,
               surfaceTintColor: Colors.transparent,
-              contentPadding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
+              contentPadding: const EdgeInsets.fromLTRB(AppSizes.s24, 0, AppSizes.s24, AppSizes.s8),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg)),
               title: Column(
                 children: [
@@ -154,7 +155,7 @@ class _NotificationReactionsWidgetState
                     'reactions'.tr(),
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.black87),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppSizes.s8),
                   Divider(color: Colors.grey.shade200, height: 1),
                 ],
               ),
@@ -162,14 +163,14 @@ class _NotificationReactionsWidgetState
                 mainAxisSize: MainAxisSize.min,
                 children: sorted.map((key) {
                   return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12.0),
+                    padding: const EdgeInsets.symmetric(vertical: AppSizes.s12),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
                           children: [
                             Text(_emojiMap[key]!, style: const TextStyle(fontSize: 26)),
-                            const SizedBox(width: 14),
+                            const SizedBox(width: AppSizes.s14),
                             Text(
                               _labelMap[key] ?? key,
                               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black87),
@@ -199,7 +200,7 @@ class _NotificationReactionsWidgetState
         );
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12, vertical: AppSizes.s6),
         decoration: const BoxDecoration(
           color: Colors.transparent,
         ),
@@ -209,11 +210,11 @@ class _NotificationReactionsWidgetState
           children: [
             ...sorted.take(3).map(
                   (k) => Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 1),
+                    padding: const EdgeInsets.symmetric(horizontal: AppSizes.s1),
                     child: Text(_emojiMap[k]!, style: const TextStyle(fontSize: 16)),
                   ),
                 ),
-            const SizedBox(width: 6),
+            const SizedBox(width: AppSizes.s6),
             Text(
               '${emotionData.totalCount ?? 0}',
               style: TextStyle(

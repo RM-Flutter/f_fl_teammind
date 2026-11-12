@@ -130,7 +130,7 @@ class _MyCVScreenState extends State<MyCVScreen> with SingleTickerProviderStateM
             }
 
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16),
               child: Column(
                 children: [
                   // Header Section
@@ -150,7 +150,7 @@ class _MyCVScreenState extends State<MyCVScreen> with SingleTickerProviderStateM
                           if(selectIndex == 2) CVJobInfoTab(cvData: viewModel.cvData),
                           if(selectIndex == 3) CVEducationTab(cvData: viewModel.cvData),
                           // Extra space so FAB doesn't overlap last item
-                          const SizedBox(height: 80),
+                          const SizedBox(height: AppSizes.s80),
                         ],
                       ),
                     ),

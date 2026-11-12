@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -15,7 +16,7 @@ class ManagerResponseTab extends StatelessWidget {
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Padding(
-        padding: const EdgeInsets.only(top: 10, bottom: 4),
+        padding: const EdgeInsets.only(top: AppSizes.s10, bottom: AppSizes.s4),
         child: (requiredApprovals != null && requiredApprovals!.isNotEmpty)
             ? RequiredApprovalsTableWidget(
                 requiredApprovals: requiredApprovals!,

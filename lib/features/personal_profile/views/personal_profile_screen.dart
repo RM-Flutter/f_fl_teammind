@@ -40,12 +40,12 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
         color: Colors.black26,
         child: Center(
           child: AppCard(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.all(AppSizes.s24),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 const CircularProgressIndicator(),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSizes.s16),
                 Text(AppStrings.loading.tr()),
               ],
             ),
@@ -134,9 +134,9 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                       controller: viewModel.scrollController,
                       padding: const EdgeInsets.fromLTRB(
                         AppSpacing.page,
-                        12,
+                        AppSizes.s12,
                         AppSpacing.page,
-                        32,
+                        AppSizes.s32,
                       ),
                       child: Center(
                         child: ConstrainedBox(
@@ -163,7 +163,7 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                     : "",
                                 subtitle: AppStrings.niceToMeetYou.tr(),
                               ),
-                              const SizedBox(height: 12),
+                              const SizedBox(height: AppSizes.s12),
 
                               // 1. Update Main Data Card
                               AppCard(
@@ -219,7 +219,7 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 12),
+                              const SizedBox(height: AppSizes.s12),
 
                               // 2. Change Email Card
                               AppCard(
@@ -287,7 +287,7 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                   ],
                                 ),
                               ),
-                              const SizedBox(height: 12),
+                              const SizedBox(height: AppSizes.s12),
 
                               // 3. Change Phone Number Card
                               AppCard(
@@ -348,7 +348,7 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                   ],
                                 ),
                               ),
-                              const SizedBox(height: 12),
+                              const SizedBox(height: AppSizes.s12),
 
                               // 4. Two-Factor Auth Card
                               if (us1Cache != null) ...[
@@ -412,7 +412,7 @@ class _PersonalProfileScreenState extends State<PersonalProfileScreen> {
                                     ],
                                   ),
                                 ),
-                                const SizedBox(height: 12),
+                                const SizedBox(height: AppSizes.s12),
                               ],
 
                               // 5. Delete Account Card

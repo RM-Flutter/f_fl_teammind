@@ -266,7 +266,7 @@ class _PointsCategoriesScreenState extends State<PointsCategoriesScreen> {
     return GestureDetector(
       onTap: onTap ?? () {},
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 5),
+        padding: const EdgeInsets.symmetric(vertical: AppSizes.s5),
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -293,10 +293,10 @@ class _PointsCategoriesScreenState extends State<PointsCategoriesScreen> {
                 ),
               ), // Replace with project images
               SizedBox(
-                height: 5,
+                height: AppSizes.s5,
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(AppSizes.s8),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

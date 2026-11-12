@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/widgets/app_responsive_grid.widget.dart';
 import 'package:app_test/core/utils/custom_shimmer_loading/shimmer_animated_loading.dart';
@@ -244,7 +245,7 @@ class _SelectSmartCardTemplateScreenState
         duration: AppMotion.fast,
         width: 34,
         height: 34,
-        padding: const EdgeInsets.all(3),
+        padding: const EdgeInsets.all(AppSizes.s3),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           border: Border.all(
@@ -302,7 +303,7 @@ class _SelectSmartCardTemplateScreenState
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Colors.red[700]),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSizes.s16),
                     ElevatedButton(
                       onPressed: () => vm.loadTemplates(context),
                       child: Text(AppStrings.retry.tr()),
@@ -320,7 +321,7 @@ class _SelectSmartCardTemplateScreenState
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.folder_open, size: 48, color: Colors.grey[400]),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: AppSizes.s16),
                     Text(
                       AppStrings.noDataFounded.tr(),
                       style:
@@ -336,7 +337,7 @@ class _SelectSmartCardTemplateScreenState
 
             return Column(
               children: [
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSizes.s16),
                 Expanded(
                   child: LayoutService.isExpanded(context)
                       // Wide windows: all the templates at once, tap one to select it.
@@ -363,10 +364,10 @@ class _SelectSmartCardTemplateScreenState
                           },
                         ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSizes.s12),
                 if (!LayoutService.isExpanded(context))
                   AppPageDots(count: templates.length, index: selectedTemplateIndex),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSizes.s16),
 
                 // Colors selection section
                 Padding(
@@ -394,7 +395,7 @@ class _SelectSmartCardTemplateScreenState
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(AppSizes.s16),
                   child: ElevatedButton(
                     onPressed: _isSaving
                         ? null
@@ -409,7 +410,7 @@ class _SelectSmartCardTemplateScreenState
                     ),
                     child: _isSaving
                         ? const SizedBox(
-                            height: 20,
+                            height: AppSizes.s20,
                             width: 20,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
@@ -454,7 +455,7 @@ class _SelectSmartCardTemplateScreenState
       child: AspectRatio(
         aspectRatio: 9 / 16,
         child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          margin: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s8),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.lg),
@@ -503,7 +504,7 @@ class _SelectSmartCardTemplateScreenState
               if (template['slug'] != null &&
                   template['slug'].toString().isNotEmpty)
                 Padding(
-                  padding: const EdgeInsets.all(12),
+                  padding: const EdgeInsets.all(AppSizes.s12),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(

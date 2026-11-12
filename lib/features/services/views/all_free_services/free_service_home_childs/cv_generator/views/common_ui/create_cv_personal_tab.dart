@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/widgets/app_field_shell.widget.dart';
 import 'package:app_test/core/widgets/app_columns_flow.widget.dart';
 import 'dart:io';
@@ -35,35 +36,35 @@ class CreateCVPersonalTab extends StatelessWidget {
             isRequired: true,
             hint: AppStrings.enterYourName.tr(),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSizes.s16),
 
           if (showCvDemographics) ...[
             _buildFamilyStatusDropdown(),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
 
             _buildBirthdayField(context),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
 
             _buildGenderDropdown(),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
           ],
 
           if (showCvDemographics) ...[
             _buildNationalityDropdown(),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
           ],
 
           _buildCountryDropdown(context),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSizes.s16),
 
           if (viewModel.countryId != null) ...[
             _buildStateDropdown(context),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
           ],
 
           if (viewModel.stateId != null) ...[
             _buildCityDropdown(context),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
           ],
 
           _buildTextField(
@@ -105,7 +106,7 @@ class CreateCVPersonalTab extends StatelessWidget {
               ),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSizes.s8),
         TextFormField(
           controller: controller,
           keyboardType: keyboardType,
@@ -116,7 +117,7 @@ class CreateCVPersonalTab extends StatelessWidget {
               borderRadius: AppField.borderRadius,
               borderSide: const BorderSide(color: AppField.borderColor),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s16),
           ),
         ),
       ],
@@ -135,7 +136,7 @@ class CreateCVPersonalTab extends StatelessWidget {
             color: Color(AppColors.secondaryButton),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSizes.s8),
         DropdownButtonFormField<String>(
           icon: AppFieldShell.icon(Icons.keyboard_arrow_down_rounded),
           value: viewModel.familyStatus,
@@ -146,7 +147,7 @@ class CreateCVPersonalTab extends StatelessWidget {
               borderRadius: AppField.borderRadius,
               borderSide: const BorderSide(color: AppField.borderColor),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s16),
           ),
           style: AppField.valueStyle,
           items: ['single', 'married', 'divorced', 'widowed']
@@ -187,7 +188,7 @@ class CreateCVPersonalTab extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSizes.s8),
         AppFieldShell(
           trailingIcon: Icons.calendar_today_outlined,
           onTap: () async {
@@ -233,7 +234,7 @@ class CreateCVPersonalTab extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSizes.s8),
         DropdownButtonFormField<String>(
           icon: AppFieldShell.icon(Icons.keyboard_arrow_down_rounded),
           value: viewModel.gender,
@@ -244,7 +245,7 @@ class CreateCVPersonalTab extends StatelessWidget {
               borderRadius: AppField.borderRadius,
               borderSide: const BorderSide(color: AppField.borderColor),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s16),
           ),
           style: AppField.valueStyle,
           items: ['male', 'female']
@@ -292,7 +293,7 @@ class CreateCVPersonalTab extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSizes.s8),
         CustomDropdown.search(
           items: viewModel.nationalities,
           selectedValue: selectedNationality,
@@ -301,7 +302,7 @@ class CreateCVPersonalTab extends StatelessWidget {
           hintStyle: AppField.hintStyle,
           borderRadius: AppField.borderRadius,
           borderSide: const BorderSide(color: AppField.borderColor),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s16),
           onChanged: (value) {
             if (value.isNotEmpty && value['id'] != null) {
               viewModel.nationalityId = value['id'] as int;
@@ -341,7 +342,7 @@ class CreateCVPersonalTab extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSizes.s8),
         CustomDropdown.search(
           items: viewModel.countries,
           selectedValue: countryValue,
@@ -350,7 +351,7 @@ class CreateCVPersonalTab extends StatelessWidget {
           hintStyle: AppField.hintStyle,
           borderRadius: AppField.borderRadius,
           borderSide: const BorderSide(color: AppField.borderColor),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s16),
           onChanged: (value) {
             if (value.isNotEmpty && value['id'] != null) {
               viewModel.loadStates(context, value['id'] as int);
@@ -389,7 +390,7 @@ class CreateCVPersonalTab extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSizes.s8),
         CustomDropdown.search(
           isLoading: viewModel.isStatesLoading,
           items: viewModel.states,
@@ -399,7 +400,7 @@ class CreateCVPersonalTab extends StatelessWidget {
           hintStyle: AppField.hintStyle,
           borderRadius: AppField.borderRadius,
           borderSide: const BorderSide(color: AppField.borderColor),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s16),
           onChanged: (value) {
             if (value.isNotEmpty && value['id'] != null && value['id'] != -1) {
               viewModel.loadCities(context, value['id'] as int);
@@ -438,7 +439,7 @@ class CreateCVPersonalTab extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSizes.s8),
         CustomDropdown.search(
           isLoading: viewModel.isCitiesLoading,
           items: viewModel.cities,
@@ -448,7 +449,7 @@ class CreateCVPersonalTab extends StatelessWidget {
           hintStyle: AppField.hintStyle,
           borderRadius: AppField.borderRadius,
           borderSide: const BorderSide(color: AppField.borderColor),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s16),
           onChanged: (value) {
             if (value.isNotEmpty && value['id'] != null && value['id'] != -1) {
               viewModel.cityId = value['id'] as int;
@@ -549,7 +550,7 @@ class CreateCVPersonalTab extends StatelessWidget {
 
         // Show picker button if new image is selected
         if (viewModel.imageSourceType == ImageSourceType.newImage) ...[
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSizes.s8),
           Row(
             children: [
               Expanded(
@@ -559,7 +560,7 @@ class CreateCVPersonalTab extends StatelessWidget {
                   label: Text(AppStrings.camera.tr()),
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               Expanded(
                 child: OutlinedButton.icon(
                   onPressed: () => viewModel.pickImageFromGallery(),

@@ -82,7 +82,7 @@ class _EvaluationRequireScreenState extends State<EvaluationRequireScreen> {
                             pathParameters: {
                               'lang': context.locale.languageCode,
                             })),
-                    if(viewModel.evaluations.isEmpty == true) const SizedBox(height: 20),
+                    if(viewModel.evaluations.isEmpty == true) const SizedBox(height: AppSizes.s20),
                     Consumer<EvaluationController>(
                         builder: (context, viewModel, child) => viewModel.isLoading
                             ? const PayrollsAndPenaltiesRewardsLoadingScreensWidget(padding: EdgeInsets.zero)

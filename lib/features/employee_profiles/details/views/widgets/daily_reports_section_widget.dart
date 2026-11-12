@@ -81,7 +81,7 @@ class DailyReportsSectionWidget extends StatelessWidget {
                       icon: Icons.calendar_month_rounded,
                       borderColor: accentColor,
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: AppSizes.s12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -93,7 +93,7 @@ class DailyReportsSectionWidget extends StatelessWidget {
                             style: AppStyles.heading(context),
                           ),
                           if (subtitleStr.isNotEmpty) ...[
-                            const SizedBox(height: 2),
+                            const SizedBox(height: AppSizes.s2),
                             Text(
                               subtitleStr,
                               maxLines: 1,
@@ -104,7 +104,7 @@ class DailyReportsSectionWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: AppSizes.s8),
                     AppStatusBadge(
                       label: AppStrings.dailyReports.tr(),
                       color: accentColor,
@@ -118,7 +118,7 @@ class DailyReportsSectionWidget extends StatelessWidget {
                 const SizedBox(height: AppSpacing.cardGap),
             itemCount: reports!.length <= 5 ? reports!.length : 5,
           ),
-          if (reports!.isNotEmpty) const SizedBox(height: 24),
+          if (reports!.isNotEmpty) const SizedBox(height: AppSizes.s24),
           if (reports!.isNotEmpty)
             Center(
               child: CustomElevatedButton(

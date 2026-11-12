@@ -225,7 +225,7 @@ class RequestsCalendarScreen extends StatelessWidget {
                                                   shrinkWrap: true,
  padding: EdgeInsets.zero,
                                                   itemCount: details.appointments.length,
-                                                  separatorBuilder: (context, index) => SizedBox(height: 8),
+                                                  separatorBuilder: (context, index) => SizedBox(height: AppSizes.s8),
                                                   itemBuilder: (context, index) {
                                                     final appt = details.appointments.elementAt(index);
                                                     if (appt is Map && appt['_isHoliday'] == true) {
@@ -278,7 +278,7 @@ class RequestsCalendarScreen extends StatelessWidget {
                                       child: Container(
                                         width: details.bounds.width,
                                         height: details.bounds.height,
-                                        margin: const EdgeInsets.only(bottom: 2),
+                                        margin: const EdgeInsets.only(bottom: AppSizes.s2),
                                         alignment: Alignment.center,
                                         decoration: BoxDecoration(
                                           color: Color(AppColors.secondaryButton),
@@ -313,10 +313,10 @@ class RequestsCalendarScreen extends StatelessWidget {
                                   return Container(
                                     width: details.bounds.width,
                                     height: details.bounds.height,
-                                    margin: const EdgeInsets.only(bottom: 2),
+                                    margin: const EdgeInsets.only(bottom: AppSizes.s2),
                                     alignment: Alignment.center,
                                     padding: EdgeInsets.symmetric(
-                                        horizontal: 4, vertical: 1),
+                                        horizontal: AppSizes.s4, vertical: AppSizes.s1),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(AppRadius.xs),
                                       color: const Color(AppColors.green),
@@ -378,10 +378,10 @@ class RequestsCalendarScreen extends StatelessWidget {
                                   child: Container(
                                     width: details.bounds.width,
                                     height: details.bounds.height,
-                                    margin: const EdgeInsets.only(bottom: 2),
+                                    margin: const EdgeInsets.only(bottom: AppSizes.s2),
                                     alignment: Alignment.center,
                                     padding: EdgeInsets.symmetric(
-                                        horizontal: 4, vertical: 1),
+                                        horizontal: AppSizes.s4, vertical: AppSizes.s1),
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(AppRadius.xs),
                                       color: backgroundColor,
@@ -407,12 +407,12 @@ class RequestsCalendarScreen extends StatelessWidget {
                             height: 15,
                           ),
                           Card(
-                            margin: EdgeInsets.all(16),
+                            margin: EdgeInsets.all(AppSizes.s16),
                             elevation: AppElevation.raised,
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(AppRadius.lg)),
                             child: Padding(
-                              padding: EdgeInsets.all(16),
+                              padding: EdgeInsets.all(AppSizes.s16),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -422,7 +422,7 @@ class RequestsCalendarScreen extends StatelessWidget {
                                         fontWeight: FontWeight.bold,
                                         fontSize: 20),
                                   ),
-                                  SizedBox(height: 12),
+                                  SizedBox(height: AppSizes.s12),
                                   ...(gCache['holidays'] as List? ?? [])
                                       .map((holiday) {
                                     final name = _titleByLang(holiday['name'],

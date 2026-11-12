@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/widgets/app_list_entrance.widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -85,7 +86,7 @@ class AppCard extends StatelessWidget {
                 icon: leadingIcon,
                 borderColor: effectiveAccent,
               ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSizes.s12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,7 +98,7 @@ class AppCard extends StatelessWidget {
                     runSpacing: 4,
                     children: topBadges,
                   ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: AppSizes.s5),
                 ],
                 Text(
                   title,
@@ -109,7 +110,7 @@ class AppCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 if (subtitle != null && subtitle.trim().isNotEmpty) ...[
-                  const SizedBox(height: 3),
+                  const SizedBox(height: AppSizes.s3),
                   Text(
                     subtitle,
                     style: AppStyles.subtitleContent(context).copyWith(
@@ -121,7 +122,7 @@ class AppCard extends StatelessWidget {
                   ),
                 ],
                 if (thirdLine != null && thirdLine.trim().isNotEmpty) ...[
-                  const SizedBox(height: 3),
+                  const SizedBox(height: AppSizes.s3),
                   Text(
                     thirdLine,
                     style: AppStyles.subtitleContent(context).copyWith(
@@ -134,14 +135,14 @@ class AppCard extends StatelessWidget {
                   ),
                 ],
                 if (extraContent != null) ...[
-                  const SizedBox(height: 5),
+                  const SizedBox(height: AppSizes.s5),
                   extraContent,
                 ],
               ],
             ),
           ),
           if (trailing != null) ...[
-            const SizedBox(width: 8),
+            const SizedBox(width: AppSizes.s8),
             trailing,
           ],
         ],

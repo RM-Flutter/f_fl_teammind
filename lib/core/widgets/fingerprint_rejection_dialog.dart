@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/routing/app_router.dart' show rootNavigatorKey;
@@ -31,17 +32,17 @@ Future<bool> showFingerprintRejection(dynamic result) async {
     useRootNavigator: true,
     builder: (dialogContext) => AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg)),
-      titlePadding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-      actionsPadding: const EdgeInsets.all(16),
+      titlePadding: const EdgeInsets.fromLTRB(AppSizes.s20, AppSizes.s20, AppSizes.s20, AppSizes.s8),
+      contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s20, vertical: AppSizes.s8),
+      actionsPadding: const EdgeInsets.all(AppSizes.s16),
       title: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(AppSizes.s8),
             decoration: BoxDecoration(color: Colors.red.withOpacity(0.12), shape: BoxShape.circle),
             child: const Icon(Icons.block, color: Colors.red, size: 26),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSizes.s12),
           Expanded(
             child: Text(
               'fingerprint_rejected'.tr(),
@@ -59,17 +60,17 @@ Future<bool> showFingerprintRejection(dynamic result) async {
             children: [
               Text('fingerprint_rejected_reasons'.tr(),
                   style: TextStyle(color: Colors.grey.shade700, fontSize: 13)),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSizes.s8),
               ...reasons.map((reason) => Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    padding: const EdgeInsets.symmetric(vertical: AppSizes.s5),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Padding(
-                          padding: EdgeInsets.only(top: 2),
+                          padding: EdgeInsets.only(top: AppSizes.s2),
                           child: Icon(Icons.close_rounded, color: Colors.red, size: 18),
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: AppSizes.s8),
                         Expanded(child: Text(reason, style: const TextStyle(fontSize: 14, height: 1.4))),
                       ],
                     ),

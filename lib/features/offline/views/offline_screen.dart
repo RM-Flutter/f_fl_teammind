@@ -160,7 +160,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 180),
+                padding: const EdgeInsets.only(top: AppSizes.s180),
                 child: Container(
                   alignment: Alignment.center,
                   decoration: const BoxDecoration(
@@ -170,14 +170,14 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                         topLeft: Radius.circular(AppRadius.lg),
                       )),
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    padding: const EdgeInsets.symmetric(vertical: AppSizes.s20),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         SvgPicture.asset("assets/images/svg/wifi.svg"),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: AppSizes.s24),
                         Text(
                           AppStrings.youAreOffline.tr(),
                           style: AppStyles.heading(context).copyWith(
@@ -185,7 +185,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                             fontWeight: FontWeight.w700,
                           ),
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: AppSizes.s12),
                         Text(
                           AppStrings.pleaseConnectToTheInternetAndTryAgain.tr(),
                           style: AppStyles.blackContent(context).copyWith(
@@ -193,7 +193,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: AppSizes.s24),
                         Consumer<ConnectionService>(
                           builder: (context, connectionService, _) {
                             return CustomElevatedButton(
@@ -227,7 +227,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                         ),
                                         backgroundColor: Colors.red,
                                         behavior: SnackBarBehavior.floating,
-                                        margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                        margin: const EdgeInsets.symmetric(horizontal: AppSizes.s24, vertical: AppSizes.s12),
                                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.sm)),
                                         duration: const Duration(seconds: 2),
                                       ),
@@ -237,7 +237,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                             );
                           },
                         ),
-                        const SizedBox(height: 32),
+                        const SizedBox(height: AppSizes.s32),
                         if (viewModel.usersFingerprints.isNotEmpty)
                           Text(
                             AppStrings.fingerprint.tr(),
@@ -246,10 +246,10 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                               fontWeight: FontWeight.w700,
                             ),
                           ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: AppSizes.s12),
                         if (viewModel.usersFingerprints.isNotEmpty)
                           SizedBox(
-                            height: 60,
+                            height: AppSizes.s60,
                             child: ListView.builder(
                               itemCount: viewModel.usersFingerprints.length,
                               shrinkWrap: true,
@@ -333,12 +333,12 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                               },
                             ),
                           ),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: AppSizes.s24),
                         // Show saved fingerprints
                         if (viewModel.savedFingerprints != null &&
                             viewModel.savedFingerprints!.isNotEmpty)
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -349,17 +349,17 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
                                     fontWeight: FontWeight.w700,
                                   ),
                                 ),
-                                const SizedBox(height: 12),
+                                const SizedBox(height: AppSizes.s12),
                                  if (viewModel.isLoadingFingerprints)
                                   const Center(
                                     child: Padding(
-                                      padding: EdgeInsets.all(20.0),
+                                      padding: EdgeInsets.all(AppSizes.s20),
                                       child: CircularProgressIndicator(),
                                     ),
                                   )
                                 else
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                                    padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16),
                                     child: FingerprintCardOffiline(
                                       fingerprint: viewModel.savedFingerprints,
                                       onDelete: (index) async {
@@ -388,7 +388,7 @@ class _OfflineScreenContentState extends State<_OfflineScreenContent> {
           Function()? onPress,
           required String hero}) =>
       Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
+        padding: const EdgeInsets.symmetric(horizontal: AppSizes.s8),
         child: FloatingActionButton(
           heroTag: hero,
           onPressed: onPress,

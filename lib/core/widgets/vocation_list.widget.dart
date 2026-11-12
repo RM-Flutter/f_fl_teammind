@@ -256,7 +256,7 @@ class VacationCard extends StatelessWidget {
       child: Container(
         width: cardWidth ?? getResponsiveItemWidth(context, paddingBetweenVocations: paddingBetweenVocations),
         height: 128,
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+        padding: const EdgeInsets.symmetric(vertical: AppSizes.s10, horizontal: AppSizes.s12),
         decoration: BoxDecoration(
           color: Color(AppColors.secondaryButton), // Match BalanceCard color
           borderRadius: BorderRadius.circular(AppRadius.md), // Match BalanceCard radius
@@ -293,7 +293,7 @@ class VacationCard extends StatelessWidget {
                     fontWeight: FontWeight.w400,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppSizes.s4),
                 Text(
                   '${(isTaken ? vocation.value.take : vocation.value.available)?.toString() ?? '0'} ${vocation.value.type?.toString().tr() ?? ''}',
                   textAlign: TextAlign.center,
@@ -303,7 +303,7 @@ class VacationCard extends StatelessWidget {
                     fontWeight: FontWeight.w900,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppSizes.s4),
                 // "FROM" line
                 Text(
                   (!isTaken && vocation.value.max != -1)

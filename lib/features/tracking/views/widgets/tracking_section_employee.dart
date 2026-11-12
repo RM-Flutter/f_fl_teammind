@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -308,7 +309,7 @@ class _StatusCard extends StatelessWidget {
                   children: [
                     Text('request_location_tracking'.tr(),
                         style: AppStyles.heading(context).copyWith(fontSize: 14, fontWeight: FontWeight.w600)),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: AppSizes.s2),
                     Text(
                       isRequired ? 'tracking_required_for_request'.tr() : 'tracking_optional_for_request'.tr(),
                       style: AppStyles.greyContent(context).copyWith(fontSize: 12),
@@ -388,7 +389,7 @@ class _LiveStrip extends StatelessWidget {
     final tones = AppColors.statusTones(green);
     final lastAgo = session.lastPointAt == null ? null : DateTime.now().difference(session.lastPointAt!).inMinutes;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSizes.s10),
       decoration: BoxDecoration(color: tones.tint, borderRadius: AppRadius.card),
       child: Row(
         children: [

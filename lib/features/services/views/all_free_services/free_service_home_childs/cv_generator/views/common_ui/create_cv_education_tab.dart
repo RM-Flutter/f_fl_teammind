@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/widgets/app_field_shell.widget.dart';
 import 'package:app_test/core/widgets/app_responsive_grid.widget.dart';
 import 'package:app_test/core/widgets/app_columns_flow.widget.dart';
@@ -41,7 +42,7 @@ class CreateCVEducationTab extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSizes.s8),
           // The title stays on top; the entries sit under it in 1 / 2 columns, never split.
           AppResponsiveGrid(
             medium: 1,
@@ -81,7 +82,7 @@ class CreateCVEducationTab extends StatelessWidget {
     return Card(
       margin: EdgeInsets.zero,
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(AppSizes.s12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -100,7 +101,7 @@ class CreateCVEducationTab extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSizes.s8),
             TextFormField(
               initialValue: education.institutionName ?? '',
               decoration: InputDecoration(
@@ -123,7 +124,7 @@ class CreateCVEducationTab extends StatelessWidget {
                 viewModel.updateEducation(index, updatedEdu);
               },
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
             TextFormField(
               initialValue: education.certificateName ?? '',
               decoration: InputDecoration(
@@ -146,7 +147,7 @@ class CreateCVEducationTab extends StatelessWidget {
                 viewModel.updateEducation(index, updatedEdu);
               },
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
             CustomDropdown.search(
               items: viewModel.countries,
               selectedValue: selectedCountry,
@@ -170,7 +171,7 @@ class CreateCVEducationTab extends StatelessWidget {
               },
             ),
             if (education.countryId != null && educationStates.isNotEmpty) ...[
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSizes.s16),
               CustomDropdown.search(
                 items: educationStates,
                 selectedValue: selectedState,
@@ -193,7 +194,7 @@ class CreateCVEducationTab extends StatelessWidget {
                 },
               ),
             ],
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
             Row(
               children: [
                 Expanded(
@@ -218,7 +219,7 @@ class CreateCVEducationTab extends StatelessWidget {
                       }
                     },
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s12),
                       decoration: BoxDecoration(
                         border: Border.all(color: AppField.borderColor),
                         borderRadius: AppField.borderRadius,
@@ -233,14 +234,14 @@ class CreateCVEducationTab extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          const SizedBox(width: 8),
+                          const SizedBox(width: AppSizes.s8),
                           const Icon(Icons.calendar_today, size: 20),
                         ],
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: AppSizes.s16),
                 Expanded(
                   child: InkWell(
                     onTap: () async {
@@ -263,7 +264,7 @@ class CreateCVEducationTab extends StatelessWidget {
                       }
                     },
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s12),
                       decoration: BoxDecoration(
                         border: Border.all(color: AppField.borderColor),
                         borderRadius: AppField.borderRadius,
@@ -278,7 +279,7 @@ class CreateCVEducationTab extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          const SizedBox(width: 8),
+                          const SizedBox(width: AppSizes.s8),
                           const Icon(Icons.calendar_today, size: 20),
                         ],
                       ),

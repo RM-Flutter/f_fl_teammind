@@ -129,7 +129,7 @@ Future<void> defaultActionBottomSheet2({
                         .height * 0.52),
                     child: Column(
                       children: [
-                        const SizedBox(height: 10),
+                        const SizedBox(height: AppSizes.s10),
                         Center(
                           child: Container(
                             height: 5,
@@ -141,7 +141,7 @@ Future<void> defaultActionBottomSheet2({
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(30.0),
+                          padding: const EdgeInsets.all(AppSizes.s30),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -152,14 +152,14 @@ Future<void> defaultActionBottomSheet2({
                                   Container(
                                     width: 88,
                                     height: 88,
-                                    padding: const EdgeInsets.all(10),
+                                    padding: const EdgeInsets.all(AppSizes.s10),
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       color: const Color(0xffE6007E)
                                           .withOpacity(0.05),
                                     ),
                                     child: Container(
-                                        padding: const EdgeInsets.all(10),
+                                        padding: const EdgeInsets.all(AppSizes.s10),
                                         decoration: const BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: Color(0xffE6007E),
@@ -168,7 +168,7 @@ Future<void> defaultActionBottomSheet2({
                                   ),
                                   if (viewCheckIcon == true)
                                     const Padding(
-                                      padding: EdgeInsets.all(8.0),
+                                      padding: EdgeInsets.all(AppSizes.s8),
                                       child: CircleAvatar(
                                         radius: 10,
                                         backgroundColor: Color(0xff38CF71),
@@ -294,7 +294,7 @@ Future<void> defaultActionBottomSheet2({
                                   context: context,
                                   hintText: textFormFieldHint,
                                   controller: textFormFieldController),
-                              const SizedBox(height: 30),
+                              const SizedBox(height: AppSizes.s30),
                               if (view == true)const Center(
                                   child: CircularProgressIndicator()),
                               if (view == false && view2Button == false &&
@@ -345,7 +345,7 @@ Future<void> defaultActionBottomSheet2({
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(width: 10,),
+                                  const SizedBox(width: AppSizes.s10,),
                                   Expanded(
                                     child: GestureDetector(
                                       onTap: onTapButton2,
@@ -446,7 +446,7 @@ defaultActionBottomSheet(
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(30.0),
+                padding: const EdgeInsets.all(AppSizes.s30),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -458,13 +458,13 @@ defaultActionBottomSheet(
                           Container(
                             width: 88,
                             height: 88,
-                            padding: const EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(AppSizes.s10),
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: const Color(0xFFE93F81).withOpacity(0.05),
                             ),
                             child: Container(
-                                padding: const EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(AppSizes.s10),
                                 decoration: const BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: Color(0xFFE93F81),
@@ -473,7 +473,7 @@ defaultActionBottomSheet(
                           ),
                           if (viewCheckIcon == true)
                             const Padding(
-                              padding: EdgeInsets.all(8.0),
+                              padding: EdgeInsets.all(AppSizes.s8),
                               child: CircleAvatar(
                                 radius: 10,
                                 backgroundColor: Color(0xff38CF71),
@@ -486,7 +486,7 @@ defaultActionBottomSheet(
                             )
                         ],
                       ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: AppSizes.s20),
                     Text(
                       title!,
                       style:   TextStyle(
@@ -506,7 +506,7 @@ defaultActionBottomSheet(
                           ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: AppSizes.s30),
                     if (viewDropDownButton == true)
                       Stack(
                         children: [
@@ -538,7 +538,7 @@ defaultActionBottomSheet(
                       Container(
                         height: 50,
                         alignment: Alignment.center,
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                        padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: 0),
                         decoration: ShapeDecoration(
                           color: AppThemeService.colorPalette.tertiaryColorBackground.color,
                           shape: RoundedRectangleBorder(
@@ -557,7 +557,7 @@ defaultActionBottomSheet(
                         controller: phoneController,
                         countryCodeController: countryCodeController,
                       ),
-                    const SizedBox(height: 30),
+                    const SizedBox(height: AppSizes.s30),
                     if (view == true)
                       const Center(
                         child: CircularProgressIndicator(),
@@ -696,7 +696,7 @@ Future<void> defaultActionBottomSheetPoints({
                         .height * 0.52),
                     child: Column(
                       children: [
-                        const SizedBox(height: 10),
+                        const SizedBox(height: AppSizes.s10),
                         Center(
                           child: Container(
                             height: 5,
@@ -708,7 +708,7 @@ Future<void> defaultActionBottomSheetPoints({
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(30.0),
+                          padding: const EdgeInsets.all(AppSizes.s30),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -719,14 +719,14 @@ Future<void> defaultActionBottomSheetPoints({
                                   Container(
                                     width: 88,
                                     height: 88,
-                                    padding: const EdgeInsets.all(10),
+                                    padding: const EdgeInsets.all(AppSizes.s10),
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       color: const Color(0xffE6007E)
                                           .withOpacity(0.05),
                                     ),
                                     child: Container(
-                                        padding: const EdgeInsets.all(10),
+                                        padding: const EdgeInsets.all(AppSizes.s10),
                                         decoration: const BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: Color(0xffE6007E),
@@ -735,7 +735,7 @@ Future<void> defaultActionBottomSheetPoints({
                                   ),
                                   if (viewCheckIcon == true)
                                     const Padding(
-                                      padding: EdgeInsets.all(8.0),
+                                      padding: EdgeInsets.all(AppSizes.s8),
                                       child: CircleAvatar(
                                         radius: 10,
                                         backgroundColor: Color(0xff38CF71),
@@ -861,7 +861,7 @@ Future<void> defaultActionBottomSheetPoints({
                                   context: context,
                                   hintText: textFormFieldHint,
                                   controller: textFormFieldController),
-                              const SizedBox(height: 30),
+                              const SizedBox(height: AppSizes.s30),
                               if (view == true)const Center(
                                   child: CircularProgressIndicator()),
                               if (view == false && view2Button == false &&
@@ -912,7 +912,7 @@ Future<void> defaultActionBottomSheetPoints({
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(width: 10,),
+                                  const SizedBox(width: AppSizes.s10,),
                                   Expanded(
                                     child: GestureDetector(
                                       onTap: onTapButton2,

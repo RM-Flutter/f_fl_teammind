@@ -206,7 +206,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
           children: [
             // Search Bar
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(AppSizes.s16),
               child: Row(
                 children: [
                   // Search Field
@@ -262,7 +262,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
                             size: 48,
                             color: Colors.grey[400],
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: AppSizes.s16),
                           Text(
                             viewModel.errorMessage!,
                             style: TextStyle(
@@ -271,7 +271,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
                             ),
                             textAlign: TextAlign.center,
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: AppSizes.s16),
                           ElevatedButton(
                             onPressed: () {
                               viewModel.fetchPremiumFiles(
@@ -297,7 +297,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
                     onRefresh: () async => _applyFilter(),
                     child: SingleChildScrollView(
                       physics: const AlwaysScrollableScrollPhysics(),
-                      padding: const EdgeInsets.fromLTRB(AppSpacing.page, 0, AppSpacing.page, 80),
+                      padding: const EdgeInsets.fromLTRB(AppSpacing.page, 0, AppSpacing.page, AppSizes.s80),
                       child: AppResponsiveGrid(
                         children: filteredFiles.map(_buildTemplateCard).toList(),
                       ),
@@ -359,7 +359,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
                   ),
                 ),
                 
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSizes.s12),
                 
                 // Template Info
                 Expanded(
@@ -377,7 +377,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
                             fontWeight: FontWeight.w400,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        const SizedBox(height: AppSizes.s4),
                       ],
                       // Title
                       if (file.title != null && file.title!.isNotEmpty) ...[
@@ -394,7 +394,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
                       ],
                       // Description
                       if (file.description != null && file.description!.isNotEmpty) ...[
-                        const SizedBox(height: 4),
+                        const SizedBox(height: AppSizes.s4),
                         Text(
                           file.description!,
                           style: TextStyle(
@@ -430,7 +430,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
                         valueColor: AlwaysStoppedAnimation<Color>(Color(AppColors.buttons)),
                         strokeWidth: 4,
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: AppSizes.s12),
                       Text(
                         '${(progress * 100).toStringAsFixed(0)}%',
                         style: const TextStyle(
@@ -440,7 +440,7 @@ class _PremiumTemplatesScreenState extends State<PremiumTemplatesScreen> {
                         ),
                       ),
                       if (_downloadingFileNames.containsKey(fileId)) ...[
-                        const SizedBox(height: 4),
+                        const SizedBox(height: AppSizes.s4),
                         Text(
                           _downloadingFileNames[fileId]!,
                           style: TextStyle(

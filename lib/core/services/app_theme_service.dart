@@ -335,7 +335,7 @@ abstract class AppThemeService {
                   ? AppConstants.fontFamilyCairo
                   : AppConstants.fontFamilyPoppins,
               fontWeight: FontWeight.w500),
-          labelPadding: const EdgeInsets.symmetric(vertical: 8.0),
+          labelPadding: const EdgeInsets.symmetric(vertical: AppSizes.s8),
         ),
 
         popupMenuTheme: PopupMenuThemeData(

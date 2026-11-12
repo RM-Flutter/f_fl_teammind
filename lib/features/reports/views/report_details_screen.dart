@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/services/layout_service.dart';
 import 'package:app_test/core/utils/app_styles.dart';
@@ -137,7 +138,7 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
               child: ConstrainedBox(
                 constraints: LayoutService.contentConstraints(context),
                 child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(AppSizes.s16),
                   child: _buildBody(context, viewModel),
                 ),
               ),
@@ -278,10 +279,10 @@ class _ReportDetailsScreenState extends State<ReportDetailsScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.error_outline, color: Color(AppColors.failureRed), size: 48),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSizes.s12),
             Text('فشل تحميل الفلاتر: ${viewModel.filtersError}',
                 style: AppStyles.redContent(context), textAlign: TextAlign.center),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                   backgroundColor: Color(AppColors.buttons)),

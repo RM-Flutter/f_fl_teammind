@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/widgets/app_responsive_grid.widget.dart';
 import 'package:app_test/core/widgets/app_columns_flow.widget.dart';
 import 'package:app_test/core/constants/app_colors.dart';
@@ -19,7 +20,7 @@ class CVJobInfoTab extends StatelessWidget {
     final jobInfo = viewModel.cvData?.jobInfo ?? cvData?.jobInfo;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16),
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.s16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
@@ -38,7 +39,7 @@ class CVJobInfoTab extends StatelessWidget {
                   icon: Icons.badge_outlined,
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               Expanded(
                 child: CVInfoItem(
                   label: 'JOB',
@@ -107,8 +108,8 @@ class CVJobInfoTab extends StatelessWidget {
 
   Widget _buildSectionTitle(String title) {
     return Container(
-      margin: const EdgeInsets.only(top: 16, bottom: 12),
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      margin: const EdgeInsets.only(top: AppSizes.s16, bottom: AppSizes.s12),
+      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s12, vertical: AppSizes.s6),
       decoration: BoxDecoration(
         color: Color(AppColors.secondaryButton).withOpacity(0.1),
         borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -116,7 +117,7 @@ class CVJobInfoTab extends StatelessWidget {
       child: Row(
         children: [
           Icon(Icons.work_outline, size: 18, color: Color(AppColors.secondaryButton)),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSizes.s8),
           Text(
             title,
             style: TextStyle(
@@ -132,7 +133,7 @@ class CVJobInfoTab extends StatelessWidget {
 
   Widget _buildAddNewItem(String label) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.only(bottom: AppSizes.s8),
       child: Text(
         '• $label',
         style: TextStyle(
@@ -145,28 +146,28 @@ class CVJobInfoTab extends StatelessWidget {
 
   Widget _buildExperienceItem(CVExperience exp) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: AppSizes.s12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               Expanded(child: CVInfoItem(label: 'COMPANY NAME', value: exp.companyName)),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               Expanded(child: CVInfoItem(label: 'JOB TITLE', value: exp.jobTitle, isRequired: true)),
             ],
           ),
           Row(
             children: [
               Expanded(child: CVInfoItem(label: 'COUNTRY', value: exp.countryTitle ?? exp.countryId?.toString())),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               Expanded(child: CVInfoItem(label: 'GOVERNORATE/STATE', value: exp.stateTitle ?? exp.stateId?.toString(), isRequired: true)),
             ],
           ),
           Row(
             children: [
               Expanded(child: CVInfoItem(label: 'DATE FROM', value: exp.dateFrom)),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               Expanded(child: CVInfoItem(label: 'DATE TO (OR PRESENT)', value: exp.dateTo)),
             ],
           ),
@@ -177,14 +178,14 @@ class CVJobInfoTab extends StatelessWidget {
 
   Widget _buildPortfolioItem(CVPortfolio portfolio) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: AppSizes.s12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               Expanded(child: CVInfoItem(label: 'اسم المشروع', value: portfolio.projectName)),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               Expanded(child: CVInfoItem(label: 'رابط المشروع', value: portfolio.projectLink)),
             ],
           ),

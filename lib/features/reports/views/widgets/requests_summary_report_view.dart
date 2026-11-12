@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/features/reports/data/models/requests_summary_report_model.dart';
@@ -42,7 +43,7 @@ class _RequestsSummaryReportViewState extends State<RequestsSummaryReportView> {
         : widget.data;
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.only(bottom: 24),
+      padding: const EdgeInsets.only(bottom: AppSizes.s24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -53,12 +54,12 @@ class _RequestsSummaryReportViewState extends State<RequestsSummaryReportView> {
               currentSubtitle: widget.currentSubtitle,
               compareSubtitle: widget.compareSubtitle,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
           ],
           _buildStatCards(context, activeData),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSizes.s16),
           _buildStatusDonutChartCard(context, activeData),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSizes.s16),
           _buildTypeBreakdownCard(context, activeData),
         ],
       ),
@@ -78,7 +79,7 @@ class _RequestsSummaryReportViewState extends State<RequestsSummaryReportView> {
               color: Color(AppColors.buttons),
               bgColor: Color(AppColors.buttons).withOpacity(0.08),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppSizes.s12),
             _buildStatCard(
               context,
               title: 'approved'.tr(),
@@ -89,7 +90,7 @@ class _RequestsSummaryReportViewState extends State<RequestsSummaryReportView> {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSizes.s12),
         Row(
           children: [
             _buildStatCard(
@@ -100,7 +101,7 @@ class _RequestsSummaryReportViewState extends State<RequestsSummaryReportView> {
               color: const Color(0xFFF59E0B),
               bgColor: const Color(0xFFF59E0B).withOpacity(0.08),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppSizes.s12),
             _buildStatCard(
               context,
               title: 'rejected'.tr(),
@@ -125,7 +126,7 @@ class _RequestsSummaryReportViewState extends State<RequestsSummaryReportView> {
   }) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.all(14),
+        padding: const EdgeInsets.all(AppSizes.s14),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(AppRadius.md),
@@ -134,14 +135,14 @@ class _RequestsSummaryReportViewState extends State<RequestsSummaryReportView> {
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(AppSizes.s10),
               decoration: BoxDecoration(
                 color: bgColor,
                 borderRadius: BorderRadius.circular(AppRadius.sm),
               ),
               child: Icon(icon, color: color, size: 22),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppSizes.s12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -156,7 +157,7 @@ class _RequestsSummaryReportViewState extends State<RequestsSummaryReportView> {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: AppSizes.s4),
                   Text(
                     value,
                     style: TextStyle(
@@ -183,7 +184,7 @@ class _RequestsSummaryReportViewState extends State<RequestsSummaryReportView> {
     final hasData = total > 0;
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSizes.s16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.lg),
@@ -195,7 +196,7 @@ class _RequestsSummaryReportViewState extends State<RequestsSummaryReportView> {
           Row(
             children: [
               Icon(Icons.pie_chart_outline, size: 20, color: Color(AppColors.buttons)),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               Text(
                 'status_distribution'.tr(),
                 style: AppStyles.blackContent(context).copyWith(
@@ -205,17 +206,17 @@ class _RequestsSummaryReportViewState extends State<RequestsSummaryReportView> {
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: AppSizes.s20),
           if (!hasData)
             Center(
               child: Padding(
-                padding: const EdgeInsets.all(24.0),
+                padding: const EdgeInsets.all(AppSizes.s24),
                 child: Text('no_data'.tr(), style: TextStyle(color: Colors.grey.shade500)),
               ),
             )
           else ...[
             SizedBox(
-              height: 180,
+              height: AppSizes.s180,
               child: Stack(
                 alignment: Alignment.center,
                 children: [
@@ -284,7 +285,7 @@ class _RequestsSummaryReportViewState extends State<RequestsSummaryReportView> {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
             Wrap(
               spacing: 16,
               runSpacing: 8,
@@ -311,7 +312,7 @@ class _RequestsSummaryReportViewState extends State<RequestsSummaryReportView> {
           height: 10,
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
-        const SizedBox(width: 6),
+        const SizedBox(width: AppSizes.s6),
         Text(
           '$label: $count ($pct%)',
           style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.black87),
@@ -322,7 +323,7 @@ class _RequestsSummaryReportViewState extends State<RequestsSummaryReportView> {
 
   Widget _buildTypeBreakdownCard(BuildContext context, RequestsSummaryReportModel currentData) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSizes.s16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.lg),
@@ -334,7 +335,7 @@ class _RequestsSummaryReportViewState extends State<RequestsSummaryReportView> {
           Row(
             children: [
               Icon(Icons.bar_chart_outlined, size: 20, color: Color(AppColors.buttons)),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               Text(
                 'requests_by_type'.tr(),
                 style: AppStyles.blackContent(context).copyWith(
@@ -344,18 +345,18 @@ class _RequestsSummaryReportViewState extends State<RequestsSummaryReportView> {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSizes.s16),
           if (currentData.typeBreakdown.isEmpty)
             Center(
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(AppSizes.s16),
                 child: Text('no_data'.tr(), style: TextStyle(color: Colors.grey.shade500)),
               ),
             )
           else
             ...currentData.typeBreakdown.map((item) {
               return Padding(
-                padding: const EdgeInsets.only(bottom: 14.0),
+                padding: const EdgeInsets.only(bottom: AppSizes.s14),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -380,7 +381,7 @@ class _RequestsSummaryReportViewState extends State<RequestsSummaryReportView> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: AppSizes.s6),
                     ClipRRect(
                       borderRadius: BorderRadius.circular(AppRadius.sm),
                       child: LinearProgressIndicator(

@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:app_test/core/constants/app_colors.dart';
@@ -30,7 +31,7 @@ class SuccessfullAddRequestSheet extends StatelessWidget {
         ),
         child: Column(
           children: [
-            SizedBox(height: 30),
+            SizedBox(height: AppSizes.s30),
             SvgPicture.asset("assets/images/svg/success_reqs.svg", width: 100, height: 100),
             SizedBox(height: 15,),
             Text(AppStrings.success.tr(), style: AppStyles.heading(context).copyWith(
@@ -50,7 +51,7 @@ class SuccessfullAddRequestSheet extends StatelessWidget {
             ),
             const Spacer(),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: EdgeInsets.symmetric(horizontal: AppSizes.s10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -110,7 +111,7 @@ class SuccessfullAddRequestSheet extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: AppSizes.s20),
           ],
         ),
       );

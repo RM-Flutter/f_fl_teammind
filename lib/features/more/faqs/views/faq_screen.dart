@@ -38,7 +38,7 @@ class _FaqScreenState extends State<FaqScreen> {
           ),
           body: AppContentWidth(
             child: (value.faqModel != null)?ListView.builder(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(AppSizes.s16),
               clipBehavior: Clip.none,
               itemCount: value.faqModel!.page!.questions!.length,
               itemBuilder: (context, index) {
@@ -47,7 +47,7 @@ class _FaqScreenState extends State<FaqScreen> {
                 );
               },
             ):ListView.builder(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(AppSizes.s16),
               clipBehavior: Clip.none,
               itemCount: 3,
               itemBuilder: (context, index) {
@@ -96,7 +96,7 @@ class _FaqTileState extends State<FaqTile> {
           boxShadow: AppShadows.card,
         ),
         child: ExpansionTile(
-          tilePadding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          tilePadding: EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s10),
           title: Text(
             widget.item.question??"",
             style: AppStyles.darkContent(context).copyWith(
@@ -106,7 +106,7 @@ class _FaqTileState extends State<FaqTile> {
           ),
           iconColor: Colors.grey,
           collapsedIconColor: Colors.grey,
-          childrenPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          childrenPadding: EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s10),
           expandedCrossAxisAlignment: CrossAxisAlignment.start,
           expandedAlignment: Alignment.centerLeft,
           collapsedBackgroundColor: Colors.transparent,

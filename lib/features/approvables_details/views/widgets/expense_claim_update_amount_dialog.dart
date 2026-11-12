@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/services/app_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -32,9 +33,9 @@ class ExpenseClaimUpdateAmountDialog {
           builder: (stContext, setState) {
             return Container(
               padding: EdgeInsets.only(
-                left: 20,
-                right: 20,
-                top: 16,
+                left: AppSizes.s20,
+                right: AppSizes.s20,
+                top: AppSizes.s16,
                 bottom: MediaQuery.of(bottomSheetContext).viewInsets.bottom + 20,
               ),
               decoration: const BoxDecoration(
@@ -53,7 +54,7 @@ class ExpenseClaimUpdateAmountDialog {
                     child: Container(
                       width: 40,
                       height: 4,
-                      margin: const EdgeInsets.only(bottom: 12),
+                      margin: const EdgeInsets.only(bottom: AppSizes.s12),
                       decoration: BoxDecoration(
                         color: Colors.grey[300],
                         borderRadius: BorderRadius.circular(AppRadius.xs),
@@ -80,7 +81,7 @@ class ExpenseClaimUpdateAmountDialog {
                     ],
                   ),
                   const Divider(),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppSizes.s12),
 
                   // Label
                   Text('total_amount_2'.tr(),
@@ -90,7 +91,7 @@ class ExpenseClaimUpdateAmountDialog {
                       color: Colors.grey[700],
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppSizes.s8),
 
                   // Input Field with old value prefilled for editing
                   TextField(
@@ -113,7 +114,7 @@ class ExpenseClaimUpdateAmountDialog {
                         fontWeight: FontWeight.w600,
                       ),
                       contentPadding:
-                          const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                          const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s14),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(AppRadius.md),
                         borderSide: BorderSide(color: Colors.grey.shade300),
@@ -124,7 +125,7 @@ class ExpenseClaimUpdateAmountDialog {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: AppSizes.s24),
 
                   // Submit Button
                   AppSheetSubmitButton(
@@ -200,7 +201,7 @@ class ExpenseClaimUpdateAmountDialog {
                             }
                           },
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: AppSizes.s10),
                 ],
               ),
             );

@@ -51,14 +51,14 @@ Future<void> customAlertDialogWithTwoButtons(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 420),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.s24, vertical: AppSizes.s24),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 if (icon != null) ...[
                   SvgPicture.asset(icon),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSizes.s16),
                 ],
                 Text(
                   title,
@@ -69,7 +69,7 @@ Future<void> customAlertDialogWithTwoButtons(
                     fontSize: 18,
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSizes.s16),
                 Text(
                   content,
                   textAlign: TextAlign.center,
@@ -79,7 +79,7 @@ Future<void> customAlertDialogWithTwoButtons(
                         fontSize: 14,
                       ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: AppSizes.s24),
                 Row(
                   children: [
                     Expanded(
@@ -93,7 +93,7 @@ Future<void> customAlertDialogWithTwoButtons(
                         },
                       ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: AppSizes.s8),
                     Expanded(
                       child: CustomElevatedButton(
                         width: double.infinity,

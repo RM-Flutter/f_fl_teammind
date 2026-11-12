@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/routing/app_router.dart';
@@ -104,11 +105,11 @@ class InterviewDetailsHeaderWidget extends StatelessWidget {
 
     final rows = <Widget>[];
     for (int i = 0; i < tiles.length; i += 2) {
-      if (rows.isNotEmpty) rows.add(const SizedBox(height: 12));
+      if (rows.isNotEmpty) rows.add(const SizedBox(height: AppSizes.s12));
       rows.add(Row(
         children: [
           Expanded(child: tiles[i]),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSizes.s12),
           Expanded(child: i + 1 < tiles.length ? tiles[i + 1] : const SizedBox()),
         ],
       ));
@@ -146,7 +147,7 @@ class InterviewDetailsHeaderWidget extends StatelessWidget {
                   titleStyle: AppStyles.whiteHeading(context).copyWith(fontSize: 20),
                   bookmarkIconColor: Colors.white,
                   leading: Padding(
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(AppSizes.s10),
                     child: InkWell(
                       customBorder: const CircleBorder(),
                       onTap: () => context.canPop()
@@ -164,9 +165,9 @@ class InterviewDetailsHeaderWidget extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 18),
+                const SizedBox(height: AppSizes.s18),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 0, 12, AppSpacing.section),
+                  padding: const EdgeInsets.fromLTRB(AppSizes.s12, 0, AppSizes.s12, AppSpacing.section),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -186,9 +187,9 @@ class InterviewDetailsHeaderWidget extends StatelessWidget {
                               Icon(_statusIcon(interview.status),
                                   size: 30, color: _statusIconColor(interview.status)),
                               if (_has(interview.status)) ...[
-                                const SizedBox(height: 4),
+                                const SizedBox(height: AppSizes.s4),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 4),
+                                  padding: const EdgeInsets.symmetric(horizontal: AppSizes.s4),
                                   child: Text(
                                     interview.status!.tr(),
                                     maxLines: 1,
@@ -202,7 +203,7 @@ class InterviewDetailsHeaderWidget extends StatelessWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: AppSizes.s8),
                       Expanded(child: Column(children: rows)),
                     ],
                   ),

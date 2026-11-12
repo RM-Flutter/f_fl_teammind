@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/routing/app_router.dart';
@@ -40,7 +41,7 @@ class PayrollListItemWidget extends StatelessWidget {
             icon: Icons.calendar_month_rounded,
             borderColor: Color(AppColors.buttons),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSizes.s12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,7 +57,7 @@ class PayrollListItemWidget extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 if (subtitle.isNotEmpty) ...[
-                  const SizedBox(height: 3),
+                  const SizedBox(height: AppSizes.s3),
                   Text(
                     subtitle,
                     style: AppStyles.subtitleContent(context).copyWith(
@@ -70,7 +71,7 @@ class PayrollListItemWidget extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSizes.s8),
           AppStatusBadge(
             label: 'view'.tr(),
             color: Color(AppColors.buttons),

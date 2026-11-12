@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +26,7 @@ class ReportCompareTabs extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppRadius.lg),
         boxShadow: AppShadows.card,
       ),
-      padding: const EdgeInsets.all(6),
+      padding: const EdgeInsets.all(AppSizes.s6),
       child: Row(
         children: [
           Expanded(
@@ -40,7 +41,7 @@ class ReportCompareTabs extends StatelessWidget {
               },
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: AppSizes.s8),
           Expanded(
             child: _buildTabItem(
               title: 'compare_period'.tr(),
@@ -70,7 +71,7 @@ class ReportCompareTabs extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeInOut,
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+        padding: const EdgeInsets.symmetric(vertical: AppSizes.s10, horizontal: AppSizes.s8),
         decoration: BoxDecoration(
           color: isSelected ? Color(AppColors.buttons) : Color(AppColors.inputFill),
           borderRadius: BorderRadius.circular(AppRadius.md),
@@ -89,7 +90,7 @@ class ReportCompareTabs extends StatelessWidget {
                   size: 15,
                   color: isSelected ? Colors.white : Colors.grey.shade600,
                 ),
-                const SizedBox(width: 6),
+                const SizedBox(width: AppSizes.s6),
                 Flexible(
                   child: Text(
                     title,
@@ -106,7 +107,7 @@ class ReportCompareTabs extends StatelessWidget {
               ],
             ),
             if (subtitle != null && subtitle.isNotEmpty) ...[
-              const SizedBox(height: 3),
+              const SizedBox(height: AppSizes.s3),
               Text(
                 subtitle,
                 textAlign: TextAlign.center,

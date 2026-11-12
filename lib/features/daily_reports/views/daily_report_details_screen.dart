@@ -75,7 +75,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   LinearProgressIndicator(value: _downloadProgress),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: AppSizes.s10),
                   Text('${(_downloadProgress * 100).toStringAsFixed(0)}%'),
                 ],
               ),
@@ -148,7 +148,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(icon, color: Color(AppColors.buttons), size: 16),
-            const SizedBox(width: 6),
+            const SizedBox(width: AppSizes.s6),
             Text(text,
                 style: AppStyles.whiteContent(context)
                     .copyWith(fontSize: 12, fontWeight: FontWeight.w500)),
@@ -174,7 +174,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
               child: AppContentWidth(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(
-                      AppSpacing.page, 10, AppSpacing.page, 10),
+                      AppSpacing.page, AppSizes.s10, AppSpacing.page, AppSizes.s10),
                   child: Column(
                     children: [
                       Stack(
@@ -187,7 +187,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                                 onTap: () => Navigator.of(context).pop(),
                                 customBorder: const CircleBorder(),
                                 child: Container(
-                                  padding: const EdgeInsets.all(8),
+                                  padding: const EdgeInsets.all(AppSizes.s8),
                                   decoration: BoxDecoration(
                                     color: Colors.white.withValues(alpha: 0.15),
                                     shape: BoxShape.circle,
@@ -221,7 +221,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                               fontWeight: FontWeight.w800,
                               height: 1.1),
                         ),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: AppSizes.s16),
                       Wrap(
                         alignment: WrapAlignment.center,
                         spacing: 16,
@@ -293,7 +293,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                           content: widget.report.inProgress ??
                               AppStrings.noOngoingTasksRecorded.tr(),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: AppSizes.s16),
 
                         _buildSection(
                           title: AppStrings.blockersAndProblems.tr(),
@@ -302,17 +302,17 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                           content: widget.report.problems ??
                               AppStrings.noProblemsRecorded.tr(),
                         ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: AppSizes.s16),
 
                         if (widget.report.attachments != null &&
                             widget.report.attachments!.isNotEmpty) ...[
                           _buildAttachmentsSection(widget.report.attachments!),
-                          const SizedBox(height: 24),
+                          const SizedBox(height: AppSizes.s24),
                         ],
 
                         // Comments Section
                         const CommentsTitle(),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: AppSizes.s12),
                         Consumer<CommentProvider>(
                             builder: (context, commentProvider, child) {
                           return CommentsWidget(
@@ -325,7 +325,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                             id: widget.report.id.toString(),
                           );
                         }),
-                        const SizedBox(height: 50),
+                        const SizedBox(height: AppSizes.s50),
                       ],
                     ),
                   ),
@@ -479,7 +479,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                                                 Icons.broken_image_rounded,
                                                 color: Colors.white54,
                                                 size: 64),
-                                            const SizedBox(height: 16),
+                                            const SizedBox(height: AppSizes.s16),
                                             Text("failed_to_load_image".tr(),
                                                 style: const TextStyle(
                                                     color: Colors.white54,
@@ -493,7 +493,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                                       right: 16,
                                       child: IconButton(
                                         icon: Container(
-                                          padding: const EdgeInsets.all(8),
+                                          padding: const EdgeInsets.all(AppSizes.s8),
                                           decoration: BoxDecoration(
                                             color:
                                                 Colors.white.withOpacity(0.1),
@@ -510,7 +510,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                                       left: 16,
                                       child: IconButton(
                                         icon: Container(
-                                          padding: const EdgeInsets.all(8),
+                                          padding: const EdgeInsets.all(AppSizes.s8),
                                           decoration: BoxDecoration(
                                             color:
                                                 Colors.white.withOpacity(0.1),
@@ -567,7 +567,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                                           Icon(Icons.broken_image_rounded,
                                               color: Colors.grey.shade400,
                                               size: 32),
-                                          const SizedBox(height: 4),
+                                          const SizedBox(height: AppSizes.s4),
                                           Text("error".tr(),
                                               style: TextStyle(
                                                   fontSize: 10,
@@ -589,7 +589,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                                     originalUrl, "image_${attachment.id}.jpg");
                               },
                               child: Container(
-                                padding: const EdgeInsets.all(6),
+                                padding: const EdgeInsets.all(AppSizes.s6),
                                 decoration: BoxDecoration(
                                   color: Colors.black.withOpacity(0.5),
                                   shape: BoxShape.circle,
@@ -625,7 +625,7 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Container(
-                              padding: const EdgeInsets.all(12),
+                              padding: const EdgeInsets.all(AppSizes.s12),
                               decoration: BoxDecoration(
                                 color:
                                     Color(AppColors.buttons).withOpacity(0.1),
@@ -634,10 +634,10 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                               child: Icon(Icons.insert_drive_file_rounded,
                                   size: 28, color: Color(AppColors.buttons)),
                             ),
-                            const SizedBox(height: 8),
+                            const SizedBox(height: AppSizes.s8),
                             Padding(
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 12),
+                                  const EdgeInsets.symmetric(horizontal: AppSizes.s12),
                               child: Text(
                                   attachment.fileName ??
                                       attachment.fileType ??
@@ -656,9 +656,9 @@ class _DailyReportDetailsScreenState extends State<DailyReportDetailsScreen> {
                   }
 
                   return Padding(
-                    padding: const EdgeInsets.only(right: 12),
+                    padding: const EdgeInsets.only(right: AppSizes.s12),
                     child: SizedBox(
-                      width: 140,
+                      width: AppSizes.s140,
                       height: 140,
                       child: cardChild,
                     ),

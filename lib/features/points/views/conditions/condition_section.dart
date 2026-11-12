@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/features/points/controllers/condition_controller/condition_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
@@ -17,7 +18,7 @@ class ConditionSection extends StatelessWidget {
       return Text(conditionProvider.errorMessage!);
     } else if (conditionProvider.termsAndConditionsModel != null) {
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 23, vertical: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 23, vertical: AppSizes.s16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

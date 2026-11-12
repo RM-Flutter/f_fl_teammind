@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/features/reports/data/models/employee_leave_schedule_report_model.dart';
@@ -55,7 +56,7 @@ class _EmployeeLeaveScheduleReportViewState extends State<EmployeeLeaveScheduleR
     }
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.only(bottom: 24),
+      padding: const EdgeInsets.only(bottom: AppSizes.s24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -66,12 +67,12 @@ class _EmployeeLeaveScheduleReportViewState extends State<EmployeeLeaveScheduleR
               currentSubtitle: widget.currentSubtitle,
               compareSubtitle: widget.compareSubtitle,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
           ],
           _buildStatCards(context, totalEvents, totalDays, uniqueEmpIds.length),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSizes.s16),
           _buildLeaveTypesChartCard(context, leaveTypeCounts, totalEvents),
-          const SizedBox(height: 20),
+          const SizedBox(height: AppSizes.s20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -83,7 +84,7 @@ class _EmployeeLeaveScheduleReportViewState extends State<EmployeeLeaveScheduleR
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: AppSizes.s10, vertical: AppSizes.s4),
                 decoration: BoxDecoration(
                   color: Color(AppColors.buttons).withOpacity(0.1),
                   borderRadius: BorderRadius.circular(AppRadius.md),
@@ -99,11 +100,11 @@ class _EmployeeLeaveScheduleReportViewState extends State<EmployeeLeaveScheduleR
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSizes.s12),
           if (activeData.events.isEmpty)
             Center(
               child: Padding(
-                padding: const EdgeInsets.all(32.0),
+                padding: const EdgeInsets.all(AppSizes.s32),
                 child: Text('no_data'.tr(), style: TextStyle(color: Colors.grey.shade500)),
               ),
             )
@@ -125,7 +126,7 @@ class _EmployeeLeaveScheduleReportViewState extends State<EmployeeLeaveScheduleR
           color: Color(AppColors.buttons),
           bgColor: Color(AppColors.buttons).withOpacity(0.08),
         ),
-        const SizedBox(width: 10),
+        const SizedBox(width: AppSizes.s10),
         _buildStatCard(
           context,
           title: 'total_days'.tr(),
@@ -134,7 +135,7 @@ class _EmployeeLeaveScheduleReportViewState extends State<EmployeeLeaveScheduleR
           color: const Color(0xFF6366F1),
           bgColor: const Color(0xFF6366F1).withOpacity(0.08),
         ),
-        const SizedBox(width: 10),
+        const SizedBox(width: AppSizes.s10),
         _buildStatCard(
           context,
           title: 'employees'.tr(),
@@ -157,7 +158,7 @@ class _EmployeeLeaveScheduleReportViewState extends State<EmployeeLeaveScheduleR
   }) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        padding: const EdgeInsets.symmetric(vertical: AppSizes.s12, horizontal: AppSizes.s8),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(AppRadius.md),
@@ -166,14 +167,14 @@ class _EmployeeLeaveScheduleReportViewState extends State<EmployeeLeaveScheduleR
         child: Column(
           children: [
             Container(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.all(AppSizes.s8),
               decoration: BoxDecoration(
                 color: bgColor,
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: color, size: 20),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSizes.s8),
             Text(
               value,
               style: TextStyle(
@@ -182,7 +183,7 @@ class _EmployeeLeaveScheduleReportViewState extends State<EmployeeLeaveScheduleR
                 color: color,
               ),
             ),
-            const SizedBox(height: 2),
+            const SizedBox(height: AppSizes.s2),
             Text(
               title,
               maxLines: 1,
@@ -218,7 +219,7 @@ class _EmployeeLeaveScheduleReportViewState extends State<EmployeeLeaveScheduleR
     final entries = typeCounts.entries.toList();
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSizes.s16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.lg),
@@ -230,7 +231,7 @@ class _EmployeeLeaveScheduleReportViewState extends State<EmployeeLeaveScheduleR
           Row(
             children: [
               Icon(Icons.pie_chart_outline, size: 20, color: Color(AppColors.buttons)),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               Text(
                 'leave_types_distribution'.tr(),
                 style: AppStyles.blackContent(context).copyWith(
@@ -240,9 +241,9 @@ class _EmployeeLeaveScheduleReportViewState extends State<EmployeeLeaveScheduleR
               ),
             ],
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: AppSizes.s18),
           SizedBox(
-            height: 180,
+            height: AppSizes.s180,
             child: Stack(
               alignment: Alignment.center,
               children: [
@@ -289,7 +290,7 @@ class _EmployeeLeaveScheduleReportViewState extends State<EmployeeLeaveScheduleR
               ],
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSizes.s16),
           Wrap(
             spacing: 14,
             runSpacing: 8,
@@ -307,7 +308,7 @@ class _EmployeeLeaveScheduleReportViewState extends State<EmployeeLeaveScheduleR
                     height: 10,
                     decoration: BoxDecoration(color: color, shape: BoxShape.circle),
                   ),
-                  const SizedBox(width: 6),
+                  const SizedBox(width: AppSizes.s6),
                   Text(
                     '$label: $count ($pct%)',
                     style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.black87),
@@ -336,8 +337,8 @@ class _EmployeeLeaveScheduleReportViewState extends State<EmployeeLeaveScheduleR
     final color = parseColor(ev.statusColor);
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(14),
+      margin: const EdgeInsets.only(bottom: AppSizes.s12),
+      padding: const EdgeInsets.all(AppSizes.s14),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.md),
@@ -360,7 +361,7 @@ class _EmployeeLeaveScheduleReportViewState extends State<EmployeeLeaveScheduleR
                   ),
                 ),
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: AppSizes.s10),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -374,7 +375,7 @@ class _EmployeeLeaveScheduleReportViewState extends State<EmployeeLeaveScheduleR
                       ),
                     ),
                     if (ev.departmentName.isNotEmpty) ...[
-                      const SizedBox(height: 2),
+                      const SizedBox(height: AppSizes.s2),
                       Text(
                         ev.departmentName,
                         style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
@@ -384,7 +385,7 @@ class _EmployeeLeaveScheduleReportViewState extends State<EmployeeLeaveScheduleR
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: AppSizes.s10, vertical: AppSizes.s4),
                 decoration: BoxDecoration(
                   color: color.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(AppRadius.md),
@@ -401,13 +402,13 @@ class _EmployeeLeaveScheduleReportViewState extends State<EmployeeLeaveScheduleR
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSizes.s12),
           const Divider(height: 1, thickness: 0.8),
-          const SizedBox(height: 10),
+          const SizedBox(height: AppSizes.s10),
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                padding: const EdgeInsets.symmetric(horizontal: AppSizes.s8, vertical: AppSizes.s3),
                 decoration: BoxDecoration(
                   color: Color(AppColors.buttons).withOpacity(0.08),
                   borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -421,9 +422,9 @@ class _EmployeeLeaveScheduleReportViewState extends State<EmployeeLeaveScheduleR
                   ),
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                padding: const EdgeInsets.symmetric(horizontal: AppSizes.s8, vertical: AppSizes.s3),
                 decoration: BoxDecoration(
                   color: Colors.purple.withOpacity(0.08),
                   borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -439,7 +440,7 @@ class _EmployeeLeaveScheduleReportViewState extends State<EmployeeLeaveScheduleR
               ),
               const Spacer(),
               Icon(Icons.date_range_outlined, size: 13, color: Colors.grey.shade600),
-              const SizedBox(width: 4),
+              const SizedBox(width: AppSizes.s4),
               Text(
                 '${ev.startDate} → ${ev.endDate}',
                 style: TextStyle(

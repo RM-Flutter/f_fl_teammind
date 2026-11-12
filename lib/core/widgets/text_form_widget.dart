@@ -105,7 +105,7 @@ class TextFormWidget extends StatelessWidget {
         fillColor: Theme.of(context).inputDecorationTheme.fillColor,
         filled: true,
         contentPadding: contentPadding ??
-            const EdgeInsets.symmetric(vertical: 18, horizontal: 26),
+            const EdgeInsets.symmetric(vertical: AppSizes.s18, horizontal: AppSizes.s26),
         hintText: hint ?? '',
         // fillColor: fillColor ??
         //     (enabled ? AppColors.neutral0 : AppColors.neutral25),
@@ -189,7 +189,7 @@ Widget defaultTextFormField({
     alignment: Alignment.center,
     margin: const EdgeInsets.symmetric(vertical: AppSizes.s10),
     padding: EdgeInsets.symmetric(
-        horizontal: 16, vertical: (maxLines! > 1) ? 16 : 0),
+        horizontal: AppSizes.s16, vertical: (maxLines! > 1) ? 16 : 0),
     decoration: ShapeDecoration(
       color: AppThemeService.colorPalette.tertiaryColorBackground.color,
       shape: RoundedRectangleBorder(

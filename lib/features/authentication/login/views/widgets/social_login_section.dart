@@ -112,8 +112,8 @@ class _CircularSocialButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 8),
-        padding: const EdgeInsets.all(5),
+        margin: const EdgeInsets.symmetric(horizontal: AppSizes.s8),
+        padding: const EdgeInsets.all(AppSizes.s5),
         height: 30,
         width: 30,
         decoration: BoxDecoration(

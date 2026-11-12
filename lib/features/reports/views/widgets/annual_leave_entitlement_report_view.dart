@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/features/reports/data/models/annual_leave_entitlement_report_model.dart';
@@ -42,7 +43,7 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
         : widget.data;
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.only(bottom: 24),
+      padding: const EdgeInsets.only(bottom: AppSizes.s24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -53,12 +54,12 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
               currentSubtitle: widget.currentSubtitle,
               compareSubtitle: widget.compareSubtitle,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
           ],
           _buildSummaryCards(context, activeData),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSizes.s16),
           _buildUsageDonutChartCard(context, activeData),
-          const SizedBox(height: 20),
+          const SizedBox(height: AppSizes.s20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -70,7 +71,7 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: AppSizes.s10, vertical: AppSizes.s4),
                 decoration: BoxDecoration(
                   color: Color(AppColors.buttons).withOpacity(0.1),
                   borderRadius: BorderRadius.circular(AppRadius.md),
@@ -86,11 +87,11 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSizes.s12),
           if (activeData.employees.isEmpty)
             Center(
               child: Padding(
-                padding: const EdgeInsets.all(32.0),
+                padding: const EdgeInsets.all(AppSizes.s32),
                 child: Text('no_data'.tr(), style: TextStyle(color: Colors.grey.shade500)),
               ),
             )
@@ -114,7 +115,7 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
               color: Color(AppColors.buttons),
               bgColor: Color(AppColors.buttons).withOpacity(0.08),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppSizes.s12),
             _buildStatCard(
               context,
               title: 'total_entitlement'.tr(),
@@ -125,7 +126,7 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSizes.s12),
         Row(
           children: [
             _buildStatCard(
@@ -136,7 +137,7 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
               color: const Color(0xFFF59E0B),
               bgColor: const Color(0xFFF59E0B).withOpacity(0.08),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppSizes.s12),
             _buildStatCard(
               context,
               title: 'remaining_days'.tr(),
@@ -161,7 +162,7 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
   }) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.all(14),
+        padding: const EdgeInsets.all(AppSizes.s14),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(AppRadius.md),
@@ -170,14 +171,14 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(AppSizes.s10),
               decoration: BoxDecoration(
                 color: bgColor,
                 borderRadius: BorderRadius.circular(AppRadius.sm),
               ),
               child: Icon(icon, color: color, size: 22),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppSizes.s12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,7 +193,7 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: AppSizes.s4),
                   Text(
                     value,
                     style: TextStyle(
@@ -219,7 +220,7 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
     final hasData = total > 0;
 
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSizes.s16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.lg),
@@ -234,7 +235,7 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
               Row(
                 children: [
                   Icon(Icons.pie_chart_outline, size: 20, color: Color(AppColors.buttons)),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: AppSizes.s8),
                   Text(
                     'overall_usage'.tr(),
                     style: AppStyles.blackContent(context).copyWith(
@@ -245,7 +246,7 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
                 ],
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: AppSizes.s8, vertical: AppSizes.s4),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF59E0B).withOpacity(0.1),
                   borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -261,17 +262,17 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
               ),
             ],
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: AppSizes.s18),
           if (!hasData)
             Center(
               child: Padding(
-                padding: const EdgeInsets.all(24.0),
+                padding: const EdgeInsets.all(AppSizes.s24),
                 child: Text('no_data'.tr(), style: TextStyle(color: Colors.grey.shade500)),
               ),
             )
           else ...[
             SizedBox(
-              height: 180,
+              height: AppSizes.s180,
               child: Stack(
                 alignment: Alignment.center,
                 children: [
@@ -328,7 +329,7 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
                 ],
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
             Wrap(
               spacing: 20,
               runSpacing: 8,
@@ -354,7 +355,7 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
           height: 10,
           decoration: BoxDecoration(color: color, shape: BoxShape.circle),
         ),
-        const SizedBox(width: 6),
+        const SizedBox(width: AppSizes.s6),
         Text(
           '$label: $count ${'days'.tr()} ($pct%)',
           style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.black87),
@@ -365,8 +366,8 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
 
   Widget _buildEmployeeCard(BuildContext context, AnnualLeaveEmployeeItem emp) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(14),
+      margin: const EdgeInsets.only(bottom: AppSizes.s12),
+      padding: const EdgeInsets.all(AppSizes.s14),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppRadius.md),
@@ -389,7 +390,7 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: AppSizes.s12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -402,7 +403,7 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
                         color: Colors.black87,
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: AppSizes.s2),
                     Text(
                       [
                         if (emp.jobTitle.isNotEmpty) emp.jobTitle,
@@ -414,7 +415,7 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                padding: const EdgeInsets.symmetric(horizontal: AppSizes.s8, vertical: AppSizes.s3),
                 decoration: BoxDecoration(
                   color: emp.isQualified
                       ? const Color(0xFF10B981).withOpacity(0.1)
@@ -432,7 +433,7 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
               ),
             ],
           ),
-          const SizedBox(height: 14),
+          const SizedBox(height: AppSizes.s14),
           Row(
             children: [
               _buildMiniStat(
@@ -441,14 +442,14 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
                 value: '${emp.entitlementDays.toStringAsFixed(0)} ${'days'.tr()}',
                 color: const Color(0xFF6366F1),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               _buildMiniStat(
                 context,
                 label: 'taken'.tr(),
                 value: '${emp.takenDays.toStringAsFixed(0)} ${'days'.tr()}',
                 color: const Color(0xFFF59E0B),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               _buildMiniStat(
                 context,
                 label: 'remaining'.tr(),
@@ -457,7 +458,7 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSizes.s12),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -480,7 +481,7 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
                   ),
                 ],
               ),
-              const SizedBox(height: 4),
+              const SizedBox(height: AppSizes.s4),
               ClipRRect(
                 borderRadius: BorderRadius.circular(AppRadius.xs),
                 child: LinearProgressIndicator(
@@ -497,12 +498,12 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
             ],
           ),
           if (emp.hireDate.isNotEmpty || emp.notes.isNotEmpty) ...[
-            const SizedBox(height: 10),
+            const SizedBox(height: AppSizes.s10),
             Row(
               children: [
                 if (emp.hireDate.isNotEmpty) ...[
                   Icon(Icons.calendar_today_outlined, size: 12, color: Colors.grey.shade500),
-                  const SizedBox(width: 4),
+                  const SizedBox(width: AppSizes.s4),
                   Text(
                     '${'hire_date'.tr()}: ${emp.hireDate}',
                     style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
@@ -526,7 +527,7 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
   Widget _buildMiniStat(BuildContext context, {required String label, required String value, required Color color}) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+        padding: const EdgeInsets.symmetric(vertical: AppSizes.s6, horizontal: AppSizes.s4),
         decoration: BoxDecoration(
           color: color.withOpacity(0.06),
           borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -534,7 +535,7 @@ class _AnnualLeaveEntitlementReportViewState extends State<AnnualLeaveEntitlemen
         child: Column(
           children: [
             Text(value, style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: color)),
-            const SizedBox(height: 2),
+            const SizedBox(height: AppSizes.s2),
             Text(label, style: TextStyle(fontSize: 10, color: Colors.grey.shade600)),
           ],
         ),

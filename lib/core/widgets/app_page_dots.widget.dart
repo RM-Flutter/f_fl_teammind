@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ class AppPageDots extends StatelessWidget {
         return AnimatedContainer(
           duration: AppMotion.normal,
           curve: AppMotion.enter,
-          margin: const EdgeInsets.symmetric(horizontal: 3),
+          margin: const EdgeInsets.symmetric(horizontal: AppSizes.s3),
           width: active ? 22 : 8,
           height: 8,
           decoration: BoxDecoration(

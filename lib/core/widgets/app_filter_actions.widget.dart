@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -41,7 +42,7 @@ class AppFilterActions extends StatelessWidget {
               color: Color(AppColors.buttons),
               borderRadius: AppRadius.button,
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 40),
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.s40),
             child: Text(
               AppStrings.applyFilter.tr(),
               style: AppStyles.whiteContent(context)
@@ -59,7 +60,7 @@ class AppFilterActions extends StatelessWidget {
               borderRadius: AppRadius.button,
               border: Border.all(color: Color(AppColors.secondaryButton), width: 1),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.s20),
             child: Text(
               AppStrings.clear.tr(),
               style: AppStyles.darkContent(context)
@@ -100,7 +101,7 @@ class AppFilterSheetFrame extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const SizedBox(height: 10),
+            const SizedBox(height: AppSizes.s10),
             Container(
               width: 63,
               height: 5,
@@ -109,9 +110,9 @@ class AppFilterSheetFrame extends StatelessWidget {
                 borderRadius: BorderRadius.circular(AppRadius.pill),
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: AppSizes.s10),
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(AppSizes.s20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -121,9 +122,9 @@ class AppFilterSheetFrame extends StatelessWidget {
                     if (i > 0) const SizedBox(height: AppSpacing.md),
                     children[i],
                   ],
-                  const SizedBox(height: 30),
+                  const SizedBox(height: AppSizes.s30),
                   AppFilterActions(onApply: onApply, onClear: onClear),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: AppSizes.s30),
                 ],
               ),
             ),

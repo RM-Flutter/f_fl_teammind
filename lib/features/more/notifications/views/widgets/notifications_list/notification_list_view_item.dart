@@ -52,7 +52,7 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
                   ? Colors.grey.shade400
                   : Color(AppColors.buttons),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: AppSizes.s12),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,7 +68,7 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
                           : Color(AppColors.secondaryButton),
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: AppSizes.s2),
                   Text(
                     DateFormat('dd/MM/yyyy', context.locale.languageCode)
                         .format(DateTime.parse(notification['created_at'])),
@@ -78,7 +78,7 @@ class _PainterNotificationListViewItemState extends State<PainterNotificationLis
               ),
             ),
             if (!seen) ...[
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSizes.s8),
               Container(
                 width: 8,
                 height: 8,

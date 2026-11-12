@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_design.dart';
@@ -70,7 +71,7 @@ Widget defaultTapBarItem({
               : itemWidth;
 
       return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+        padding: const EdgeInsets.symmetric(horizontal: AppSizes.s4, vertical: AppSizes.s4),
         alignment: Alignment.center,
         height: !useVertical ? 50 : null,
         width: totalWidth,

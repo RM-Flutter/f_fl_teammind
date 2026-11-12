@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/widgets/app_responsive_grid.widget.dart';
 import 'dart:ui' as ui;
 import 'dart:convert';
@@ -141,7 +142,7 @@ class _SmartCardProfileDetailScreenState
       context: context,
       backgroundColor: Colors.transparent,
       builder: (ctx) => Container(
-        padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+        padding: const EdgeInsets.fromLTRB(AppSizes.s24, AppSizes.s20, AppSizes.s24, AppSizes.s24),
         decoration: BoxDecoration(
           color: Color(AppColors.modalBackground),
           borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
@@ -158,9 +159,9 @@ class _SmartCardProfileDetailScreenState
                 color: Color(AppColors.black),
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSizes.s12),
             SelectableText(url, style: TextStyle(fontSize: 12, color: Colors.grey[700])),
-            const SizedBox(height: 20),
+            const SizedBox(height: AppSizes.s20),
             Row(
               children: [
                 Expanded(
@@ -177,7 +178,7 @@ class _SmartCardProfileDetailScreenState
                     label: Text(AppStrings.copy.tr(), style:  TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: Colors.white),),
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppSizes.s8),
                 Expanded(
                   child: FilledButton.icon(
                     onPressed: () async {
@@ -212,7 +213,7 @@ class _SmartCardProfileDetailScreenState
       context: context,
       backgroundColor: Colors.transparent,
       builder: (ctx) => Container(
-        padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+        padding: const EdgeInsets.fromLTRB(AppSizes.s24, AppSizes.s20, AppSizes.s24, AppSizes.s24),
         decoration: BoxDecoration(
           color: Color(AppColors.modalBackground),
           borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
@@ -224,7 +225,7 @@ class _SmartCardProfileDetailScreenState
               key: _qrKey,
               child: Container(
                 color: Colors.white,
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(AppSizes.s16),
                 child: QrImageView(
                   data: url,
                   version: QrVersions.auto,
@@ -234,14 +235,14 @@ class _SmartCardProfileDetailScreenState
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: AppSizes.s20),
             SizedBox(
               width: double.infinity,
               child: FilledButton.icon(
                 onPressed: () => _downloadQr(ctx),
                 style: FilledButton.styleFrom(
                   backgroundColor: Color(AppColors.buttons),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  padding: const EdgeInsets.symmetric(vertical: AppSizes.s14),
                 ),
                 icon: SvgPicture.asset("assets/images/svg/downloadQr.svg"),
                 label: Text(AppStrings.downloadQr.tr(), style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),),
@@ -399,7 +400,7 @@ class _SmartCardProfileDetailScreenState
         routeName: AppRoutes.smartCardProfileDetailScreen.name,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSizes.s16),
         child: Column(
           children: [
             AppResponsiveGrid(

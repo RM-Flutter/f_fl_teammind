@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/widgets/app_field_shell.widget.dart';
 import 'dart:convert';
 
@@ -51,11 +52,11 @@ class CreateCVJobInfoTab extends StatelessWidget {
               isRequired: true,
               hint: AppStrings.enterYourCurrentJobTitle.tr(),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
 
             if (showCvOnlySections) ...[
               _buildJobDropdown(),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSizes.s16),
             ],
 
             // In Smart Card Employee update: replace "About Me" with "Company Name"
@@ -72,11 +73,11 @@ class CreateCVJobInfoTab extends StatelessWidget {
                 label: AppStrings.companyName.tr(),
                 hint: AppStrings.companyName.tr(),
               ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
 
             if (showCvOnlySections) ...[
               _buildSkillsMultiSelect(),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSizes.s16),
 
               _buildTextField(
                 controller: viewModel.moreSkillsController,
@@ -84,7 +85,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                 hint: AppStrings.enterAdditionalSkills.tr(),
                 maxLines: 3,
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSizes.s24),
             ],
 
             if (isSmartCardEmployee) ...[
@@ -93,23 +94,23 @@ class CreateCVJobInfoTab extends StatelessWidget {
                 Column(
                   children: [
                     _buildExperiencesSection(context),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: AppSizes.s24),
                     _buildPortfoliosSection(),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: AppSizes.s24),
                     _buildMediaGalleriesSection(context),
                   ],
                 ),
               ),
             ] else ...[
               _buildExperiencesSection(context),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSizes.s24),
               _buildPortfoliosSection(),
             ],
 
             if (showCvOnlySections) ...[
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSizes.s24),
               _buildLanguagesLevelsSection(),
-              const SizedBox(height: 24),
+              const SizedBox(height: AppSizes.s24),
               _buildSkillsLevelsSection(),
             ],
           ],
@@ -144,7 +145,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
         left: 0,
         right: 0,
       ),
-      padding: const EdgeInsets.only(top: 15, bottom: 5),
+      padding: const EdgeInsets.only(top: 15, bottom: AppSizes.s5),
       backgroundColor: Colors.transparent,
       content: CustomAlert(
         title: AppStrings.failed.tr(),
@@ -183,7 +184,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
               ),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSizes.s8),
         TextFormField(
           controller: controller,
           maxLines: maxLines,
@@ -193,7 +194,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
               borderRadius: AppField.borderRadius,
               borderSide: const BorderSide(color: AppField.borderColor),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s16),
           ),
         ),
       ],
@@ -220,7 +221,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSizes.s8),
         DropdownButtonFormField<int>(
           value: viewModel.jobId,
           decoration: InputDecoration(
@@ -230,7 +231,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
               borderRadius: AppField.borderRadius,
               borderSide: const BorderSide(color: AppField.borderColor),
             ),
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s16),
           ),
           style: AppField.valueStyle,
           items: viewModel.jobs
@@ -263,7 +264,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
             color: Color(AppColors.secondaryButton),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSizes.s8),
         Wrap(
           spacing: 8,
           runSpacing: 8,
@@ -274,7 +275,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
               label: Text(skill['title'] ?? ''),
               labelStyle: const TextStyle(fontSize: 12),
               padding: EdgeInsets.zero,
-              labelPadding: const EdgeInsets.symmetric(horizontal: 4),
+              labelPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s4),
               visualDensity: const VisualDensity(horizontal: -4, vertical: -4),
               selected: isSelected,
               onSelected: (selected) {
@@ -312,7 +313,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
             color: Color(AppColors.secondaryButton),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSizes.s8),
         if (viewModel.worksGallery.isNotEmpty)
           Wrap(
             spacing: 8,
@@ -356,7 +357,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
               );
             }),
           ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSizes.s8),
         OutlinedButton.icon(
           onPressed: () async {
             await _pickWorksImages(context);
@@ -370,7 +371,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
             side: const BorderSide(color: AppField.borderColor),
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSizes.s16),
         Text(
           AppStrings.videos.tr(),
           style: TextStyle(
@@ -379,7 +380,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
             color: Color(AppColors.secondaryButton),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSizes.s8),
         if (viewModel.videoGallery.isNotEmpty)
           Wrap(
             spacing: 8,
@@ -414,7 +415,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
               );
             }),
           ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSizes.s8),
         OutlinedButton.icon(
           onPressed: () async {
             await _pickVideos(context);
@@ -493,7 +494,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSizes.s8),
         ...viewModel.experiences.asMap().entries.map((entry) {
           final index = entry.key;
           final experience = entry.value;
@@ -528,9 +529,9 @@ class CreateCVJobInfoTab extends StatelessWidget {
         : null;
 
     return Card(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: AppSizes.s8),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(AppSizes.s12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -549,7 +550,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSizes.s8),
             // Company Name (Smart Card / CV-compatible – stored فقط محلياً في CVExperience)
             TextFormField(
               initialValue: experience.companyName ?? '',
@@ -573,7 +574,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                 viewModel.updateExperience(index, updatedExp);
               },
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
             TextFormField(
               initialValue: experience.jobTitle ?? '',
               decoration: InputDecoration(
@@ -596,7 +597,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                 viewModel.updateExperience(index, updatedExp);
               },
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
             CustomDropdown.search(
               items: viewModel.countries,
               selectedValue: selectedCountry,
@@ -621,7 +622,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
               },
             ),
             if (experience.countryId != null && experienceStates.isNotEmpty) ...[
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSizes.s16),
               CustomDropdown.search(
                 items: experienceStates,
                 selectedValue: selectedState,
@@ -644,7 +645,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                 },
               ),
             ],
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
             Row(
               children: [
                 Expanded(
@@ -669,7 +670,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                       }
                     },
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s12),
                       decoration: BoxDecoration(
                         border: Border.all(color: AppField.borderColor),
                         borderRadius: AppField.borderRadius,
@@ -684,14 +685,14 @@ class CreateCVJobInfoTab extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          const SizedBox(width: 8),
+                          const SizedBox(width: AppSizes.s8),
                           const Icon(Icons.calendar_today, size: 20),
                         ],
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: AppSizes.s16),
                 Expanded(
                   child: InkWell(
                     onTap: () async {
@@ -714,7 +715,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                       }
                     },
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s12),
                       decoration: BoxDecoration(
                         border: Border.all(color: AppField.borderColor),
                         borderRadius: AppField.borderRadius,
@@ -729,7 +730,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          const SizedBox(width: 8),
+                          const SizedBox(width: AppSizes.s8),
                           const Icon(Icons.calendar_today, size: 20),
                         ],
                       ),
@@ -767,7 +768,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSizes.s8),
         ...viewModel.portfolios.asMap().entries.map((entry) {
           final index = entry.key;
           final portfolio = entry.value;
@@ -779,9 +780,9 @@ class CreateCVJobInfoTab extends StatelessWidget {
 
   Widget _buildPortfolioItem(int index, CVPortfolio portfolio) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: AppSizes.s8),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(AppSizes.s12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -800,7 +801,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSizes.s8),
             TextFormField(
               initialValue: portfolio.projectName ?? '',
               decoration: InputDecoration(
@@ -821,7 +822,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                 viewModel.updatePortfolio(index, updatedPortfolio);
               },
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
             TextFormField(
               initialValue: portfolio.projectDescription ?? '',
               decoration: InputDecoration(
@@ -843,7 +844,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                 viewModel.updatePortfolio(index, updatedPortfolio);
               },
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
             TextFormField(
               initialValue: portfolio.projectLink ?? '',
               decoration: InputDecoration(
@@ -893,7 +894,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSizes.s8),
         ...viewModel.languagesLevels.asMap().entries.map((entry) {
           final index = entry.key;
           final languageLevel = entry.value;
@@ -919,9 +920,9 @@ class CreateCVJobInfoTab extends StatelessWidget {
         : null;
 
     return Card(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: AppSizes.s8),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(AppSizes.s12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -940,7 +941,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSizes.s8),
             CustomDropdown.search(
               items: viewModel.languages,
               selectedValue: selectedLanguage,
@@ -958,7 +959,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                 }
               },
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
             CustomDropdown.search(
               items: viewModel.levels,
               selectedValue: selectedLevel,
@@ -1005,7 +1006,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSizes.s8),
         ...viewModel.skillsLevels.asMap().entries.map((entry) {
           final index = entry.key;
           final skillLevel = entry.value;
@@ -1031,9 +1032,9 @@ class CreateCVJobInfoTab extends StatelessWidget {
         : null;
 
     return Card(
-      margin: const EdgeInsets.only(bottom: 8),
+      margin: const EdgeInsets.only(bottom: AppSizes.s8),
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(AppSizes.s12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1066,7 +1067,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                               viewModel.updateSkillLevel(index, updatedSkill);
                             },
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s4),
                               decoration: BoxDecoration(
                                 color: !skillLevel.isTextMode ? Color(AppColors.secondaryButton) : Colors.transparent,
                                 borderRadius: BorderRadius.circular(AppRadius.lg),
@@ -1100,7 +1101,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                               viewModel.updateSkillLevel(index, updatedSkill);
                             },
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s4),
                               decoration: BoxDecoration(
                                 color: skillLevel.isTextMode ? Color(AppColors.secondaryButton) : Colors.transparent,
                                 borderRadius: BorderRadius.circular(AppRadius.lg),
@@ -1128,7 +1129,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSizes.s8),
             if (skillLevel.isTextMode)
               TextFormField(
                 initialValue: skillLevel.skillName ?? '',
@@ -1181,7 +1182,7 @@ class CreateCVJobInfoTab extends StatelessWidget {
                   }
                 },
               ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSizes.s16),
             CustomDropdown.search(
               items: viewModel.levels,
               selectedValue: selectedLevel,

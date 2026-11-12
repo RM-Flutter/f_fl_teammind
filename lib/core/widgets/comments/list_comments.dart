@@ -160,9 +160,9 @@ class _ListCommentsScreenState extends State<ListCommentsScreen> {
                                 child: AppShimmerCard());
                           } else {
                             return Container(
-                              margin: const EdgeInsets.symmetric(vertical: 8),
+                              margin: const EdgeInsets.symmetric(vertical: AppSizes.s8),
                               padding: const EdgeInsets.symmetric(
-                                  vertical: 8, horizontal: 12),
+                                  vertical: AppSizes.s8, horizontal: AppSizes.s12),
                               decoration: ShapeDecoration(
                                 color: Colors.white,
                                 shape: RoundedRectangleBorder(
@@ -194,7 +194,7 @@ class _ListCommentsScreenState extends State<ListCommentsScreen> {
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(width: 12),
+                                  const SizedBox(width: AppSizes.s12),
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
@@ -216,7 +216,7 @@ class _ListCommentsScreenState extends State<ListCommentsScreen> {
                                                       .secondaryButton))),
                                         ),
                                         const SizedBox(
-                                          height: 5,
+                                          height: AppSizes.s5,
                                         ),
                                         SizedBox(
                                           width:
@@ -231,7 +231,7 @@ class _ListCommentsScreenState extends State<ListCommentsScreen> {
                                                   color: Color(0xff606060))),
                                         ),
                                         const SizedBox(
-                                          height: 5,
+                                          height: AppSizes.s5,
                                         ),
                                         if (value.comments[index]['content'] !=
                                             null)

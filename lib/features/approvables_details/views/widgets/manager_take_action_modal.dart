@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/services/app_toast.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -124,9 +125,9 @@ class _ManagerTakeActionModalState extends State<ManagerTakeActionModal> {
 
         return Container(
           padding: EdgeInsets.only(
-            top: 20,
-            left: 20,
-            right: 20,
+            top: AppSizes.s20,
+            left: AppSizes.s20,
+            right: AppSizes.s20,
             bottom: MediaQuery.of(context).viewInsets.bottom + 20,
           ),
           decoration: const BoxDecoration(
@@ -162,7 +163,7 @@ class _ManagerTakeActionModalState extends State<ManagerTakeActionModal> {
                   ],
                 ),
                 const Divider(),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSizes.s12),
 
                 // Approver Employee Dropdown (Case B)
                 if (isAsSomeoneElse)
@@ -201,7 +202,7 @@ class _ManagerTakeActionModalState extends State<ManagerTakeActionModal> {
                 if (_errorMessage != null)
                   ActionErrorBanner(errorMessage: _errorMessage!),
 
-                const SizedBox(height: 24),
+                const SizedBox(height: AppSizes.s24),
 
                 // Submit Button
                 Center(

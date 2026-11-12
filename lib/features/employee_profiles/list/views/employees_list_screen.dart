@@ -81,10 +81,10 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
                                       onPressed: viewModel.releaseSearchValuesAndFilters)
                                   : null,
                               isDense: true,
-                              contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 12)),
+                              contentPadding: EdgeInsets.symmetric(vertical: AppSizes.s10, horizontal: AppSizes.s12)),
                         ),
                       ),
-                      SizedBox(width: 4),
+                      SizedBox(width: AppSizes.s4),
                       IconButton(
                         icon: Image.asset(
                           AppImages.profileFilter,
@@ -162,7 +162,7 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
                                                   borderColor: Color(
                                                       AppColors.buttons),
                                                 ),
-                                                const SizedBox(width: 12),
+                                                const SizedBox(width: AppSizes.s12),
                                                 Expanded(
                                                   child: Column(
                                                     crossAxisAlignment:
@@ -180,7 +180,7 @@ class _EmployeesListScreenState extends State<EmployeesListScreen> {
                                                       ),
                                                       if (subtitleParts
                                                           .isNotEmpty) ...[
-                                                        const SizedBox(height: 2),
+                                                        const SizedBox(height: AppSizes.s2),
                                                         Text(
                                                           subtitleParts
                                                               .join(' · '),

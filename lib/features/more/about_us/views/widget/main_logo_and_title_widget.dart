@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:app_test/core/widgets/dynamic_image_widget.dart';
@@ -11,7 +12,7 @@ class MainLogoAndTitleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: 30),
+        SizedBox(height: AppSizes.s30),
         Center(
           child: SizedBox(
             height: 177,

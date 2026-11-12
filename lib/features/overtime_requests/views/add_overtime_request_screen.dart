@@ -206,8 +206,8 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
     }
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 4),
-      padding: EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+      margin: EdgeInsets.symmetric(horizontal: AppSizes.s4),
+      padding: EdgeInsets.symmetric(horizontal: AppSizes.s14, vertical: AppSizes.s10),
       decoration: BoxDecoration(
         color: Color(AppColors.buttons).withOpacity(0.08),
         borderRadius: BorderRadius.circular(AppRadius.md),
@@ -216,7 +216,7 @@ class _AddOvertimeRequestScreenState extends State<AddOvertimeRequestScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(Icons.access_time, size: 16, color: Color(AppColors.buttons)),
-          SizedBox(width: 8),
+          SizedBox(width: AppSizes.s8),
           Text(
             text,
             style: AppStyles.primaryContent(context).copyWith(

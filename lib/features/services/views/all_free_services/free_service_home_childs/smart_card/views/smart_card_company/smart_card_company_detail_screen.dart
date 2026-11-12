@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/widgets/app_card.widget.dart';
 import 'package:app_test/core/widgets/app_responsive_grid.widget.dart';
 import 'package:app_test/core/utils/app_styles.dart';
@@ -70,7 +71,7 @@ class _SmartCardCompanyDetailScreenState
       context: context,
       backgroundColor: Colors.transparent,
       builder: (ctx) => Container(
-        padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+        padding: const EdgeInsets.fromLTRB(AppSizes.s24, AppSizes.s20, AppSizes.s24, AppSizes.s24),
         decoration: BoxDecoration(
           color: Color(AppColors.modalBackground),
           borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
@@ -87,9 +88,9 @@ class _SmartCardCompanyDetailScreenState
                 color: Color(AppColors.black),
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSizes.s12),
             SelectableText(url, style: TextStyle(fontSize: 12, color: Colors.grey[700])),
-            const SizedBox(height: 20),
+            const SizedBox(height: AppSizes.s20),
             Row(
               children: [
                 Expanded(
@@ -106,7 +107,7 @@ class _SmartCardCompanyDetailScreenState
                     label: Text(AppStrings.copy.tr(), style:  TextStyle(fontWeight: FontWeight.w500, fontSize: 16, color: Colors.white),),
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppSizes.s8),
                 Expanded(
                   child: FilledButton.icon(
                     onPressed: () async {
@@ -141,7 +142,7 @@ class _SmartCardCompanyDetailScreenState
       context: context,
       backgroundColor: Colors.transparent,
       builder: (ctx) => Container(
-        padding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+        padding: const EdgeInsets.fromLTRB(AppSizes.s24, AppSizes.s20, AppSizes.s24, AppSizes.s24),
         decoration: BoxDecoration(
           color: Color(AppColors.modalBackground),
           borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
@@ -153,7 +154,7 @@ class _SmartCardCompanyDetailScreenState
               key: _qrKey,
               child: Container(
                 color: Colors.white,
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(AppSizes.s16),
                 child: QrImageView(
                   data: url,
                   version: QrVersions.auto,
@@ -163,14 +164,14 @@ class _SmartCardCompanyDetailScreenState
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: AppSizes.s20),
             SizedBox(
               width: double.infinity,
               child: FilledButton.icon(
                 onPressed: () => _downloadQr(ctx),
                 style: FilledButton.styleFrom(
                   backgroundColor: Color(AppColors.buttons),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  padding: const EdgeInsets.symmetric(vertical: AppSizes.s14),
                 ),
                 icon: SvgPicture.asset("assets/images/svg/downloadQr.svg"),
                 label: Text(AppStrings.downloadQr.tr(), style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16),),
@@ -226,7 +227,7 @@ class _SmartCardCompanyDetailScreenState
               borderRadius:
                   const BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
             ),
-            padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+            padding: const EdgeInsets.fromLTRB(AppSizes.s24, AppSizes.s16, AppSizes.s24, AppSizes.s24),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -248,10 +249,10 @@ class _SmartCardCompanyDetailScreenState
                       borderRadius: BorderRadius.circular(AppRadius.sm),
                       borderSide: const BorderSide(color: Colors.black),
                     ),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: AppSizes.s16, vertical: AppSizes.s12),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: AppSizes.s20),
                 SizedBox(
                   width: double.infinity,
                   child: FilledButton(
@@ -271,7 +272,7 @@ class _SmartCardCompanyDetailScreenState
                     },
                     style: FilledButton.styleFrom(
                       backgroundColor: Color(AppColors.buttons),
-                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      padding: const EdgeInsets.symmetric(vertical: AppSizes.s14),
                     ),
                     child: Text(
                       'create'.tr(),
@@ -297,7 +298,7 @@ class _SmartCardCompanyDetailScreenState
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (ctx) => Container(
-        padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
+        padding: const EdgeInsets.fromLTRB(AppSizes.s24, AppSizes.s24, AppSizes.s24, AppSizes.s32),
         decoration: BoxDecoration(
           color: Color(AppColors.modalBackground),
           borderRadius: const BorderRadius.vertical(top: Radius.circular(AppRadius.xl)),
@@ -314,7 +315,7 @@ class _SmartCardCompanyDetailScreenState
                 color: Color(AppColors.black),
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSizes.s24),
             OutlinedButton.icon(
               onPressed: () async {
                 Navigator.of(ctx).pop();
@@ -327,7 +328,7 @@ class _SmartCardCompanyDetailScreenState
               icon: const Icon(Icons.play_circle_outline),
               label: Text(AppStrings.learnMoreYoutube.tr()),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSizes.s12),
             FilledButton.icon(
               onPressed: () {
                 Navigator.of(ctx).pop();
@@ -338,7 +339,7 @@ class _SmartCardCompanyDetailScreenState
               },
               style: FilledButton.styleFrom(
                 backgroundColor: Color(AppColors.buttons),
-                padding: const EdgeInsets.symmetric(vertical: 14),
+                padding: const EdgeInsets.symmetric(vertical: AppSizes.s14),
               ),
               icon: const Icon(Icons.contact_support),
               label: Text(AppStrings.contactUs.tr()),
@@ -443,7 +444,7 @@ class _SmartCardCompanyDetailScreenState
               onRefresh: () => vm.setCompanyAndLoadEmployees(context, widget.company),
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(AppSizes.s16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -454,7 +455,7 @@ class _SmartCardCompanyDetailScreenState
                             .copyWith(fontSize: 16, fontWeight: FontWeight.w700),
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: AppSizes.s24),
                     AppResponsiveGrid(
                       compact: 2,
                       medium: 2,

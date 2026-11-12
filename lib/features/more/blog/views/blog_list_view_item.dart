@@ -44,7 +44,7 @@ class BlogListViewItem extends StatelessWidget {
             icon: Icons.article_outlined,
             borderColor: Color(AppColors.buttons),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSizes.s12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,7 +56,7 @@ class BlogListViewItem extends StatelessWidget {
                   style: AppStyles.heading(context),
                 ),
                 if (createdAt != null && createdAt.isNotEmpty) ...[
-                  const SizedBox(height: 2),
+                  const SizedBox(height: AppSizes.s2),
                   Text(
                     createdAt,
                     maxLines: 1,

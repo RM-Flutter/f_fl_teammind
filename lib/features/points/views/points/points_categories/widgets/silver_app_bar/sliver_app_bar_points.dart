@@ -127,7 +127,7 @@ class SliverAppBarPoints extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(
-                              height: 10,
+                              height: AppSizes.s10,
                             ),
                             GestureDetector(
                               onTap: () {
@@ -138,7 +138,7 @@ class SliverAppBarPoints extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(
-                              height: 10,
+                              height: AppSizes.s10,
                             ),
                             GestureDetector(
                               onTap: () async {

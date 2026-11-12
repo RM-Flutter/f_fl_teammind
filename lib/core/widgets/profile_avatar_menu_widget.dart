@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/routing/app_router.dart';
@@ -51,7 +52,7 @@ class ProfileAvatarMenuWidget extends StatelessWidget {
         elevation: const WidgetStatePropertyAll(10),
         shadowColor: WidgetStatePropertyAll(Colors.black.withOpacity(0.25)),
         minimumSize: const WidgetStatePropertyAll(Size(210, 0)),
-        padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(vertical: 6)),
+        padding: const WidgetStatePropertyAll(EdgeInsets.symmetric(vertical: AppSizes.s6)),
         shape: WidgetStatePropertyAll(
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.lg))),
       ),
@@ -83,7 +84,7 @@ class ProfileAvatarMenuWidget extends StatelessWidget {
       onPressed: onPressed,
       style: const ButtonStyle(
         minimumSize: WidgetStatePropertyAll(Size(210, 48)),
-        padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: 14)),
+        padding: WidgetStatePropertyAll(EdgeInsets.symmetric(horizontal: AppSizes.s14)),
       ),
       leadingIcon: Container(
         width: 32,

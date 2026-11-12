@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -17,7 +18,7 @@ class SliderHomeMenu extends StatelessWidget {
       alignment: Alignment.topCenter,
       children: [
         Container(
-          padding:const EdgeInsets.symmetric(vertical: 25),
+          padding:const EdgeInsets.symmetric(vertical: AppSizes.s25),
           width: 150,
           height: 170,
           color: Colors.transparent,
@@ -26,9 +27,9 @@ class SliderHomeMenu extends StatelessWidget {
                 color: Color(AppColors.textC5),
                 borderRadius: BorderRadius.circular(AppRadius.md)),
             padding: const EdgeInsetsDirectional.only(
-              bottom: 30,
-              start: 2,
-              end: 2,
+              bottom: AppSizes.s30,
+              start: AppSizes.s2,
+              end: AppSizes.s2,
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -40,7 +41,7 @@ class SliderHomeMenu extends StatelessWidget {
                       fontWeight: FontWeight.w700,
                       color: Color(0xff15223D)),
                 ),
-                const SizedBox(height: 4,),
+                const SizedBox(height: AppSizes.s4,),
                 Text(
                   description,
                   style:  const TextStyle(
@@ -101,7 +102,7 @@ class SliderHomeMenu2 extends StatelessWidget {
               color: Color(AppColors.textC5),
               borderRadius: BorderRadius.circular(AppRadius.md),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: AppSizes.s6, vertical: AppSizes.s8),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -115,7 +116,7 @@ class SliderHomeMenu2 extends StatelessWidget {
                     color: Color(0xff15223D),
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppSizes.s4),
                 AutoSizeText(
                   description,
                   maxLines: 2,

@@ -1,3 +1,4 @@
+import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
 import 'package:app_test/core/widgets/all_bottom_sheet.dart';
 import 'package:app_test/features/home/controllers/home_controller.dart';
@@ -67,21 +68,21 @@ class SendPointConfirmBottomsheet extends StatelessWidget {
                     height: MediaQuery.sizeOf(context).height * 0.46,
                     child: Column(
                       children: [
-                        const SizedBox(height: 20,),
+                        const SizedBox(height: AppSizes.s20,),
                         Stack(
                           alignment: Alignment.topRight,
                           children: [
                             Container(
                               width: 88,
                               height: 88,
-                              padding: const EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(AppSizes.s10),
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: const Color(0xffE6007E)
                                     .withOpacity(0.05),
                               ),
                               child: Container(
-                                padding: const EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(AppSizes.s10),
                                 decoration: const BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: Color(0xffE6007E),
@@ -93,7 +94,7 @@ class SendPointConfirmBottomsheet extends StatelessWidget {
                               ),
                             ),
                             const Padding(
-                              padding: EdgeInsets.all(8.0),
+                              padding: EdgeInsets.all(AppSizes.s8),
                               child: CircleAvatar(
                                 radius: 10,
                                 backgroundColor: Color(0xff38CF71),
@@ -107,7 +108,7 @@ class SendPointConfirmBottomsheet extends StatelessWidget {
                           ],
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(30.0),
+                          padding: const EdgeInsets.all(AppSizes.s30),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -167,7 +168,7 @@ class SendPointConfirmBottomsheet extends StatelessWidget {
                                     ) : const Center(child: CircularProgressIndicator(),),
                                   ),
                                   const SizedBox(
-                                    width: 10,
+                                    width: AppSizes.s10,
                                   ),
                                   Expanded(
                                     child: GestureDetector(
