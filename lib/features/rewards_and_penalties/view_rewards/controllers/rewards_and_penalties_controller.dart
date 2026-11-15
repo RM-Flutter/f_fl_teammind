@@ -3,196 +3,235 @@ import 'dart:convert';
 import 'package:app_test/core/constants/user_consts.dart';
 import 'package:app_test/core/models/settings/user_settings.model.dart';
 import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
-import 'package:app_test/features/rewards_and_penalties/view_rewards/data/models/reward_and_penalty_team_model.dart';
+import 'package:app_test/core/services/requests_services.dart';
+import 'package:app_test/core/utils/request_scope_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:app_test/core/routing/app_router.dart';
-import '../../../../core/services/backend_services/api_service/dio_api_service/dio.dart';
-import '../data/models/reward_and_penalty_model.dart';
+
+import '../data/models/reward_penalty_approvable_model.dart';
 import '../data/repos/rewards_and_penalties.service.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:app_test/core/services/alert_service/alerts_service.dart';
 
+/// List of rewards and penalties through the approval system
+/// (type `rewards_and_penalties`): "mine" and "incoming" (team / other
+/// departments / all company). Details and actions open `approvableDetails`.
+/// Creating a reward or penalty still uses the old payroll endpoint
+/// (`add_rewards/`).
 class RewardsAndPenaltiesViewModel extends ChangeNotifier {
-  List<RewardAndPenaltyModel>? rewardsAndPenalties;
-  List<RewardAndPenaltyModelTeam>? rewardsAndPenaltiesTeam;
+  List<RewardPenaltyApprovableModel>? personalItems;
+  List<RewardPenaltyApprovableModel>? incomingItems;
   UserSettingsModel? userSettings;
-  int currentPersonalPage = 1;
-  bool hasMorePersonal = true;
-  bool isLoadingMorePersonal = false;
 
-  int currentTeamPage = 1;
-  bool hasMoreTeam = true;
-  bool isLoadingMoreTeam = false;
-  bool isForTeam = false;
-  String? currentEmpId;
-  
-  Future<void> toggleTeamView(bool value, BuildContext context) async {
-    isForTeam = value;
-    notifyListeners();
-    if (isForTeam && (rewardsAndPenaltiesTeam == null || rewardsAndPenaltiesTeam!.isEmpty) && hasMoreTeam) {
-      updateLoadingStatus(laodingValue: true);
-      await _getRewardsAndPenaltiesTeam(context: context, empId: currentEmpId, page: 1);
-      updateLoadingStatus(laodingValue: false);
-    } else if (!isForTeam && (rewardsAndPenalties == null || rewardsAndPenalties!.isEmpty) && hasMorePersonal) {
-      updateLoadingStatus(laodingValue: true);
-      await _getRewardsAndPenalties(context: context, empId: currentEmpId, page: 1);
-      updateLoadingStatus(laodingValue: false);
+  bool isLoadingPersonal = true;
+  bool isLoadingIncoming = true;
+
+  int personalCurrentPage = 1;
+  bool personalHasMore = true;
+  bool personalIsLoadingMore = false;
+
+  int incomingCurrentPage = 1;
+  bool incomingHasMore = true;
+  bool incomingIsLoadingMore = false;
+
+  bool isIncomingView = false;
+  String incomingScope = RequestScopeHelper.defaultIncomingScope;
+
+  /// When opened from an employee profile, the incoming list is filtered to
+  /// this employee.
+  String? filterEmpId;
+
+  Map<String, String?> personalFilters = {};
+  Map<String, String?> incomingFilters = {};
+
+  Map<String, String?> get currentFiltersMap =>
+      isIncomingView ? incomingFilters : personalFilters;
+
+  String? get filterEmpName => currentFiltersMap['empName'];
+  String? get filterDepId => currentFiltersMap['depId'];
+  String? get filterDepName => currentFiltersMap['depName'];
+  String? get filterStatus => currentFiltersMap['status'];
+  String? get filterFrom => currentFiltersMap['from'];
+  String? get filterTo => currentFiltersMap['to'];
+  String? get _filterEmp => currentFiltersMap['empId'];
+
+  bool get isLoading => isIncomingView ? isLoadingIncoming : isLoadingPersonal;
+  List<RewardPenaltyApprovableModel>? get currentList =>
+      isIncomingView ? incomingItems : personalItems;
+
+  void _loadUserSettings() {
+    final jsonString = CacheHelper.getString('US1');
+    if (jsonString != null && jsonString.isNotEmpty) {
+      userSettings = UserSettingsModel.fromJson(
+          json.decode(jsonString) as Map<String, dynamic>);
+      UserSettingConst.userSettings = userSettings;
     }
   }
 
-  bool isLoading = true;
-
-  void updateLoadingStatus({required bool laodingValue}) {
-    isLoading = laodingValue;
-    notifyListeners();
+  /// Opens the incoming view filtered to one employee (from their profile).
+  void openForEmployee({required String empId, String? empName}) {
+    filterEmpId = empId;
+    isIncomingView = true;
+    incomingScope = RequestScopeHelper.defaultIncomingScope;
+    incomingFilters['empId'] = empId;
+    incomingFilters['empName'] = empName;
   }
 
-  Future<void> initializeRewardsAndPenaltiesListScreen(
-      {required BuildContext context, required String? empId}) async {
-    this.currentEmpId = empId;
-    updateLoadingStatus(laodingValue: true);
-    currentPersonalPage = 1;
-    hasMorePersonal = true;
-    currentTeamPage = 1;
-    hasMoreTeam = true;
-    rewardsAndPenalties = null;
-    rewardsAndPenaltiesTeam = null;
-
-    var jsonString;
-    var gCache;
-    UserSettingsModel? userSettingsModel;
-    jsonString = CacheHelper.getString("US1");
-    if (jsonString != null && jsonString.isNotEmpty && jsonString != "") {
-      gCache = json.decode(jsonString) as Map<String, dynamic>; // Convert String back to JSON
-      UserSettingConst.userSettings = UserSettingsModel.fromJson(gCache);
-    }
-    userSettingsModel = UserSettingsModel.fromJson(gCache);
-    userSettings = userSettingsModel;
-    
-    if (isForTeam) {
-      await _getRewardsAndPenaltiesTeam(context: context, empId: empId, page: 1);
+  Future<void> initializeScreen(BuildContext context) async {
+    _loadUserSettings();
+    if (isIncomingView) {
+      await getIncoming(context: context);
     } else {
-      await _getRewardsAndPenalties(context: context, empId: empId, page: 1);
-    }
-    
-    updateLoadingStatus(laodingValue: false);
-  }
-
-  Future<void> _getRewardsAndPenalties(
-      {required BuildContext context, String? empId, int page = 1}) async {
-    try {
-      final result =
-          await RewardsAndPenaltiesRepo.getRewardsAndPenaltiesList(
-              context: context, empId: empId, getTeam: false, page: page);
-      if (result.success && result.data != null) {
-        var rewardsAndPenaltiesListData =
-            result.data?['data'] as List<dynamic>?;
-        
-        final newItems = rewardsAndPenaltiesListData
-            ?.map((item) =>
-                RewardAndPenaltyModel.fromJson(item as Map<String, dynamic>))
-            .toList() ?? [];
-
-        if (page == 1) {
-          rewardsAndPenalties = newItems;
-        } else {
-          rewardsAndPenalties?.addAll(newItems);
-        }
-
-        if (newItems.isEmpty) {
-          hasMorePersonal = false;
-        }
-      } else {
-        hasMorePersonal = false;
-      }
-    } catch (err, t) {
-      hasMorePersonal = false;
-      debugPrint(
-          "error while getting user rewardsAndPenaltiesListData  list ${err.toString()} at :- $t");
+      await getPersonal(context: context);
     }
   }
 
-  Future<void> loadMorePersonal(BuildContext context, String? empId) async {
-    if (isLoadingMorePersonal || !hasMorePersonal) return;
-    isLoadingMorePersonal = true;
+  void toggleIncomingView(bool value, BuildContext context) {
+    isIncomingView = value;
     notifyListeners();
-
-    currentPersonalPage++;
-    await _getRewardsAndPenalties(context: context, empId: empId, page: currentPersonalPage);
-
-    isLoadingMorePersonal = false;
-    notifyListeners();
-  }
-
-  Future<void> _getRewardsAndPenaltiesTeam(
-      {required BuildContext context, String? empId, int page = 1}) async {
-    try {
-      final result =
-          await RewardsAndPenaltiesRepo.getRewardsAndPenaltiesList(
-              context: context, empId: empId, getTeam: true, page: page);
-      if (result.success && result.data != null) {
-        var rewardsAndPenaltiesTeamData =
-            result.data?['data'] as List<dynamic>?;
-        
-        final newItems = rewardsAndPenaltiesTeamData
-            ?.map((item) => RewardAndPenaltyModelTeam.fromJson(
-                item as Map<String, dynamic>))
-            .toList() ?? [];
-
-        if (page == 1) {
-          rewardsAndPenaltiesTeam = newItems;
-        } else {
-          rewardsAndPenaltiesTeam?.addAll(newItems);
-        }
-
-        if (newItems.isEmpty) {
-          hasMoreTeam = false;
-        }
-      } else {
-        hasMoreTeam = false;
-      }
-    } catch (err, t) {
-      hasMoreTeam = false;
-      debugPrint(
-          "error while getting user rewardsAndPenaltiesListData  list ${err.toString()} at :- $t");
+    if (value && incomingItems == null) {
+      getIncoming(context: context);
+    } else if (!value && personalItems == null) {
+      getPersonal(context: context);
     }
   }
 
-  Future<void> loadMoreTeam(BuildContext context, String? empId) async {
-    if (isLoadingMoreTeam || !hasMoreTeam) return;
-    isLoadingMoreTeam = true;
+  void setIncomingScope(String scope, BuildContext context) {
+    incomingScope = scope;
+    incomingItems = null;
     notifyListeners();
-
-    currentTeamPage++;
-    await _getRewardsAndPenaltiesTeam(context: context, empId: empId, page: currentTeamPage);
-
-    isLoadingMoreTeam = false;
-    notifyListeners();
+    getIncoming(context: context);
   }
 
-  Future<void> cancelRewardAndPenalty({required BuildContext context, required int id, String? empId}) async {
-    final safeContext = rootNavigatorKey.currentContext ?? context;
-    updateLoadingStatus(laodingValue: true);
+  void applyFilters(Map<String, String?> filters, BuildContext context) {
+    if (isIncomingView) {
+      incomingFilters = Map.from(filters);
+      getIncoming(context: context);
+    } else {
+      personalFilters = Map.from(filters);
+      getPersonal(context: context);
+    }
+  }
+
+  void _clear(List<String> keys, BuildContext context) {
+    final filters = Map<String, String?>.from(currentFiltersMap);
+    for (final k in keys) {
+      filters[k] = null;
+    }
+    applyFilters(filters, context);
+  }
+
+  void clearFilterEmp(BuildContext context) => _clear(['empId', 'empName'], context);
+  void clearFilterDep(BuildContext context) => _clear(['depId', 'depName'], context);
+  void clearFilterDate(BuildContext context) => _clear(['from', 'to'], context);
+  void clearFilterStatus(BuildContext context) => _clear(['status'], context);
+
+  List<RewardPenaltyApprovableModel> _parse(Map<String, dynamic>? data) {
+    final raw = data?['approvables'] ?? data?['data'];
+    final List list = raw is Map && raw['data'] is List
+        ? raw['data'] as List
+        : (raw is List ? raw : const []);
+    return list
+        .whereType<Map<String, dynamic>>()
+        .map(RewardPenaltyApprovableModel.fromApprovableJson)
+        .toList();
+  }
+
+  Future<void> getPersonal(
+      {required BuildContext context, bool loadMore = false}) async {
+    if (loadMore) {
+      if (!personalHasMore || personalIsLoadingMore) return;
+      personalIsLoadingMore = true;
+      personalCurrentPage++;
+    } else {
+      personalCurrentPage = 1;
+      personalHasMore = true;
+      isLoadingPersonal = true;
+    }
+    notifyListeners();
+
     try {
-      final response = await DioHelper.deleteData(
-        url: "/rm_payroll/v1/payroll/penalities-and-rewards/$id",
-        context: safeContext,
+      final result = await RequestsServices.getMyApprovables(
+        context: context,
+        type: RewardsAndPenaltiesRepo.approvableType,
+        page: personalCurrentPage,
+        status: filterStatus,
+        dateFrom: filterFrom,
+        dateTo: filterTo,
       );
-      if (response.data['status'] == true) {
-        AlertsService.success(
-          context: safeContext,
-          title: 'Success',
-          message: response.data['message'] ?? 'Successfully deleted',
-        );
-        // Refresh the list
-        await initializeRewardsAndPenaltiesListScreen(context: safeContext, empId: empId ?? this.currentEmpId);
+      if (result.success) {
+        final items = _parse(result.data);
+        if (items.isEmpty) personalHasMore = false;
+        if (personalCurrentPage == 1) {
+          personalItems = items;
+        } else {
+          personalItems?.addAll(items);
+        }
       } else {
-        updateLoadingStatus(laodingValue: false);
+        personalHasMore = false;
+        if (!loadMore) personalItems = [];
       }
-    } catch (error) {
-      updateLoadingStatus(laodingValue: false);
-      debugPrint("Error canceling reward/penalty: $error");
+    } catch (e, t) {
+      personalHasMore = false;
+      debugPrint('Error fetching my rewards/penalties: $e at $t');
+    } finally {
+      personalIsLoadingMore = false;
+      isLoadingPersonal = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> getIncoming(
+      {required BuildContext context, bool loadMore = false}) async {
+    if (loadMore) {
+      if (!incomingHasMore || incomingIsLoadingMore) return;
+      incomingIsLoadingMore = true;
+      incomingCurrentPage++;
+    } else {
+      incomingCurrentPage = 1;
+      incomingHasMore = true;
+      isLoadingIncoming = true;
+    }
+    notifyListeners();
+
+    try {
+      final result = await RequestsServices.getManagerApprovables(
+        context: context,
+        type: RewardsAndPenaltiesRepo.approvableType,
+        scope: incomingScope,
+        page: incomingCurrentPage,
+        employeesIds:
+            (_filterEmp != null && _filterEmp!.isNotEmpty) ? [_filterEmp!] : null,
+        departmentIds:
+            (filterDepId != null && filterDepId!.isNotEmpty) ? [filterDepId!] : null,
+        status: filterStatus,
+        dateFrom: filterFrom,
+        dateTo: filterTo,
+      );
+      if (result.success) {
+        final items = _parse(result.data);
+        if (items.isEmpty) incomingHasMore = false;
+        if (incomingCurrentPage == 1) {
+          incomingItems = items;
+        } else {
+          incomingItems?.addAll(items);
+        }
+      } else {
+        incomingHasMore = false;
+        if (!loadMore) incomingItems = [];
+      }
+    } catch (e, t) {
+      incomingHasMore = false;
+      debugPrint('Error fetching incoming rewards/penalties: $e at $t');
+    } finally {
+      incomingIsLoadingMore = false;
+      isLoadingIncoming = false;
+      notifyListeners();
+    }
+  }
+
+  void loadMore(BuildContext context) {
+    if (isIncomingView) {
+      getIncoming(context: context, loadMore: true);
+    } else {
+      getPersonal(context: context, loadMore: true);
     }
   }
 }
-

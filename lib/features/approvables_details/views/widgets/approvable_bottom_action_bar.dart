@@ -162,6 +162,7 @@ class ApprovableBottomActionBar extends StatelessWidget {
                   type == 'salary_advance_requests' ||
                   type == 'salary_advance' ||
                   type == 'employee_expense_claims' ||
+                  type == 'rewards_and_penalties' ||
                   type == 'shift_change_requests' ||
                   details.isShiftChangeRequest) {
                 await RequestDetailsViewModel().showAndGetEmployeeHistory(
@@ -216,6 +217,7 @@ class ApprovableBottomActionBar extends StatelessWidget {
                   type == 'salary_advance_requests' ||
                   type == 'salary_advance' ||
                   type == 'employee_expense_claims' ||
+                  type == 'rewards_and_penalties' ||
                   type == 'shift_change_requests' ||
                   details.isShiftChangeRequest) {
                 await RequestDetailsViewModel().showAndGetEmployeeHistory(

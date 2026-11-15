@@ -112,6 +112,13 @@ class ApprovableDetailsModel {
     this.rawDepartmentName,
   });
 
+  static String? _labelOf(dynamic v) {
+    if (v == null) return null;
+    if (v is Map) return (v['value'] ?? v['name'] ?? v['title'] ?? v['key'])?.toString();
+    final s = v.toString();
+    return s.isEmpty ? null : s;
+  }
+
   factory ApprovableDetailsModel.fromJson(Map<String, dynamic> json) {
     final reqEmp = json['requester_employee'] is Map<String, dynamic>
         ? ProfileModel.fromJson(json['requester_employee'] as Map<String, dynamic>)
@@ -141,6 +148,20 @@ class ApprovableDetailsModel {
         (json['can_update_approval'] ?? json['can_update'] ?? json['update_approval'])
                 as bool? ??
             false;
+
+    // rewards_and_penalties: `type` / `category` may come as {key, value},
+    // the value as `amount` (+ days / hours / amount unit) and the date as `due_date`.
+    final bool isRewardPenalty =
+        (json['approvable_type']?.toString().toLowerCase().contains('reward') ?? false) ||
+            json['type'] is Map ||
+            json.containsKey('due_date');
+    final String? rewardUnit = _labelOf(json['amount_type'] ?? json['value_type'])?.toLowerCase();
+    final bool rewardIsTime =
+        isRewardPenalty && (rewardUnit == 'days' || rewardUnit == 'hours');
+    final String rewardTypeName = [
+      _labelOf(json['type']),
+      _labelOf(json['category_name'] ?? json['category']),
+    ].whereType<String>().where((e) => e.isNotEmpty).join(' · ');
 
     final int? levelVal = json['level'] is int
         ? json['level']
@@ -176,14 +197,19 @@ class ApprovableDetailsModel {
           ? DepartmentModel.fromJson(json['department'] as Map<String, dynamic>)
           : null,
       profile: profileVal,
-      typeId: json['type_id'],
-      typeName: json['type_name'],
+      typeId: json['type_id'] is int
+          ? json['type_id']
+          : int.tryParse(json['type_id']?.toString() ?? ''),
+      typeName: json['type_name']?.toString() ??
+          (isRewardPenalty ? rewardTypeName : null),
       duration: json['duration'] is num
           ? json['duration']
-          : num.tryParse(json['duration']?.toString() ?? ''),
-      unit: json['unit'],
-      moneyValue: json['money_value']?.toString(),
-      dateFrom: json['date_from'],
+          : (num.tryParse(json['duration']?.toString() ?? '') ??
+              (rewardIsTime ? num.tryParse('${json['amount']}') : null)),
+      unit: json['unit'] ?? (rewardIsTime ? rewardUnit : null),
+      moneyValue: json['money_value']?.toString() ??
+          (isRewardPenalty && !rewardIsTime ? json['amount']?.toString() : null),
+      dateFrom: json['date_from'] ?? (isRewardPenalty ? json['due_date'] : null),
       dateTo: json['date_to'],
       reason: json['reason'],
       level: levelVal,

@@ -24,7 +24,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:app_test/core/services/url_launcher_service.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import '../../../controllers/rewards_and_penalties_controller.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/widgets/app_details_sheet.widget.dart';
 

@@ -15,6 +15,7 @@ import 'package:app_test/features/approvables_details/views/widgets/overlapping_
 import 'package:app_test/features/cv_hub/models/cv_hub_models.dart';
 import 'package:app_test/features/expense_claim_requests/shared/models/expense_claim_model.dart';
 import 'package:app_test/features/overtime_requests/models/overtime_request_model.dart';
+import 'package:app_test/features/rewards_and_penalties/view_rewards/data/models/reward_penalty_approvable_model.dart';
 import 'package:app_test/features/salary_advance_requests/shared/models/salary_advance_request_model.dart';
 import 'package:app_test/features/shifts/models/shift_change_request_model.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -149,6 +150,35 @@ class ApprovableCardWidget extends StatelessWidget {
           sub += ' · $formattedDate';
         }
         subtitle = sub;
+      } else if (request is RewardPenaltyApprovableModel) {
+        final rp = request as RewardPenaltyApprovableModel;
+        takeAction = rp.takeAction == true;
+        takeActionAsSomeoneElse = rp.canTakeActionAsSomeoneElse == true;
+        status = rp.status;
+        employeeName = rp.employeeName ?? '';
+        avatarUrl = rp.employeeAvatar;
+        id = rp.id?.toString() ?? '';
+        approvableType = 'rewards_and_penalties';
+
+        final typeLabel = rp.isReward ? 'reward'.tr() : 'penalty'.tr();
+        final unit = (rp.unit ?? '').toLowerCase();
+        final unitLabel = unit == 'days'
+            ? 'days'.tr()
+            : (unit == 'hours' ? 'hours'.tr() : 'egp_2'.tr());
+        title = (rp.amount != null && rp.amount!.isNotEmpty)
+            ? '$typeLabel · ${rp.amount} $unitLabel'
+            : typeLabel;
+
+        final parts = <String>[];
+        if (rp.categoryName != null && rp.categoryName!.isNotEmpty) {
+          parts.add(rp.categoryName!);
+        }
+        if (rp.dueDate != null && rp.dueDate!.isNotEmpty) {
+          parts.add(DateService.formatDate(
+                  isArabic ? 'ar' : 'en', context, rp.dueDate) ??
+              rp.dueDate!.split(' ').first);
+        }
+        subtitle = parts.join(' · ');
       } else if (request is ShiftChangeRequestModel) {
         final sc = request as ShiftChangeRequestModel;
         takeAction = sc.takeAction == true;
@@ -305,6 +335,8 @@ class ApprovableCardWidget extends StatelessWidget {
         return Icons.receipt_long_outlined;
       case 'shift_change_requests':
         return Icons.swap_horiz_rounded;
+      case 'rewards_and_penalties':
+        return Icons.emoji_events_outlined;
       case 'interview':
         return Icons.assignment_ind_outlined;
       default:

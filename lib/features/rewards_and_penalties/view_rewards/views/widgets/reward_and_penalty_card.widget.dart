@@ -5,10 +5,8 @@ import 'package:app_test/core/utils/modal_sheet_helper.dart';
 import 'package:app_test/features/rewards_and_penalties/view_rewards/views/widgets/widgets/rewards_and_penalties_details_modal.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../data/repos/rewards_and_penalties.service.dart';
-import '../../controllers/rewards_and_penalties_controller.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/widgets/app_card.widget.dart';
@@ -62,16 +60,6 @@ class RewardAndPenaltyCardWidget extends StatelessWidget {
         fitContent: true,
             modalContent: RewardsAndPenaltiesDetailsModal(
               rewardAndPenalty: rewardAndPenalty,
-              onCancel: () {
-                try {
-                  final viewModel =
-                      context.read<RewardsAndPenaltiesViewModel>();
-                  viewModel.cancelRewardAndPenalty(
-                      context: context, id: rewardAndPenalty.id!);
-                } catch (e) {
-                  debugPrint('RewardsAndPenaltiesViewModel not found: $e');
-                }
-              },
             ),
             title: isReward
                 ? AppStrings.rewardInfo.tr()

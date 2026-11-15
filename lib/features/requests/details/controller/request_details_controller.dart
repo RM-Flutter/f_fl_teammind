@@ -24,6 +24,7 @@ import 'package:app_test/core/services/requests_services.dart';
 import '../../../../core/models/requests_model.dart' show RequestModel;
 import 'package:app_test/features/overtime_requests/models/overtime_request_model.dart';
 import 'package:app_test/features/salary_advance_requests/shared/models/salary_advance_request_model.dart';
+import 'package:app_test/features/rewards_and_penalties/view_rewards/data/models/reward_penalty_approvable_model.dart';
 import 'package:app_test/features/expense_claim_requests/shared/models/expense_claim_model.dart';
 import 'package:app_test/core/widgets/approvable_card_widget.dart';
 
@@ -153,6 +154,35 @@ class RequestDetailsViewModel extends ChangeNotifier {
             requests: reqs,
             id: empId,
             empName: empName,
+          );
+        } else if (type == 'rewards_and_penalties') {
+          final reqs = listData
+              .whereType<Map<String, dynamic>>()
+              .map(RewardPenaltyApprovableModel.fromApprovableJson)
+              .toList();
+          if (reqs.isEmpty) {
+            AlertsService.info(context: context, message: 'no_previous_requests'.tr(), title: AppStrings.information.tr());
+            return;
+          }
+          title = AppStrings.rewardsAndPenalties.tr();
+          contentWidget = Padding(
+            padding: const EdgeInsets.only(top: AppSizes.s16),
+            child: Column(
+              children: reqs.map((req) => ApprovableCardWidget(
+                request: req,
+                isForDepartment: false,
+                onTap: () {
+                  context.pushNamed(
+                    AppRoutes.approvableDetails.name,
+                    pathParameters: {
+                      'type': 'rewards_and_penalties',
+                      'id': req.id.toString(),
+                      'lang': context.locale.languageCode,
+                    },
+                  );
+                },
+              )).toList(),
+            ),
           );
         } else if (type == 'employee_expense_claims') {
           final reqs = listData.map((e) => ExpenseClaimModel.fromApprovableJson(e)).toList();
