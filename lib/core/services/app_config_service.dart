@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/proxy_actions_service.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -609,6 +610,7 @@ class AppConfigService extends ChangeNotifier {
     await CacheHelper.deleteData(key: "s2Date");
     // لا تحذف fcm_token حتى start_app التالي (بعد اختيار الدومين) يبعته. احذف last_sent فقط.
     await CacheHelper.deleteData(key: "last_sent_fcm_token");
+    await ProxyActionsService.clear();
 
     // Clear static memory objects
     UserSettingConst.userSettings = null;

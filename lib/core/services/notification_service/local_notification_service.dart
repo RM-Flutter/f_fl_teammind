@@ -42,6 +42,7 @@ class LocalNotificationService {
     required String title,
     required String body,
     required DateTime scheduledDate,
+    bool exact = true,
   }) async {
     // No local notifications on web; only schedule future dates.
     if (kIsWeb || scheduledDate.isBefore(DateTime.now())) {
@@ -67,8 +68,35 @@ class LocalNotificationService {
           presentSound: true,
         ),
       ),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      androidScheduleMode: exact
+          ? AndroidScheduleMode.exactAllowWhileIdle
+          : AndroidScheduleMode.inexactAllowWhileIdle,
     );
+  }
+
+  /// Android 12+ may deny exact alarms (denied by default on Android 14 when
+  /// only SCHEDULE_EXACT_ALARM is granted). zonedSchedule with an exact mode
+  /// throws in that case, so callers fall back to inexact.
+  static Future<bool> canScheduleExact() async {
+    if (kIsWeb) return false;
+    final android = _notificationsPlugin.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
+    if (android == null) return true; // iOS: no such restriction.
+    try {
+      return await android.canScheduleExactNotifications() ?? false;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// Cancels every scheduled (pending) notification without removing the ones
+  /// already shown in the tray (FCM pushes etc.), unlike [cancelAllNotifications].
+  static Future<void> cancelAllPending() async {
+    if (kIsWeb) return;
+    final pending = await _notificationsPlugin.pendingNotificationRequests();
+    for (final p in pending) {
+      await _notificationsPlugin.cancel(p.id);
+    }
   }
 
 //

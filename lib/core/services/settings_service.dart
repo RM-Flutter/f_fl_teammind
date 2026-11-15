@@ -1,4 +1,5 @@
 import 'package:app_test/core/services/fcm_token.service.dart';
+import 'package:app_test/core/services/proxy_actions_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'dart:convert';
 import 'package:dio/dio.dart';
@@ -268,6 +269,10 @@ abstract class AppSettingsService {
         CacheHelper.setString(key: "last_sent_fcm_token", value: fcm_token);
       }
       CacheHelper.setString(key: "update_url", value: result.data!['update_url'] ?? "" );
+      // What this manager may do on behalf of employees (attendance / leave create / leave edit).
+      if (settingType == SettingsType.startupSettings) {
+        await ProxyActionsService.saveFromStartApp(result.data!);
+      }
       if(result.data!['token'] != null){
         if(appConfigServiceProvider.token.isNotEmpty && appConfigServiceProvider.token != result.data!['token']){
           await updateToken(context, result.data!['token']);

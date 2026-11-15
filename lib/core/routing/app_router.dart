@@ -1,3 +1,4 @@
+import 'package:app_test/features/proxy_actions/views/proxy_hub_screen.dart';
 import 'package:app_test/features/services/views/all_free_services/free_service_home_childs/smart_card/views/select_smart_card_template_screen.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -168,6 +169,7 @@ enum AppRoutes {
   requestsById,
   requestDetails,
   liveGroupMap,
+  proxyActions,
   trackingDemoHub,
   trackingReports,
   addRequest,
@@ -1190,6 +1192,28 @@ GoRouter goRouter(BuildContext context) {
                   return AppRouterTransitions.slideTransition(
                     key: state.pageKey,
                     child: const LiveGroupMapScreen(),
+                    animation: animationController,
+                    begin: const Offset(1.0, 0.0),
+                  );
+                },
+              ),
+              GoRoute(
+                path: 'proxyActions',
+                parentNavigatorKey: rootNavigatorKey,
+                name: AppRoutes.proxyActions.name,
+                pageBuilder: (context, state) {
+                  final animationController = AnimationController(
+                    vsync: ticker,
+                  );
+                  animationController.addStatusListener((status) {
+                    if (status == AnimationStatus.completed ||
+                        status == AnimationStatus.dismissed) {
+                      animationController.dispose();
+                    }
+                  });
+                  return AppRouterTransitions.slideTransition(
+                    key: state.pageKey,
+                    child: const ProxyHubScreen(),
                     animation: animationController,
                     begin: const Offset(1.0, 0.0),
                   );

@@ -1,3 +1,4 @@
+import 'package:app_test/core/services/proxy_actions_service.dart';
 import 'package:app_test/core/widgets/app_content_width.widget.dart';
 import 'package:app_test/core/widgets/profile_avatar_menu_widget.dart';
 import 'package:app_test/core/utils/app_styles.dart';
@@ -418,6 +419,20 @@ class _MoreScreenState extends State<MoreScreen> {
                                       });
                                 },
                               ),
+                          // Actions on behalf of employees (attendance / leaves); each switch comes
+                          // from proxy_actions in start_app.
+                          if (ProxyActionsService.hasAny)
+                            DefaultListTile(
+                              title: 'proxy_title'.tr(),
+                              icon: Icons.supervisor_account_rounded,
+                              onTap: () async {
+                                await context.pushNamed(
+                                    AppRoutes.proxyActions.name,
+                                    pathParameters: {
+                                      'lang': context.locale.languageCode
+                                    });
+                              },
+                            ),
                           // Team tracking map + tracking reports (request-linked tracking).
                           if (gCache['is_teamleader_in'].isNotEmpty ||
                               gCache['is_manager_in'].isNotEmpty ||
