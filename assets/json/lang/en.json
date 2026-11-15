@@ -1965,5 +1965,9 @@
   "proxy_no_requests_hint": "Leaves you create for your employees appear here.",
   "proxy_editable": "Editable",
   "proxy_not_enabled": "Not Enabled",
-  "proxy_not_enabled_hint": "Acting on behalf of employees is not enabled for your account."
+  "proxy_not_enabled_hint": "Acting on behalf of employees is not enabled for your account.",
+  "proxy_no_request_types": "No request types were found in the company settings. Pull to refresh from the home screen and try again.",
+  "add_actions_title": "Add",
+  "add_actions_my_request": "New Request",
+  "add_actions_my_request_hint": "A request for yourself"
 }

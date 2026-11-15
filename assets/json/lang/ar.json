@@ -257,7 +257,7 @@
   "addImageSuccessful": "تم اضافه الصوره بنجاح",
   "viewProfile": "الملف الشخصي",
   "canceled": "مرفوض",
-  "waiting_seen": "في انتظار المشاهدة",
+  "waiting_seen": "تمت المشاهدة - في الانتظار",
   "seen": "تم المشاهدة",
   "downloadFile": "تحميل الملف",
   "loginTo": "تسجيل الدخول إلى",
@@ -1964,5 +1964,9 @@
   "proxy_no_requests_hint": "ستظهر هنا الإجازات التي تنشئها لموظفيك.",
   "proxy_editable": "قابل للتعديل",
   "proxy_not_enabled": "غير مفعّل",
-  "proxy_not_enabled_hint": "النيابة عن الموظفين غير مفعّلة لحسابك."
+  "proxy_not_enabled_hint": "النيابة عن الموظفين غير مفعّلة لحسابك.",
+  "proxy_no_request_types": "لم يتم العثور على أنواع طلبات في إعدادات الشركة. حدّث الصفحة الرئيسية ثم حاول مرة أخرى.",
+  "add_actions_title": "إضافة",
+  "add_actions_my_request": "طلب جديد",
+  "add_actions_my_request_hint": "طلب لنفسك"
 }

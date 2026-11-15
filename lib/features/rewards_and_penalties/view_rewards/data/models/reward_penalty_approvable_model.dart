@@ -69,6 +69,16 @@ class RewardPenaltyApprovableModel {
             ? json['employee'] as Map<String, dynamic>
             : <String, dynamic>{});
     final department = json['department'];
+    final unit = _keyOrValue(
+        json['unit'] ?? json['amount_type'] ?? json['value_type']);
+    // The backend sends the unit (days / hours / amount) in `category` too.
+    String? category = _keyOrValue(json['category_name'] ?? json['category'],
+        preferValue: true);
+    if (category != null &&
+        (category.toLowerCase() == unit?.toLowerCase() ||
+            const ['days', 'hours', 'amount'].contains(category.toLowerCase()))) {
+      category = null;
+    }
 
     return RewardPenaltyApprovableModel(
       id: json['id'] is int ? json['id'] : int.tryParse('${json['id']}'),
@@ -77,9 +87,8 @@ class RewardPenaltyApprovableModel {
       canTakeActionAsSomeoneElse: (json['can_take_action_as_someone_else'] ??
           json['take_action_as_someone_else']) as bool?,
       type: _keyOrValue(json['type'] ?? json['reward_type']),
-      categoryName: _keyOrValue(json['category_name'] ?? json['category'],
-          preferValue: true),
-      unit: _keyOrValue(json['unit'] ?? json['amount_type'] ?? json['value_type']),
+      categoryName: category,
+      unit: unit ?? _keyOrValue(json['category']),
       amount: (json['amount'] ?? json['money_value'] ?? json['value'])
           ?.toString(),
       reason: json['reason']?.toString(),

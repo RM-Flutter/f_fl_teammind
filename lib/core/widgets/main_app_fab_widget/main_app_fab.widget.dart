@@ -1,10 +1,8 @@
 import 'dart:convert';
 
 import 'package:app_test/core/helpers/package_helper.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import '../../constants/user_consts.dart';
 import '../../models/settings/user_settings.model.dart';
 import '../../platform/platform_is.dart';
@@ -15,8 +13,8 @@ import '../../utils/custom_expandable_fab/expandable_fab.dart';
 import '../custom_floating_action_button.widget.dart';
 import '../../constants/app_images.dart';
 import '../../constants/app_sizes.dart';
-import '../../routing/app_router.dart';
 import 'main_app_fab.service.dart';
+import 'widgets/add_actions_sheet.dart';
 
 class MainAppFabWidget extends StatelessWidget {
   bool? requests = false;
@@ -135,11 +133,8 @@ class MainAppFabWidget extends StatelessWidget {
        if(viewRequest == true && PackageHelper.hasPackage('emp-requests')) Positioned(
           child: CustomFloatingActionButton(
             iconPath: AppImages.addFloatingActionButtonIcon,
-            onPressed: () async => await context
-                .pushNamed(AppRoutes.addRequest.name, pathParameters: {
-              'type': 'mine',
-              'lang': context.locale.languageCode
-            }),
+            // A request for me, or (with proxy_actions) a leave / punch on behalf of an employee.
+            onPressed: () => AddActionsSheet.onPlusPressed(context),
             tagSuffix: 'add',
             height: AppSizes.s16,
             width: AppSizes.s16,

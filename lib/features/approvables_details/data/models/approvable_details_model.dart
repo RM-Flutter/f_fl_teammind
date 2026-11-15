@@ -155,12 +155,13 @@ class ApprovableDetailsModel {
         (json['approvable_type']?.toString().toLowerCase().contains('reward') ?? false) ||
             json['type'] is Map ||
             json.containsKey('due_date');
-    final String? rewardUnit = _labelOf(json['amount_type'] ?? json['value_type'])?.toLowerCase();
+    final String? rewardUnit = _labelOf(json['unit'] ?? json['amount_type'] ?? json['value_type'] ?? json['category'])?.toLowerCase();
     final bool rewardIsTime =
         isRewardPenalty && (rewardUnit == 'days' || rewardUnit == 'hours');
     final String rewardTypeName = [
       _labelOf(json['type']),
-      _labelOf(json['category_name'] ?? json['category']),
+      // `category` holds the unit (days / hours / amount) for rewards: skip it.
+      _labelOf(json['category_name']),
     ].whereType<String>().where((e) => e.isNotEmpty).join(' · ');
 
     final int? levelVal = json['level'] is int

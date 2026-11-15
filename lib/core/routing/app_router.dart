@@ -1213,7 +1213,11 @@ GoRouter goRouter(BuildContext context) {
                   });
                   return AppRouterTransitions.slideTransition(
                     key: state.pageKey,
-                    child: const ProxyHubScreen(),
+                    child: ProxyHubScreen(
+                      autoStart: state.extra is Map
+                          ? (state.extra as Map)['autoStart']?.toString()
+                          : null,
+                    ),
                     animation: animationController,
                     begin: const Offset(1.0, 0.0),
                   );

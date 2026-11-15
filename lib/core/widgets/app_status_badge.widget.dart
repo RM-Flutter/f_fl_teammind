@@ -169,8 +169,11 @@ class AppStatusBadge extends StatelessWidget {
       case 'on_leave':
         return Icons.beach_access_rounded;
 
-      case 'waiting':
+      // Seen by the approver, still waiting for an action.
       case 'waiting_seen':
+        return Icons.visibility_outlined;
+
+      case 'waiting':
       case 'waiting_cancel':
       case 'pending':
       case 'pending_evaluation':
@@ -203,9 +206,10 @@ class AppStatusBadge extends StatelessWidget {
       return '-';
     }
     switch (normalizedStatus) {
-      case 'waiting_seen':
       case 'waiting':
         return 'waiting'.tr();
+      case 'waiting_seen':
+        return 'waiting_seen'.tr();
       case 'waiting_cancel':
         return 'waiting_cancel'.tr();
       case 'approved':

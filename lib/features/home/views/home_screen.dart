@@ -1,4 +1,3 @@
-import 'package:app_test/core/services/proxy_actions_service.dart';
 import 'dart:async';
 import 'package:app_test/core/services/bookmark_service.dart';
 import 'dart:convert';
@@ -713,14 +712,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 'type': GetRequestsTypes.myTeam.name,
                 'lang': context.locale.languageCode
               })
-        },
-      // Actions on behalf of employees, when start_app enabled any of them.
-      if (ProxyActionsService.hasAny)
-        {
-          'title': 'proxy_title'.tr(),
-          'icon': 'assets/images/add-request.png',
-          'onTap': () => context.pushNamed(AppRoutes.proxyActions.name,
-              pathParameters: {'lang': context.locale.languageCode})
         },
       if (PackageHelper.hasPackage('emp-payroll'))
         {

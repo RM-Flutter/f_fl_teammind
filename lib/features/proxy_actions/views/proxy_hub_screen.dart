@@ -25,7 +25,10 @@ import 'widgets/proxy_request_card_widget.dart';
 /// employees (each one only when its `proxy_actions` switch is on) and "My Proxy Requests", the
 /// leaves already created on someone's behalf (edit while still waiting, when allowed).
 class ProxyHubScreen extends StatefulWidget {
-  const ProxyHubScreen({super.key});
+  /// Opened from the "+" sheet: `leave` starts a leave on behalf, `attendance` a punch on behalf.
+  final String? autoStart;
+
+  const ProxyHubScreen({super.key, this.autoStart});
 
   @override
   State<ProxyHubScreen> createState() => _ProxyHubScreenState();
@@ -40,7 +43,13 @@ class _ProxyHubScreenState extends State<ProxyHubScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted && _showRequests) _controller.refresh(context);
+      if (!mounted) return;
+      if (_showRequests) _controller.refresh(context);
+      if (widget.autoStart == 'leave' && ProxyActionsService.canCreateLeave) {
+        _newRequest();
+      } else if (widget.autoStart == 'attendance' && ProxyActionsService.canAttendance) {
+        ProxyAttendanceController.start(context);
+      }
     });
   }
 
