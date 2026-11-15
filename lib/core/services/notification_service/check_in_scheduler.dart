@@ -241,6 +241,22 @@ abstract class CheckInScheduler {
     return days;
   }
 
+  /// Backend-computed off days for the current month (weekend, holidays and
+  /// approved requests): `{off_days: [{date: yyyy-MM-dd}, ...]}`.
+  static Future<Set<String>?> _backendOffDays(BuildContext context) async {
+    final body = await _get(context, '${AppConstants.baseUrl}/emp_requests/v1/off-days-this-month', {});
+    if (body == null) return null;
+    final list = body['off_days'] ?? (body['data'] is Map ? body['data']['off_days'] : null);
+    final days = <String>{};
+    if (list is List) {
+      for (final item in list) {
+        final d = _parseDate(item is Map ? item['date'] : item);
+        if (d != null) days.add(_day(d));
+      }
+    }
+    return days;
+  }
+
   /// The employee's own profile: `this_week_shifts` and `working_hours`.
   static Future<Map?> _ownProfile(BuildContext context, Map<String, dynamic> us1) async {
     final id = us1['employee_profile_id'];
@@ -279,7 +295,13 @@ abstract class CheckInScheduler {
     var complete = true; // false when an API call failed → retry on next home load
     Map? profile;
     if (active) {
-      final leaves = await _approvedLeaveDays(context, today, lastDay);
+      // Main source: the backend's off days for this month. The local
+      // calculation and approved leaves cover the days after month end too.
+      final backendOff = context.mounted ? await _backendOffDays(context) : null;
+      if (backendOff == null) complete = false;
+      offDays.addAll(backendOff ?? const {});
+
+      final leaves = context.mounted ? await _approvedLeaveDays(context, today, lastDay) : null;
       if (leaves == null) complete = false;
       offDays.addAll(leaves ?? const {});
 
@@ -340,10 +362,10 @@ abstract class CheckInScheduler {
       hireDate == null ? null : _day(hireDate),
       CacheHelper.getString('lang'),
     ]);
-    if (prefs.getString(_signatureKey) == signature) {
-      if (complete) await prefs.setString(_lastRunKey, '$inputs|${now.toIso8601String()}');
-      return;
-    }
+    // Even a run with a failed API waits [_minInterval] before calling again,
+    // so a missing endpoint isn't hit on every home load.
+    await prefs.setString(_lastRunKey, '$inputs|${now.toIso8601String()}');
+    if (prefs.getString(_signatureKey) == signature) return;
 
     // Only this scheduler schedules notifications, so clear every pending one
     // (also removes ids 1..N left by the old monthly scheduler) but keep the
@@ -394,10 +416,7 @@ abstract class CheckInScheduler {
       }
     }
 
-    if (complete) {
-      await prefs.setString(_signatureKey, signature);
-      await prefs.setString(_lastRunKey, '$inputs|${now.toIso8601String()}');
-    }
+    if (complete) await prefs.setString(_signatureKey, signature);
     debugPrint('CheckInScheduler: scheduled $count notifications (active=$active, exact=$exact).');
   }
 }
