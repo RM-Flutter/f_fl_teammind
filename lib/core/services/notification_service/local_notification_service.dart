@@ -3,6 +3,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
+import 'web_local_notifications.dart';
+
 //
 class LocalNotificationService {
   static final FlutterLocalNotificationsPlugin _notificationsPlugin =
@@ -44,8 +46,11 @@ class LocalNotificationService {
     required DateTime scheduledDate,
     bool exact = true,
   }) async {
-    // No local notifications on web; only schedule future dates.
-    if (kIsWeb || scheduledDate.isBefore(DateTime.now())) {
+    // Only schedule future dates.
+    if (scheduledDate.isBefore(DateTime.now())) return;
+    // Web: a timer in the open page (flutter_local_notifications has no web support).
+    if (kIsWeb) {
+      WebLocalNotifications.schedule(id: id, title: title, body: body, at: scheduledDate);
       return;
     }
 //
@@ -89,10 +94,16 @@ class LocalNotificationService {
     }
   }
 
+  /// Cancels one scheduled notification (or removes it from the tray if already shown).
+  static Future<void> cancel(int id) async {
+    if (kIsWeb) return WebLocalNotifications.cancel(id);
+    await _notificationsPlugin.cancel(id);
+  }
+
   /// Cancels every scheduled (pending) notification without removing the ones
   /// already shown in the tray (FCM pushes etc.), unlike [cancelAllNotifications].
   static Future<void> cancelAllPending() async {
-    if (kIsWeb) return;
+    if (kIsWeb) return WebLocalNotifications.cancelAll();
     final pending = await _notificationsPlugin.pendingNotificationRequests();
     for (final p in pending) {
       await _notificationsPlugin.cancel(p.id);
@@ -103,7 +114,7 @@ class LocalNotificationService {
   static Future<void> cancelAllNotifications() async {
     // flutter_local_notifications has no web implementation: cancelAll()
     // throws LateInitializationError there.
-    if (kIsWeb) return;
+    if (kIsWeb) return WebLocalNotifications.cancelAll();
     await _notificationsPlugin.cancelAll();
   }
 }

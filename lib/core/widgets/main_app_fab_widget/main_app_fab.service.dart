@@ -1,4 +1,5 @@
 import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/services/notification_service/check_in_scheduler.dart';
 import 'package:app_test/core/services/app_error_reporter.dart';
 import 'package:app_test/core/services/app_toast.dart';
 import 'dart:async';
@@ -2212,6 +2213,8 @@ abstract class MainFabServices {
 
             // Handle the server response
             if (result.success) {
+              // Own punch done: drop today's attendance reminder(s).
+              CheckInScheduler.onPunch();
               if (AppConstants.fpScanSteps && context.mounted) {
                 await _showScanStepsSuccessDialog(context,
                     capturedFace: capturedFace, fingerprintType: 'NFC');
@@ -2627,6 +2630,8 @@ abstract class MainFabServices {
 
               // ✅ Show result
               if (result != null && result.success) {
+                // Own punch done: drop today's attendance reminder(s).
+                CheckInScheduler.onPunch();
                 if (AppConstants.fpScanSteps && context.mounted) {
                   await _showScanStepsSuccessDialog(context,
                       capturedFace: capturedFace, fingerprintType: 'Bluetooth');
@@ -2829,6 +2834,8 @@ abstract class MainFabServices {
 
               // Handle the server response
               if (result != null && result.success) {
+                // Own punch done: drop today's attendance reminder(s).
+                CheckInScheduler.onPunch();
                 if (AppConstants.fpScanSteps && context.mounted) {
                   await _showScanStepsSuccessDialog(context,
                       capturedFace: capturedFace, fingerprintType: 'Wi-Fi');
@@ -3122,6 +3129,8 @@ abstract class MainFabServices {
 
               // Handle the server response
               if (result != null && result.success) {
+                // Own punch done: drop today's attendance reminder(s).
+                CheckInScheduler.onPunch();
                 if (AppConstants.fpScanSteps && context.mounted) {
                   await _showScanStepsSuccessDialog(context,
                       capturedFace: capturedFace, fingerprintType: 'GPS');
@@ -3279,6 +3288,8 @@ abstract class MainFabServices {
 
               print("result status --> ${result?.data != null && result.data is Map ? result.data['status'] : result?.success}");
               if (result != null && result.success) {
+                // Own punch done: drop today's attendance reminder(s).
+                CheckInScheduler.onPunch();
                 if (AppConstants.fpScanSteps && context.mounted) {
                   await _showScanStepsSuccessDialog(context,
                       capturedFace: capturedFace, fingerprintType: 'QR Code');

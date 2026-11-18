@@ -1,4 +1,5 @@
 import 'package:app_test/core/services/proxy_actions_service.dart';
+import 'package:app_test/core/services/notification_service/check_in_scheduler.dart';
 import 'package:app_test/core/services/location_tracking/location_tracking_service.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'dart:async';
@@ -619,6 +620,8 @@ class AppConfigService extends ChangeNotifier {
     // لا تحذف fcm_token حتى start_app التالي (بعد اختيار الدومين) يبعته. احذف last_sent فقط.
     await CacheHelper.deleteData(key: "last_sent_fcm_token");
     await ProxyActionsService.clear();
+    // Attendance reminders scheduled for this account must stop after logout.
+    await CheckInScheduler.clear();
     await LocationTrackingService.instance.clearAll();
 
     // Clear static memory objects

@@ -25,7 +25,8 @@ abstract class CheckInScheduler {
   static const String _lastRunKey = 'check_in_scheduler_last_run';
   static const Duration _minInterval = Duration(hours: 3);
   static const int _windowDays = 14;
-  static const int _checkInOutBaseId = 7000; // 7000..7000+2*_windowDays
+  static const int _checkInOutBaseId = 7000; // 7000..7799, see [_reminderId]
+  static const String _punchesKey = 'check_in_scheduler_punches'; // 'yyyy-MM-dd|count'
   static const int _anniversaryId = 7999;
 
   static const Map<int, String> _weekdayNames = {
@@ -40,8 +41,89 @@ abstract class CheckInScheduler {
 
   static bool _running = false;
 
+  /// Web: the reminders are timers that die with the page, so the first run of each page
+  /// load ignores the saved throttle and signature and schedules again.
+  static bool _ranThisPage = false;
+
+  /// On logout: cancels the pending reminders (they belong to the old account) and forgets
+  /// the last run, so the next login schedules again right away.
+  static Future<void> clear() async {
+    _ranThisPage = false;
+    try {
+      await LocalNotificationService.cancelAllPending();
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove(_signatureKey);
+      await prefs.remove(_lastRunKey);
+      await prefs.remove(_punchesKey);
+    } catch (e) {
+      debugPrint('CheckInScheduler.clear error: $e');
+    }
+  }
+
+  /// Id of a day's check-in / check-out reminder. It depends on the date (not on the run),
+  /// so [onPunch] can cancel today's reminder whenever it was scheduled.
+  static int _reminderId(DateTime day, {required bool checkOut}) {
+    final epochDay = DateTime.utc(day.year, day.month, day.day).millisecondsSinceEpoch ~/
+        Duration.millisecondsPerDay;
+    return _checkInOutBaseId + (epochDay % 400) * 2 + (checkOut ? 1 : 0);
+  }
+
+  /// Punches made today from this device (counted by [onPunch]).
+  static int _localPunchesToday(SharedPreferences prefs, DateTime today) {
+    final parts = prefs.getString(_punchesKey)?.split('|');
+    if (parts == null || parts.length != 2 || parts[0] != _day(today)) return 0;
+    return int.tryParse(parts[1]) ?? 0;
+  }
+
+  /// Call after the employee's own punch succeeded (online, or saved offline).
+  /// The day's punches carry no in/out type, so the 1st punch counts as the check-in
+  /// (cancels today's check-in reminder) and the 2nd as the check-out (cancels the
+  /// check-out reminder too).
+  static Future<void> onPunch() async {
+    try {
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+      final prefs = await SharedPreferences.getInstance();
+      await _applyPunches(prefs, today, _localPunchesToday(prefs, today) + 1);
+    } catch (e) {
+      debugPrint('CheckInScheduler.onPunch error: $e');
+    }
+  }
+
+  /// Saves today's punch count and cancels today's reminders it covers:
+  /// 1+ punches → check-in reminder, 2+ → check-out reminder too.
+  static Future<void> _applyPunches(SharedPreferences prefs, DateTime today, int count) async {
+    if (count <= 0) return;
+    await prefs.setString(_punchesKey, '${_day(today)}|$count');
+    await LocalNotificationService.cancel(_reminderId(today, checkOut: false));
+    if (count >= 2) {
+      await LocalNotificationService.cancel(_reminderId(today, checkOut: true));
+    }
+  }
+
+  /// Today's punches on the server (all devices, proxy punches included), or null on failure.
+  /// `get_fingerprints` returns one record per day with its punches in `finger_datetime`.
+  static Future<int?> _serverPunchesToday(BuildContext context, DateTime today) async {
+    final body = await _get(
+      context,
+      '${AppConstants.baseUrl}/rm_fingerprint/v1/get_fingerprints',
+      {'page': 1, 'order': 'desc'},
+    );
+    if (body == null) return null;
+    final list = body['fingerprints'] ?? (body['data'] is Map ? body['data']['fingerprints'] : null);
+    if (list is! List) return 0;
+    var count = 0;
+    for (final r in list.whereType<Map>()) {
+      final day = _parseDate(r['finger_day']);
+      if (day == null || _day(day) != _day(today)) continue;
+      final times = r['finger_datetime'];
+      count += times is List ? times.length : 1;
+    }
+    return count;
+  }
+
   static Future<void> scheduleNotifications(BuildContext context) async {
-    if (kIsWeb || _running) return;
+    if (_running) return;
     _running = true;
     try {
       await _schedule(context);
@@ -276,10 +358,21 @@ abstract class CheckInScheduler {
     // Throttle the API calls: at most every [_minInterval], unless the cached
     // settings (US1/US2) or the day changed.
     final inputs = '${_day(today)}|${CacheHelper.getString('US1')}|${CacheHelper.getString('US2')}'.hashCode;
-    final last = prefs.getString(_lastRunKey)?.split('|');
+    final freshPage = kIsWeb && !_ranThisPage;
+    final last = freshPage ? null : prefs.getString(_lastRunKey)?.split('|');
     if (last != null && last.length == 2 && last[0] == '$inputs') {
       final at = DateTime.tryParse(last[1]);
-      if (at != null && now.difference(at) < _minInterval) return;
+      if (at != null && now.difference(at) < _minInterval) {
+        // No full run yet, but a punch from another device or by a manager (proxy)
+        // must still drop today's reminder: check today's punches on the server.
+        if (_isCheckInActive(_readCache('US1')) && context.mounted) {
+          final server = await _serverPunchesToday(context, today);
+          if (server != null && server > _localPunchesToday(prefs, today)) {
+            await _applyPunches(prefs, today, server);
+          }
+        }
+        return;
+      }
     }
 
     final us1 = _readCache('US1');
@@ -355,9 +448,23 @@ abstract class CheckInScheduler {
       }
     }
 
+    // Already punched today: no check-in reminder today, and none for check-out after 2 punches.
+    var punchesToday = _localPunchesToday(prefs, today);
+    if (active && reminders[_day(today)] != null && context.mounted) {
+      final server = await _serverPunchesToday(context, today);
+      if (server != null && server > punchesToday) punchesToday = server;
+    }
+    if (punchesToday > _localPunchesToday(prefs, today)) {
+      await prefs.setString(_punchesKey, '${_day(today)}|$punchesToday');
+    }
+    final todayReminders = reminders[_day(today)];
+    if (todayReminders != null && punchesToday > 0) {
+      reminders[_day(today)] = (null, punchesToday >= 2 ? null : todayReminders.$2);
+    }
+
     // Skip the work when nothing changed since the last run today.
     final signature = json.encode([
-      _day(today), active,
+      _day(today), active, punchesToday,
       reminders.entries.map((e) => [e.key, e.value.$1?.toIso8601String(), e.value.$2?.toIso8601String()]).toList(),
       hireDate == null ? null : _day(hireDate),
       CacheHelper.getString('lang'),
@@ -365,7 +472,7 @@ abstract class CheckInScheduler {
     // Even a run with a failed API waits [_minInterval] before calling again,
     // so a missing endpoint isn't hit on every home load.
     await prefs.setString(_lastRunKey, '$inputs|${now.toIso8601String()}');
-    if (prefs.getString(_signatureKey) == signature) return;
+    if (!freshPage && prefs.getString(_signatureKey) == signature) return;
 
     // Only this scheduler schedules notifications, so clear every pending one
     // (also removes ids 1..N left by the old monthly scheduler) but keep the
@@ -392,11 +499,11 @@ abstract class CheckInScheduler {
       final r = reminders[_day(d)];
       if (r == null) continue;
       if (r.$1 != null) {
-        await schedule(_checkInOutBaseId + i * 2, 'attendance_reminder'.tr(),
+        await schedule(_reminderId(d, checkOut: false), 'attendance_reminder'.tr(),
             'check_in_reminder_body'.tr(), r.$1!);
       }
       if (r.$2 != null) {
-        await schedule(_checkInOutBaseId + i * 2 + 1, 'attendance_reminder'.tr(),
+        await schedule(_reminderId(d, checkOut: true), 'attendance_reminder'.tr(),
             'check_out_reminder_body'.tr(), r.$2!);
       }
     }
@@ -417,6 +524,7 @@ abstract class CheckInScheduler {
     }
 
     if (complete) await prefs.setString(_signatureKey, signature);
+    _ranThisPage = true;
     debugPrint('CheckInScheduler: scheduled $count notifications (active=$active, exact=$exact).');
   }
 }
