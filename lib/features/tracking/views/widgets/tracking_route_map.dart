@@ -7,7 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/services/localization_service.dart';
+import 'package:app_test/core/constants/app_constants.dart';
 import '../../data/models/tracking_point.model.dart';
+import 'tracking_google_route_map.dart';
 
 /// The 10 route colours of the group map. Spec: one page shows at most 10 employees, and each one
 /// takes the colour of their position on the page (not a colour stored per employee), so colours
@@ -54,10 +56,10 @@ class TrackingRouteLine {
 
 /// The map of tracking routes used by the request route dialog and the group map.
 ///
-/// There is no map SDK in the app yet, so the routes are drawn to scale on a light street-like
-/// background; pinch to zoom, drag to pan, tap a start / end / manual point to select it.
-/// Start points are green, end points red, manual points use the route colour and show their
-/// title, auto points are small dots.
+/// With [AppConstants.googleMapsEnabled] the routes are drawn on Google Maps; otherwise (no key
+/// yet) they are drawn to scale without map tiles. Either way: one line per session in its colour,
+/// green start, red end, manual points in the route colour with their title, tap a key point to
+/// select it.
 class TrackingRouteMap extends StatelessWidget {
   final List<TrackingRouteLine> lines;
   final TrackingPointModel? selectedPoint;
@@ -72,7 +74,36 @@ class TrackingRouteMap extends StatelessWidget {
     this.showAutoPoints = true,
   });
 
-  static bool _isKey(TrackingPointModel p) => p.isStartPoint || p.isEndPoint || p.isManual;
+  @override
+  Widget build(BuildContext context) {
+    if (AppConstants.googleMapsEnabled) {
+      return TrackingGoogleRouteMap(lines: lines, selectedPoint: selectedPoint, onPointTap: onPointTap);
+    }
+    return _DrawnRouteMap(
+      lines: lines,
+      selectedPoint: selectedPoint,
+      onPointTap: onPointTap,
+      showAutoPoints: showAutoPoints,
+    );
+  }
+}
+
+/// Routes drawn to scale on a light street-like background (no map SDK); pinch to zoom, drag to
+/// pan. Used until Google Maps is turned on.
+class _DrawnRouteMap extends StatelessWidget {
+  final List<TrackingRouteLine> lines;
+  final TrackingPointModel? selectedPoint;
+  final ValueChanged<TrackingPointModel>? onPointTap;
+  final bool showAutoPoints;
+
+  const _DrawnRouteMap({
+    required this.lines,
+    this.selectedPoint,
+    this.onPointTap,
+    this.showAutoPoints = true,
+  });
+
+  static bool _isKey(TrackingPointModel p) => p.isKeyPoint;
 
   @override
   Widget build(BuildContext context) {

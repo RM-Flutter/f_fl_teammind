@@ -149,6 +149,7 @@ dependencies:
   # Assistant
   speech_to_text: ^7.0.0
   flutter_tts: ^4.2.0
+  google_maps_flutter: 2.18.1
 
 dev_dependencies:
 #  flutter_launcher_icons: 0.13.1

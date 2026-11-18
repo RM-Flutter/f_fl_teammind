@@ -1969,5 +1969,17 @@
   "proxy_no_request_types": "No request types were found in the company settings. Pull to refresh from the home screen and try again.",
   "add_actions_title": "Add",
   "add_actions_my_request": "New Request",
-  "add_actions_my_request_hint": "A request for yourself"
+  "add_actions_my_request_hint": "A request for yourself",
+  "tracking_approval_blocked": "Tracking is required before approval",
+  "tracking_approval_blocked_hint": "The employee has not tracked this request yet, so approving it will be refused. You can still refuse or cancel it.",
+  "tracking_filter_missing_required": "Required tracking missing",
+  "tracking_key_point_no_location": "Your location could not be read. Make sure location is on, then try again.",
+  "tracking_mobile_only": "Starting and stopping tracking is done from the Team Mind mobile app.",
+  "tracking_notification_channel": "Request tracking",
+  "tracking_notification_text": "Your route is being recorded for your request. Stop tracking from the request when you finish.",
+  "tracking_notification_title": "Location tracking is on",
+  "tracking_only_tracking": "Tracking only",
+  "tracking_sync_failed_hint": "Some points were not sent. They stay saved on the phone and are sent when the connection is back.",
+  "tracking_point_saved_hint": "Saved at your current location and sent.",
+  "tracking_no_employees": "No employees to show for this choice."
 }

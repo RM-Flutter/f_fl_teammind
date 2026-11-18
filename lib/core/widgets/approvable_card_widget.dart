@@ -1,4 +1,5 @@
 import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/core/models/request_tracking_status.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_design.dart';
 import 'package:app_test/core/constants/app_strings.dart';
@@ -56,6 +57,7 @@ class ApprovableCardWidget extends StatelessWidget {
     String employeeName = '';
     String? avatarUrl;
     String approvableType = 'employee_requests';
+    RequestTrackingStatus trackingStatus = RequestTrackingStatus.notRequired;
     String id = '';
 
     try {
@@ -241,6 +243,9 @@ class ApprovableCardWidget extends StatelessWidget {
         try {
           avatarUrl = dyn.employeeAvatar?.toString() ?? dyn.avatar?.toString();
         } catch (_) {}
+        try {
+          trackingStatus = RequestTrackingStatus.fromRaw(dyn.trackingStatus?.toString());
+        } catch (_) {}
         String? depName = dyn.departmentName;
         if (depName != null && depName.isNotEmpty) {
           employeeName = '$employeeName · $depName';
@@ -322,6 +327,7 @@ class ApprovableCardWidget extends StatelessWidget {
       avatarUrl: avatarUrl,
       approvableType: approvableType,
       id: id,
+      trackingStatus: trackingStatus,
     );
   }
 
@@ -553,7 +559,8 @@ class ApprovableCardWidget extends StatelessWidget {
                 if (info.takeAction ||
                     info.takeActionAsSomeoneElse ||
                     info.canApproveCancel ||
-                    info.waitingCancel) ...[
+                    info.waitingCancel ||
+                    info.trackingStatus != RequestTrackingStatus.notRequired) ...[
                   Wrap(
                     spacing: 6,
                     runSpacing: 4,
@@ -585,6 +592,16 @@ class ApprovableCardWidget extends StatelessWidget {
                           label: isArabic
                               ? 'مطلوب موافقة إلغاء'
                               : 'Cancel Approval Required',
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: AppSizes.s8, vertical: AppSizes.s3),
+                          fontSize: 10,
+                          iconSize: 11,
+                        ),
+                      if (info.trackingStatus != RequestTrackingStatus.notRequired)
+                        AppStatusBadge(
+                          icon: info.trackingStatus.icon,
+                          color: info.trackingStatus.baseColor,
+                          label: info.trackingStatus.getLabel(),
                           padding: const EdgeInsets.symmetric(
                               horizontal: AppSizes.s8, vertical: AppSizes.s3),
                           fontSize: 10,
@@ -769,7 +786,11 @@ class _ApprovableInfo {
   final String approvableType;
   final String id;
 
+  /// Request-linked tracking status (employee requests only).
+  final RequestTrackingStatus trackingStatus;
+
   const _ApprovableInfo({
+    this.trackingStatus = RequestTrackingStatus.notRequired,
     required this.takeAction,
     required this.takeActionAsSomeoneElse,
     this.waitingCancel = false,

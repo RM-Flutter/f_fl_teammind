@@ -32,3 +32,6 @@ Runner/GeneratedPluginRegistrant.*
 !default.mode2v3
 !default.pbxuser
 !default.perspectivev3
+
+# Google Maps key for the tracking maps (MAPS_API_KEY=...), kept out of git
+Flutter/Maps.xcconfig

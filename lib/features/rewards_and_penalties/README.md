@@ -1,9 +1,10 @@
 # rewards_and_penalties
 
-Rewards and penalties that affect payroll.
+Rewards and penalties that affect payroll. Listing, details and approve/refuse go through the approval system with the type key **`rewards_and_penalties`**; creating one still uses the old payroll endpoint.
 
-- `view_rewards/data/repos/rewards_and_penalties.service.dart`: list mine or my team (`rm_payroll/v1/payroll/penalities-and-rewards`, paged).
-- `view_rewards/controllers/rewards_and_penalties_controller.dart`: `initializeRewardsAndPenaltiesListScreen`, `loadMorePersonal`, `loadMoreTeam`, `toggleTeamView`, and `cancelRewardAndPenalty` (`.../penalities-and-rewards/{id}`).
-- `view_rewards/views/`: list, card and a details modal (with a complain action).
-- `add_rewards/`: managers only. `AddRewardAndPenaltyViewModel` sets the target type (employee or department), category, amount or days, date and attachments, then calls `createRewardAndPenalty` (POST `rm_payroll/v1/payroll/penalities-and-rewards`). Departments and employees come from `/emp_requests/v1/employees`.
-- `view_rewards/data/models/`: personal and team models.
+- `view_rewards/data/repos/rewards_and_penalties.service.dart`: `RewardsAndPenaltiesRepo.approvableType` (`rewards_and_penalties`), plus date and image helpers.
+- `view_rewards/controllers/rewards_and_penalties_controller.dart`: `RewardsAndPenaltiesViewModel`. "Mine" uses `/approval-system/v1/rewards_and_penalties/employee/my-approvables`, "incoming" uses `.../manager/under-my-management-approvables` with scope `team` / `other_departments` / `all_company`, through `RequestsServices.getMyApprovables` / `getManagerApprovables`. Filters (employee, department, status, dates) and paging.
+- `view_rewards/data/models/reward_penalty_approvable_model.dart`: `RewardPenaltyApprovableModel.fromApprovableJson` for `approvables[]` items. Rendered by the shared `ApprovableCardWidget` (swipe actions included).
+- `view_rewards/views/rewards_and_penalties_screen.dart`: list screen. A card opens `approvableDetails` with type `rewards_and_penalties` (details, approval chain, take action, ask remember / ignore). Opened from another employee's profile it starts on the incoming view filtered to that employee.
+- `add_rewards/`: unchanged. Managers only (`can_add_reward` / `can_add_penalty`). `AddRewardAndPenaltyViewModel` sets the target type (employee or department), category, amount or days, date and attachments, then calls `createRewardAndPenalty` (POST `rm_payroll/v1/payroll/penalities-and-rewards`). Departments and employees come from `/emp_requests/v1/employees`.
+- `view_rewards/data/models/reward_and_penalty_model.dart`: only `MediaFile` is still used (employee profile assets). The employee profile's Rewards and penalties tab now uses the approval system too (`EmployeeDetailsViewModel.getRewardsAndPenaltiesList`, same `ApprovableCardWidget` cards, "View all" opens this list filtered to the employee).

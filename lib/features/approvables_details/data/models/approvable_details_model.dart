@@ -1,4 +1,5 @@
 import '../../../../core/models/employee_action_model.dart';
+import 'package:app_test/features/tracking/data/models/request_tracking.model.dart';
 
 class ApprovableDetailsModel {
   final int? id;
@@ -29,6 +30,9 @@ class ApprovableDetailsModel {
   final String? notes;
   final List<dynamic>? files;
   final List<EmployeeActionModel>? employeeActions;
+
+  /// Request-linked location tracking (employee requests only); null when the server sends none.
+  final RequestTrackingInfoModel? tracking;
 
   // Extra fields for Shift Change Requests & Shift/Leave conflicts
   final ProfileModel? requesterEmployee;
@@ -92,6 +96,7 @@ class ApprovableDetailsModel {
     this.notes,
     this.files,
     this.employeeActions,
+    this.tracking,
     this.requesterEmployee,
     this.receiverEmployee,
     this.requesterEmployeeId,
@@ -221,6 +226,7 @@ class ApprovableDetailsModel {
               .map((e) => EmployeeActionModel.fromJson(e))
               .toList()
           : null,
+      tracking: RequestTrackingInfoModel.tryParse(json['tracking']),
       requesterEmployee: reqEmp,
       receiverEmployee: recEmp,
       requesterEmployeeId: json['requester_employee_id'] is int

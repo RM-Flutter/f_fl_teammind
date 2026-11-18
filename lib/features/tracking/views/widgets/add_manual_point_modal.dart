@@ -12,11 +12,12 @@ import 'tracking_choice_chip.dart';
 /// Bottom sheet to save a key (manual) point during an active leg. The title is optional; the
 /// point is saved with the current location and sent right away (spec: mobile §4).
 class AddManualPointModal extends StatefulWidget {
-  final Function(String label) onSubmit;
+  /// The title, or null when the employee left it empty (the API label is optional).
+  final void Function(String? label) onSubmit;
 
   const AddManualPointModal({super.key, required this.onSubmit});
 
-  static Future<void> show(BuildContext context, {required Function(String label) onSubmit}) {
+  static Future<void> show(BuildContext context, {required void Function(String? label) onSubmit}) {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -48,8 +49,8 @@ class _AddManualPointModalState extends State<AddManualPointModal> {
 
   void _submit() {
     final text = _controller.text.trim();
-    widget.onSubmit(text.isEmpty ? 'manual_point'.tr() : text);
     Navigator.of(context).pop();
+    widget.onSubmit(text.isEmpty ? null : text);
   }
 
   @override

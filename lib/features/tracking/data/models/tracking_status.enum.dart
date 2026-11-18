@@ -2,75 +2,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_colors.dart';
 
+export 'package:app_test/core/models/request_tracking_status.dart';
+
 /// Neutral grey used for "nothing to show" states (same grey as field hints).
 const Color _kNeutral = Color(0xFF8A8FA3);
-
-/// Tracking state of a whole request (simplified, see the spec "Request-Level Status").
-/// Colours come from the app palette and are split with [AppColors.statusTones], like every
-/// other status badge in the app.
-enum RequestTrackingStatus {
-  notRequired,
-  optionalNotStarted,
-  requiredNotStarted,
-  active,
-  completed,
-  requiredMissing;
-
-  String getLabel({bool isArabic = true}) {
-    switch (this) {
-      case RequestTrackingStatus.notRequired:
-        return 'no_tracking'.tr();
-      case RequestTrackingStatus.optionalNotStarted:
-        return 'optional_not_started'.tr();
-      case RequestTrackingStatus.requiredNotStarted:
-        return 'required_not_started'.tr();
-      case RequestTrackingStatus.active:
-        return 'tracking_active'.tr();
-      case RequestTrackingStatus.completed:
-        return 'tracking_completed'.tr();
-      case RequestTrackingStatus.requiredMissing:
-        return 'tracking_missing'.tr();
-    }
-  }
-
-  /// The one colour of this status; badges derive text / tint / border from it.
-  Color get baseColor {
-    switch (this) {
-      case RequestTrackingStatus.active:
-        return Color(AppColors.successGreen);
-      case RequestTrackingStatus.completed:
-        return Color(AppColors.buttons);
-      case RequestTrackingStatus.requiredNotStarted:
-        return Color(AppColors.warningYellow);
-      case RequestTrackingStatus.requiredMissing:
-        return Color(AppColors.failureRed);
-      case RequestTrackingStatus.optionalNotStarted:
-      case RequestTrackingStatus.notRequired:
-        return _kNeutral;
-    }
-  }
-
-  Color get textColor => AppColors.statusTones(baseColor).text;
-  Color get backgroundColor => AppColors.statusTones(baseColor).tint;
-  Color get borderColor => AppColors.statusTones(baseColor).border;
-
-  IconData get icon {
-    switch (this) {
-      case RequestTrackingStatus.active:
-        return Icons.radio_button_checked_rounded;
-      case RequestTrackingStatus.completed:
-        return Icons.check_circle_outline_rounded;
-      case RequestTrackingStatus.requiredNotStarted:
-        return Icons.error_outline_rounded;
-      case RequestTrackingStatus.requiredMissing:
-        return Icons.cancel_outlined;
-      case RequestTrackingStatus.optionalNotStarted:
-        return Icons.radio_button_unchecked_rounded;
-      case RequestTrackingStatus.notRequired:
-        return Icons.remove_rounded;
-    }
-  }
-}
 
 /// State of one tracking session (leg).
 enum TrackingSessionStatus {
@@ -78,6 +13,19 @@ enum TrackingSessionStatus {
   completed,
   interrupted,
   cancelled;
+
+  static TrackingSessionStatus fromRaw(String? raw) {
+    switch (raw) {
+      case 'completed':
+        return TrackingSessionStatus.completed;
+      case 'interrupted':
+        return TrackingSessionStatus.interrupted;
+      case 'cancelled':
+        return TrackingSessionStatus.cancelled;
+      default:
+        return TrackingSessionStatus.active;
+    }
+  }
 
   String getLabel({bool isArabic = true}) {
     switch (this) {
@@ -95,9 +43,9 @@ enum TrackingSessionStatus {
   Color get color {
     switch (this) {
       case TrackingSessionStatus.active:
-        return Color(AppColors.successGreen);
-      case TrackingSessionStatus.completed:
         return Color(AppColors.buttons);
+      case TrackingSessionStatus.completed:
+        return Color(AppColors.successGreen);
       case TrackingSessionStatus.interrupted:
         return Color(AppColors.warningYellow);
       case TrackingSessionStatus.cancelled:

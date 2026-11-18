@@ -54,10 +54,12 @@
 	<string>Team Mind uses Face ID to securely authenticate you into the app.</string>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>Team Mind needs access to your local network to verify your Wi-Fi connection for attendance.</string>
+	<key>GMSApiKey</key>
+	<string>$(MAPS_API_KEY)</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Team Mind needs your location in the background to ensure accurate attendance tracking and Wi-Fi verification.</string>
+	<string>Team Mind uses your location in the background to verify attendance and, while you track a request such as a field mission, to record its route.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Team Mind needs your location in the background to provide continuous attendance tracking.</string>
+	<string>Team Mind uses your location in the background to verify attendance and, while you track a request such as a field mission, to record its route.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Team Mind needs your location to access Wi-Fi information and verify attendance.</string>
 	<key>NSMicrophoneUsageDescription</key>

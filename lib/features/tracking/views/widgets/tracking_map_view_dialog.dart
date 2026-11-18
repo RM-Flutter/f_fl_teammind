@@ -65,7 +65,9 @@ class _TrackingMapViewDialogState extends State<TrackingMapViewDialog> {
             TrackingRouteLine(color: TrackingPalette.colorAt(i), points: widget.sessions[i].points),
       ];
 
-  int get _pointsCount => widget.sessions.fold(0, (sum, s) => sum + s.points.length);
+  /// Recorded points only (the start / end markers repeat a recorded point).
+  int get _pointsCount => widget.sessions
+      .fold(0, (sum, s) => sum + s.points.where((p) => !p.isStartPoint && !p.isEndPoint).length);
 
   Future<void> _openInGoogleMaps(TrackingPointModel p) async {
     final uri = Uri.parse('https://www.google.com/maps/search/?api=1&query=${p.latitude},${p.longitude}');
@@ -224,7 +226,9 @@ class _SelectedPointCard extends StatelessWidget {
                     style: AppStyles.heading(context).copyWith(fontSize: 13.5, fontWeight: FontWeight.w600)),
                 const SizedBox(height: AppSizes.s2),
                 Text(
-                  '$time · ${'tracking_accuracy_m'.tr(namedArgs: {'m': point.accuracy.toStringAsFixed(0)})}',
+                  point.accuracy == null
+                      ? time
+                      : '$time · ${'tracking_accuracy_m'.tr(namedArgs: {'m': point.accuracy!.toStringAsFixed(0)})}',
                   style: AppStyles.greyContent(context).copyWith(fontSize: 11.5),
                 ),
               ],

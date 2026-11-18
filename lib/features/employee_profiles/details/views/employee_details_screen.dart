@@ -255,8 +255,17 @@ class _EmployeeDetailsScreenState extends State<EmployeeDetailsScreen> {
                                             empName: viewModel.employee!.name.toString(),
                                           );
                                         } else if (actualIndex == 8) {
+                                          if (viewModel.rewardsAndPenaltiesList == null) return const AppShimmerList(padding: EdgeInsets.zero, count: 3);
                                           return RewardsAndPenaltiesSectionWidget(
                                             employee: viewModel.employee,
+                                            items: viewModel.rewardsAndPenaltiesList,
+                                            isTeam: getTeam ?? false,
+                                            onChanged: () {
+                                              viewModel.rewardsAndPenaltiesList = null;
+                                              viewModel.fetchDataForIndex(8, context,
+                                                  getTeam: getTeam ?? false,
+                                                  empId: viewModel.employee!.id.toString());
+                                            },
                                           );
                                         
                                         } else if (actualIndex == 10) {

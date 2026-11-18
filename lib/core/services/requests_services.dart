@@ -261,6 +261,8 @@ abstract class RequestsServices {
     String? dateTo,
     int page = 1,
     int perPage = 15,
+    /// Request-linked tracking filter: with_tracking | without_tracking | missing_required.
+    String? tracking,
   }) async {
     // The endpoint pattern is: /approval-system/v1/{type}/employee/my-approvables
     final url = '${AppConstants.baseUrl}/approval-system/v1/$type/employee/my-approvables';
@@ -287,6 +289,9 @@ abstract class RequestsServices {
     }
     if (dateTo != null && dateTo.isNotEmpty) {
       queryParams['date_to'] = dateTo;
+    }
+    if (tracking != null && tracking.isNotEmpty) {
+      queryParams['tracking'] = tracking;
     }
 
     debugPrint("🟢 getMyApprovables → $url | params: $queryParams");
@@ -317,6 +322,8 @@ abstract class RequestsServices {
     String? dateTo,
     int page = 1,
     int perPage = 15,
+    /// Request-linked tracking filter: with_tracking | without_tracking | missing_required.
+    String? tracking,
   }) async {
     final url = '${AppConstants.baseUrl}/approval-system/v1/$type/manager/under-my-management-approvables';
 
@@ -346,6 +353,9 @@ abstract class RequestsServices {
     }
     if (dateTo != null && dateTo.isNotEmpty) {
       queryParams['date_to'] = dateTo;
+    }
+    if (tracking != null && tracking.isNotEmpty) {
+      queryParams['tracking'] = tracking;
     }
 
     debugPrint("🟢 getManagerApprovables → $url | params: $queryParams");

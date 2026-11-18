@@ -1,6 +1,9 @@
 
 class OtherDepartmentRequestModel {
   var id;
+
+  /// `tracking.status` of the request (request-linked tracking), shown as a badge on the card.
+  String? trackingStatus;
   var departmentId;
   var departmentName;
   var employeeId;
@@ -30,6 +33,7 @@ class OtherDepartmentRequestModel {
   bool? hasOverlapping;
 
   OtherDepartmentRequestModel({
+    this.trackingStatus,
     required this.id,
     required this.rulesMessage,
     required this.notes,
@@ -62,6 +66,7 @@ class OtherDepartmentRequestModel {
 
   factory OtherDepartmentRequestModel.fromJson(Map<String, dynamic> json) {
     return OtherDepartmentRequestModel(
+      trackingStatus: json['tracking'] is Map ? json['tracking']['status']?.toString() : null,
       id: json['id'] ?? 0,
       rulesMessage: json['rules_message'] ?? "",
       notes: json['notes'] ?? "",

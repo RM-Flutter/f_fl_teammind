@@ -32,6 +32,9 @@ class SearchFilterWidget extends StatefulWidget {
   final bool underMyManagement;
   SearchFilterWidget({super.key, this.contexts, this.requestsType, this.isWeb, this.underMyManagement = false});
 
+  /// The `tracking=` values the request lists accept (API doc screen 1).
+  static const trackingFilterValues = ['with_tracking', 'without_tracking', 'missing_required'];
+
   @override
   State<SearchFilterWidget> createState() => _SearchFilterWidgetState();
 }
@@ -41,14 +44,15 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
   int? selectId;
   bool _filtersLoaded = false;
 
-  /// Tracking filter (spec: requests list): null = any, 'with_tracking', 'without_tracking'.
-  /// Shows requests that should have tracking but do not. UI only until the API supports it.
+  /// Tracking filter (API doc screen 1), sent as `tracking=` by `RequestsViewModel` from the
+  /// "trackingFilter" cache: null = any (not sent), 'with_tracking', 'without_tracking',
+  /// 'missing_required' (required tracking with no session).
   static String? _trackingFilter = _validTracking(CacheHelper.getString("trackingFilter"));
 
-  /// Only the two real values are kept; anything else (an empty cache value, an old value) is
-  /// "any". A value that is not one of the dropdown items would crash the DropdownButton.
-  static String? _validTracking(String? v) =>
-      v == 'with_tracking' || v == 'without_tracking' ? v : null;
+  /// Only the real values are kept; anything else (an empty cache value, an old value) is
+  /// "any". A value that is not one of the dropdown items would crash the DropdownButton, and the
+  /// server answers any other value with an error.
+  static String? _validTracking(String? v) => SearchFilterWidget.trackingFilterValues.contains(v) ? v : null;
 
   /// الحالة الحالية للفلتر (نستخدمها عند الإغلاق بدل الكاش لتجنب إرسال id بعد المسح)
   static Map<String, String?> _buildFilterMap(AddNewRequestController viewModels, FilterController viewModel) {
@@ -495,6 +499,7 @@ class _SearchFilterWidgetState extends State<SearchFilterWidget> {
                                             DropdownMenuItem(value: 'any', child: Text('tracking_filter_any'.tr(), style: AppField.valueStyle)),
                                             DropdownMenuItem(value: 'with_tracking', child: Text('tracking_filter_with'.tr(), style: AppField.valueStyle)),
                                             DropdownMenuItem(value: 'without_tracking', child: Text('tracking_filter_without'.tr(), style: AppField.valueStyle)),
+                                            DropdownMenuItem(value: 'missing_required', child: Text('tracking_filter_missing_required'.tr(), style: AppField.valueStyle)),
                                           ],
                                           onChanged: (v) => setState(() => _trackingFilter = _validTracking(v)),
                                         ),

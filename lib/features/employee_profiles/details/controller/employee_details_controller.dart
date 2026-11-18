@@ -25,6 +25,9 @@ import 'package:app_test/features/salary_advance_requests/shared/repos/salary_ad
 import 'package:app_test/features/shifts/models/shift_change_request_model.dart';
 import 'package:app_test/features/payrolls/shared/models/payroll_model.dart';
 import 'package:app_test/features/payrolls/shared/repos/payroll_service.dart';
+import 'package:app_test/core/utils/request_scope_helper.dart';
+import 'package:app_test/features/rewards_and_penalties/view_rewards/data/models/reward_penalty_approvable_model.dart';
+import 'package:app_test/features/rewards_and_penalties/view_rewards/data/repos/rewards_and_penalties.service.dart';
 
 class EmployeeDetailsViewModel extends ChangeNotifier {
   EmployeeProfileModel? employee;
@@ -41,6 +44,9 @@ class EmployeeDetailsViewModel extends ChangeNotifier {
   List<OvertimeRequestModel>? overtimeRequests;
   List<SalaryAdvanceRequestModel>? salaryAdvanceRequestsList;
   List<ExpenseClaimModel>? expenseClaimRequestsList;
+
+  /// Rewards and penalties tab (approval system, type `rewards_and_penalties`).
+  List<RewardPenaltyApprovableModel>? rewardsAndPenaltiesList;
   List<ShiftChangeRequestModel>? shiftChangeRequestsList;
 
   void updateLoadingStatus({required bool laodingValue}) {
@@ -81,6 +87,7 @@ class EmployeeDetailsViewModel extends ChangeNotifier {
     salaryAdvanceRequestsList = null;
     expenseClaimRequestsList = null;
     shiftChangeRequestsList = null;
+    rewardsAndPenaltiesList = null;
     await fetchDataForIndex(tabIndex, context, getTeam: getTeam, empId: employeeId);
     notifyListeners();
   }
@@ -104,6 +111,8 @@ class EmployeeDetailsViewModel extends ChangeNotifier {
       await getExpenseClaimRequestsList(context, empId: empId, getTeam: getTeam);
     } else if (index == 11 && shiftChangeRequestsList == null) {
       await getShiftChangeRequestsList(context, empId: empId, getTeam: getTeam);
+    } else if (index == 8 && rewardsAndPenaltiesList == null) {
+      await getRewardsAndPenaltiesList(context, empId: empId, getTeam: getTeam);
     }
   }
 
@@ -373,5 +382,44 @@ class EmployeeDetailsViewModel extends ChangeNotifier {
       shiftChangeRequestsList = [];
       notifyListeners();
     }
+  }
+
+  /// Same source as the More → Rewards and penalties list: my own items through `my-approvables`,
+  /// another employee's through `under-my-management-approvables` filtered to them, with the same
+  /// default scope that list opens with for an employee.
+  Future<void> getRewardsAndPenaltiesList(BuildContext context,
+      {required String empId, required bool getTeam}) async {
+    try {
+      final response = getTeam
+          ? await RequestsServices.getManagerApprovables(
+              context: context,
+              type: RewardsAndPenaltiesRepo.approvableType,
+              scope: RequestScopeHelper.defaultIncomingScope,
+              employeesIds: [empId],
+              perPage: 6,
+            )
+          : await RequestsServices.getMyApprovables(
+              context: context,
+              type: RewardsAndPenaltiesRepo.approvableType,
+              perPage: 6,
+            );
+      final dynamic rawData = response.data?['approvables'] ?? response.data?['data'];
+      List<dynamic> listData = [];
+      if (rawData is Map<String, dynamic> && rawData['data'] is List) {
+        listData = rawData['data'];
+      } else if (rawData is List) {
+        listData = rawData;
+      }
+      rewardsAndPenaltiesList = response.success
+          ? listData
+              .whereType<Map<String, dynamic>>()
+              .map(RewardPenaltyApprovableModel.fromApprovableJson)
+              .toList()
+          : [];
+    } catch (e) {
+      debugPrint("Error fetching rewards and penalties: $e");
+      rewardsAndPenaltiesList = [];
+    }
+    notifyListeners();
   }
 }

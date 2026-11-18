@@ -4,255 +4,129 @@ import 'package:flutter/material.dart';
 
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_design.dart';
-import 'package:app_test/core/services/alert_service/alerts_service.dart';
+import 'package:app_test/core/services/location_tracking/location_tracking_service.dart';
 import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/widgets/app_card.widget.dart';
 import 'package:app_test/core/widgets/app_section_header.widget.dart';
-import '../../data/dummy/tracking_dummy_data.dart';
-import '../../data/models/tracking_point.model.dart';
+import 'package:provider/provider.dart';
+import '../../controllers/request_tracking_controller.dart';
+import '../../data/models/request_tracking.model.dart';
 import '../../data/models/tracking_session.model.dart';
 import '../../data/models/tracking_status.enum.dart';
 import 'add_manual_point_modal.dart';
 import 'tracking_key_points_timeline.dart';
-import 'tracking_map_view_dialog.dart';
+import 'request_tracking_tab.dart';
 import 'tracking_notice_banner.dart';
 import 'tracking_session_card.dart';
 import 'tracking_status_badge.dart';
 
-/// "Tracking" tab of the employee's own request (spec: mobile screen 2).
+/// "Tracking" tab of the employee's own request (API doc screen 2).
 ///
-/// - Start / Stop: Start shows only when the request date matches today (or today is inside the
-///   request's date range) and the request is not cancelled. Every Start / Stop is a new leg.
-/// - Add key point: only while a leg is running; the title is optional; sent right away.
-/// - Location problems (waiting / permission / limited / offline) are shown as a notice.
-/// - "Sync now" shows only when points wait to be uploaded and no leg is running.
-/// - Key points log + legs list, and the full route opens in a pop-up map.
-///
-/// UI only: all data is dummy ([TrackingDummyData]).
-class TrackingSectionEmployee extends StatefulWidget {
-  final dynamic request;
-  final bool isDateMatched;
-  final bool isRequestCancelled;
-
-  /// Required tracking turns the badge orange until a leg is recorded.
-  final bool isRequired;
-  final TrackingLocationState locationState;
-  final List<TrackingSessionModel>? initialSessions;
-  final int initialUnsentPoints;
+/// Everything comes from `GET /requests/{id}` through [RequestTrackingController]:
+/// - Start shows when `tracking.can_start`; otherwise, with no open session, `can_start_reason`.
+///   The app never works out on its own whether tracking may start.
+/// - Stop and "Add key point" show while `active_session_id` is set.
+/// - Location problems (waiting / permission / limited / offline) come from the phone's recorder.
+/// - "Sync now" shows when points of this request wait in the queue and no session is open.
+/// - Key points log (`main_points`), sessions, and the full route in a pop-up map (`/path`).
+/// On the web (no background location) the employee sees the data, but Start / Stop are hidden.
+class TrackingSectionEmployee extends StatelessWidget {
+  final RequestTrackingController controller;
 
   /// Side padding; zero when the parent already pads the page (request details tabs).
   final EdgeInsetsGeometry padding;
 
   const TrackingSectionEmployee({
     super.key,
-    required this.request,
-    this.isDateMatched = true,
-    this.isRequestCancelled = false,
-    this.isRequired = true,
-    this.locationState = TrackingLocationState.ok,
-    this.initialSessions,
-    this.initialUnsentPoints = 0,
+    required this.controller,
     this.padding = AppSpacing.pagePadding,
   });
 
-  @override
-  State<TrackingSectionEmployee> createState() => _TrackingSectionEmployeeState();
-}
-
-class _TrackingSectionEmployeeState extends State<TrackingSectionEmployee> {
-  late List<TrackingSessionModel> _sessions;
-  late int _unsentPoints;
-
-  @override
-  void initState() {
-    super.initState();
-    _sessions = List.of(widget.initialSessions ?? [TrackingDummyData.session1, TrackingDummyData.activeSession]);
-    _unsentPoints = widget.initialUnsentPoints;
-  }
-
-  TrackingSessionModel? get _activeSession {
-    for (final s in _sessions) {
-      if (s.isActive) return s;
+  static TrackingLocationState _locationState(TrackingLocationStatus s) {
+    switch (s) {
+      case TrackingLocationStatus.ok:
+        return TrackingLocationState.ok;
+      case TrackingLocationStatus.waitingForLocation:
+        return TrackingLocationState.waitingForLocation;
+      case TrackingLocationStatus.permissionRequired:
+        return TrackingLocationState.permissionRequired;
+      case TrackingLocationStatus.permissionLimited:
+        return TrackingLocationState.permissionLimited;
+      case TrackingLocationStatus.offline:
+        return TrackingLocationState.offline;
     }
-    return null;
   }
 
-  RequestTrackingStatus get _status {
-    if (_activeSession != null) return RequestTrackingStatus.active;
-    if (_sessions.isNotEmpty) return RequestTrackingStatus.completed;
-    return widget.isRequired ? RequestTrackingStatus.requiredNotStarted : RequestTrackingStatus.optionalNotStarted;
+  void _addKeyPoint(BuildContext context) {
+    AddManualPointModal.show(context, onSubmit: (label) => controller.addKeyPoint(context, label));
   }
-
-  TrackingSessionModel _copy(
-    TrackingSessionModel s, {
-    DateTime? endedAt,
-    TrackingSessionStatus? status,
-    String? stopSource,
-    List<TrackingPointModel>? points,
-    int? manualPointsCount,
-  }) {
-    final pts = points ?? s.points;
-    return TrackingSessionModel(
-      id: s.id,
-      requestId: s.requestId,
-      employeeId: s.employeeId,
-      startedAt: s.startedAt,
-      endedAt: endedAt ?? s.endedAt,
-      status: status ?? s.status,
-      stopSource: stopSource ?? s.stopSource,
-      lastPointAt: DateTime.now(),
-      pointsCount: s.pointsCount + (pts.length - s.points.length),
-      manualPointsCount: manualPointsCount ?? s.manualPointsCount,
-      durationMinutes: endedAt != null ? endedAt.difference(s.startedAt).inMinutes : s.durationMinutes,
-      points: pts,
-    );
-  }
-
-  TrackingPointModel _pointNear(TrackingPointModel? last, {bool start = false, bool end = false, String? label}) {
-    final base = last ?? TrackingDummyData.session1Start;
-    final n = DateTime.now().millisecondsSinceEpoch;
-    return TrackingPointModel(
-      clientPointId: 'pt-$n',
-      latitude: base.latitude + 0.0012,
-      longitude: base.longitude + 0.0009,
-      recordedAt: DateTime.now(),
-      pointType: label != null ? 'manual' : 'auto',
-      label: label,
-      labelEn: label,
-      isStartPoint: start,
-      isEndPoint: end,
-    );
-  }
-
-  void _start() {
-    if (widget.locationState == TrackingLocationState.permissionRequired) {
-      AlertsService.warning(
-        context: context,
-        title: 'tracking_permission_required',
-        message: 'tracking_permission_required_hint',
-      );
-      return;
-    }
-    final last = _sessions.isNotEmpty && _sessions.last.points.isNotEmpty ? _sessions.last.points.last : null;
-    setState(() {
-      _sessions.add(TrackingSessionModel(
-        id: DateTime.now().millisecondsSinceEpoch % 100000,
-        requestId: 101,
-        employeeId: 5,
-        startedAt: DateTime.now(),
-        status: TrackingSessionStatus.active,
-        pointsCount: 1,
-        points: [_pointNear(last, start: true)],
-      ));
-    });
-    AlertsService.success(context: context, title: 'tracking_started', message: 'tracking_started_hint');
-  }
-
-  void _stop() {
-    final active = _activeSession;
-    if (active == null) return;
-    final now = DateTime.now();
-    setState(() {
-      final i = _sessions.indexOf(active);
-      _sessions[i] = _copy(
-        active,
-        endedAt: now,
-        status: TrackingSessionStatus.completed,
-        stopSource: 'manual',
-        points: [...active.points, _pointNear(active.points.isNotEmpty ? active.points.last : null, end: true)],
-      );
-    });
-    AlertsService.success(context: context, title: 'tracking_stopped', message: 'tracking_session_ended_route_saved');
-  }
-
-  void _addKeyPoint() {
-    AddManualPointModal.show(context, onSubmit: (label) {
-      final active = _activeSession;
-      if (active == null) return;
-      setState(() {
-        final i = _sessions.indexOf(active);
-        _sessions[i] = _copy(
-          active,
-          points: [...active.points, _pointNear(active.points.isNotEmpty ? active.points.last : null, label: label)],
-          manualPointsCount: active.manualPointsCount + 1,
-        );
-      });
-      AlertsService.success(context: context, title: 'tracking_point_saved', message: label);
-    });
-  }
-
-  void _syncNow() {
-    setState(() => _unsentPoints = 0);
-    AlertsService.success(context: context, title: 'sync_now', message: 'all_points_synced_uploaded_successfully');
-  }
-
-  void _openFullMap() => TrackingMapViewDialog.show(
-        context,
-        title: 'full_request_route_map'.tr(),
-        sessions: _sessions,
-      );
 
   @override
   Widget build(BuildContext context) {
-    final active = _activeSession;
+    final recorder = context.watch<LocationTrackingService>();
+    final tracking = controller.tracking;
+    final sessions = controller.sessions;
+    final active = controller.activeSession;
+    final canAct = LocationTrackingService.isSupported;
+    final unsent = recorder.pendingCount(controller.requestId);
+    final recordingHere = active != null && recorder.activeSessionId == active.id;
+    final location = recordingHere ? _locationState(recorder.status) : TrackingLocationState.ok;
+
     return Padding(
-      padding: widget.padding,
+      padding: padding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _StatusCard(
-            status: _status,
-            isRequired: widget.isRequired,
+            tracking: tracking,
             activeSession: active,
-            activeLegNumber: active == null ? null : _sessions.indexOf(active) + 1,
-            isRequestCancelled: widget.isRequestCancelled,
-            isDateMatched: widget.isDateMatched,
-            onStart: _start,
-            onStop: _stop,
-            onAddKeyPoint: _addKeyPoint,
+            activeLegNumber: active == null ? null : sessions.indexOf(active) + 1,
+            canAct: canAct,
+            busy: controller.isBusy,
+            onStart: () => controller.start(context),
+            onStop: () => controller.stop(context),
+            onAddKeyPoint: () => _addKeyPoint(context),
           ),
-          if (widget.locationState != TrackingLocationState.ok) ...[
+          if (location != TrackingLocationState.ok) ...[
             const SizedBox(height: AppSpacing.md),
-            TrackingNoticeBanner.forLocation(widget.locationState, onOpenSettings: () {}),
+            TrackingNoticeBanner.forLocation(location, onOpenSettings: recorder.openSettings),
           ],
-          if (_unsentPoints > 0 && active == null) ...[
+          if (canAct && unsent > 0 && tracking.activeSessionId == null) ...[
             const SizedBox(height: AppSpacing.md),
             TrackingNoticeBanner(
               icon: Icons.cloud_upload_outlined,
               color: Color(AppColors.warningYellow),
-              title: 'tracking_unsent_points'.tr(namedArgs: {'n': '$_unsentPoints'}),
+              title: 'tracking_unsent_points'.tr(namedArgs: {'n': '$unsent'}),
               message: 'tracking_unsent_points_hint'.tr(),
               actionLabel: 'sync_now'.tr(),
-              onAction: _syncNow,
+              onAction: controller.isBusy ? null : () => controller.syncNow(context),
             ),
           ],
           const SizedBox(height: AppSpacing.section),
           AppSectionHeader(
             title: 'tracking_key_points'.tr(),
             actionText: 'tracking_view_on_map'.tr(),
-            onViewAll: _sessions.isEmpty ? null : _openFullMap,
+            onViewAll: tracking.hasSessions && !controller.isBusy ? () => openTrackingRouteMap(context, controller) : null,
           ),
           const SizedBox(height: AppSpacing.sectionHeaderGap),
-          TrackingKeyPointsTimeline(sessions: _sessions, showLeg: _sessions.length > 1),
+          TrackingKeyPointsTimeline(sessions: sessions, showLeg: sessions.length > 1),
           const SizedBox(height: AppSpacing.section),
-          AppSectionHeader(title: 'tracking_legs_count'.tr(namedArgs: {'n': '${_sessions.length}'})),
+          AppSectionHeader(title: 'tracking_legs_count'.tr(namedArgs: {'n': '${sessions.length}'})),
           const SizedBox(height: AppSpacing.sectionHeaderGap),
-          if (_sessions.isEmpty)
+          if (sessions.isEmpty)
             AppCard(
               child: Text('no_tracking_sessions_recorded_yet_for_this'.tr(),
                   style: AppStyles.greyContent(context).copyWith(fontSize: 12.5)),
             )
           else
-            for (var i = 0; i < _sessions.length; i++) ...[
+            for (var i = 0; i < sessions.length; i++) ...[
               if (i > 0) const SizedBox(height: AppSpacing.cardGap),
               TrackingSessionCard(
-                session: _sessions[i],
+                session: sessions[i],
                 sessionIndex: i,
-                onOpenMap: () => TrackingMapViewDialog.show(
-                  context,
-                  title: 'route_for_session'.tr(namedArgs: {'index_1': '${i + 1}'}),
-                  sessions: [_sessions[i]],
-                ),
+                onOpenMap: controller.isBusy
+                    ? null
+                    : () => openTrackingRouteMap(context, controller, sessionId: sessions[i].id, legIndex: i),
               ),
             ],
           const SizedBox(height: AppSpacing.section),
@@ -262,25 +136,25 @@ class _TrackingSectionEmployeeState extends State<TrackingSectionEmployee> {
   }
 }
 
-/// Top card: what tracking is for this request, its status, the running leg and the actions.
+/// Top card: what tracking is for this request, its status, the running session and the actions.
 class _StatusCard extends StatelessWidget {
-  final RequestTrackingStatus status;
-  final bool isRequired;
+  final RequestTrackingInfoModel tracking;
   final TrackingSessionModel? activeSession;
   final int? activeLegNumber;
-  final bool isRequestCancelled;
-  final bool isDateMatched;
+
+  /// False on the web: the data shows, the actions do not.
+  final bool canAct;
+  final bool busy;
   final VoidCallback onStart;
   final VoidCallback onStop;
   final VoidCallback onAddKeyPoint;
 
   const _StatusCard({
-    required this.status,
-    required this.isRequired,
+    required this.tracking,
     required this.activeSession,
     required this.activeLegNumber,
-    required this.isRequestCancelled,
-    required this.isDateMatched,
+    required this.canAct,
+    required this.busy,
     required this.onStart,
     required this.onStop,
     required this.onAddKeyPoint,
@@ -290,6 +164,8 @@ class _StatusCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final accent = Color(AppColors.buttons);
     final tones = AppColors.statusTones(accent);
+    final isRunning = tracking.activeSessionId != null;
+    final reason = tracking.canStartReason;
     return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -311,14 +187,14 @@ class _StatusCard extends StatelessWidget {
                         style: AppStyles.heading(context).copyWith(fontSize: 14, fontWeight: FontWeight.w600)),
                     const SizedBox(height: AppSizes.s2),
                     Text(
-                      isRequired ? 'tracking_required_for_request'.tr() : 'tracking_optional_for_request'.tr(),
+                      tracking.isRequired ? 'tracking_required_for_request'.tr() : 'tracking_optional_for_request'.tr(),
                       style: AppStyles.greyContent(context).copyWith(fontSize: 12),
                     ),
                   ],
                 ),
               ),
               const SizedBox(width: AppSpacing.sm),
-              TrackingStatusBadge(status: status),
+              TrackingStatusBadge(status: tracking.status),
             ],
           ),
           if (activeSession != null) ...[
@@ -326,27 +202,16 @@ class _StatusCard extends StatelessWidget {
             _LiveStrip(session: activeSession!, legNumber: activeLegNumber ?? 1),
           ],
           const SizedBox(height: AppSpacing.lg),
-          if (isRequestCancelled)
-            _Hint(icon: Icons.block_rounded, text: 'tracking_not_for_cancelled'.tr())
-          else if (activeSession == null) ...[
-            _PrimaryButton(
-              icon: Icons.play_arrow_rounded,
-              label: 'start_new_tracking_leg'.tr(),
-              color: Color(AppColors.successGreen),
-              onPressed: isDateMatched ? onStart : null,
-            ),
-            if (!isDateMatched) ...[
-              const SizedBox(height: AppSpacing.sm),
-              _Hint(icon: Icons.event_busy_outlined, text: 'tracking_only_on_request_date'.tr()),
-            ],
-          ] else
+          if (!canAct)
+            _Hint(icon: Icons.phone_iphone_rounded, text: 'tracking_mobile_only'.tr())
+          else if (isRunning)
             Row(
               children: [
                 Expanded(
                   child: SizedBox(
                     height: AppButtonSize.height,
                     child: OutlinedButton.icon(
-                      onPressed: onAddKeyPoint,
+                      onPressed: busy ? null : onAddKeyPoint,
                       icon: const Icon(Icons.add_location_alt_outlined, size: 20),
                       label: Text('tracking_key_point'.tr(),
                           maxLines: 1,
@@ -366,11 +231,20 @@ class _StatusCard extends StatelessWidget {
                     icon: Icons.stop_rounded,
                     label: 'stop_leg'.tr(),
                     color: Color(AppColors.failureRed),
-                    onPressed: onStop,
+                    onPressed: busy ? null : onStop,
                   ),
                 ),
               ],
-            ),
+            )
+          else if (tracking.canStart)
+            _PrimaryButton(
+              icon: Icons.play_arrow_rounded,
+              label: 'start_new_tracking_leg'.tr(),
+              color: Color(AppColors.successGreen),
+              onPressed: busy ? null : onStart,
+            )
+          else if (reason != null && reason.isNotEmpty)
+            _Hint(icon: Icons.event_busy_outlined, text: reason),
         ],
       ),
     );

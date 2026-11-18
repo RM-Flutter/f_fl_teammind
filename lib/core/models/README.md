@@ -11,6 +11,8 @@ Plain Dart models shared by several features. Each has `fromJson`/`toJson`.
 | `settings/fingerprint_security_checks.model.dart` | Levels for each fingerprint security check (see `constants/README.md`) |
 | `settings/license.model.dart`, `app_settings_model.dart` | Licence info and the base settings type |
 | `notifications_model.dart`, `requests_model.dart`, `employee_action_model.dart` | Shared list models for notifications, requests and manager actions |
+| `tracking_queue_point.model.dart` | `TrackingQueuePoint`: a location point waiting in the tracking queue (`client_point_id` made once, `recorded_at` sent as ISO 8601 with the phone's offset) |
+| `request_tracking_status.dart` | `RequestTrackingStatus` (`tracking.status` of a request: label, colour, icon). Used by the request card badge and `features/tracking` |
 | `book_mark_model.dart` | Local bookmarks (see `services/bookmark_service.dart`) |
 | `device_information.model.dart` | Device id, OS, model and app version, sent with `start_app` and the device endpoints |
 | `color_palette.model.dart`, `color_value.model.dart` | Branding palette parsed from server settings |

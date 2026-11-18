@@ -433,7 +433,7 @@ class _MoreScreenState extends State<MoreScreen> {
                                     });
                               },
                             ),
-                          // Team tracking map + tracking reports (request-linked tracking).
+                          // Team tracking map (request-linked tracking). The server limits it to the user's scope.
                           if (gCache['is_teamleader_in'].isNotEmpty ||
                               gCache['is_manager_in'].isNotEmpty ||
                               gCache['is_hr'] == true ||

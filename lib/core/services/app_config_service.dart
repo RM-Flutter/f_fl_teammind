@@ -1,4 +1,5 @@
 import 'package:app_test/core/services/proxy_actions_service.dart';
+import 'package:app_test/core/services/location_tracking/location_tracking_service.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -575,6 +576,13 @@ class AppConfigService extends ChangeNotifier {
       if (isLogout == false) return;
     }
 
+    // Send the tracking points still in the queue while the token is valid, then forget them.
+    if (!skipServerLogout) {
+      try {
+        await LocationTrackingService.instance.flush(force: true);
+      } catch (_) {}
+    }
+
     // Call logout API first while token is still present (backend expects the token)
     if (!skipServerLogout) {
       try {
@@ -611,6 +619,7 @@ class AppConfigService extends ChangeNotifier {
     // لا تحذف fcm_token حتى start_app التالي (بعد اختيار الدومين) يبعته. احذف last_sent فقط.
     await CacheHelper.deleteData(key: "last_sent_fcm_token");
     await ProxyActionsService.clear();
+    await LocationTrackingService.instance.clearAll();
 
     // Clear static memory objects
     UserSettingConst.userSettings = null;

@@ -1,4 +1,5 @@
 import 'package:app_test/core/constants/app_sizes.dart';
+import 'package:app_test/features/tracking/views/widgets/request_tracking_tab.dart' show TrackingApprovalWarning;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -412,7 +413,15 @@ class ApprovableBottomActionBar extends StatelessWidget {
           width: 1.sw,
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: rows,
+            children: [
+              // Required tracking not done yet: the server refuses Approve (refuse / cancel still work).
+              if ((details.takeAction == true || details.canTakeActionAsSomeoneElse == true) &&
+                  details.tracking?.blocksApproval == true) ...[
+                const TrackingApprovalWarning(),
+                const SizedBox(height: AppSizes.s8),
+              ],
+              ...rows,
+            ],
           ),
         ),
       ),

@@ -160,6 +160,9 @@ class EmployeesListViewModel extends ChangeNotifier {
                     ?.borderSide,
                 hintText: AppStrings.selectDepartment.tr(),
                 hintStyle: Theme.of(context).inputDecorationTheme.hintStyle,
+                // Always black text for the selected value and the list items.
+                selectedStyle: const TextStyle(color: Colors.black),
+                listItemStyle: const TextStyle(color: Colors.black),
                 items: departments
                     ?.whereType<DepartmentModel>()
                     .map((dep) => dep.toJson())

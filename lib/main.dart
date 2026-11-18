@@ -28,6 +28,7 @@ import 'package:app_test/features/cv_hub/controllers/cv_hub_interview_details_co
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'core/services/internet_check.dart';
+import 'core/services/location_tracking/location_tracking_service.dart';
 import 'features/home/controllers/home_controller.dart';
 import 'features/main_layout/controllers/main_controller.dart';
 import 'package:app_test/core/utils/error_handling/global_error_handler.dart';
@@ -138,6 +139,10 @@ void main() async {
           ChangeNotifierProvider<AppConfigService>.value(
             value: appConfigService,
           ),
+          // Request-linked location tracking: resumes an open session after an app restart.
+          ChangeNotifierProvider<LocationTrackingService>.value(
+            value: LocationTrackingService.instance,
+          ),
           ChangeNotifierProvider<MainLayoutController>(
             create: (_) => MainLayoutController(),
           ),
@@ -162,4 +167,9 @@ void main() async {
         ],
         child: MyApp(),
       )));
+
+  // After the first frame: translations and the navigator context (used for uploads) are ready.
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    Future.delayed(const Duration(seconds: 2), () => LocationTrackingService.instance.init());
+  });
 }

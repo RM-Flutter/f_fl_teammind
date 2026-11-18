@@ -1,6 +1,9 @@
 
 class RequestModel {
   var id;
+
+  /// `tracking.status` of the request (request-linked tracking), shown as a badge on the card.
+  String? trackingStatus;
   var departmentId;
   var departmentName;
   var employeeId;
@@ -31,6 +34,7 @@ class RequestModel {
   bool? hasOverlapping;
 
   RequestModel({
+    this.trackingStatus,
     required this.id,
     required this.notes,
     required this.rulesMessage,
@@ -114,6 +118,7 @@ class RequestModel {
     final profile = json['profile'] as Map<String, dynamic>? ?? {};
 
     return RequestModel(
+      trackingStatus: json['tracking'] is Map ? json['tracking']['status']?.toString() : null,
       id: json['id'] ?? 0,
       // rules_message not returned yet in new API — backend will re-add it
       rulesMessage: "",

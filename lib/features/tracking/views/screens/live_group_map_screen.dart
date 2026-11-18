@@ -1,160 +1,193 @@
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import 'package:app_test/core/routing/app_router.dart';
-
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_design.dart';
+import 'package:app_test/core/services/alert_service/alerts_service.dart';
 import 'package:app_test/core/utils/app_styles.dart';
+import 'package:app_test/core/utils/custom_shimmer_loading/app_shimmer_list.dart';
 import 'package:app_test/core/widgets/app_card.widget.dart';
 import 'package:app_test/core/widgets/app_section_header.widget.dart';
+import 'package:app_test/core/widgets/shared_list_filter_widget.dart';
 import 'package:app_test/core/widgets/template_page.widget.dart';
-import '../../data/dummy/tracking_dummy_data.dart';
+import '../../controllers/group_tracking_map_controller.dart';
 import '../../data/models/employee_tracking_summary.model.dart';
-import '../../data/models/tracking_session.model.dart';
-import '../../data/models/tracking_status.enum.dart';
+import '../../data/models/tracking_point.model.dart';
+import '../../data/repos/tracking_repo.dart';
 import '../widgets/tracking_choice_chip.dart';
 import '../widgets/tracking_key_points_timeline.dart';
+import '../widgets/tracking_map_view_dialog.dart';
+import '../widgets/tracking_metrics.dart';
 import '../widgets/tracking_route_map.dart';
 import '../widgets/tracking_status_badge.dart';
 
-/// Time range shown on the group map (spec: Live / Today (history) / a picked day).
-enum _MapMode { live, today, date }
-
-/// Team tracking map for managers / HR (spec: mobile screen 4).
+/// Group tracking map (API doc screen 4), from More → "Team Tracking".
 ///
-/// - Live, Today or a picked day.
-/// - Up to 10 employees per page, each in the colour of their position on the page
-///   ([TrackingPalette]); their routes are drawn in the same colour.
-/// - Pick one employee to see their status card (Active / Stopped / Offline / No active tracking,
-///   last update) and their key points; the others are faded on the map.
-///
-/// UI only: all data is dummy ([TrackingDummyData]).
-class LiveGroupMapScreen extends StatefulWidget {
+/// - Live (refreshed every 60 s), Today (live state + today's routes) or a picked day.
+/// - 10 employees per page; each one in the palette colour of their `color_index`, the same in
+///   live and history for the same page and filters.
+/// - Filters: employee, department (filter sheet) and, in Live, "only tracking".
+/// - Pick an employee for their status card, distance and hours, key points, and their request's
+///   full route.
+class LiveGroupMapScreen extends StatelessWidget {
   const LiveGroupMapScreen({super.key});
 
   @override
-  State<LiveGroupMapScreen> createState() => _LiveGroupMapScreenState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider<GroupTrackingMapController>(
+      create: (ctx) => GroupTrackingMapController()..load(ctx),
+      child: const _GroupMapView(),
+    );
+  }
 }
 
-class _LiveGroupMapScreenState extends State<LiveGroupMapScreen> {
-  _MapMode _mode = _MapMode.live;
-  DateTime? _pickedDate;
-  int _page = 1;
-  int? _selectedEmployeeId;
+class _GroupMapView extends StatelessWidget {
+  const _GroupMapView();
 
-  List<EmployeeTrackingSummaryModel> get _employees => TrackingDummyData.employeesPage(_page);
-
-  int get _pages => (TrackingDummyData.totalEmployees / TrackingDummyData.pageSize).ceil();
-
-  Future<void> _pickDate() async {
+  Future<void> _pickDate(BuildContext context, GroupTrackingMapController c) async {
     final now = DateTime.now();
     final date = await showDatePicker(
       context: context,
-      initialDate: _pickedDate ?? now.subtract(const Duration(days: 1)),
-      firstDate: now.subtract(const Duration(days: 180)), // points are kept for 6 months
+      initialDate: c.pickedDate ?? now.subtract(const Duration(days: 1)),
+      firstDate: now.subtract(const Duration(days: 180)),
       lastDate: now,
     );
-    if (date != null) {
-      setState(() {
-        _pickedDate = date;
-        _mode = _MapMode.date;
-      });
-    }
+    if (date != null && context.mounted) c.setMode(context, GroupMapMode.date, date: date);
   }
 
-  void _goToPage(int page) => setState(() {
-        _page = page;
-        _selectedEmployeeId = null;
-      });
+  Future<void> _openFilters(BuildContext context, GroupTrackingMapController c) async {
+    final result = await showModalBottomSheet<Map<String, String?>>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => SharedListFilterWidget(
+        showEmployee: true,
+        showDepartment: true,
+        showDateRange: false,
+        initialFilters: {'empId': c.employeeId, 'depId': c.departmentId},
+        underMyManagement: true,
+      ),
+    );
+    if (result != null && context.mounted) c.applyFilters(context, result);
+  }
 
   @override
   Widget build(BuildContext context) {
-    final isAr = context.locale.languageCode == 'ar';
-    final employees = _employees;
-    final routes = <int, List<TrackingSessionModel>>{
-      for (var i = 0; i < employees.length; i++) employees[i].employeeId: TrackingDummyData.routeFor(employees[i], i),
-    };
-    final selectedIndex = employees.indexWhere((e) => e.employeeId == _selectedEmployeeId);
-    final selected = selectedIndex == -1 ? null : employees[selectedIndex];
+    final c = context.watch<GroupTrackingMapController>();
+    final employees = c.employees;
+    final selected = c.selected;
+    final isLive = c.mode == GroupMapMode.live;
 
-    final lines = <TrackingRouteLine>[
-      for (var i = 0; i < employees.length; i++)
-        for (final s in routes[employees[i].employeeId]!)
+    // Live: one marker per employee at `last_point` (none when null).
+    // Today / a picked day: one line per session, in the employee's colour.
+    List<TrackingRouteLine> linesOf(EmployeeTrackingSummaryModel e) {
+      final color = TrackingPalette.colorAt(e.colorIndex);
+      final dimmed = selected != null && selected.employeeId != e.employeeId;
+      final label = e.name.split(' ').first;
+      if (isLive) {
+        if (e.lastPoint == null) return const [];
+        return [
           TrackingRouteLine(
-            color: TrackingPalette.colorAt(i),
+              color: color, points: [e.lastPoint!], showLivePosition: true, liveLabel: label, dimmed: dimmed),
+        ];
+      }
+      return [
+        for (final s in e.sessions)
+          TrackingRouteLine(
+            color: color,
             points: s.points,
-            showLivePosition: _mode == _MapMode.live && employees[i].status == 'active' && s.isActive,
-            liveLabel: employees[i].getName(isArabic: isAr).split(' ').first,
-            dimmed: selected != null && selected.employeeId != employees[i].employeeId,
+            showLivePosition: c.mode == GroupMapMode.today && s.isActive,
+            liveLabel: label,
+            dimmed: dimmed,
           ),
-    ];
+      ];
+    }
 
-    final dateLabel = _pickedDate == null
+    final lines = <TrackingRouteLine>[for (final e in employees) ...linesOf(e)];
+
+    final dateLabel = c.pickedDate == null
         ? 'tracking_pick_day'.tr()
-        : DateFormat('d MMM', context.locale.languageCode).format(_pickedDate!);
-    final from = (_page - 1) * TrackingDummyData.pageSize + 1;
-    final to = from + employees.length - 1;
+        : DateFormat('d MMM', context.locale.languageCode).format(c.pickedDate!);
+    final from = employees.isEmpty ? 0 : (c.result.page - 1) * c.result.itemsCount + 1;
+    final to = employees.isEmpty ? 0 : from + employees.length - 1;
 
     return TemplatePage(
       pageContext: context,
       title: 'tracking_team_map'.tr(),
       routeName: AppRoutes.liveGroupMap.name,
       backgroundColor: Color(AppColors.background),
-      onRefresh: () async => setState(() {}),
+      onRefresh: () => c.load(context, silent: true),
       actions: [
         IconButton(
-          tooltip: 'tracking_reports'.tr(),
-          icon: Icon(Icons.assessment_outlined, color: Color(AppColors.secondaryButton)),
-          onPressed: () => context.pushNamed(
-            AppRoutes.trackingReports.name,
-            pathParameters: {'lang': context.locale.languageCode},
+          tooltip: 'filter'.tr(),
+          icon: Badge(
+            isLabelVisible: c.hasFilters,
+            smallSize: 8,
+            child: Icon(Icons.filter_list_rounded, color: Color(AppColors.secondaryButton)),
           ),
+          onPressed: () => _openFilters(context, c),
         ),
       ],
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SizedBox(height: AppSpacing.md),
-          // Time range.
           TrackingChipsRow(chips: [
             TrackingChoiceChip(
               label: 'tracking_live'.tr(),
               icon: Icons.sensors_rounded,
-              selected: _mode == _MapMode.live,
-              onTap: () => setState(() => _mode = _MapMode.live),
+              selected: isLive,
+              onTap: () => c.setMode(context, GroupMapMode.live),
             ),
             TrackingChoiceChip(
               label: 'tracking_today'.tr(),
               icon: Icons.today_outlined,
-              selected: _mode == _MapMode.today,
-              onTap: () => setState(() => _mode = _MapMode.today),
+              selected: c.mode == GroupMapMode.today,
+              onTap: () => c.setMode(context, GroupMapMode.today),
             ),
             TrackingChoiceChip(
               label: dateLabel,
               icon: Icons.event_outlined,
-              selected: _mode == _MapMode.date,
-              onTap: _pickDate,
+              selected: c.mode == GroupMapMode.date,
+              onTap: () => _pickDate(context, c),
             ),
-          ]),
-          const SizedBox(height: AppSpacing.md),
-          // Employees of this page, each with their route colour.
-          TrackingChipsRow(chips: [
-            TrackingChoiceChip(
-              label: 'tracking_all_employees'.tr(namedArgs: {'n': '${employees.length}'}),
-              selected: selected == null,
-              onTap: () => setState(() => _selectedEmployeeId = null),
-            ),
-            for (var i = 0; i < employees.length; i++)
+            if (isLive)
               TrackingChoiceChip(
-                label: employees[i].getName(isArabic: isAr),
-                dotColor: TrackingPalette.colorAt(i),
-                selected: employees[i].employeeId == _selectedEmployeeId,
-                onTap: () => setState(() => _selectedEmployeeId = employees[i].employeeId),
+                label: 'tracking_only_tracking'.tr(),
+                icon: Icons.my_location_rounded,
+                selected: c.onlyTracking,
+                onTap: () => c.toggleOnlyTracking(context),
               ),
           ]),
+          if (c.hasFilters) ...[
+            const SizedBox(height: AppSpacing.sm),
+            Padding(
+              padding: AppSpacing.pagePadding,
+              child: Text(
+                [c.employeeName, c.departmentName].whereType<String>().join(' · '),
+                style: AppStyles.greyContent(context).copyWith(fontSize: 12),
+              ),
+            ),
+          ],
+          const SizedBox(height: AppSpacing.md),
+          if (employees.isNotEmpty)
+            TrackingChipsRow(chips: [
+              TrackingChoiceChip(
+                label: 'tracking_all_employees'.tr(namedArgs: {'n': '${employees.length}'}),
+                selected: selected == null,
+                onTap: () => c.select(null),
+              ),
+              for (final e in employees)
+                TrackingChoiceChip(
+                  label: e.name,
+                  dotColor: TrackingPalette.colorAt(e.colorIndex),
+                  selected: e.employeeId == c.selectedEmployeeId,
+                  onTap: () => c.select(e.employeeId),
+                ),
+            ]),
           const SizedBox(height: AppSpacing.md),
           Padding(
             padding: AppSpacing.pagePadding,
@@ -168,17 +201,19 @@ class _LiveGroupMapScreenState extends State<LiveGroupMapScreen> {
               clipBehavior: Clip.antiAlias,
               child: Stack(
                 children: [
-                  Positioned.fill(child: TrackingRouteMap(lines: lines, showAutoPoints: selected != null)),
+                  Positioned.fill(
+                    child: TrackingRouteMap(lines: lines, showAutoPoints: selected != null),
+                  ),
                   PositionedDirectional(
                     top: AppSpacing.sm,
                     start: AppSpacing.sm,
                     child: _MapTag(
-                      text: _mode == _MapMode.live
+                      text: isLive
                           ? 'tracking_live_now'.tr()
-                          : _mode == _MapMode.today
+                          : c.mode == GroupMapMode.today
                               ? 'tracking_history_today'.tr()
                               : 'tracking_history_of'.tr(namedArgs: {'date': dateLabel}),
-                      live: _mode == _MapMode.live,
+                      live: isLive,
                     ),
                   ),
                 ],
@@ -186,7 +221,6 @@ class _LiveGroupMapScreenState extends State<LiveGroupMapScreen> {
             ),
           ),
           const SizedBox(height: AppSpacing.sm),
-          // Pagination (10 per page).
           Padding(
             padding: AppSpacing.pagePadding,
             child: Row(
@@ -196,21 +230,22 @@ class _LiveGroupMapScreenState extends State<LiveGroupMapScreen> {
                     'tracking_employees_range'.tr(namedArgs: {
                       'from': '$from',
                       'to': '$to',
-                      'total': '${TrackingDummyData.totalEmployees}',
+                      'total': '${c.result.total}',
                     }),
                     style: AppStyles.greyContent(context).copyWith(fontSize: 12),
                   ),
                 ),
                 _PageButton(
                   icon: Icons.chevron_left_rounded,
-                  onTap: _page > 1 ? () => _goToPage(_page - 1) : null,
+                  onTap: c.page > 1 && !c.isLoading ? () => c.goToPage(context, c.page - 1) : null,
                 ),
                 const SizedBox(width: AppSpacing.sm),
-                Text('$_page / $_pages', style: AppStyles.heading(context).copyWith(fontSize: 13, fontWeight: FontWeight.w600)),
+                Text('${c.page} / ${c.pages}',
+                    style: AppStyles.heading(context).copyWith(fontSize: 13, fontWeight: FontWeight.w600)),
                 const SizedBox(width: AppSpacing.sm),
                 _PageButton(
                   icon: Icons.chevron_right_rounded,
-                  onTap: _page < _pages ? () => _goToPage(_page + 1) : null,
+                  onTap: c.page < c.pages && !c.isLoading ? () => c.goToPage(context, c.page + 1) : null,
                 ),
               ],
             ),
@@ -218,33 +253,71 @@ class _LiveGroupMapScreenState extends State<LiveGroupMapScreen> {
           const SizedBox(height: AppSpacing.section),
           Padding(
             padding: AppSpacing.pagePadding,
-            child: selected == null
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      AppSectionHeader(title: 'tracking_employees'.tr()),
-                      const SizedBox(height: AppSpacing.sectionHeaderGap),
-                      for (var i = 0; i < employees.length; i++) ...[
-                        if (i > 0) const SizedBox(height: AppSpacing.cardGap),
-                        _EmployeeRow(
-                          employee: employees[i],
-                          color: TrackingPalette.colorAt(i),
-                          onTap: () => setState(() => _selectedEmployeeId = employees[i].employeeId),
-                        ),
-                      ],
-                    ],
-                  )
-                : _EmployeeStatusCard(
-                    employee: selected,
-                    color: TrackingPalette.colorAt(selectedIndex),
-                    sessions: routes[selected.employeeId]!,
-                  ),
+            child: _body(context, c, selected),
           ),
           const SizedBox(height: AppSpacing.listBottom),
         ],
       ),
     );
   }
+
+  Widget _body(BuildContext context, GroupTrackingMapController c, EmployeeTrackingSummaryModel? selected) {
+    if (c.isLoading && c.employees.isEmpty) {
+      return const AppShimmerList(count: 4, padding: EdgeInsets.zero, showAvatar: true);
+    }
+    if (c.errorMessage != null && c.employees.isEmpty) {
+      return AppCard(
+        child: Column(
+          children: [
+            Text(c.errorMessage!, textAlign: TextAlign.center, style: AppStyles.greyContent(context)),
+            TextButton(onPressed: () => c.load(context), child: Text('retry'.tr())),
+          ],
+        ),
+      );
+    }
+    if (c.employees.isEmpty) {
+      return AppCard(
+        child: Text('tracking_no_employees'.tr(),
+            textAlign: TextAlign.center, style: AppStyles.greyContent(context).copyWith(fontSize: 12.5)),
+      );
+    }
+    if (selected != null) {
+      return _EmployeeStatusCard(employee: selected, mode: c.mode);
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        AppSectionHeader(title: 'tracking_employees'.tr()),
+        const SizedBox(height: AppSpacing.sectionHeaderGap),
+        for (var i = 0; i < c.employees.length; i++) ...[
+          if (i > 0) const SizedBox(height: AppSpacing.cardGap),
+          _EmployeeRow(
+            employee: c.employees[i],
+            mode: c.mode,
+            onTap: () => c.select(c.employees[i].employeeId),
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+/// Opens the full route of the employee's request (`GET /requests/{request_id}/path`).
+Future<void> _openRequestRoute(BuildContext context, EmployeeTrackingSummaryModel e) async {
+  final requestId = e.requestId;
+  if (requestId == null) return;
+  final details = await TrackingRepo.getRequestTracking(context: context, requestId: requestId);
+  if (!context.mounted) return;
+  final mainPoints = <TrackingPointModel>[
+    for (final s in details.data?.sessions ?? const []) ...s.points,
+  ];
+  final path = await TrackingRepo.getPath(context: context, requestId: requestId, mainPoints: mainPoints);
+  if (!context.mounted) return;
+  if (!path.success || path.data == null) {
+    AlertsService.error(context: context, title: 'tracking', message: path.message ?? 'something_went_wrong');
+    return;
+  }
+  TrackingMapViewDialog.show(context, title: 'full_request_route_map'.tr(), sessions: path.data!);
 }
 
 /// "Live now" / "History · 12 Nov" tag in the corner of the map.
@@ -268,7 +341,8 @@ class _MapTag extends StatelessWidget {
         children: [
           Container(width: 8, height: 8, decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
           const SizedBox(width: AppSizes.s6),
-          Text(text, style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w600, color: AppColors.statusTones(color).text)),
+          Text(text,
+              style: TextStyle(fontSize: 11.5, fontWeight: FontWeight.w600, color: AppColors.statusTones(color).text)),
         ],
       ),
     );
@@ -300,42 +374,44 @@ class _PageButton extends StatelessWidget {
   }
 }
 
-/// One employee in the "all employees" list: route colour ring, name, department, presence and
-/// how long ago the last point arrived.
+String _subtitle(EmployeeTrackingSummaryModel e) =>
+    [e.jobTitle, e.departmentName].whereType<String>().where((s) => s.isNotEmpty).join(' · ');
+
+/// One employee in the list: colour ring, name, job and department, presence and last update.
 class _EmployeeRow extends StatelessWidget {
   final EmployeeTrackingSummaryModel employee;
-  final Color color;
+  final GroupMapMode mode;
   final VoidCallback onTap;
-  const _EmployeeRow({required this.employee, required this.color, required this.onTap});
+  const _EmployeeRow({required this.employee, required this.mode, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    final isAr = context.locale.languageCode == 'ar';
     return AppCard.listItem(
       context: context,
-      title: employee.getName(isArabic: isAr),
-      subtitle: employee.getDepartment(isArabic: isAr),
-      thirdLine: employee.getLastUpdatedText(isArabic: isAr),
-      avatarUrl: employee.avatarUrl,
-      avatarInitialsText: employee.getName(isArabic: isAr),
-      accentColor: color,
-      trailing: EmployeePresenceBadge(presence: EmployeeTrackingPresence.fromRaw(employee.status)),
+      title: employee.name,
+      subtitle: _subtitle(employee),
+      thirdLine: mode == GroupMapMode.date ? null : employee.getLastUpdatedText(),
+      avatarInitialsText: employee.name,
+      accentColor: TrackingPalette.colorAt(employee.colorIndex),
+      trailing: EmployeePresenceBadge(presence: employee.presence),
       onTap: onTap,
     );
   }
 }
 
-/// The picked employee: presence, last update, current leg, then their key points in time order.
+/// The picked employee: presence, last update, current session, distance and hours, their key
+/// points in time order and their request's full route.
 class _EmployeeStatusCard extends StatelessWidget {
   final EmployeeTrackingSummaryModel employee;
-  final Color color;
-  final List<TrackingSessionModel> sessions;
-  const _EmployeeStatusCard({required this.employee, required this.color, required this.sessions});
+  final GroupMapMode mode;
+  const _EmployeeStatusCard({required this.employee, required this.mode});
 
   @override
   Widget build(BuildContext context) {
-    final isAr = context.locale.languageCode == 'ar';
+    final color = TrackingPalette.colorAt(employee.colorIndex);
     final active = employee.activeSession;
+    final sessions = employee.sessions;
+    final hasHistory = mode != GroupMapMode.live;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -345,22 +421,18 @@ class _EmployeeStatusCard extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  AppCardLeadingAvatar(
-                    imageUrl: employee.avatarUrl,
-                    nameForInitials: employee.getName(isArabic: isAr),
-                    borderColor: color,
-                  ),
+                  AppCardLeadingAvatar(nameForInitials: employee.name, borderColor: color),
                   const SizedBox(width: AppSpacing.md),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(employee.getName(isArabic: isAr),
+                        Text(employee.name,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: AppStyles.heading(context).copyWith(fontSize: 14, fontWeight: FontWeight.w600)),
                         const SizedBox(height: AppSizes.s2),
-                        Text(employee.getDepartment(isArabic: isAr),
+                        Text(_subtitle(employee),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: AppStyles.greyContent(context).copyWith(fontSize: 12)),
@@ -368,36 +440,71 @@ class _EmployeeStatusCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: AppSpacing.sm),
-                  EmployeePresenceBadge(presence: EmployeeTrackingPresence.fromRaw(employee.status)),
+                  EmployeePresenceBadge(presence: employee.presence),
                 ],
               ),
               const SizedBox(height: AppSpacing.md),
               Divider(height: 1, color: Color(AppColors.divider)),
               const SizedBox(height: AppSpacing.md),
-              _InfoLine(
-                icon: Icons.update_rounded,
-                label: 'tracking_last_update'.tr(),
-                value: employee.getLastUpdatedText(isArabic: isAr),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              _InfoLine(
-                icon: Icons.timer_outlined,
-                label: 'tracking_current_leg'.tr(),
-                value: active != null ? active.getDurationFormatted() : '—',
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              _InfoLine(
-                icon: Icons.repeat_rounded,
-                label: 'tracking_start_stop_count'.tr(),
-                value: '${sessions.length}',
-              ),
+              if (mode != GroupMapMode.date) ...[
+                _InfoLine(
+                  icon: Icons.update_rounded,
+                  label: 'tracking_last_update'.tr(),
+                  value: employee.getLastUpdatedText(),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+              ],
+              if (hasHistory) ...[
+                _InfoLine(
+                  icon: Icons.timer_outlined,
+                  label: 'tracking_current_leg'.tr(),
+                  value: active != null ? active.getDurationFormatted() : '—',
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                _InfoLine(
+                  icon: Icons.repeat_rounded,
+                  label: 'tracking_start_stop_count'.tr(),
+                  value: '${sessions.length}',
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                _InfoLine(
+                  icon: Icons.route_outlined,
+                  label: 'tracking_distance'.tr(),
+                  value: 'tracking_km'.tr(namedArgs: {'km': (employee.totalDistanceMeters / 1000).toStringAsFixed(1)}),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                _InfoLine(
+                  icon: Icons.schedule_rounded,
+                  label: 'active_hours'.tr(),
+                  value: TrackingMetricsRow.formatHours(employee.totalActiveSeconds / 3600),
+                ),
+              ],
+              if (employee.requestId != null) ...[
+                const SizedBox(height: AppSpacing.md),
+                SizedBox(
+                  height: AppButtonSize.height,
+                  child: OutlinedButton.icon(
+                    onPressed: () => _openRequestRoute(context, employee),
+                    icon: const Icon(Icons.map_outlined, size: 20),
+                    label: Text('view_full_route_on_map'.tr(),
+                        style: const TextStyle(fontSize: AppButtonSize.fontSize, fontWeight: FontWeight.w600)),
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: Color(AppColors.secondaryButton),
+                      side: BorderSide(color: Color(AppColors.secondaryButton)),
+                      shape: RoundedRectangleBorder(borderRadius: AppRadius.button),
+                    ),
+                  ),
+                ),
+              ],
             ],
           ),
         ),
-        const SizedBox(height: AppSpacing.section),
-        AppSectionHeader(title: 'tracking_key_points'.tr()),
-        const SizedBox(height: AppSpacing.sectionHeaderGap),
-        TrackingKeyPointsTimeline(sessions: sessions, accent: color, showLeg: sessions.length > 1),
+        if (hasHistory) ...[
+          const SizedBox(height: AppSpacing.section),
+          AppSectionHeader(title: 'tracking_key_points'.tr()),
+          const SizedBox(height: AppSpacing.sectionHeaderGap),
+          TrackingKeyPointsTimeline(sessions: sessions, accent: color, showLeg: sessions.length > 1),
+        ],
       ],
     );
   }

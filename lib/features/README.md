@@ -31,7 +31,7 @@ Screens are registered in `lib/core/routing/app_router.dart`. Most features read
 | [tasks](tasks/README.md) | Tasks with sub-tasks, assignees and status |
 | [daily_reports](daily_reports/README.md) | Employee daily work reports |
 | [payrolls](payrolls/README.md) | Payslips list, details and PDF |
-| [rewards_and_penalties](rewards_and_penalties/README.md) | Rewards and penalties: view, and add (managers) |
+| [rewards_and_penalties](rewards_and_penalties/README.md) | Rewards and penalties: list and approvals via the approval system (`rewards_and_penalties`), add (managers) |
 | [commissions](commissions/README.md) | My commissions |
 | [evaluation](evaluation/README.md) | Employee evaluations and required evaluations |
 | [employee_profiles](employee_profiles/README.md) | Employee directory and the full employee profile (manager view) |
@@ -44,4 +44,4 @@ Screens are registered in `lib/core/routing/app_router.dart`. Most features read
 | [assistant](assistant/README.md) | TeamMind assistant: offline voice and text help for "how do I…" questions, with an optional "Hey TeamMind" wake phrase |
 | [pages](pages/README.md) | Generic list, detail and page screens for server-defined content types |
 | [services](services/README.md) | Free services (also open to visitors): CV builder, smart card, templates, vacation calculator, personality test |
-| [tracking](tracking/README.md) | Request-linked employee tracking: request tab, group map and reports (UI only, dummy data) |
+| [tracking](tracking/README.md) | Request-linked location tracking: the request's Tracking tab (start / stop, key points, route map), background recording and upload, and the team group map |

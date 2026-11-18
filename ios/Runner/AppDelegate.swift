@@ -1,4 +1,5 @@
 import Flutter
+import GoogleMaps
 import UIKit
 import UserNotifications
 
@@ -8,6 +9,10 @@ import UserNotifications
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+    // Google Maps key for the tracking maps (GMSApiKey in Info.plist ← MAPS_API_KEY in Flutter/Maps.xcconfig).
+    if let mapsKey = Bundle.main.object(forInfoDictionaryKey: "GMSApiKey") as? String, !mapsKey.isEmpty {
+      GMSServices.provideAPIKey(mapsKey)
+    }
     GeneratedPluginRegistrant.register(with: self)
     // Notifications that arrive while the app is open go through FlutterAppDelegate, which hands
     // them to firebase_messaging (onMessage) and flutter_local_notifications. Without this the

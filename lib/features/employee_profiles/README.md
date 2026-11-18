@@ -16,7 +16,7 @@ The employee directory and the full employee profile that managers see.
   - accounts and payroll
   - assets
   - requests and leave balances (tap a balance to see the requests by type: `RequestsByBalanceAndEmployeeIdViewModel`)
-  - rewards and penalties, evaluations, daily reports, expense claims, salary advances, overtime, shift change requests (each links to its own feature)
+  - rewards and penalties (approval system `rewards_and_penalties`, same cards as the More list), evaluations, daily reports, expense claims, salary advances, overtime, shift change requests (each links to its own feature)
 
 ## Shared (`shared/`)
 

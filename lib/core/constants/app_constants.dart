@@ -204,6 +204,12 @@ abstract class AppConstants {
   static String get baseUrl => "$base/api";
   static const String refreshTokenBaseUrl = "http://refresh_token_test-api/";
   static const String appPackageName = "com.rightminddev.rmemp";
+
+  /// Tracking maps use Google Maps when true; otherwise the routes are drawn without map tiles.
+  /// Turn it on only after the keys are set, or the map cannot load:
+  /// Android `MAPS_API_KEY` in android/local.properties, iOS `MAPS_API_KEY` in
+  /// ios/Flutter/Maps.xcconfig, web the script tag in web/index.html.
+  static const bool googleMapsEnabled = bool.fromEnvironment('GOOGLE_MAPS_ENABLED', defaultValue: false);
   static const String fontFamilyPoppins = 'Poppins';
   static const String fontFamilyCairo = 'Cairo';
   static const String fontFamilyIbrand = 'Poppins';

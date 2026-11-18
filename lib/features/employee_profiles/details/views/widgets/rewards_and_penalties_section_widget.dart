@@ -1,209 +1,100 @@
-import 'package:app_test/core/widgets/app_section_header.widget.dart';
-import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
 import 'package:app_test/core/constants/app_colors.dart';
 import 'package:app_test/core/constants/app_sizes.dart';
 import 'package:app_test/core/constants/app_strings.dart';
-import 'package:app_test/core/utils/app_styles.dart';
 import 'package:app_test/core/routing/app_router.dart';
-import 'package:go_router/go_router.dart';
+import 'package:app_test/core/utils/placeholder_no_existing_screen/no_existing_placeholder_screen.dart';
+import 'package:app_test/core/widgets/approvable_card_widget.dart';
+import 'package:app_test/core/widgets/custom_elevated_button.widget.dart';
 import 'package:app_test/features/employee_profiles/shared/models/employee_profile_model.dart';
+import 'package:app_test/features/rewards_and_penalties/view_rewards/data/models/reward_penalty_approvable_model.dart';
+import 'package:app_test/features/rewards_and_penalties/view_rewards/data/repos/rewards_and_penalties.service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:app_test/features/rewards_and_penalties/view_rewards/data/models/reward_and_penalty_model.dart';
-import 'package:app_test/features/rewards_and_penalties/view_rewards/views/widgets/reward_and_penalty_card.widget.dart';
-import 'package:app_test/core/constants/app_design.dart';
+import 'package:go_router/go_router.dart';
 
-class RewardsAndPenaltiesSectionWidget extends StatefulWidget {
+/// Rewards and penalties tab of an employee profile. Same source and cards as More → Rewards and
+/// penalties: approval-system items (`rewards_and_penalties`) shown with [ApprovableCardWidget];
+/// a card opens the shared approvable details. Shows the latest 5; "View all" opens the full list
+/// (filtered to this employee when it is someone else's profile).
+class RewardsAndPenaltiesSectionWidget extends StatelessWidget {
   final EmployeeProfileModel? employee;
-  const RewardsAndPenaltiesSectionWidget({super.key, required this.employee});
+  final List<RewardPenaltyApprovableModel>? items;
 
-  @override
-  State<RewardsAndPenaltiesSectionWidget> createState() =>
-      _RewardsAndPenaltiesSectionWidgetState();
-}
+  /// Whether the signed-in user looks at another employee (cards show the employee name).
+  final bool isTeam;
 
-class _RewardsAndPenaltiesSectionWidgetState
-    extends State<RewardsAndPenaltiesSectionWidget> {
-  // 0 = all, 1 = rewards, 2 = penalties
-  int _filter = 0;
+  /// Reloads the tab after returning from the details (an action may have changed an item).
+  final VoidCallback? onChanged;
 
-  List<EmpRewardPenalty> get _items {
-    final all = widget.employee?.rewardsAndPenalties ?? [];
-    if (_filter == 1) return all.where((e) => e.type == 'reward').toList();
-    if (_filter == 2) return all.where((e) => e.type == 'penalty').toList();
-    return all;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final all = widget.employee?.rewardsAndPenalties ?? [];
-
-    if (all.isEmpty) {
-      return NoExistingPlaceholderScreen(
-        compact: true,
-        title: AppStrings.noDataFounded.tr(),
-      );
-    }
-
-    final rewards = all.where((e) => e.type == 'reward').length;
-    final penalties = all.where((e) => e.type == 'penalty').length;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        // ── Title + "View all" ────────────────────────────────
-        AppSectionHeader(
-          height: 24,
-          title: AppStrings.rewardsAndPenalties.tr(),
-          onViewAll: () {
-            context.pushNamed(
-              AppRoutes.rewardsAndPenalties.name,
-              pathParameters: {'lang': context.locale.languageCode},
-              extra: {
-                'employeeName': widget.employee?.name,
-                'employeeId': widget.employee?.id?.toString(),
-              },
-            );
-          },
-        ),
-        const SizedBox(height: AppSpacing.md),
-
-        // ── Summary chips (scroll sideways instead of overflowing) ─────
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children: [
-              _SummaryChip(
-                label: 'all'.tr(),
-                count: all.length,
-                isSelected: _filter == 0,
-                color: Color(AppColors.buttons),
-                onTap: () => setState(() => _filter = 0),
-              ),
-              const SizedBox(width: AppSizes.s8),
-              _SummaryChip(
-                label: 'rewards'.tr(),
-                count: rewards,
-                isSelected: _filter == 1,
-                color: Color(AppColors.successGreen),
-                onTap: () => setState(() => _filter = 1),
-              ),
-              const SizedBox(width: AppSizes.s8),
-              _SummaryChip(
-                label: 'penalties'.tr(),
-                count: penalties,
-                isSelected: _filter == 2,
-                color: Color(AppColors.failureRed),
-                onTap: () => setState(() => _filter = 2),
-              ),
-            ],
-          ),
-        ),
-
-        const SizedBox(height: AppSpacing.md),
-
-        // ── List ─────────────────────────────────────────────
-        Expanded(
-          child: _items.isEmpty
-              ? NoExistingPlaceholderScreen(compact: true, title: AppStrings.noDataFounded.tr())
-              : ListView.separated(
-                  padding: EdgeInsets.zero,
-                  clipBehavior: Clip.none,
-                  itemCount: _items.length,
-                  separatorBuilder: (_, __) => const SizedBox.shrink(),
-                  itemBuilder: (context, index) {
-                    final eItem = _items[index];
-                    
-                    // Convert EmpRewardPenalty to RewardAndPenaltyModel for compatibility
-                    final model = RewardAndPenaltyModel(
-                      id: eItem.id,
-                      type: eItem.type,
-                      category: eItem.category,
-                      amount: eItem.amount?.toInt(),
-                      reason: eItem.reason,
-                      dueDate: eItem.dueDate,
-                      action: eItem.action,
-                      canCancel: eItem.canCancel,
-                      createdAt: eItem.createdAt,
-                      employeeId: eItem.profileId,
-                      files: eItem.signatureDocumentUrl != null 
-                          ? [MediaFile(file: eItem.signatureDocumentUrl, title: 'Attachment')] 
-                          : null,
-                    );
-                    
-                    return RewardAndPenaltyCardWidget(
-                      rewardAndPenalty: model,
-                      isTeam: false,
-                    );
-                  },
-                ),
-        ),
-      ],
-    );
-  }
-}
-
-// ── Summary chip ──────────────────────────────────────────────────────────────
-class _SummaryChip extends StatelessWidget {
-  final String label;
-  final int count;
-  final bool isSelected;
-  final Color color;
-  final VoidCallback onTap;
-  const _SummaryChip({
-    required this.label,
-    required this.count,
-    required this.isSelected,
-    required this.color,
-    required this.onTap,
+  const RewardsAndPenaltiesSectionWidget({
+    super.key,
+    required this.employee,
+    required this.items,
+    this.isTeam = false,
+    this.onChanged,
   });
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: AppSizes.s14, vertical: AppSizes.s8),
-        decoration: BoxDecoration(
-          color: isSelected ? color : color.withOpacity(0.08),
-          borderRadius: BorderRadius.circular(AppRadius.lg),
-          border: Border.all(
-              color: isSelected ? color : color.withOpacity(0.25), width: 1.2),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: isSelected ? Colors.white : color,
-              ),
+    final list = items ?? const <RewardPenaltyApprovableModel>[];
+    if (list.isEmpty) {
+      return NoExistingPlaceholderScreen(
+        compact: true,
+        title: AppStrings.noExistingPenaltiesAndRewards.tr(),
+      );
+    }
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ListView.separated(
+            shrinkWrap: true,
+            clipBehavior: Clip.none,
+            physics: const ClampingScrollPhysics(),
+            padding: EdgeInsets.zero,
+            itemCount: list.length <= 5 ? list.length : 5,
+            separatorBuilder: (context, index) => const SizedBox.shrink(),
+            itemBuilder: (context, index) {
+              final item = list[index];
+              return ApprovableCardWidget(
+                request: item,
+                isForDepartment: isTeam,
+                onActionTaken: onChanged,
+                onTap: () async {
+                  await context.pushNamed(
+                    AppRoutes.approvableDetails.name,
+                    pathParameters: {
+                      'lang': context.locale.languageCode,
+                      'type': RewardsAndPenaltiesRepo.approvableType,
+                      'id': item.id.toString(),
+                    },
+                  );
+                  onChanged?.call();
+                },
+              );
+            },
+          ),
+          const SizedBox(height: AppSizes.s24),
+          Center(
+            child: CustomElevatedButton(
+              backgroundColor: Color(AppColors.secondaryButton),
+              titleSize: AppSizes.s12,
+              title: 'viewAll'.tr(),
+              onPressed: () async {
+                await context.pushNamed(
+                  AppRoutes.rewardsAndPenalties.name,
+                  pathParameters: {'lang': context.locale.languageCode},
+                  extra: {
+                    'employeeName': employee?.name?.toString(),
+                    'employeeId': employee?.id?.toString(),
+                  },
+                );
+                onChanged?.call();
+              },
             ),
-            const SizedBox(width: AppSizes.s6),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: AppSizes.s6, vertical: AppSizes.s2),
-              decoration: BoxDecoration(
-                color: isSelected
-                    ? Colors.white.withOpacity(0.25)
-                    : color.withOpacity(0.15),
-                borderRadius: BorderRadius.circular(AppRadius.sm),
-              ),
-              child: Text(
-                '$count',
-                style: TextStyle(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                  color: isSelected ? Colors.white : color,
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
-

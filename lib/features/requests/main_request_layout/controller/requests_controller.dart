@@ -5,6 +5,8 @@ import 'package:app_test/features/home/data/models/my_team_request_model.dart';
 import 'package:app_test/features/home/data/models/other_departments_request.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:app_test/core/services/backend_services/api_service/dio_api_service/shared.dart';
+import '../views/widgets/search_filter_widget.dart';
 
 
 class RequestsViewModel extends ChangeNotifier {
@@ -35,6 +37,13 @@ class RequestsViewModel extends ChangeNotifier {
       waitingCancel: waitingCancel,
     );
     updateLoadingStatus(laodingValue: false);
+  }
+
+  /// Tracking filter chosen in the filter sheet (saved there as "trackingFilter"); every load,
+  /// load-more and refresh sends it. Unknown values are not sent (the server rejects them).
+  String? get _trackingFilter {
+    final v = CacheHelper.getString("trackingFilter")?.toString();
+    return SearchFilterWidget.trackingFilterValues.contains(v) ? v : null;
   }
 
   void updateLoadingStatus({required bool laodingValue}) {
@@ -98,6 +107,7 @@ class RequestsViewModel extends ChangeNotifier {
           dateFrom: (from != null && from.toString().isNotEmpty) ? from.toString() : null,
           dateTo: (to != null && to.toString().isNotEmpty) ? to.toString() : null,
           page: currentPage,
+          tracking: _trackingFilter,
         );
 
         if (result.success && result.data != null) {
@@ -164,6 +174,7 @@ class RequestsViewModel extends ChangeNotifier {
         dateFrom: (from != null && from.toString().isNotEmpty) ? from.toString() : null,
         dateTo: (to != null && to.toString().isNotEmpty) ? to.toString() : null,
         page: currentPage,
+        tracking: _trackingFilter,
       );
 
       if (result.success && result.data != null) {

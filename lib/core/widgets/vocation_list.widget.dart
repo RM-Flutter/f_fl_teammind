@@ -121,10 +121,10 @@ class VacationListWidget extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: AppSizes.s10, horizontal: AppSizes.s6),
               decoration: BoxDecoration(
                 // Glass tile: reads as a shortcut on the navy header, not as one more balance card.
-                color: Colors.white.withValues(alpha: 0.12),
+                // Tinted with the brand button colour (server-driven), so it follows the theme.
+                color: Color(AppColors.buttons).withValues(alpha: 0.18),
                 borderRadius: BorderRadius.circular(AppRadius.md),
-                border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.35), width: 1),
+                border: Border.all(color: Color(AppColors.buttons), width: 1),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

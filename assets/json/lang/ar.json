@@ -1968,5 +1968,17 @@
   "proxy_no_request_types": "لم يتم العثور على أنواع طلبات في إعدادات الشركة. حدّث الصفحة الرئيسية ثم حاول مرة أخرى.",
   "add_actions_title": "إضافة",
   "add_actions_my_request": "طلب جديد",
-  "add_actions_my_request_hint": "طلب لنفسك"
+  "add_actions_my_request_hint": "طلب لنفسك",
+  "tracking_approval_blocked": "التتبع مطلوب قبل الموافقة",
+  "tracking_approval_blocked_hint": "الموظف لسه ماتتبعش الطلب ده، فالموافقة هتترفض. تقدر ترفضه أو تلغيه عادي.",
+  "tracking_filter_missing_required": "تتبع إلزامي ناقص",
+  "tracking_key_point_no_location": "مقدرناش نقرا موقعك. اتأكد إن الموقع شغال وجرب تاني.",
+  "tracking_mobile_only": "بدء وإيقاف التتبع بيتعمل من تطبيق Team Mind على الموبايل.",
+  "tracking_notification_channel": "تتبع الطلبات",
+  "tracking_notification_text": "مسارك بيتسجل للطلب. وقّف التتبع من الطلب لما تخلص.",
+  "tracking_notification_title": "تتبع الموقع شغال",
+  "tracking_only_tracking": "المتتبعين بس",
+  "tracking_sync_failed_hint": "في نقاط ماتبعتتش. هتفضل محفوظة على الموبايل وهتتبعت لما النت يرجع.",
+  "tracking_point_saved_hint": "اتحفظت على موقعك الحالي واتبعتت.",
+  "tracking_no_employees": "مفيش موظفين يظهروا للاختيار ده."
 }

@@ -2,14 +2,14 @@
 
 One details-and-action screen for **every type** of item that goes through the backend approval system (`emp-approval-system`). It is the only feature that uses `flutter_bloc`.
 
-Route: `approvableDetails` with path params `:type/:id`. `type` is one of `employee_requests`, `overtime`, `salary_advance`, `employee_expense_claims`, `shift_change_requests`. `extra['autoOpenAction']` can open the action sheet straight away.
+Route: `approvableDetails` with path params `:type/:id`. `type` is one of `employee_requests`, `overtime`, `salary_advance`, `employee_expense_claims`, `shift_change_requests`, `rewards_and_penalties`. `extra['autoOpenAction']` can open the action sheet straight away.
 
 | Path | Role |
 |---|---|
 | `cubit/approvable_details_cubit.dart` | `ApprovableDetailsCubit` with states Loading, Loaded, Error, ActionSubmitting, ActionSuccess and ActionError. Methods: `fetchDetails`, `fetchCurrentLevelApprovers`, `submitTakeAction`, `submitTakeActionAsSomeoneElse`, `askIgnore`, `askRemember`. |
 | `data/services/approvables_details_service.dart` | API calls, all under `/approval-system/v1/{type}/`: `employee/approvables/{id}` (details), `.../ask-ignore`, `.../remember`, `manager/approvables/{id}/current-level-approvers`, `manager/take-action`, `manager/take-action-as-someone-else`, and `employee_requests/manager/approvables/{id}/overlapping-vacations` |
-| `data/models/approvable_details_model.dart` | Details, required approvals per level, current-level approvers, overlapping vacations, seen-by |
-| `views/approvable_details_screen.dart` | Header, tabs (information, reason, manager response) and the bottom action bar |
+| `data/models/approvable_details_model.dart` | Details, required approvals per level, current-level approvers, overlapping vacations, seen-by, and the request's `tracking` block (`RequestTrackingInfoModel`) |
+| `views/approvable_details_screen.dart` | Header, tabs (information, reason, manager response, and tracking for employee requests whose type has tracking: `RequestTrackingTab` from `features/tracking`) and the bottom action bar. The bar shows `TrackingApprovalWarning` above the actions when tracking is required and not started, because the server refuses the approval until then |
 | `views/widgets/approvals_table/`, `required_approvals_table_widget.dart` | Approval chain: levels and who approved, refused or is pending |
 | `views/widgets/manager_take_action_modal.dart` + `manager_take_action/` | Approve or refuse, with a reply, attachment, and optionally another approver (act on someone's behalf) |
 | `views/widgets/overlapping_vacations_sheet.dart` | Who else is off on the same dates |

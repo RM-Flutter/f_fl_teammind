@@ -2,48 +2,70 @@ import 'package:easy_localization/easy_localization.dart';
 import 'tracking_point.model.dart';
 import 'tracking_status.enum.dart';
 
+/// One tracking session (leg) of a request. Every Start / Stop makes a new session.
+///
+/// Server object (`sessions[]`, Start / Stop / upload `data`): `id, request_id, profile_id, status,
+/// start_source, stop_source, points_count, manual_points_count, distance_m, active_seconds,
+/// first_point, last_point, permission_state, started_at, ended_at, last_point_at,
+/// last_uploaded_at`. Right after Start the counters come back as `null`.
+///
+/// [points] is filled by the app: the key points (`main_points`) for the log, or the whole
+/// `path` for the map.
 class TrackingSessionModel {
   final int id;
   final int requestId;
-  final int employeeId;
+  final int profileId;
   final DateTime startedAt;
   final DateTime? endedAt;
   final TrackingSessionStatus status;
   final String? stopSource;
-  final String? startSource;
   final DateTime? lastPointAt;
   final int pointsCount;
   final int manualPointsCount;
-  final int durationMinutes;
+  final int distanceMeters;
+  final int activeSeconds;
   final List<TrackingPointModel> points;
 
   const TrackingSessionModel({
     required this.id,
-    required this.requestId,
-    required this.employeeId,
+    this.requestId = 0,
+    this.profileId = 0,
     required this.startedAt,
     this.endedAt,
     this.status = TrackingSessionStatus.active,
     this.stopSource,
-    this.startSource = 'employee_app',
     this.lastPointAt,
     this.pointsCount = 0,
     this.manualPointsCount = 0,
-    this.durationMinutes = 0,
+    this.distanceMeters = 0,
+    this.activeSeconds = 0,
     this.points = const [],
   });
 
   bool get isActive => status == TrackingSessionStatus.active;
 
-  List<TrackingPointModel> get manualPoints =>
-      points.where((p) => p.isManual || p.isStartPoint || p.isEndPoint).toList();
+  TrackingSessionModel withPoints(List<TrackingPointModel> pts) => TrackingSessionModel(
+        id: id,
+        requestId: requestId,
+        profileId: profileId,
+        startedAt: startedAt,
+        endedAt: endedAt,
+        status: status,
+        stopSource: stopSource,
+        lastPointAt: lastPointAt,
+        pointsCount: pointsCount,
+        manualPointsCount: manualPointsCount,
+        distanceMeters: distanceMeters,
+        activeSeconds: activeSeconds,
+        points: pts,
+      );
 
-  String get durationFormatted => getDurationFormatted(isArabic: true);
-
+  /// Time actually tracked (server `active_seconds`); for a running session with no number yet,
+  /// the time since it started.
   String getDurationFormatted({bool isArabic = true}) {
-    final minutes = durationMinutes > 0
-        ? durationMinutes
-        : DateTime.now().difference(startedAt).inMinutes;
+    final minutes = activeSeconds > 0
+        ? activeSeconds ~/ 60
+        : (isActive ? DateTime.now().difference(startedAt).inMinutes : 0);
     if (minutes < 60) {
       return 'mins_2'.tr(namedArgs: {'minutes': '$minutes'});
     }
@@ -55,70 +77,35 @@ class TrackingSessionModel {
     return 'h_m'.tr(namedArgs: {'hours': '$hours', 'remaining_minutes': '$remainingMinutes'});
   }
 
+  static int _i(dynamic v) => v is num ? v.toInt() : int.tryParse(v?.toString() ?? '') ?? 0;
+
   factory TrackingSessionModel.fromJson(Map<String, dynamic> json) {
-    TrackingSessionStatus sessionStatus = TrackingSessionStatus.active;
-    final statusStr = json['status']?.toString().toLowerCase();
-    if (statusStr == 'completed') {
-      sessionStatus = TrackingSessionStatus.completed;
-    } else if (statusStr == 'interrupted') {
-      sessionStatus = TrackingSessionStatus.interrupted;
-    } else if (statusStr == 'cancelled') {
-      sessionStatus = TrackingSessionStatus.cancelled;
-    }
-
-    final pointsList = (json['points'] as List?)
-            ?.map((p) => TrackingPointModel.fromJson(p as Map<String, dynamic>))
-            .toList() ??
-        [];
-
+    DateTime? time(String k) =>
+        json[k] == null ? null : DateTime.tryParse(json[k].toString())?.toLocal();
     return TrackingSessionModel(
-      id: json['id'] is int ? json['id'] : int.tryParse(json['id'].toString()) ?? 0,
-      requestId: json['request_id'] is int
-          ? json['request_id']
-          : int.tryParse(json['request_id'].toString()) ?? 0,
-      employeeId: json['employee_id'] is int
-          ? json['employee_id']
-          : int.tryParse(json['employee_id'].toString()) ?? 0,
-      startedAt: json['started_at'] != null
-          ? DateTime.tryParse(json['started_at'].toString()) ?? DateTime.now()
-          : DateTime.now(),
-      endedAt: json['ended_at'] != null
-          ? DateTime.tryParse(json['ended_at'].toString())
-          : null,
-      status: sessionStatus,
+      id: _i(json['id']),
+      requestId: _i(json['request_id']),
+      profileId: _i(json['profile_id']),
+      startedAt: time('started_at') ?? DateTime.now(),
+      endedAt: time('ended_at'),
+      status: TrackingSessionStatus.fromRaw(json['status']?.toString()),
       stopSource: json['stop_source']?.toString(),
-      startSource: json['start_source']?.toString() ?? 'employee_app',
-      lastPointAt: json['last_point_at'] != null
-          ? DateTime.tryParse(json['last_point_at'].toString())
-          : null,
-      pointsCount: json['points_count'] is int
-          ? json['points_count']
-          : int.tryParse(json['points_count']?.toString() ?? '0') ?? pointsList.length,
-      manualPointsCount: json['manual_points_count'] is int
-          ? json['manual_points_count']
-          : pointsList.where((p) => p.isManual).length,
-      durationMinutes: json['duration_minutes'] is int
-          ? json['duration_minutes']
-          : int.tryParse(json['duration_minutes']?.toString() ?? '0') ?? 0,
-      points: pointsList,
+      lastPointAt: time('last_point_at'),
+      pointsCount: _i(json['points_count']),
+      manualPointsCount: _i(json['manual_points_count']),
+      distanceMeters: _i(json['distance_m']),
+      activeSeconds: _i(json['active_seconds']),
     );
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'request_id': requestId,
-      'employee_id': employeeId,
-      'started_at': startedAt.toIso8601String(),
-      'ended_at': endedAt?.toIso8601String(),
-      'status': status.name,
-      'stop_source': stopSource,
-      'start_source': startSource,
-      'last_point_at': lastPointAt?.toIso8601String(),
-      'points_count': pointsCount,
-      'manual_points_count': manualPointsCount,
-      'duration_minutes': durationMinutes,
-      'points': points.map((p) => p.toJson()).toList(),
-    };
+  /// Attaches each point to its session (by `session_id`), sorted by time.
+  static List<TrackingSessionModel> attachPoints(
+      List<TrackingSessionModel> sessions, List<TrackingPointModel> points) {
+    final sorted = [...sessions]..sort((a, b) => a.startedAt.compareTo(b.startedAt));
+    return [
+      for (final s in sorted)
+        s.withPoints(points.where((p) => p.sessionId == s.id).toList()
+          ..sort((a, b) => a.recordedAt.compareTo(b.recordedAt))),
+    ];
   }
 }
